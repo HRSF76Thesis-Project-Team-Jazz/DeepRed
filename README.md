@@ -1,13 +1,13 @@
-# Project Name
+# Deep Red
 
-The project description
+On line chess game with options for (1) 2 player virtual play or (2) playing against an artificially intelligent computer.
 
 ## Team
 
-- teamMember
-- teamMember
-- teamMember
-- teamMember
+- Ryan Chow
+- Shawn Feng
+- Carlo P. Las Marias
+- Jason Yu
 
 ## Roadmap
 
