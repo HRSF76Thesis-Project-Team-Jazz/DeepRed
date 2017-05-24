@@ -1,4 +1,3 @@
-'use strict';
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
@@ -34,6 +33,7 @@ passport.use('local-signup', new LocalStrategy({
 },
   (req, email, password, done) => {
     // check to see if there is a local account with this email address
+    console.log('***: ', email, password); //*********************/
     return models.Profile.where({ email }).fetch({
       withRelated: [{
         auths: query => query.where({ type: 'local' })
@@ -41,6 +41,7 @@ passport.use('local-signup', new LocalStrategy({
     })
       .then(profile => {
         // create a new profile if a profile does not exist
+        console.log('*** profile: ', profile); //*********************/
         if (!profile) {
           return models.Profile.forge({ email }).save();
         }
@@ -66,7 +67,8 @@ passport.use('local-signup', new LocalStrategy({
       .error(error => {
         done(error, null);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log('*** signup error: ', err); //*********************/
         done(null, false, req.flash('signupMessage', 'An account with this email address already exists.'));
       });
   }));
