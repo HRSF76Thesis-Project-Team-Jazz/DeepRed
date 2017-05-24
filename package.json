@@ -2,8 +2,7 @@
   "name": "course.thesis",
   "version": "1.0.0",
   "scripts": {
-    "start": "node server",
-    "start:dev": "nodemon server",
+    "start": "nodemon server",
     "test": "NODE_ENV=test grunt test",
     "heroku-postbuild": "webpack -p",
     "build": "webpack --watch",
