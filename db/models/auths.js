@@ -4,7 +4,7 @@ const bcrypt = Promise.promisifyAll(require('bcrypt-nodejs'));
 
 const Auth = db.Model.extend({
   tableName: 'auths',
-  profile: function() {
+  profile: () => {
     return this.belongsTo('Profile');
   },
 
@@ -12,9 +12,7 @@ const Auth = db.Model.extend({
     this.on('saving', (user, attrs, options) => {
       if (user.get('type') === 'local') {
         return this.generatePassword(user.get('password'))
-          .then(hash => {
-            this.set('password', hash);
-          })
+          .then(hash => this.set('password', hash))
           .error(err => console.log(err));
       }
     });
