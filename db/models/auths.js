@@ -4,11 +4,11 @@ const bcrypt = Promise.promisifyAll(require('bcrypt-nodejs'));
 
 const Auth = db.Model.extend({
   tableName: 'auths',
-  profile: () => {
+  profile: function profile() {
     return this.belongsTo('Profile');
   },
 
-  initialize: function() {
+  initialize: function initialize() {
     this.on('saving', (user, attrs, options) => {
       if (user.get('type') === 'local') {
         return this.generatePassword(user.get('password'))
@@ -18,17 +18,17 @@ const Auth = db.Model.extend({
     });
   },
 
-  comparePassword: function(attempted) {
+  comparePassword: function comparePassword(attempted) {
     return bcrypt.compareAsync(attempted, this.get('password'));
   },
 
-  generatePassword: function(password) {
+  generatePassword: function generatePassword(password) {
     return bcrypt.genSaltAsync(null)
-      .then(salt => {
+      .then((salt) => {
         this.set('salt', salt);
         return bcrypt.hashAsync(password, salt, null);
       });
-  }
+  },
 });
 
 module.exports = db.model('Auth', Auth);

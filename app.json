@@ -5,6 +5,12 @@
   "env": {
     "NPM_CONFIG_PRODUCTION": {
       "required": true
+    },
+    "NODE_ENV": {
+      "required": true
+    },
+    "DATABASE_URL": {
+      "required": true
     }
   },
   "formation": {
