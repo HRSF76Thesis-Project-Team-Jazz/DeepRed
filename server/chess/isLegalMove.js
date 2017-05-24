@@ -13,26 +13,31 @@ const isVertPathClear = (game, origin, dest, limit = 7) => {
   return true;
 };
 
-const isDiagPathClear = (game, origin, dest, limit = 7 ) => {
+const isDiagPathClear = (game, origin, dest, limit = 7) => {
   console.log('Origin: ', origin, game.board[origin[0]][origin[1]]);
   console.log('Dest: ', dest, game.board[dest[0]][dest[1]]);
-  // if destination coordinates is located below the original piece
+  // if destination coordinate is located below the original piece
   if (origin[0] < dest[0]) {
-    for (let i = origin[0]; i < dest[0]; i++) {
-      if (game.board[i][origin[1]]) {
+    let y = origin[1] - 1;
+    for (let i = origin[0] + 1; i < dest[0]; i++) {
+      console.log('Path: ', [i, y], game.board[i][y]);
+      if (game.board[i][y]) {
         return false;
       }
-      origin[1]--;
+      y--;
     }
   } else {
-  // if destination coordinates is located above the original piece
+    // if destination coordinate is located above the original piece
+    let y = origin[1] + 1;
     for (let i = origin[0]; i > dest[0]; i--) {
-      if (game.board[i][origin[1]]) {
+      console.log('Path: ', [i, y], game.board[i][y]);
+      if (game.board[i][y]) {
         return false;
       }
-      origin[1]++;
+      y++;
     }
   }
+  return true;
 };
 
 const isLegalMovePawn = (board, origin, dest) => {
