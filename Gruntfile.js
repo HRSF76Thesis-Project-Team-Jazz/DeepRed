@@ -1,21 +1,20 @@
 const config = require('config')['knex'];
 
-module.exports = function(grunt) {
-
+module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
     eslint: {
-      target: ['Gruntfile.js', 'client/**/*.js', 'db/**/*.js', 'server/**/*.js']
+      target: ['Gruntfile.js', 'client/**/*.js', 'db/**/*.js', 'server/**/*.js'],
     },
 
     mochaTest: {
       test: {
         options: {
-          reporter: 'spec'
+          reporter: 'spec',
         },
-        src: ['server/test/**/*.js']
-      }
+        src: ['server/test/**/*.js'],
+      },
     },
 
     pgcreatedb: {
@@ -25,11 +24,11 @@ module.exports = function(grunt) {
           password: config.connection.password,
           host: config.connection.host,
           port: config.connection.port,
-          database: 'template1'
+          database: 'template1',
         },
-        name: config.connection.database
-      }
-    }
+        name: config.connection.database,
+      },
+    },
 
   });
 
