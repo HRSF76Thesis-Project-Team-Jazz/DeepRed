@@ -33,7 +33,6 @@ passport.use('local-signup', new LocalStrategy({
 },
   (req, email, password, done) => {
     // check to see if there is a local account with this email address
-    console.log('***: ', email, password); //*********************/
     return models.Profile.where({ email }).fetch({
       withRelated: [{
         auths: query => query.where({ type: 'local' })
@@ -80,6 +79,9 @@ passport.use('local-login', new LocalStrategy({
 },
   (req, email, password, done) => {
     // fetch any profiles that have a local auth account with this email address
+
+    console.log('login attempt: ', email, password);    
+
     return models.Profile.where({ email }).fetch({
       withRelated: [{
         auths: query => query.where({ type: 'local' })
@@ -87,11 +89,19 @@ passport.use('local-login', new LocalStrategy({
     })
       .then(profile => {
         // if there is no profile with that email or if there is no local auth account with profile
+        console.log('retrieved profile: ', profile);
+
         if (!profile || !profile.related('auths').at(0)) {
           throw profile;
         }
 
         // check password and pass through account
+
+        /**
+         * CHECK PASSWORD
+         */
+        console.log(password);
+
         return Promise.all([profile, profile.related('auths').at(0).comparePassword(password)]);
       })
       .then(([profile, match]) => {
@@ -108,7 +118,8 @@ passport.use('local-login', new LocalStrategy({
       .error(err => {
         done(err, null);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log('login error: ', err);
         done(null, null, req.flash('loginMessage', 'Incorrect username or password'));
       });
   }));
