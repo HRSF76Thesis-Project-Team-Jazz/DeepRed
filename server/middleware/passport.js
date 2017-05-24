@@ -35,12 +35,11 @@ passport.use('local-signup', new LocalStrategy({
     // check to see if there is a local account with this email address
     return models.Profile.where({ email }).fetch({
       withRelated: [{
-        auths: query => query.where({ type: 'local' })
-      }]
+        auths: query => query.where({ type: 'local' }),
+      }],
     })
       .then((profile) => {
         // create a new profile if a profile does not exist
-        console.log('*** profile: ', profile); //*********************/
         if (!profile) {
           return models.Profile.forge({ email }).save();
         }
@@ -67,7 +66,6 @@ passport.use('local-signup', new LocalStrategy({
         done(error, null);
       })
       .catch((err) => {
-        console.log('*** signup error: ', err.attributes.email || err); //*********************/
         done(null, false, req.flash('signupMessage', 'An account with this email address already exists.'));
       });
   }));
@@ -80,8 +78,6 @@ passport.use('local-login', new LocalStrategy({
   (req, email, password, done) => {
     // fetch any profiles that have a local auth account with this email address
 
-    console.log('=> login attempt: ', email, password);
-
     return models.Profile.where({ email }).fetch({
       withRelated: [{
         auths: query => query.where({ type: 'local' }),
@@ -89,7 +85,6 @@ passport.use('local-login', new LocalStrategy({
     })
       .then((profile) => {
         // if there is no profile with that email or if there is no local auth account with profile
-        console.log('=> retrieved profile: ', profile.attributes.id, profile.attributes.email);
 
         if (!profile || !profile.related('auths').at(0)) {
           throw profile;
@@ -97,16 +92,10 @@ passport.use('local-login', new LocalStrategy({
 
         // check password and pass through account
 
-        /**
-         * CHECK PASSWORD
-         */
-        console.log('** password: ', password);
-
         return Promise.all([profile, profile.related('auths').at(0).comparePassword(password)]);
       })
       .then(([profile, match]) => {
         if (!match) {
-          console.log('** PASSWORD !match: ', match)
           throw profile;
         }
         // if the password matches, pass on the profile
@@ -120,7 +109,6 @@ passport.use('local-login', new LocalStrategy({
         done(err, null);
       })
       .catch((err) => {
-        console.log('=> login error: ', err.attributes.email || err);
         done(null, null, req.flash('loginMessage', 'Incorrect username or password'));
       });
   }));
@@ -154,10 +142,9 @@ passport.use('twitter', new TwitterStrategy({
 
 const getOrCreateOAuthProfile = (type, oauthProfile, done) => {
   return models.Auth.where({ type, oauth_id: oauthProfile.id }).fetch({
-    withRelated: ['profile']
+    withRelated: ['profile'],
   })
-    .then(oauthAccount => {
-
+    .then((oauthAccount) => {
       if (oauthAccount) {
         throw oauthAccount;
       }
@@ -168,39 +155,38 @@ const getOrCreateOAuthProfile = (type, oauthProfile, done) => {
       }
       return models.Profile.where({ email: oauthProfile.emails[0].value }).fetch();
     })
-    .then(profile => {
-
-      let profileInfo = {
+    .then((profile) => {
+      const profileInfo = {
         first: oauthProfile.name.givenName,
         last: oauthProfile.name.familyName,
         display: oauthProfile.displayName || `${oauthProfile.name.givenName} ${oauthProfile.name.familyName}`,
-        email: oauthProfile.emails[0].value
+        email: oauthProfile.emails[0].value,
       };
 
       if (profile) {
-        //update profile with info from oauth
+        // update profile with info from oauth
         return profile.save(profileInfo, { method: 'update' });
       }
       // otherwise create new profile
       return models.Profile.forge(profileInfo).save();
     })
-    .tap(profile => {
+    .tap((profile) => {
       return models.Auth.forge({
         type,
         profile_id: profile.get('id'),
-        oauth_id: oauthProfile.id
+        oauth_id: oauthProfile.id,
       }).save();
     })
-    .error(err => {
+    .error((err) => {
       done(err, null);
     })
-    .catch(oauthAccount => {
+    .catch((oauthAccount) => {
       if (!oauthAccount) {
         throw oauthAccount;
       }
       return oauthAccount.related('profile');
     })
-    .then(profile => {
+    .then((profile) => {
       if (profile) {
         done(null, profile.serialize());
       }
@@ -209,7 +195,7 @@ const getOrCreateOAuthProfile = (type, oauthProfile, done) => {
       // TODO: This is not working because redirect to login uses req.flash('loginMessage')
       // and there is no access to req here
       done(null, null, {
-        'message': 'Signing up requires an email address, \
+        message: 'Signing up requires an email address, \
           please be sure there is an email address associated with your Facebook account \
           and grant access when you register.' });
     });

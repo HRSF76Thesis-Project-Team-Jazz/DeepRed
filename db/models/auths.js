@@ -19,7 +19,6 @@ const Auth = db.Model.extend({
   },
 
   comparePassword: function comparePassword(attempted) {
-    console.log('[db/models/auth: comparePassword] ', attempted, this.get('password'));
     return bcrypt.compareAsync(attempted, this.get('password'));
   },
 
