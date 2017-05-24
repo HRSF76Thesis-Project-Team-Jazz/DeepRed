@@ -1,4 +1,5 @@
-
+// origin = [X1, Y1]
+// dest = [X2, Y2]
 // P = Pawn
 // R = Rook
 // N = Knight
@@ -26,14 +27,15 @@ class ChessGame {
   }
 
   movePiece(origin, dest) {
+    if (dest === undefined) {
+      throw new Error('Attempted destination is invalid');
+    }
     let originPiece = this.board[dest[0]][dest[1]];
     const originPieceColor = originPiece[0];
     let destPiece = this.board[dest[0]][dest[1]];
-    const destPieceColor = destPiece[0];
-
     if (isLegalMove(this.board, origin, dest)) {
-      if (dest) {
-        if (originPieceColor === destPieceColor) {
+      if (destPiece) {
+        if (originPieceColor === destPiece[0]) {
           throw new Error('Attempted to capture own piece');
         } else {
           this.capturePiece(destPiece);
@@ -44,7 +46,7 @@ class ChessGame {
       // check for check/checkmate/stalemate
       return this.board;
     }
-    throw new Error ('Attempted Move is Illegal')
+    throw new Error('Attempted Move is Illegal');
   }
 
   capturePiece(piece) {
