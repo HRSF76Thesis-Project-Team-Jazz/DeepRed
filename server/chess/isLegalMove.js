@@ -1,12 +1,45 @@
-// origin/dest are arrays that represent coordinates [M, N]
+const isVertPathClear = (board, origin, dest, limit = 7) => {
+  console.log('Orig: ', origin, board[origin[0]][origin[1]]);
+  console.log('Dest: ', dest, board[dest[0]][dest[1]])
+  let start = '';
+  let end = '';
+  let count = 0;
 
-const isVertPathClear = (game, origin, dest, limit = 7) => {
-  console.log('Origin: ', origin, board[origin[0]][origin[1]]);
-  console.log('Dest: ', dest, game.board[dest[0]][dest[1]]);
+  if (dest[0] > origin[0]) {
+    start = origin[0];
+    end = dest[0];
+  } else {
+    start = dest[0];
+    end = origin[0];
+  }
+  for (let i = start + 1; i < end; i += 1) {
+    count += 1;
+    console.log('Path: ', [i, origin[1]], board[i][origin[1]], count);
+    if (board[i][origin[1]] || count >= limit) {
+      return false;
+    }
+  }
+  return true;
+};
 
-  for (let i = origin[0] + 1; i < dest[0]; i++) {
-    console.log('Path: ', [i, origin[1]], game.board[i][origin[1]]);
-    if (game.board[i][origin[1]]) {
+const isHorizPathClear = (board, origin, dest, limit = 7) => {
+  console.log('Orig: ', origin, board[origin[0]][origin[1]]);
+  console.log('Dest: ', dest, board[dest[0]][dest[1]])
+  let start = '';
+  let end = '';
+  let count = 0;
+
+  if (dest[1] > origin[1]) {
+    start = origin[1];
+    end = dest[1];
+  } else {
+    start = dest[1];
+    end = origin[1];
+  }
+  for (let i = start + 1; i < end; i += 1) {
+    console.log('Path: ', [origin[0], i], board[origin[0]][i]);
+    count += 1;
+    if (board[origin[0]][i] || count === limit) {
       return false;
     }
   }
@@ -41,18 +74,24 @@ const isDiagPathClear = (board, origin, dest, limit = 7) => {
 };
 
 const isLegalMovePawn = (board, origin, dest) => {
-  // TODO
-  return true;
+  if (origin[1] === dest[1]) {
+    return isVertPathClear(board, origin, dest, 2);
+  }
+  return false;
 };
 
 const isLegalMoveRook = (board, origin, dest) => {
-  // TODO
-  return true;
+  if (origin[1] === dest[1]) {
+    return isVertPathClear(board, origin, dest);
+  } else if (origin[0] === dest[0]) {
+    return isHorizPathClear(board, origin, dest);
+  }
+  return false;
 };
 
 const isLegalMoveKnight = (board, origin, dest) => {
-  // TODO
-  return true;
+  var result = [Math.abs(origin[0] - dest[0]), Math.abs(origin[1] - dest[1])];
+  return (result.includes(1) && result.includes(2));
 };
 
 const isLegalMoveBishop = (board, origin, dest) => {
@@ -61,12 +100,15 @@ const isLegalMoveBishop = (board, origin, dest) => {
 };
 
 const isLegalMoveQueen = (board, origin, dest) => {
-  // TODO
-  return true;
+  if (origin[1] === dest[1]) {
+    return isVertPathClear(board, origin, dest);
+  } else if (origin[0] === dest[0]) {
+    return isHorizPathClear(board, origin, dest);
+  }
+  return false;
 };
 
 const isLegalMoveKing = (board, origin, dest) => {
-  // TODO
   return true;
 };
 
@@ -86,20 +128,20 @@ const isLegalMoveKing = (board, origin, dest) => {
 //
 // };
 
-const isLegalMove = (game, origin, dest) => {
+const isLegalMove = (board, origin, dest) => {
   const pieceType = board[origin[0]][origin[1]][1];
   if (pieceType === 'P') {
-    return isLegalMovePawn(game, origin, dest);
+    return isLegalMovePawn(board, origin, dest);
   } else if (pieceType === 'R') {
-    return isLegalMoveRook(game, origin, dest);
+    return isLegalMoveRook(board, origin, dest);
   } else if (pieceType === 'N') {
-    return isLegalMoveKnight(game, origin, dest);
+    return isLegalMoveKnight(board, origin, dest);
   } else if (pieceType === 'B') {
-    return isLegalMoveBishop(game, origin, dest);
+    return isLegalMoveBishop(board, origin, dest);
   } else if (pieceType === 'Q') {
-    return isLegalMoveQueen(game, origin, dest);
+    return isLegalMoveQueen(board, origin, dest);
   } else if (pieceType === 'K') {
-    return isLegalMoveKing(game, origin, dest);
+    return isLegalMoveKing(board, origin, dest);
   }
   return false;
 };
