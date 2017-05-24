@@ -90,8 +90,8 @@ const isLegalMoveRook = (board, origin, dest) => {
 };
 
 const isLegalMoveKnight = (board, origin, dest) => {
-  // TODO
-  return true;
+  var result = [Math.abs(origin[0] - dest[0]), Math.abs(origin[1] - dest[1])];
+  return (result.includes(1) && result.includes(2));
 };
 
 const isLegalMoveBishop = (board, origin, dest) => {
