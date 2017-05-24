@@ -1,6 +1,7 @@
 # Deep Red
 
-On line chess game with options for (1) 2 player virtual play or (2) playing against an artificially intelligent computer. 
+On line chess game with options for (1) 2 player virtual play or (2) playing against an artificially intelligent computer.
+
 
 ## Team
 
