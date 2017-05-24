@@ -12,13 +12,13 @@ passport.serializeUser((profile, done) => {
 
 passport.deserializeUser((id, done) => {
   return models.Profile.where({ id }).fetch()
-    .then(profile => {
+    .then((profile) => {
       if (!profile) {
         throw profile;
       }
       done(null, profile.serialize());
     })
-    .error(error => {
+    .error((error) => {
       done(error, null);
     })
     .catch(() => {
@@ -29,7 +29,7 @@ passport.deserializeUser((id, done) => {
 passport.use('local-signup', new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password',
-  passReqToCallback: true
+  passReqToCallback: true,
 },
   (req, email, password, done) => {
     // check to see if there is a local account with this email address
@@ -38,7 +38,7 @@ passport.use('local-signup', new LocalStrategy({
         auths: query => query.where({ type: 'local' })
       }]
     })
-      .then(profile => {
+      .then((profile) => {
         // create a new profile if a profile does not exist
         console.log('*** profile: ', profile); //*********************/
         if (!profile) {
@@ -51,7 +51,7 @@ passport.use('local-signup', new LocalStrategy({
 
         return profile;
       })
-      .tap(profile => {
+      .tap((profile) => {
         // create a new local auth account with the user's profile id
         return models.Auth.forge({
           password,
@@ -59,15 +59,15 @@ passport.use('local-signup', new LocalStrategy({
           profile_id: profile.get('id')
         }).save();
       })
-      .then(profile => {
+      .then((profile) => {
         // serialize profile for session
         done(null, profile.serialize());
       })
-      .error(error => {
+      .error((error) => {
         done(error, null);
       })
       .catch((err) => {
-        console.log('*** signup error: ', err); //*********************/
+        console.log('*** signup error: ', err.attributes.email || err); //*********************/
         done(null, false, req.flash('signupMessage', 'An account with this email address already exists.'));
       });
   }));
@@ -75,21 +75,21 @@ passport.use('local-signup', new LocalStrategy({
 passport.use('local-login', new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password',
-  passReqToCallback: true
+  passReqToCallback: true,
 },
   (req, email, password, done) => {
     // fetch any profiles that have a local auth account with this email address
 
-    console.log('login attempt: ', email, password);    
+    console.log('=> login attempt: ', email, password);
 
     return models.Profile.where({ email }).fetch({
       withRelated: [{
-        auths: query => query.where({ type: 'local' })
-      }]
+        auths: query => query.where({ type: 'local' }),
+      }],
     })
-      .then(profile => {
+      .then((profile) => {
         // if there is no profile with that email or if there is no local auth account with profile
-        console.log('retrieved profile: ', profile);
+        console.log('=> retrieved profile: ', profile.attributes.id, profile.attributes.email);
 
         if (!profile || !profile.related('auths').at(0)) {
           throw profile;
@@ -100,26 +100,27 @@ passport.use('local-login', new LocalStrategy({
         /**
          * CHECK PASSWORD
          */
-        console.log(password);
+        console.log('** password: ', password);
 
         return Promise.all([profile, profile.related('auths').at(0).comparePassword(password)]);
       })
       .then(([profile, match]) => {
         if (!match) {
+          console.log('** PASSWORD !match: ', match)
           throw profile;
         }
         // if the password matches, pass on the profile
         return profile;
       })
-      .then(profile => {
+      .then((profile) => {
         // call done with serialized profile to include in session
         done(null, profile.serialize());
       })
-      .error(err => {
+      .error((err) => {
         done(err, null);
       })
       .catch((err) => {
-        console.log('login error: ', err);
+        console.log('=> login error: ', err.attributes.email || err);
         done(null, null, req.flash('loginMessage', 'Incorrect username or password'));
       });
   }));
@@ -127,7 +128,7 @@ passport.use('local-login', new LocalStrategy({
 passport.use('google', new GoogleStrategy({
   clientID: config.Google.clientID,
   clientSecret: config.Google.clientSecret,
-  callbackURL: config.Google.callbackURL
+  callbackURL: config.Google.callbackURL,
 },
   (accessToken, refreshToken, profile, done) => getOrCreateOAuthProfile('google', profile, done))
 );
