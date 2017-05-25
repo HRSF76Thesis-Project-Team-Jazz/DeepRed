@@ -66,6 +66,7 @@ passport.use('local-signup', new LocalStrategy({
         done(error, null);
       })
       .catch((err) => {
+        console.warn(err);
         done(null, false, req.flash('signupMessage', 'An account with this email address already exists.'));
       });
   }));
@@ -109,6 +110,7 @@ passport.use('local-login', new LocalStrategy({
         done(err, null);
       })
       .catch((err) => {
+        console.warn(err);
         done(null, null, req.flash('loginMessage', 'Incorrect username or password'));
       });
   }));
