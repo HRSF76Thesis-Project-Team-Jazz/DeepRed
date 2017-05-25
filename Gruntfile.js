@@ -19,13 +19,15 @@ module.exports = (grunt) => {
 
     pgcreatedb: {
       default: {
-        user: config.connection.user,
-        password: config.connection.password,
-        host: config.connection.host,
-        port: config.connection.port,
-        database: config.connection.database,
+        connection: {
+          user: config.connection.user,
+          password: config.connection.password,
+          host: config.connection.host,
+          port: config.connection.port,
+          database: config.connection.database,
+        },
+        name: config.connection.database,
       },
-      name: config.connection.database,
     },
   });
 
@@ -36,3 +38,4 @@ module.exports = (grunt) => {
   grunt.registerTask('default', ['eslint']);
   grunt.registerTask('test', ['mochaTest']);
 };
+
