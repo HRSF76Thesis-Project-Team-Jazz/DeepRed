@@ -11,6 +11,7 @@ const config = {
       password: process.env.DB_PASSWORD || 'postgres',
       host: process.env.DB_HOST || 'localhost',
       port: process.env.DB_PORT || 5432,
+      url: process.env.DB_URL || '',
     },
     pool: {
       min: 1,

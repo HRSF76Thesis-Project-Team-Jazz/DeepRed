@@ -28,6 +28,12 @@ module.exports = (grunt) => {
         },
         name: config.connection.database,
       },
+      staging: {
+        connection: {
+          url: config.connection.url,
+        },
+        name: config.connection.database,
+      },
     },
   });
 
