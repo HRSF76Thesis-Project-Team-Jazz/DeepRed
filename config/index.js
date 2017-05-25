@@ -38,19 +38,19 @@ const config = {
     Google: {
       clientID: process.env.GOOGLE_CLIENT_ID || local.Google.clientID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || local.Google.clientSecret,
-      callbackURL: 'http://hrsf76deepred-staging.herokuapp.com/auth/google/callback',
+      callbackURL: (process.env.NODE_ENV === 'staging') ? 'http://hrsf76deepred-staging.herokuapp.com/auth/google/callback' : 'http://hrsf76deepred.herokuapp.com/auth/google/callback',
     },
 
     Facebook: {
       clientID: process.env.FACEBOOK_CLIENT_ID || local.Facebook.clientID,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET || local.Facebook.clientSecret,
-      callbackURL: 'http://hrsf76deepred-staging.herokuapp.com/auth/facebook/callback',
+      callbackURL: (process.env.NODE_ENV === 'staging') ? 'http://hrsf76deepred-staging.herokuapp.com/auth/facebook/callback' : 'http://hrsf76deepred.herokuapp.com/auth/facebook/callback',
     },
 
     Twitter: {
       consumerKey: process.env.TWITTER_CONSUMER_KEY || local.Twitter.consumerKey,
       consumerSecret: process.env.TWITTER_CONSUMER_SECRET || local.Twitter.consumerSecret,
-      callbackURL: 'http://hrsf76deepred-staging.herokuapp.com/auth/twitter/callback',
+      callbackURL: (process.env.NODE_ENV === 'staging') ? 'http://hrsf76deepred-staging.herokuapp.com/auth/twitter/callback' : 'http://hrsf76deepred.herokuapp.com/auth/twitter/callback',
     },
   },
 };
