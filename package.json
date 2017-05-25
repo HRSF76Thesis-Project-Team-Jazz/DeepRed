@@ -4,7 +4,7 @@
   "scripts": {
     "start": "nodemon server",
     "test": "NODE_ENV=test grunt test",
-    "heroku-postbuild": "webpack -p && knex seed:run",
+    "heroku-postbuild": "webpack -p && grunt pgcreatedb:default && knex migrate:latest && knex seed:run",
     "build": "webpack --watch",
     "db": "pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start && redis-server",
     "db:stop": "pg_ctl -D /usr/local/var/postgres stop -s -m fast",
