@@ -1,6 +1,6 @@
 const env = process.env.NODE_ENV || 'local';
 let local;
-if (env === 'local') local = require('./config.dev.js');
+if (env === 'local' || env === 'test') local = require('./config.dev.js');
 
 const config = {
   knex: {

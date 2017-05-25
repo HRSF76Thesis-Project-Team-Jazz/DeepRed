@@ -14,7 +14,7 @@ module.exports = (grunt) => {
           reporter: 'spec',
         },
         src: ['server/test/**/*.js'],
-      }
+      },
     },
 
     pgcreatedb: {
@@ -22,6 +22,7 @@ module.exports = (grunt) => {
         connection: config.connection,
         ssl: true,
       },
+      name: config.connection.database,
     },
   });
 
