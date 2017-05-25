@@ -40,6 +40,11 @@ passport.use('local-signup', new LocalStrategy({
     })
       .then((profile) => {
         // create a new profile if a profile does not exist
+
+
+        console.log('[passport - local-signup] retrieved profile: ', profile);
+
+
         if (!profile) {
           return models.Profile.forge({ email }).save();
         }
@@ -52,6 +57,11 @@ passport.use('local-signup', new LocalStrategy({
       })
       .tap((profile) => {
         // create a new local auth account with the user's profile id
+
+
+        console.log('[passport - local-signup] create new profile: ', profile);
+
+
         return models.Auth.forge({
           password,
           type: 'local',
@@ -60,12 +70,27 @@ passport.use('local-signup', new LocalStrategy({
       })
       .then((profile) => {
         // serialize profile for session
+
+
+        console.log('[passport - local-signup] serialize profile for session: ', profile);
+
+
         done(null, profile.serialize());
       })
       .error((error) => {
+
+
+        console.log('[passport - local-signup] error: ', error);
+
+
         done(error, null);
       })
       .catch((err) => {
+
+
+        console.log('[passport - local-signup] catch error: ', err);
+
+
         done(null, false, req.flash('signupMessage', 'An account with this email address already exists.'));
       });
   }));
@@ -109,6 +134,11 @@ passport.use('local-login', new LocalStrategy({
         done(err, null);
       })
       .catch((err) => {
+
+
+        console.log('[passport - local-login] error: ', err);
+
+        
         done(null, null, req.flash('loginMessage', 'Incorrect username or password'));
       });
   }));
