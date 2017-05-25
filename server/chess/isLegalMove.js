@@ -13,9 +13,9 @@ const isVertPathClear = (board, origin, dest, limit = 7) => {
     end = origin[0];
   }
   for (let i = start + 1; i < end; i += 1) {
-    count += 1;
     console.log('Path: ', [i, origin[1]], board[i][origin[1]], count);
-    if (board[i][origin[1]] || count >= limit) {
+    count += 1;
+    if (board[i][origin[1]] || count === limit) {
       return false;
     }
   }
@@ -88,11 +88,33 @@ const isDiagPathClear = (board, origin, dest) => {
 };
 
 const isLegalMovePawn = (board, origin, dest) => {
-  const pieceColor = board[origin[0]][origin[1]][0];
-  if (origin[1] === dest[1]) {
-    if ((pieceColor === 'B' && origin[0] < dest[0]) ||
-    (pieceColor === 'W' && origin[0] > dest[0])) {
-      return isVertPathClear(board, origin, dest, 2);
+  const xDist = Math.abs(origin[0] - dest[0]);
+  const yDist = Math.abs(origin[1] - dest[1]);
+  const originPieceColor = board[origin[0]][origin[1]][0];
+
+  if (origin[1] === dest[1]) { // vertical movement
+    if (board[dest[0]][dest[1]]) {
+      return false;
+    }
+    if (originPieceColor === 'B' && origin[0] < dest[0]) {
+      if (origin[0] === 1) {
+        return isVertPathClear(board, origin, dest, 2);
+      }
+      return isVertPathClear(board, origin, dest, 1);
+    } else if (originPieceColor === 'W' && origin[0] > dest[0]) {
+      if (origin[0] === 6) {
+        return isVertPathClear(board, origin, dest, 2);
+      }
+      return isVertPathClear(board, origin, dest, 1);
+    }
+  } else if (xDist === 1 && yDist === 1) {
+    if (board[dest[0]][dest[1]]) {
+      const destPieceColor = board[dest[0]][dest[1]][0];
+      if (originPieceColor === 'B' && destPieceColor === 'W' && origin[0] < dest[0]) {
+        return true;
+      } else if (originPieceColor === 'W' && destPieceColor === 'B' && origin[0] > dest[0]) {
+        return true;
+      }
     }
   }
   return false;
@@ -177,5 +199,4 @@ const isLegalMove = (board, origin, dest) => {
   return false;
 };
 
-
-exports.module = isLegalMove;
+module.exports = isLegalMove;
