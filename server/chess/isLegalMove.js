@@ -135,7 +135,7 @@ const isLegalMoveKnight = (board, origin, dest) => {
 };
 
 const isLegalMoveBishop = (board, origin, dest) => {
-  const slope = Math.abs((dest[1] - origin[1]) / (dest[0] - origin[1]));
+  const slope = Math.abs((dest[1] - origin[1]) / (dest[0] - origin[0]));
   if (slope === 1) {
     return isDiagPathClear(board, origin, dest);
   }
@@ -143,7 +143,7 @@ const isLegalMoveBishop = (board, origin, dest) => {
 };
 
 const isLegalMoveQueen = (board, origin, dest) => {
-  const slope = Math.abs((dest[1] - origin[1]) / (dest[0] - origin[1]));
+  const slope = Math.abs((dest[1] - origin[1]) / (dest[0] - origin[0]));
   if (origin[1] === dest[1]) {
     return isVertPathClear(board, origin, dest);
   } else if (origin[0] === dest[0]) {
