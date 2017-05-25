@@ -29,6 +29,8 @@ class ChessGame {
   movePiece(origin, dest) {
     if (dest === undefined) {
       throw new Error('Attempted destination is invalid');
+    } else if (origin[0] === dest[0] && origin[1] === dest[1]) {
+      throw new Error('Origin and destination cannot be the same');
     }
     let originPiece = this.board[dest[0]][dest[1]];
     let destPiece = this.board[dest[0]][dest[1]];
