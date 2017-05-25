@@ -1,6 +1,6 @@
 const isVertPathClear = (board, origin, dest, limit = 7) => {
   console.log('Orig: ', origin, board[origin[0]][origin[1]]);
-  console.log('Dest: ', dest, board[dest[0]][dest[1]])
+  console.log('Dest: ', dest, board[dest[0]][dest[1]]);
   let start = '';
   let end = '';
   let count = 0;
@@ -24,7 +24,7 @@ const isVertPathClear = (board, origin, dest, limit = 7) => {
 
 const isHorizPathClear = (board, origin, dest, limit = 7) => {
   console.log('Orig: ', origin, board[origin[0]][origin[1]]);
-  console.log('Dest: ', dest, board[dest[0]][dest[1]])
+  console.log('Dest: ', dest, board[dest[0]][dest[1]]);
   let start = '';
   let end = '';
   let count = 0;
@@ -104,7 +104,7 @@ const isLegalMoveRook = (board, origin, dest) => {
 };
 
 const isLegalMoveKnight = (board, origin, dest) => {
-  var result = [Math.abs(origin[0] - dest[0]), Math.abs(origin[1] - dest[1])];
+  const result = [Math.abs(origin[0] - dest[0]), Math.abs(origin[1] - dest[1])];
   return (result.includes(1) && result.includes(2));
 };
 
@@ -129,7 +129,14 @@ const isLegalMoveQueen = (board, origin, dest) => {
 };
 
 const isLegalMoveKing = (board, origin, dest) => {
-  return true;
+  const xDist = Math.abs(origin[0] - dest[0]);
+  const yDist = Math.abs(origin[1] - dest[1]);
+  if (xDist + yDist === 1) {
+    return true;
+  } else if (xDist + yDist === 2) {
+    return (xDist && yDist);
+  }
+  return false;
 };
 
 // const isKingInCheck = (board) => {

@@ -31,11 +31,10 @@ class ChessGame {
       throw new Error('Attempted destination is invalid');
     }
     let originPiece = this.board[dest[0]][dest[1]];
-    const originPieceColor = originPiece[0];
     let destPiece = this.board[dest[0]][dest[1]];
     if (isLegalMove(this.board, origin, dest)) {
       if (destPiece) {
-        if (originPieceColor === destPiece[0]) {
+        if (originPiece[0] === destPiece[0]) {
           throw new Error('Attempted to capture own piece');
         } else {
           this.capturePiece(destPiece);
