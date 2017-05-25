@@ -5,12 +5,12 @@ if (env === 'local' || env === 'test') local = require('./config.dev.js');
 const config = {
   knex: {
     client: 'postgresql',
-    connection: process.env.DATABASE_URL || {
-      database: 'deepred',
-      user: 'postgres',
-      password: 'postgres',
-      host: 'localhost',
-      port: 5432,
+    connection: {
+      database: process.env.DB || 'deepred',
+      user: process.env.DB_USER || 'postgres',
+      password: process.env.DB_PASSWORD || 'postgres',
+      host: process.env.DB_HOST || 'localhost',
+      port: process.env.DB_PORT || 5432,
     },
     pool: {
       min: 1,

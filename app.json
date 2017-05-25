@@ -12,6 +12,21 @@
     "DATABASE_URL": {
       "required": true
     },
+    "DB": {
+      "required": true
+    },
+    "DB_USER": {
+      "required": true
+    },
+    "DB_PASSWORD": {
+      "required": true
+    },
+    "DB_HOST": {
+      "required": true
+    },
+    "DB_PORT": {
+      "required": true
+    },
     "REDIS_URL": {
       "required": true
     },

@@ -19,8 +19,11 @@ module.exports = (grunt) => {
 
     pgcreatedb: {
       default: {
-        connection: config.connection,
-        ssl: true,
+        user: config.connection.user,
+        password: config.connection.password,
+        host: config.connection.host,
+        port: config.connection.port,
+        database: config.connection.database,
       },
       name: config.connection.database,
     },
