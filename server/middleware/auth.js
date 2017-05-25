@@ -1,6 +1,12 @@
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
-const redisClient = require('redis').createClient();
+const config = require('../../config').redis;
+
+const redisConfig = (config.url) ? { url: config.url } : {
+  client: require('redis').createClient(),
+  host: config.local.host,
+  port: config.local.port,
+};
 
 module.exports.verify = (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -10,12 +16,8 @@ module.exports.verify = (req, res, next) => {
 };
 
 module.exports.session = session({
-  store: new RedisStore({
-    client: redisClient,
-    host: 'localhost',
-    port: 6379,
-  }),
+  store: new RedisStore(redisConfig),
   secret: 'more laughter, more love, more life',
-  resave: false,
-  saveUninitialized: false,
+  resave: config.url === undefined,
+  saveUninitialized: config.url === undefined,
 });

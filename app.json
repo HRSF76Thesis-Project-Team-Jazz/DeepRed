@@ -12,6 +12,9 @@
     "DATABASE_URL": {
       "required": true
     },
+    "REDIS_URL": {
+      "required": true
+    },
     "FACEBOOK_CLIENT_ID": {
       "required": true
     },

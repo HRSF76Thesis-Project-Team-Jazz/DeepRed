@@ -25,6 +25,14 @@ const config = {
     },
   },
 
+  redis: {
+    url: process.env.REDIS_URL,
+    local: {
+      host: 'localhost',
+      port: 6379,
+    },
+  },
+
   passport: {
     Google: {
       clientID: process.env.GOOGLE_CLIENT_ID || local.Google.clientID,
