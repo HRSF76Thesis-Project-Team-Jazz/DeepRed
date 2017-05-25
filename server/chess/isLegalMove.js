@@ -160,26 +160,10 @@ const isLegalMoveKing = (board, origin, dest) => {
   if (xDist + yDist === 1) {
     return true;
   } else if (xDist + yDist === 2) {
-    return (xDist && yDist);
+    return Boolean(xDist && yDist);
   }
   return false;
 };
-
-// const isKingInCheck = (board) => {
-//   // TODO
-//   return true;
-//
-// };
-//
-// const isCheckMate = (board) => {
-//
-// };
-//
-// const isStalemate = (board) => {
-//   // TODO
-//   return true;
-//
-// };
 
 const isLegalMove = (board, origin, dest) => {
   const pieceType = board[origin[0]][origin[1]][1];
