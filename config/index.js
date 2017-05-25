@@ -9,6 +9,7 @@ const callbackURL = (name) => {
 };
 
 // NODE_ENV=test
+
 const config = {
   knex: {
     client: 'postgresql',
