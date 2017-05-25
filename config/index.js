@@ -2,7 +2,11 @@ const env = process.env.NODE_ENV || 'local';
 let local;
 if (env === 'local' || env === 'test') local = require('./config.dev.js');
 
-const callbackURL = (process.env.NODE_ENV === 'staging') ? 'http://hrsf76deepred-staging.herokuapp.com/auth/google/callback' : 'http://hrsf76deepred.herokuapp.com/auth/google/callback';
+const callbackURL = (name) => {
+  if (env === 'local') return `http://localhost:3000/auth/${name}/callback`;
+  const suffix = (process.env.NODE_ENV === 'staging') ? '-staging' : '';
+  return `http://hrsf76deepred${suffix}.herokuapp.com/auth/${name}/callback`;
+};
 
 const config = {
   knex: {
@@ -40,19 +44,19 @@ const config = {
     Google: {
       clientID: process.env.GOOGLE_CLIENT_ID || local.Google.clientID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || local.Google.clientSecret,
-      callbackURL,
+      callbackURL: callbackURL('google'),
     },
 
     Facebook: {
       clientID: process.env.FACEBOOK_CLIENT_ID || local.Facebook.clientID,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET || local.Facebook.clientSecret,
-      callbackURL,
+      callbackURL: callbackURL('facebook'),
     },
 
     Twitter: {
       consumerKey: process.env.TWITTER_CONSUMER_KEY || local.Twitter.consumerKey,
       consumerSecret: process.env.TWITTER_CONSUMER_SECRET || local.Twitter.consumerSecret,
-      callbackURL,
+      callbackURL: callbackURL('twitter'),
     },
   },
 };
