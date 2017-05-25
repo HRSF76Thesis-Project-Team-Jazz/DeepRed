@@ -5,7 +5,7 @@ node_js:
 
 addons:
   code_climate:
-    repo_token: <f2c69c560d0e21eced6d7bda6f5d07e5dd587eb35595de294b72987d093aaaef>
+    repo_token: 7de5be8599da4473edc5d91b8c6ab7548125a84b30f95dd61eb478098d179b49
 
 before_script:
   - npm install -g grunt-cli
