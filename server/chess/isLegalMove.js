@@ -88,8 +88,12 @@ const isDiagPathClear = (board, origin, dest) => {
 };
 
 const isLegalMovePawn = (board, origin, dest) => {
+  const pieceColor = board[origin[0]][origin[1]][0];
   if (origin[1] === dest[1]) {
-    return isVertPathClear(board, origin, dest, 2);
+    if ((pieceColor === 'B' && origin[0] < dest[0]) ||
+    (pieceColor === 'W' && origin[0] > dest[0])) {
+      return isVertPathClear(board, origin, dest, 2);
+    }
   }
   return false;
 };
