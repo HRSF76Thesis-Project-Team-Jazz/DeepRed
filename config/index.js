@@ -1,8 +1,6 @@
 const env = process.env.NODE_ENV || 'local';
 const local = require('./config.dev.js');
 
-console.log(' ENVIRONMENT: ', env);
-
 const config = {
   knex: {
     client: 'postgresql',
