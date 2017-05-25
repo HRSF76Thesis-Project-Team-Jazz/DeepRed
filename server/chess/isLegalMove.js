@@ -49,8 +49,8 @@ const isHorizPathClear = (board, origin, dest, limit = 7) => {
 const isDiagPathClear = (board, origin, dest) => {
   console.log('Origin: ', origin, board[origin[0]][origin[1]]);
   console.log('Dest: ', dest, board[dest[0]][dest[1]]);
-  // if destination coordinate is located below the original piece
-  if (origin[0] < dest[0]) {
+  // if destination coordinate is located to the left and below the original piece
+  if (dest[0] > origin[0] && dest[1] < origin[1]) {
     let y = origin[1] - 1;
     for (let i = origin[0] + 1; i < dest[0]; i += 1) {
       console.log('Path: ', [i, y], board[i][y]);
@@ -59,10 +59,30 @@ const isDiagPathClear = (board, origin, dest) => {
       }
       y -= 1;
     }
-  } else {
-    // if destination coordinate is located above the original piece
+  } else if (dest[0] > origin[0] && dest[1] > origin[1]) {
+    // if destination is located to the right and below the original piece
     let y = origin[1] + 1;
-    for (let i = origin[0]; i > dest[0]; i -= 1) {
+    for (let i = origin[0] + 1; i < dest[0]; i += 1) {
+      console.log('Path: ', [i, y], board[i][y]);
+      if (board[i][y]) {
+        return false;
+      }
+      y += 1;
+    }
+  } else if (dest[0] < origin[0] && dest[1] < origin[1]) {
+    // if destination is located to the left and above the original piece
+    let y = origin[1] - 1;
+    for (let i = origin[0] - 1; i > dest[0]; i -= 1) {
+      console.log('Path: ', [i, y], board[i][y]);
+      if (board[i][y]) {
+        return false;
+      }
+      y -= 1;
+    }
+  } else if (dest[0] < origin[0] && dest[1] > origin[1]) {
+    // if destination is located to the right and above the original piece
+    let y = origin[1] + 1;
+    for (let i = origin[0] - 1; i > dest[0]; i -= 1) {
       console.log('Path: ', [i, y], board[i][y]);
       if (board[i][y]) {
         return false;
