@@ -47,13 +47,10 @@ const isHorizPathClear = (board, origin, dest, limit = 7) => {
 };
 
 const isDiagPathClear = (board, origin, dest) => {
-  console.log('Origin: ', origin, board[origin[0]][origin[1]]);
-  console.log('Dest: ', dest, board[dest[0]][dest[1]]);
   // if destination coordinate is located to the left and below the original piece
   if (dest[0] > origin[0] && dest[1] < origin[1]) {
     let y = origin[1] - 1;
     for (let i = origin[0] + 1; i < dest[0]; i += 1) {
-      console.log('Path: ', [i, y], board[i][y]);
       if (board[i][y]) {
         return false;
       }
@@ -63,7 +60,6 @@ const isDiagPathClear = (board, origin, dest) => {
     // if destination is located to the right and below the original piece
     let y = origin[1] + 1;
     for (let i = origin[0] + 1; i < dest[0]; i += 1) {
-      console.log('Path: ', [i, y], board[i][y]);
       if (board[i][y]) {
         return false;
       }
@@ -73,7 +69,6 @@ const isDiagPathClear = (board, origin, dest) => {
     // if destination is located to the left and above the original piece
     let y = origin[1] - 1;
     for (let i = origin[0] - 1; i > dest[0]; i -= 1) {
-      console.log('Path: ', [i, y], board[i][y]);
       if (board[i][y]) {
         return false;
       }
@@ -83,7 +78,6 @@ const isDiagPathClear = (board, origin, dest) => {
     // if destination is located to the right and above the original piece
     let y = origin[1] + 1;
     for (let i = origin[0] - 1; i > dest[0]; i -= 1) {
-      console.log('Path: ', [i, y], board[i][y]);
       if (board[i][y]) {
         return false;
       }
@@ -115,15 +109,21 @@ const isLegalMoveKnight = (board, origin, dest) => {
 };
 
 const isLegalMoveBishop = (board, origin, dest) => {
-  // TODO
-  return true;
+  const slope = Math.abs((dest[1] - origin[1]) / (dest[0] - origin[1]));
+  if (slope === 1) {
+    return isDiagPathClear(board, origin, dest);
+  }
+  return false;
 };
 
 const isLegalMoveQueen = (board, origin, dest) => {
+  const slope = Math.abs((dest[1] - origin[1]) / (dest[0] - origin[1]));
   if (origin[1] === dest[1]) {
     return isVertPathClear(board, origin, dest);
   } else if (origin[0] === dest[0]) {
     return isHorizPathClear(board, origin, dest);
+  } else if (slope === 1) {
+    return isDiagPathClear(board, origin, dest);
   }
   return false;
 };
