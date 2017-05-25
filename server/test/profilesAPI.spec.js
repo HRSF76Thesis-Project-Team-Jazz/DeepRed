@@ -20,11 +20,11 @@ describe('Profiles API', function () {
       .get('/api/profiles')
       .expect(res => {
         res.body = {
-          length: res.body.length
+          length: res.body.length,
         };
       })
       .expect(200, {
-        length: 1
+        length: 1,
       })
       .end(done);
   });
