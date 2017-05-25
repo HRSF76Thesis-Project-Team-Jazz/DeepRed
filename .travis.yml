@@ -3,5 +3,13 @@ language: node_js
 node_js:
   - "6"
 
+addons:
+  code_climate:
+    repo_token: <f2c69c560d0e21eced6d7bda6f5d07e5dd587eb35595de294b72987d093aaaef>
+
 before_script:
   - npm install -g grunt-cli
+
+after_success:
+  - npm install -g codeclimate-test-reporter
+  - codeclimate-test-reporter < lcov.info
