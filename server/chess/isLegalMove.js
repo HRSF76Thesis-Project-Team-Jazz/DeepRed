@@ -199,4 +199,7 @@ const isLegalMove = (board, origin, dest) => {
   return false;
 };
 
+
 module.exports = isLegalMove;
+module.exports = isDiagPathClear;
+
