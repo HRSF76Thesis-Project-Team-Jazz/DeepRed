@@ -1,4 +1,4 @@
-const config = require('config').knex;
+const config = require('./config').knex;
 
 module.exports = (grunt) => {
   grunt.initConfig({
@@ -19,17 +19,10 @@ module.exports = (grunt) => {
 
     pgcreatedb: {
       default: {
-        connection: {
-          user: config.connection.user,
-          password: config.connection.password,
-          host: config.connection.host,
-          port: config.connection.port,
-          database: 'template1',
-        },
-        name: config.connection.database,
+        connection: config.connection,
+        ssl: true,
       },
     },
-
   });
 
   grunt.loadNpmTasks('grunt-mocha-test');

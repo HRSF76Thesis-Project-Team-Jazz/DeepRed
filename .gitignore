@@ -3,6 +3,7 @@ config/development.json
 config/production.json
 config/staging.json
 config/test.json
+config/config.dev.js
 
 # OS X
 .DS_Store
