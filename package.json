@@ -4,7 +4,7 @@
   "scripts": {
     "start": "nodemon server",
     "heroku-postbuild": "webpack -p && knex migrate:latest",
-    "test": "grunt test",
+    "test": "NODE_ENV=test grunt test",
     "build": "webpack --watch",
     "db:local-start": "pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start && redis-server",
     "db:stop": "pg_ctl -D /usr/local/var/postgres stop -s -m fast",
@@ -12,8 +12,7 @@
     "db:init-heroku": "knex migrate:latest",
     "db:init-test": "NODE_ENV=test grunt pgcreatedb:default && knex migrate:latest --env NODE_ENV",
     "chesstest": "node ./node_modules/mocha/bin/mocha",
-    "localtest": "grunt test",
-    "test-local": "NODE_ENV=test grunt test"
+    "localtest": "NODE_ENV=localtest grunt test"
   },
   "author": "Hack Reactor",
   "license": "MIT",
