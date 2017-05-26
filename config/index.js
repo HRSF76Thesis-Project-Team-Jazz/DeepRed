@@ -69,3 +69,4 @@ if (env === 'travis_ci') {
 }
 
 module.exports = config;
+// -U postgres

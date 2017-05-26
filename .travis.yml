@@ -15,7 +15,7 @@ addons:
 
 before_script:
   - npm install -g grunt-cli
-  - psql -c 'create database travis_ci_test;' -U postgres
+  - psql -c 'create database travis_ci_test;'
 
 after_success:
   - npm install -g codeclimate-test-reporter
