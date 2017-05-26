@@ -13,6 +13,10 @@ engines:
   eslint:
     enabled: true
 ratings:
-
+path:
+  - client/**
+  - db/**
+  - server/**
+  - "**.js"
 exclude_paths:
 - server/test/**.js
