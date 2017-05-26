@@ -12,8 +12,8 @@ engines:
     enabled: true
   fixme:
     enabled: true
-# ratings:
+ratings:
 #   paths:
 #   - "**.js"
-# exclude_paths:
-# - dist/**/*
+exclude_paths:
+- server/test/**.js
