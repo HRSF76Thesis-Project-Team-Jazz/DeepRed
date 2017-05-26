@@ -3,12 +3,16 @@ engines:
     enabled: true
     checks:
       Similar code:
-        enabled: false
+        enabled: true
     config:
       languages:
       - javascript
   eslint:
     enabled: true
+  fixme:
+    enabled: true
 ratings:
-exclude_paths:
-- server/test/**.js
+  paths:
+  - "**.js"
+# exclude_paths:
+# - dist/**/*
