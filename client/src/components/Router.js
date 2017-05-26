@@ -1,7 +1,8 @@
 import React from 'react';
+import { Switch, Route } from 'react-router-dom';
+
 import Settings from './Settings';
 import App from './App';
-import { Switch, Route, Link } from 'react-router-dom';
 
 class Router extends React.Component {
   constructor(props) {
