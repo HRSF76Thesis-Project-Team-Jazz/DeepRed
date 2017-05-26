@@ -13,7 +13,8 @@ engines:
   fixme:
     enabled: true
 ratings:
-#   paths:
-#   - "**.js"
+  paths:
+  - /client/**.js
+  -/db/**.js
 exclude_paths:
 - server/test/**.js
