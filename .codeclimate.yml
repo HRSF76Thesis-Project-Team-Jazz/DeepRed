@@ -3,6 +3,8 @@ engines:
     enabled: true
   duplication:
     enabled: true
+    languages:
+    - javascript
 ratings:
   paths:
   - client/**
