@@ -1,7 +1,4 @@
 JavaScript: true
-Ruby: true
-Python: false
-PHP: false
 
 exclude_paths:
 - server/test/**
