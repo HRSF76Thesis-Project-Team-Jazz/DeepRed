@@ -4,7 +4,7 @@ node_js:
   - '7'
 
 env:
-- NODE_ENV=test
+  - NODE_ENV=test
 
 services:
   - postgresql
@@ -14,7 +14,7 @@ addons:
     repo_token: 7de5be8599da4473edc5d91b8c6ab7548125a84b30f95dd61eb478098d179b49
 
 script:
-- npm test
+  - npm test
 
 before_script:
   - npm install -g grunt-cli
