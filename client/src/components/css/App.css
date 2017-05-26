@@ -1,6 +1,6 @@
-* {
+.* {
   font-family: 'Helvetica Neue';
-  /*border: 0.5px gray dashed;*/
+  border: 0.5px gray dashed;
 }
 
 body {
@@ -25,7 +25,21 @@ body {
 
 .header h1 {
   font-size: 1.1rem;
-  padding: 10px 70px;
+  padding-left: 15px;
+}
+
+.header table {
+  width: 100%;
+}
+
+.header .button-cell {
+  padding-top: 15px;
+  float: right;
+}
+
+.header .button {
+  margin: 5px;
+  padding: 5px;
 }
 
 .content {

@@ -3,16 +3,17 @@
     <div class="page-header text-center">
         <div class="logo"><img src="/assets/deepRed_100.png" /></div>
 
-        <h1><span class="fa fa-anchor"></span> Profile Page</h1>
-        <a href="/" class="btn btn-default btn-sm">Home page</a>
+        <h1><span class="fa fa-anchor"></span> Home Page</h1>
+        <a href="/" class="btn btn-default btn-sm">Start game</a>
         <a href="/logout" class="btn btn-default btn-sm">Logout</a>
     </div>
 
     <div class="row">
 
         <!-- LOCAL INFORMATION -->
-        <div class="col-sm-6 profile-info">
-            <div class="well">
+        <div class="col-sm-12 profile-info">
+          
+            <div class="well col-sm-5 well-container">
                 <h3><span class="fa fa-user"></span> Local</h3>
 
                 <% if (user.email) { %>
@@ -27,6 +28,11 @@
                 <a href="/connect/local" class="btn btn-default">Connect Local</a>
                 <% } %>
 
+            </div>
+            <div class="well col-sm-5 well-container">
+              <a href="/" class="btn btn-primary btn-sm btn-block">Start game</a></br>
+              <a href="/#" class="btn btn-default btn-sm btn-block" disabled>1 vs 1</a></br>
+              <a href="/#" class="btn btn-default btn-sm btn-block" disabled>1 vs Computer</a>
             </div>
         </div>
 
