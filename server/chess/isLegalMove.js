@@ -1,6 +1,6 @@
 const isVertPathClear = (board, origin, dest, limit = 7) => {
-  console.log('Orig: ', origin, board[origin[0]][origin[1]]);
-  console.log('Dest: ', dest, board[dest[0]][dest[1]]);
+  // console.log('Orig: ', origin, board[origin[0]][origin[1]]);
+  // console.log('Dest: ', dest, board[dest[0]][dest[1]]);
   let start = '';
   let end = '';
   let count = 0;
@@ -13,7 +13,7 @@ const isVertPathClear = (board, origin, dest, limit = 7) => {
     end = origin[0];
   }
   for (let i = start + 1; i < end; i += 1) {
-    console.log('Path: ', [i, origin[1]], board[i][origin[1]], count);
+    // console.log('Path: ', [i, origin[1]], board[i][origin[1]], count);
     count += 1;
     if (board[i][origin[1]] || count === limit) {
       return false;
@@ -23,8 +23,8 @@ const isVertPathClear = (board, origin, dest, limit = 7) => {
 };
 
 const isHorizPathClear = (board, origin, dest, limit = 7) => {
-  console.log('Orig: ', origin, board[origin[0]][origin[1]]);
-  console.log('Dest: ', dest, board[dest[0]][dest[1]]);
+  // console.log('Orig: ', origin, board[origin[0]][origin[1]]);
+  // console.log('Dest: ', dest, board[dest[0]][dest[1]]);
   let start = '';
   let end = '';
   let count = 0;
@@ -37,7 +37,7 @@ const isHorizPathClear = (board, origin, dest, limit = 7) => {
     end = origin[1];
   }
   for (let i = start + 1; i < end; i += 1) {
-    console.log('Path: ', [origin[0], i], board[origin[0]][i]);
+    // console.log('Path: ', [origin[0], i], board[origin[0]][i]);
     count += 1;
     if (board[origin[0]][i] || count === limit) {
       return false;
@@ -135,7 +135,7 @@ const isLegalMoveKnight = (board, origin, dest) => {
 };
 
 const isLegalMoveBishop = (board, origin, dest) => {
-  const slope = Math.abs((dest[1] - origin[1]) / (dest[0] - origin[0]));
+  const slope = Math.abs((dest[1] - origin[1]) / (dest[0] - origin[1]));
   if (slope === 1) {
     return isDiagPathClear(board, origin, dest);
   }
@@ -143,7 +143,7 @@ const isLegalMoveBishop = (board, origin, dest) => {
 };
 
 const isLegalMoveQueen = (board, origin, dest) => {
-  const slope = Math.abs((dest[1] - origin[1]) / (dest[0] - origin[0]));
+  const slope = Math.abs((dest[1] - origin[1]) / (dest[0] - origin[1]));
   if (origin[1] === dest[1]) {
     return isVertPathClear(board, origin, dest);
   } else if (origin[0] === dest[0]) {
@@ -183,8 +183,4 @@ const isLegalMove = (board, origin, dest) => {
   return false;
 };
 
-
 module.exports = isLegalMove;
-module.exports = isDiagPathClear;
-module.exports = isLegalMoveBishop;
-
