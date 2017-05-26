@@ -4,7 +4,7 @@ engines:
     enabled: true
     checks:
       Similar code:
-        enabled: true
+        enabled: false
     config:
       languages:
       - javascript
@@ -12,8 +12,8 @@ engines:
     enabled: true
   fixme:
     enabled: true
-ratings:
-  paths:
-  - "**.js"
+# ratings:
+#   paths:
+#   - "**.js"
 # exclude_paths:
 # - dist/**/*
