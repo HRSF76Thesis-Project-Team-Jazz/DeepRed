@@ -7,3 +7,15 @@ ratings:
   - "**.js"
 exclude_paths:
   -server/test/**.js
+
+
+
+
+
+
+
+
+
+
+
+
