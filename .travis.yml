@@ -20,8 +20,7 @@ postgres:
 
 before_script:
   - npm install -g grunt-cli
-  - "psql -c 'create database deepred_ci;' -U postgres"
-  - "knex migrate:latest"
+  - psql -c 'create database deepred_ci;' -U postgres
 
 after_success:
   - npm install -g codeclimate-test-reporter
