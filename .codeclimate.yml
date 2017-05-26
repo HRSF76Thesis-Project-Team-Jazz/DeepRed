@@ -2,10 +2,7 @@ engines:
   eslint:
     enabled: true
   duplication:
-        enabled: true
-    config:
-        languages:
-      - javascript
+    enabled: true
 ratings:
   paths:
   - client/**
