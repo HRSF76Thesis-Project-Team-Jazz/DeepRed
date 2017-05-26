@@ -25,8 +25,18 @@ class App extends Component {
     return (
       <div className="site-wrap">
         <div className="header">
-          <h1>Deep Red</h1>
-          <Link to="/settings">Settings</Link>
+          <table>
+            <tbody>
+              <tr>
+                <td><h1>Deep Red</h1></td>
+                <td className="button-cell">
+                  <Link to="/settings">Settings</Link>
+                  <a href="/profile" className="button">Home</a>
+                  <a href="/logout" className="button">Logout</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div className="content">
           <div className="flex-row">
