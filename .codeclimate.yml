@@ -1,7 +1,5 @@
 ---
 engines:
-  env:
-  - NODE_ENV=travis
   duplication:
     enabled: true
     checks:
@@ -13,10 +11,9 @@ engines:
   eslint:
     enabled: true
 ratings:
-path:
+  path:
   - client/**
   - db/**
   - server/**
-  - "**.js"
 exclude_paths:
-- server/test/**.js
+- server/test/
