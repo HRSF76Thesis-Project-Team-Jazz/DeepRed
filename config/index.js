@@ -8,8 +8,6 @@ const callbackURL = (name) => {
   return `http://hrsf76deepred${suffix}.herokuapp.com/auth/${name}/callback`;
 };
 
-// NODE_ENV=test
-
 const config = {
   knex: {
     client: 'postgresql',
