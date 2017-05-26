@@ -1,0 +1,7 @@
+.captured-pieces {
+  min-height: 8vh;
+  background-color: #e6e6e6;
+  border-radius: 2px;
+  margin: 5px;
+  padding: 5px;
+}
