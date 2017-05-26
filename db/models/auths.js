@@ -13,7 +13,7 @@ const Auth = db.Model.extend({
       if (user.get('type') === 'local') {
         return this.generatePassword(user.get('password'))
           .then(hash => this.set('password', hash))
-          .error(err => console.log(err));
+          .error(err => console.log('[db/models/auth.js] err: ', err));
       }
     });
   },

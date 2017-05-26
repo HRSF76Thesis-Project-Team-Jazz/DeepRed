@@ -1,0 +1,45 @@
+* {
+  font-family: 'Helvetica Neue';
+  /*border: 0.5px gray dashed;*/
+}
+
+body {
+  background-color: rgb(90,90,90);
+}
+
+.site-wrap {
+  background-color: rgb(200,200,200);
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  max-width: 960px;
+}
+
+.header {
+  background-color: #121212;
+  color: white;
+  display: flex;
+  width: 100%
+}
+
+.header h1 {
+  font-size: 1.1rem;
+  padding: 10px 70px;
+}
+
+.content {
+  display: flex;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  padding: 5px;
+}
