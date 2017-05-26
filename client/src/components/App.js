@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 // Components
 import Board from './Board';
@@ -25,6 +26,7 @@ class App extends Component {
       <div className="site-wrap">
         <div className="header">
           <h1>Deep Red</h1>
+          <Link to="/settings">Settings</Link>
         </div>
         <div className="content">
           <div className="flex-row">
