@@ -5,7 +5,6 @@
     "start": "nodemon server",
     "heroku-postbuild": "webpack -p && knex migrate:latest",
     "test": "grunt test",
-    "test-local": "NODE_ENV=test grunt test",
     "build": "webpack --watch",
     "db:local-start": "pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start && redis-server",
     "db:stop": "pg_ctl -D /usr/local/var/postgres stop -s -m fast",
