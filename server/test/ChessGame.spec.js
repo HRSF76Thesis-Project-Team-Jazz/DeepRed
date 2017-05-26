@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 
-const ChessGame = require('../server/chess/ChessGame');
-const isLegalMove = require('../server/chess/isLegalMove');
+const ChessGame = require('../chess/ChessGame');
+const isLegalMove = require('../chess/isLegalMove');
 
 const testChessGame = new ChessGame();
 
@@ -115,7 +115,7 @@ describe('ChessGame.capturePiece', () => {
   });
   const expectedKnightCapBoard1 = [
     ['BR', 'BN', 'BB', 'BK', null, 'BB', 'BN', 'BR'],
-    ['BP', 'BP', 'BP', null, 'BQ', 'WN', 'BP', 'BP'],
+    ['BP', 'BP', 'BP', null, 'BQ', 'BP', 'BP', 'WN'],
     [null, null, null, null, 'BP', null, null, null],
     [null, null, null, null, null, null, null, null],
     ['WP', null, null, null, 'WP', null, null, 'WP'],
@@ -124,14 +124,14 @@ describe('ChessGame.capturePiece', () => {
     ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
   ];
   it('should allow WK to capture BP', () => {
-    expect(captChessGame.movePiece([3, 6], [1, 5])).to.eql(expectedKnightCapBoard1);
+    expect(captChessGame.movePiece([3, 6], [1, 7])).to.eql(expectedKnightCapBoard1);
   });
   it('should add WP to whiteCapPieces array', () => {
     expect(captChessGame.whiteCapPieces).to.eql(['BP', 'BP']);
   });
   const expectedQueenCapBoard1 = [
     ['BR', 'BN', 'BB', 'BK', null, 'BB', 'BN', 'BR'],
-    ['BP', 'BP', 'BP', null, null, 'BQ', 'BP', 'BP'],
+    ['BP', 'BP', 'BP', null, 'BQ', 'BP', 'BP', 'WN'],
     [null, null, null, null, 'BP', null, null, null],
     [null, null, null, null, null, null, null, null],
     ['WP', null, null, null, 'WP', null, null, 'WP'],
@@ -139,14 +139,29 @@ describe('ChessGame.capturePiece', () => {
     [null, 'WP', 'WP', 'WP', null, null, 'WP', null],
     ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
   ];
-  it('should allow BQ to capture WN', () => {
-    expect(captChessGame.movePiece([1, 4], [1, 5])).to.eql(expectedQueenCapBoard1);
+  it('should allow BQ to capture WP', () => {
+    expect(captChessGame.movePiece([1, 4], [4, 7])).to.eql(expectedQueenCapBoard1);
   });
   it('should add WP to whiteCapPieces array', () => {
-    expect(captChessGame.blackCapPieces).to.eql(['WP', 'WN']);
+    expect(captChessGame.blackCapPieces).to.eql(['WP', 'WP']);
+  });
+  const expectedRookCapBoard1 = [
+    ['BR', 'BN', 'BB', 'BK', null, 'BB', 'BN', null],
+    ['BP', 'BP', 'BP', null, null, 'BP', 'BP', 'BR'],
+    [null, null, null, null, 'BP', null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', null, null, null, 'WP', null, null, 'BQ'],
+    [null, null, null, null, null, null, null, null],
+    [null, 'WP', 'WP', 'WP', null, null, 'WP', null],
+    ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
+  ];
+  it('should allow BR to capture WN', () => {
+    expect(captChessGame.movePiece([0, 7], [1, 7])).to.eql(expectedRookCapBoard1);
+  });
+  it('should add WP to whiteCapPieces array', () => {
+    expect(captChessGame.blackCapPieces).to.eql(['WP', 'WP', 'WN']);
   });
 });
-
 
 describe('isLegalMovePawn', () => {
   it('function should exist', () => {
