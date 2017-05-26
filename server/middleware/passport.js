@@ -158,12 +158,23 @@ const getOrCreateOAuthProfile = (type, oauthProfile, done) => {
       return models.Profile.where({ email: oauthProfile.emails[0].value }).fetch();
     })
     .then((profile) => {
-      const profileInfo = {
-        first: oauthProfile.name.givenName,
-        last: oauthProfile.name.familyName,
-        display: oauthProfile.displayName || `${oauthProfile.name.givenName} ${oauthProfile.name.familyName}`,
-        email: oauthProfile.emails[0].value,
-      };
+      let profileInfo;
+
+      if (type !== 'twitter') {
+        profileInfo = {
+          first: oauthProfile.name.givenName || '',
+          last: oauthProfile.name.familyName || '',
+          display: oauthProfile.displayName || `${oauthProfile.name.givenName} ${oauthProfile.name.familyName}`,
+          email: oauthProfile.emails[0].value,
+        };
+      } else {
+        profileInfo = {
+          first: oauthProfile.displayName || '',
+          last: '',
+          display: oauthProfile.username,
+          email: oauthProfile.emails[0].value,
+        };
+      }
 
       if (profile) {
         // update profile with info from oauth
