@@ -1,10 +1,10 @@
 language: node_js
 
 node_js:
-  - "6"
+  - '7'
 
 env:
-- NODE_ENV=travis_ci
+- NODE_ENV=staging
 
 services:
   - postgresql
@@ -13,10 +13,9 @@ addons:
   code_climate:
     repo_token: 7de5be8599da4473edc5d91b8c6ab7548125a84b30f95dd61eb478098d179b49
 
-postgres:
-  adapter: postgresql
-  database: deepred_ci
-  username: postgres
+script:
+- npm test
+
 
 before_script:
   - npm install -g grunt-cli

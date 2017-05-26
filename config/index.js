@@ -64,8 +64,8 @@ const config = {
 if (env === 'test') {
   config.knex.connection.database = 'deepred_test';
 }
-if (env === 'travis_ci') {
-  config.knex.connection.database = 'deepred_ci';
-}
+// if (env === 'travis_ci') {
+//   config.knex.connection.database = 'deepred_ci';
+// }
 
 module.exports = config;
