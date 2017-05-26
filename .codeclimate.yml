@@ -1,20 +1,8 @@
----
 engines:
-  duplication:
-    enabled: true
-    checks:
-      Similar code:
-        enabled: false
-    config:
-      languages:
-      - javascript
   eslint:
-    enabled: true
-  fixme:
     enabled: true
 ratings:
   paths:
-  - /client/**.js
-  -/db/**.js
+    server/
 exclude_paths:
-- server/test/**.js
+  - server/test/**.js

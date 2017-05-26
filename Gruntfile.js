@@ -34,6 +34,12 @@ module.exports = (grunt) => {
         },
         name: config.connection.database,
       },
+      travis: {
+        connection: {
+          url: config.connection.url,
+        },
+        name: config.connection.database,
+      },
     },
   });
 
