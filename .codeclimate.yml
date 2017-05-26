@@ -1,14 +1,14 @@
-ngines:
+engines:
   eslint:
     enabled: true
   duplication:
-  	enabled: true
+        enabled: true
     config:
-    	languages:
+        languages:
       - javascript
 ratings:
   paths:
   - client/**
   - "**.js"
 exclude_paths:
-- server/test/**.js
+  -server/test/**.js
