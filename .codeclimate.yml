@@ -12,8 +12,5 @@ engines:
     enabled: true
 ratings:
   path:
-  - client/**
-  - db/**
-  - server/**
 exclude_paths:
-- server/test/
+- server/test/**.js
