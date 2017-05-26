@@ -1,6 +1,6 @@
 const env = process.env.NODE_ENV || 'local';
 let local;
-if (env === 'local' || env === 'test') local = require('./config.dev.js');
+if (env === 'local' || env === 'localtest') local = require('./config.dev.js');
 
 const callbackURL = (name) => {
   if (env === 'local' || env === 'test') return `http://localhost:3000/auth/${name}/callback`;
@@ -61,7 +61,7 @@ const config = {
   },
 };
 
-if (env === 'test') {
+if (env === 'localtest') {
   config.knex.connection.database = 'deepred_test';
 }
 // if (env === 'travis_ci') {
