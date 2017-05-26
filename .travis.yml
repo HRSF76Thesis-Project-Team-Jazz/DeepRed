@@ -4,7 +4,7 @@ node_js:
   - '7'
 
 env:
-- NODE_ENV=staging
+- NODE_ENV=travis
 
 services:
   - postgresql
