@@ -1,6 +1,6 @@
 .board {
-  min-height: 70vh;
-  min-width: 70vh;
+  min-height: 50vh;
+  min-width: 50vh;
   margin: auto;
   padding: 5px;
   align-items: center;
@@ -8,14 +8,14 @@
 }
 
 .board-row {
-  min-height: 8.5vh;
+  min-height: 7vh;
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
 
 .board-col {
-  min-width: 8.5vh;
+  min-width: 7vh;
   display: flex;
   flex-direction: column;
 }
