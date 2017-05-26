@@ -5,4 +5,4 @@ ratings:
   paths:
     server/
 exclude_paths:
- server/test/**.js
+  - server/test/**.js
