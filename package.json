@@ -12,7 +12,8 @@
     "db:init-heroku": "knex migrate:latest",
     "db:init-test": "NODE_ENV=test grunt pgcreatedb:default && knex migrate:latest --env NODE_ENV",
     "chesstest": "node ./node_modules/mocha/bin/mocha",
-    "localtest": "grunt test"
+    "localtest": "grunt test",
+    "test-local": "NODE_ENV=test grunt test"
   },
   "author": "Hack Reactor",
   "license": "MIT",
@@ -69,4 +70,3 @@
     ]
   }
 }
-
