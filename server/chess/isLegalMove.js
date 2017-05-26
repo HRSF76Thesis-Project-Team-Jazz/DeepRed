@@ -184,3 +184,6 @@ const isLegalMove = (board, origin, dest) => {
 };
 
 module.exports = isLegalMove;
+module.exports.isDiagPathClear = isDiagPathClear;
+module.exports.isLegalMoveBishop = isLegalMoveBishop;
+

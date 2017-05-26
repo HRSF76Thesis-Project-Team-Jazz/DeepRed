@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
-const isDiagPathClear = require('../chess/isLegalMove');
-const isLegalMoveBishop = require('../chess/isLegalMove');
+const isDiagPathClear = require('../chess/isLegalMove').isDiagPathClear;
+const isLegalMoveBishop = require('../chess/isLegalMove').isLegalMoveBishop;
 
 const emptyBoard = [
 [null, null, null, null, null, null, null, null],
