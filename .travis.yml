@@ -16,7 +16,6 @@ addons:
 script:
 - npm test
 
-
 before_script:
   - npm install -g grunt-cli
   - psql -c 'create database deepred_ci;' -U postgres

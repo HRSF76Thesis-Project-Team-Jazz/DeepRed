@@ -1,5 +1,7 @@
 ---
 engines:
+  env:
+  - NODE_ENV=travis
   duplication:
     enabled: true
     checks:
@@ -8,8 +10,6 @@ engines:
     config:
       languages:
       - javascript
-      NODE_ENV:
-      - travis
   eslint:
     enabled: true
 ratings:
