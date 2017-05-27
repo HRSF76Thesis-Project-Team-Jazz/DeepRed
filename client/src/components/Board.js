@@ -55,12 +55,14 @@ class Board extends Component {
       });
     } else {
         if (this.state.originDestCoord) {
-          const coord = this.state.originDestCoord;
+          const coord = [];
+          coord[0] = this.state.originDestCoord;
+          coord[1] = [x, y];
           this.setState({
-            originDestCoord: coord + ',' + [x, y],
+            originDestCoord: coord,
           })
+          this.props.checkLegalMove(coord);
         }
-      this.props.checkLegalMove(this.state.originDestCoord);
       const board = this.state.board;
       board[x][y] = this.state.selectedPiece;
       board[this.state.selectedPosition[0]][this.state.selectedPosition[1]] = null;
