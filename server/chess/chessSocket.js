@@ -3,9 +3,9 @@ module.exports = (io, client) => {
   // attenpt to drop it to a new grid
   client.on('checkLegalMove', (data) => {
     console.log('coordinates received at server');
-    console.log('data: ', data);
+    console.log('coordinates: ', data);
     // check chess logic
     // return boolean result
-    // client.sockets.emit(data);
+    // client.emit();
   });
 };

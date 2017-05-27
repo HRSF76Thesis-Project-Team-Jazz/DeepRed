@@ -64,6 +64,7 @@ class Board extends Component {
         message: '  ',
         selectedPosition: '',
         selectedPiece: '',
+        originDestCoord: [],
       });
     }
   }
