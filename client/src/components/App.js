@@ -20,7 +20,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const socket = io('https://localhost:3000');
+    const socket = io('http://localhost:3000');
     socket.on('connect', () => {
       console.log('client side socket is connected!');
     });

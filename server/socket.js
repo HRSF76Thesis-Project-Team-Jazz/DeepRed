@@ -1,5 +1,7 @@
-const io = require('./index').io;
+const index = require('./index');
+
+const io = index.io;
 
 io.on('connect', (socket) => {
-  console.log('server side socket connected!', socket);
+  console.log('server side socket connected!');
 });
