@@ -40,8 +40,8 @@ class Board extends Component {
       if (selection === null) {
         this.setState({ message: 'Invalid selection' });
       } else {
-        this.state.originDestCoord.push([x, y]);
         this.setState({
+          originDestCoord: [x, y],
           message: `${selection} selected`,
           selectedPosition: coordinates,
           selectedPiece: selection,
@@ -54,6 +54,12 @@ class Board extends Component {
         selectedPiece: '',
       });
     } else {
+        if (this.state.originDestCoord) {
+          const coord = this.state.originDestCoord;
+          this.setState({
+            originDestCoord: coord + ',' + [x, y],
+          })
+        }
       this.state.originDestCoord.push([x, y]);
       this.props.checkLegalMove(this.state.originDestCoord);
       const board = this.state.board;
