@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import io from 'socket.io-client';
 
 // Components
 import Board from './Board';
@@ -19,6 +20,10 @@ class App extends Component {
   }
 
   componentDidMount() {
+    const socket = io('https://localhost:3000');
+    socket.on('connect', () => {
+      console.log('client side socket is connected!');
+    });
   }
 
   render() {
