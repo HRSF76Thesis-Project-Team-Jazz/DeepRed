@@ -6,13 +6,23 @@ class Board extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      board: [
+        ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+        ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+        ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+      ],
     };
   }
 
   componentDidMount() {
   }
 
-  imageName(XY) {
+  getImage(XY) {
     return <img className="piece-img" src={`/assets/${XY}.png`}></img>;
   }
 
@@ -21,15 +31,14 @@ class Board extends Component {
 
     return (
       <div className="board">
-        {board.map((x) => {
-          return (<div key={x} className="board-row">
-            {board.map(y =>
+        {this.state.board.map((row, rowIndex) => {
+          return (<div key={Math.random()} className="board-row">
+            {row.map((col, colIndex) =>
               (<div
-                className={((x + y) % 2 === 0) ? 'board-col dark' : 'board-col light'}
-                key={x.toString() + y.toString()}
+                className={((rowIndex + colIndex) % 2 === 0) ? 'board-col dark' : 'board-col light'}
+                key={rowIndex.toString() + colIndex.toString()}
               >
-                {(x === 1) ? this.imageName('BP') :
-                 (x === 6) ? this.imageName('WP') : null}
+                {(col) ? this.getImage(col) : ''}
               </div>),
             )}
           </div>);
