@@ -30,7 +30,7 @@ class App extends Component {
 
   checkLegalMove(originDestCoord) {
     console.log('sending origin and dest coordinates to server');
-      this.io.emit('checkLegalMove', originDestCoord);
+    this.io.emit('checkLegalMove', originDestCoord);
   }
 
   render() {
