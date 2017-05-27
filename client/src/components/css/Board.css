@@ -24,10 +24,19 @@
   background-color: #e6eeff;
 }
 
+.board-col:active {
+  background-color: #4d94ff;
+}
+
 .dark {
   background-color: rgb(90,90,90);
 }
 
 .light {
-  background-color: white;
+  background-color: #bfbfbf;
+}
+
+.piece-img {
+  max-width: 100%;
+  max-height: 100%;
 }
