@@ -1,16 +1,21 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import socket from 'socket.io-client';
-
+import injectTapEventPlugin from 'react-tap-event-plugin';
 // Components
+import ChessMenu from './ChessMenu';
+import SettingsDrawer from './SettingsDrawer';
 import Board from './Board';
 import CapturedPieces from './CapturedPieces';
 import Clock from './Clock';
-import MovesList from './MovesList';
-
-// CSS
+// import MovesList from './MovesList';
+import MoveHistory from './MoveHistory';
 import './css/App.css';
 
+// Needed for onTouchTap
+// http://stackoverflow.com/a/34015469/988941
+injectTapEventPlugin();
+// CSS
 
 class App extends Component {
   constructor(props) {
@@ -30,18 +35,20 @@ class App extends Component {
 
   checkLegalMove(originDestCoord) {
     console.log('sending origin and dest coordinates to server');
-      this.io.emit('checkLegalMove', originDestCoord);
+    this.io.emit('checkLegalMove', originDestCoord);
   }
 
   render() {
     return (
       <div className="site-wrap">
+        <ChessMenu />
         <div className="header">
           <table>
             <tbody>
               <tr>
                 <td><h1>Deep Red</h1></td>
                 <td className="button-cell">
+                  <SettingsDrawer />
                   <Link to="/settings">Settings</Link>
                   <a href="/profile" className="button">Home</a>
                   <a href="/logout" className="button">Logout</a>
@@ -61,7 +68,7 @@ class App extends Component {
 
             <div className="flex-col right-col">
               <Clock />
-              <MovesList />
+              <MoveHistory />
               <Clock />
             </div>
 
