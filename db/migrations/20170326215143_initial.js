@@ -8,6 +8,10 @@ exports.up = function (knex, Promise) {
       table.string('display', 100).nullable();
       table.string('email', 100).nullable().unique();
       table.string('phone', 100).nullable();
+      table.integer('win').nullable();
+      table.integer('loss').nullable();
+      table.integer('draw').nullable();
+      table.integer('total_games').nullable();
       table.timestamps(true, true);
     }),
     knex.schema.createTableIfNotExists('auths', function(table) {
@@ -17,6 +21,20 @@ exports.up = function (knex, Promise) {
       table.string('password', 100).nullable();
       table.string('salt', 100).nullable();
       table.integer('profile_id').references('profiles.id').onDelete('CASCADE');
+    }),
+    knex.schema.createTableIfNotExists('games', function(table) {
+      table.increments('game').unsigned().primary();
+      table.string('white').nullable();
+      table.string('black').nullable();
+      table.string('result').nullable();
+      table.integer('rounds').nullable();
+      table.timestamps(true, true);
+    }),
+    knex.schema.createTableIfNotExists('game_moves', function(table){
+      table.increments('move').unsigned().primary();
+      table.string('action').nullable();
+      table.integer('game').nullable().references('games.game').onDelete('CASCADE');
+      table.timestamps(true, true);
     })
   ]);
 };
@@ -24,7 +42,8 @@ exports.up = function (knex, Promise) {
 exports.down = function (knex, Promise) {
   return Promise.all([
     knex.schema.dropTable('auths'),
-    knex.schema.dropTable('profiles')
+    knex.schema.dropTable('profiles'),
+    knex.schema.dropTable('games')
   ]);
 };
 
