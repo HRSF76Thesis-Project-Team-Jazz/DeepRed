@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import io from 'socket.io-client';
+import socket from 'socket.io-client';
 
 // Components
 import Board from './Board';
@@ -17,13 +17,20 @@ class App extends Component {
     super(props);
     this.state = {
     };
+
+    this.checkLegalMove = this.checkLegalMove.bind(this);
   }
 
   componentDidMount() {
-    const socket = io('http://localhost:3000');
-    socket.on('connect', () => {
-      console.log('client side socket is connected!');
+    this.io = socket('http://localhost:3000');
+    this.io.on('connect', () => {
+      console.log('client side connected!');
     });
+  }
+
+  checkLegalMove(originDestCoord) {
+    console.log("sending origin and dest coordinates to server);
+      this.io.emit('checkLegalMove', originDestCoord);
   }
 
   render() {
@@ -48,7 +55,7 @@ class App extends Component {
 
             <div className="flex-col">
               <CapturedPieces color="Black" />
-              <Board />
+              <Board checkLegalMove={this.checkLegalMove} />
               <CapturedPieces color="White" />
             </div>
 

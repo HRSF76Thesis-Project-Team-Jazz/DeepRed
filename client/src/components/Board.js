@@ -19,6 +19,7 @@ class Board extends Component {
       message: '  ',
       selectedPosition: '',
       selectedPiece: '',
+      originDestCoord: [],
     };
 
     this.onClick = this.onClick.bind(this);
@@ -28,7 +29,7 @@ class Board extends Component {
   }
 
   getImage(CP) {
-    return <img className="piece-img" src={`/assets/${CP}.png`}></img>;
+    return <img className="piece-img" src={`/assets/${CP}.png`} />;
   }
 
   onClick(coordinates) {
@@ -39,6 +40,7 @@ class Board extends Component {
       if (selection === null) {
         this.setState({ message: 'Invalid selection' });
       } else {
+        this.state.originDestCoord.push([x, y]);
         this.setState({
           message: `${selection} selected`,
           selectedPosition: coordinates,
@@ -52,6 +54,8 @@ class Board extends Component {
         selectedPiece: '',
       });
     } else {
+      this.state.originDestCoord.push([x, y]);
+      this.props.checkLegalMove(this.state.originDestCoord);
       const board = this.state.board;
       board[x][y] = this.state.selectedPiece;
       board[this.state.selectedPosition[0]][this.state.selectedPosition[1]] = null;
