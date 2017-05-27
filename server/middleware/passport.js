@@ -166,6 +166,10 @@ const getOrCreateOAuthProfile = (type, oauthProfile, done) => {
           last: oauthProfile.name.familyName || '',
           display: oauthProfile.displayName || `${oauthProfile.name.givenName} ${oauthProfile.name.familyName}`,
           email: oauthProfile.emails[0].value,
+          win: 0,
+          loss: 0,
+          draw: 0,
+          total_games: 0
         };
       } else {
         profileInfo = {
@@ -173,6 +177,10 @@ const getOrCreateOAuthProfile = (type, oauthProfile, done) => {
           last: '',
           display: oauthProfile.username,
           email: oauthProfile.emails[0].value,
+          win: 0,
+          loss: 0,
+          draw: 0,
+          total_games: 0
         };
       }
 
