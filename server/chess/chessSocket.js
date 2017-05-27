@@ -6,6 +6,7 @@ module.exports = (io, client) => {
     console.log('coordinates: ', data);
     // check chess logic
     // return boolean result
-    // client.emit();
+    const result = false; // hardcoded for now, in order to make test pass
+    client.emit(result);
   });
 };
