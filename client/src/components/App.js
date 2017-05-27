@@ -8,7 +8,6 @@ import SettingsDrawer from './SettingsDrawer';
 import Board from './Board';
 import CapturedPieces from './CapturedPieces';
 import Clock from './Clock';
-// import MovesList from './MovesList';
 import MoveHistory from './MoveHistory';
 import './css/App.css';
 

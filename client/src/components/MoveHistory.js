@@ -1,18 +1,12 @@
 import React from 'react';
 import { List, ListItem } from 'material-ui/List';
-// import ActionGrade from 'material-ui/svg-icons/action/grade';
-// import ContentInbox from 'material-ui/svg-icons/content/inbox';
-// import ContentSend from 'material-ui/svg-icons/content/send';
-// import ContentDrafts from 'material-ui/svg-icons/content/drafts';
-// import Divider from 'material-ui/Divider';
-// import ActionInfo from 'material-ui/svg-icons/action/info';
 
 import MobileTearSheet from './MobileTearSheet';
 
 const MoveHistory = () => {
   const moveList = [];
   for (let i = 0; i < 40; i += 1) {
-    moveList.push('Chess Move');
+    moveList.push('e2 - e4');
   }
   return (
     <MobileTearSheet>
