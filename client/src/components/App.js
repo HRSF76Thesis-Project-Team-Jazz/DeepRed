@@ -30,6 +30,7 @@ class App extends Component {
     this.io = socket.connect();
     this.io.on('connect', () => {
       console.log('client side connected!');
+      console.log('logged in as user: ', this.io.id);
     });
   }
 
