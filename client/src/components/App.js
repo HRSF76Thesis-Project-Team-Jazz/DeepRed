@@ -47,7 +47,7 @@ class App extends Component {
               <CapturedPieces color="White" />
             </div>
 
-            <div className="flex-col">
+            <div className="flex-col right-col">
               <Clock />
               <MovesList />
               <Clock />
