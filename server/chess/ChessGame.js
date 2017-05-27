@@ -27,15 +27,18 @@ class ChessGame {
     this.whiteCapPieces = [];
     this.turn = 1;
     this.history = {};
+    this.count = 1;
   }
 
   movePiece(origin, dest) {
     if (dest === undefined) {
       throw new Error('Attempted destination is invalid');
-    } else if (origin === undefined) {
+    } else if (!this.board[origin[0]][origin[1]]) {
       throw new Error('Origin is invalid');
     } else if (origin[0] === dest[0] && origin[1] === dest[1]) {
       throw new Error('Origin and destination cannot be the same');
+    } else if ((this.count % 2 === 0 && this.board[origin[0]][origin[1]][0] === 'W') || (this.count % 2 === 1 && this.board[origin[0]][origin[1]][0] === 'B')) {
+      throw new Error('Not your turn.');
     }
     const originPiece = this.board[origin[0]][origin[1]];
     const destPiece = this.board[dest[0]][dest[1]];
@@ -45,17 +48,20 @@ class ChessGame {
           throw new Error('Attempted to capture own piece');
         } else {
           // this.history += moveToPGNString(this.board, origin, dest, this.count);
-          this.history.count = this.history.count || '';
-          this.history.count = this.history.count + origin + dest;
-          if (originPiece[0] === 'B') {
-            this.count += 1;
-          }
           this.capturePiece(destPiece);
         }
       }
+      this.history[this.turn] = this.history[this.turn] || [];
+      this.history[this.turn].push(origin);
+      this.history[this.turn].push(dest);
+      if (originPiece[0] === 'B') {
+        this.turn += 1;
+      }
+      this.count += 1;
       this.board[dest[0]][dest[1]] = originPiece;
       this.board[origin[0]][origin[1]] = null;
       // check for check/checkmate/stalemate
+      console.log('--------------', this.history);
       return this.board;
     }
     throw new Error('Attempted Move is Illegal');
