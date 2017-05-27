@@ -3,15 +3,17 @@
   "version": "1.0.0",
   "scripts": {
     "start": "nodemon server",
+    "start:dev": "webpack-dev-server --inline --hot",
     "heroku-postbuild": "webpack -p && knex migrate:latest",
-    "test": "grunt test",
+    "test": "NODE_ENV=test grunt test",
     "build": "webpack --watch",
     "db:local-start": "pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start && redis-server",
     "db:stop": "pg_ctl -D /usr/local/var/postgres stop -s -m fast",
     "db:init-dev": "grunt pgcreatedb:default && knex migrate:latest && knex seed:run",
     "db:init-heroku": "knex migrate:latest",
     "db:init-test": "NODE_ENV=test grunt pgcreatedb:default && knex migrate:latest --env NODE_ENV",
-    "chesstest": "node ./node_modules/mocha/bin/mocha"
+    "chesstest": "node ./node_modules/mocha/bin/mocha",
+    "localtest": "NODE_ENV=localtest grunt test"
   },
   "author": "Hack Reactor",
   "license": "MIT",
@@ -39,7 +41,10 @@
     "pg": "^6.1.5",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "redis": "^2.7.1"
+    "react-router-dom": "^4.1.1",
+    "redis": "^2.7.1",
+    "socket.io": "^2.0.1",
+    "socket.io-client": "^2.0.1"
   },
   "devDependencies": {
     "babel-loader": "^7.0.0",
@@ -47,6 +52,7 @@
     "babel-preset-latest": "^6.24.0",
     "babel-preset-react": "^6.23.0",
     "chai": "^3.5.0",
+    "css-loader": "^0.28.3",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^15.0.1",
     "eslint-plugin-import": "^2.2.0",
@@ -56,8 +62,10 @@
     "grunt-cli": "^1.2.0",
     "grunt-eslint": "^19.0.0",
     "grunt-mocha-test": "^0.13.2",
+    "html-webpack-plugin": "^2.28.0",
     "mocha": "^3.2.0",
     "node-mocks-http": "^1.6.1",
+    "style-loader": "^0.18.1",
     "supertest": "^3.0.0",
     "webpack": "^2.3.2",
     "webpack-dev-server": "^2.4.2"
@@ -68,4 +76,3 @@
     ]
   }
 }
-

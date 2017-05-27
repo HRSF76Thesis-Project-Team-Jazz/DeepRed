@@ -1,10 +1,11 @@
 const expect = require('chai').expect;
 
-const ChessGame = require('../server/chess/ChessGame');
-const isLegalMove = require('../server/chess/isLegalMove');
+const ChessGame = require('../chess/ChessGame');
+const isLegalMove = require('../chess/isLegalMove');
+
+const testChessGame = new ChessGame();
 
 describe('ChessGame', () => {
-  const testChessGame = new ChessGame();
   it('function (class) should exist', () => {
     expect(ChessGame).to.be.a('function');
   });
@@ -18,8 +19,147 @@ describe('ChessGame', () => {
     ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
     ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
   ];
-  it('should return object with board property', () => {
+  it('should return object with board, blackCapPieces, whiteCapPieces, turn, history properties', () => {
+    expect(testChessGame.board).to.be.a('array');
+    expect(testChessGame.blackCapPieces).to.be.a('array');
+    expect(testChessGame.whiteCapPieces).to.be.a('array');
+    expect(testChessGame.turn).to.be.a('number');
+    expect(testChessGame.history).to.be.a('object');
+  });
+  it('should return object with starting board state', () => {
     expect(testChessGame.board).to.eql(initBoard);
+  });
+  it('should return object with movePiece method', () => {
+    expect(testChessGame.movePiece).to.be.a('function');
+  });
+  it('should return object with capturePiece method', () => {
+    expect(testChessGame.capturePiece).to.be.a('function');
+  });
+});
+
+describe('ChessGame.movePiece', () => {
+  it('should throw error if destination is undefined', () => {
+    expect(() => testChessGame.movePiece([0, 0], undefined)).to.throw(Error);
+  });
+  it('should throw error if origin is undefined', () => {
+    expect(() => testChessGame.movePiece(undefined, [4, 4])).to.throw(Error);
+  });
+  it('should throw error if origin equals destination', () => {
+    expect(() => testChessGame.movePiece([0, 0], [0, 0])).to.throw(Error);
+  });
+  it('should throw error if capturing own piece', () => {
+    expect(() => testChessGame.movePiece([7, 0], [6, 0])).to.throw(Error);
+  });
+  const expectedMoveBoard = [
+    ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+    ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+    ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+  ];
+  it('should allow move a2 to a3', () => {
+    expect(testChessGame.movePiece([6, 0], [4, 0])).to.be.eql(expectedMoveBoard);
+  });
+  it('should not allow move h1 to h4 and throw error', () => {
+    expect(() => testChessGame.movePiece([7, 7], [7, 4])).to.throw(Error);
+  });
+});
+
+const captChessGame = new ChessGame();
+
+describe('ChessGame.capturePiece', () => {
+  captChessGame.board = [
+    ['BR', 'BN', 'BB', 'BK', null, 'BB', 'BN', 'BR'],
+    ['BP', 'BP', 'BP', null, 'BQ', 'BP', 'BP', 'BP'],
+    [null, null, null, null, 'BP', null, null, null],
+    [null, null, null, 'BP', null, null, 'WN', null],
+    ['WP', null, null, null, 'WP', null, null, 'WP'],
+    [null, null, null, null, null, 'WP', null, null],
+    [null, 'WP', 'WP', 'WP', null, null, 'WP', null],
+    ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
+  ];
+  const expectedPawnCapBoard1 = [
+    ['BR', 'BN', 'BB', 'BK', null, 'BB', 'BN', 'BR'],
+    ['BP', 'BP', 'BP', null, 'BQ', 'BP', 'BP', 'BP'],
+    [null, null, null, null, 'BP', null, null, null],
+    [null, null, null, null, null, null, 'WN', null],
+    ['WP', null, null, null, 'BP', null, null, 'WP'],
+    [null, null, null, null, null, 'WP', null, null],
+    [null, 'WP', 'WP', 'WP', null, null, 'WP', null],
+    ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
+  ];
+  it('should allow BP to capture WP', () => {
+    expect(captChessGame.movePiece([3, 3], [4, 4])).to.eql(expectedPawnCapBoard1);
+  });
+  it('should add WP to whiteCapPieces array', () => {
+    expect(captChessGame.blackCapPieces).to.eql(['WP']);
+  });
+  const expectedPawnCapBoard2 = [
+    ['BR', 'BN', 'BB', 'BK', null, 'BB', 'BN', 'BR'],
+    ['BP', 'BP', 'BP', null, 'BQ', 'BP', 'BP', 'BP'],
+    [null, null, null, null, 'BP', null, null, null],
+    [null, null, null, null, null, null, 'WN', null],
+    ['WP', null, null, null, 'WP', null, null, 'WP'],
+    [null, null, null, null, null, null, null, null],
+    [null, 'WP', 'WP', 'WP', null, null, 'WP', null],
+    ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
+  ];
+  it('should allow WP to capture BP', () => {
+    expect(captChessGame.movePiece([5, 5], [4, 4])).to.eql(expectedPawnCapBoard2);
+  });
+  it('should add WP to whiteCapPieces array', () => {
+    expect(captChessGame.whiteCapPieces).to.eql(['BP']);
+  });
+  const expectedKnightCapBoard1 = [
+    ['BR', 'BN', 'BB', 'BK', null, 'BB', 'BN', 'BR'],
+    ['BP', 'BP', 'BP', null, 'BQ', 'BP', 'BP', 'WN'],
+    [null, null, null, null, 'BP', null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', null, null, null, 'WP', null, null, 'WP'],
+    [null, null, null, null, null, null, null, null],
+    [null, 'WP', 'WP', 'WP', null, null, 'WP', null],
+    ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
+  ];
+  it('should allow WK to capture BP', () => {
+    expect(captChessGame.movePiece([3, 6], [1, 7])).to.eql(expectedKnightCapBoard1);
+  });
+  it('should add WP to whiteCapPieces array', () => {
+    expect(captChessGame.whiteCapPieces).to.eql(['BP', 'BP']);
+  });
+  const expectedQueenCapBoard1 = [
+    ['BR', 'BN', 'BB', 'BK', null, 'BB', 'BN', 'BR'],
+    ['BP', 'BP', 'BP', null, null, 'BP', 'BP', 'WN'],
+    [null, null, null, null, 'BP', null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', null, null, null, 'WP', null, null, 'BQ'],
+    [null, null, null, null, null, null, null, null],
+    [null, 'WP', 'WP', 'WP', null, null, 'WP', null],
+    ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
+  ];
+  it('should allow BQ to capture WP', () => {
+    expect(captChessGame.movePiece([1, 4], [4, 7])).to.eql(expectedQueenCapBoard1);
+  });
+  it('should add WP to whiteCapPieces array', () => {
+    expect(captChessGame.blackCapPieces).to.eql(['WP', 'WP']);
+  });
+  const expectedRookCapBoard1 = [
+    ['BR', 'BN', 'BB', 'BK', null, 'BB', 'BN', null],
+    ['BP', 'BP', 'BP', null, null, 'BP', 'BP', 'BR'],
+    [null, null, null, null, 'BP', null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', null, null, null, 'WP', null, null, 'BQ'],
+    [null, null, null, null, null, null, null, null],
+    [null, 'WP', 'WP', 'WP', null, null, 'WP', null],
+    ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
+  ];
+  it('should allow BR to capture WN', () => {
+    expect(captChessGame.movePiece([0, 7], [1, 7])).to.eql(expectedRookCapBoard1);
+  });
+  it('should add WP to whiteCapPieces array', () => {
+    expect(captChessGame.blackCapPieces).to.eql(['WP', 'WP', 'WN']);
   });
 });
 
@@ -264,6 +404,74 @@ describe('isLegalMoveKnight', () => {
   }
   it('knight cannot be blocked', () => {
     expect(actualKnightResultBoard2).to.eql(expectedKnightResultBoard);
+  });
+});
+
+describe('isLegalMoveQueen', () => {
+  const queenTestBoard = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, 'WQ', null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+  ];
+  const expectedQueenResultBoard = [
+    [true, false, false, false, true, false, false, false],
+    [false, true, false, false, true, false, false, true],
+    [false, false, true, false, true, false, true, false],
+    [false, false, false, true, true, true, false, false],
+    [true, true, true, true, true, true, true, true],
+    [false, false, false, true, true, true, false, false],
+    [false, false, true, false, true, false, true, false],
+    [false, true, false, false, true, false, false, true],
+  ];
+  const actualQueenResultBoard = [];
+  for (let i = 0; i < 8; i += 1) {
+    actualQueenResultBoard[i] = new Array(8);
+  }
+  for (let i = 0; i < 8; i += 1) {
+    for (let j = 0; j < 8; j += 1) {
+      actualQueenResultBoard[i][j] = isLegalMove(queenTestBoard, [4, 4], [i, j]);
+    }
+  }
+  it('queen moves as expected', () => {
+    expect(actualQueenResultBoard).to.eql(expectedQueenResultBoard);
+  });
+
+  const queenTestBoard2 = [
+    ['BP', null, null, null, null, null, null, null],
+    [null, 'BP', null, null, null, null, null, null],
+    [null, null, null, null, 'BP', null, 'BP', null],
+    [null, null, null, null, null, null, null, null],
+    [null, 'BP', null, 'BP', 'WQ', null, null, 'BP'],
+    [null, null, null, null, null, 'BP', null, null],
+    [null, null, null, null, 'BP', null, null, null],
+    [null, 'BP', null, null, null, null, null, null],
+  ];
+  const expectedQueenResultBoard2 = [
+    [false, false, false, false, false, false, false, false],
+    [false, true, false, false, false, false, false, false],
+    [false, false, true, false, true, false, true, false],
+    [false, false, false, true, true, true, false, false],
+    [false, false, false, true, true, true, true, true],
+    [false, false, false, true, true, true, false, false],
+    [false, false, true, false, true, false, false, false],
+    [false, true, false, false, false, false, false, false],
+  ];
+  const actualQueenResultBoard2 = [];
+  for (let i = 0; i < 8; i += 1) {
+    actualQueenResultBoard2[i] = new Array(8);
+  }
+  for (let i = 0; i < 8; i += 1) {
+    for (let j = 0; j < 8; j += 1) {
+      actualQueenResultBoard2[i][j] = isLegalMove(queenTestBoard2, [4, 4], [i, j]);
+    }
+  }
+  it('queen blocked as expected', () => {
+    expect(actualQueenResultBoard2).to.eql(expectedQueenResultBoard2);
   });
 });
 

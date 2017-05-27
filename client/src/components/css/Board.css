@@ -1,0 +1,48 @@
+.board {
+  min-height: 50vh;
+  min-width: 50vh;
+  margin: auto;
+  padding: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+.board-row {
+  height: 7vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.board-col {
+  width: 7vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.board-col:hover {
+  background-color: #e6eeff;
+}
+
+.board-col:active {
+  background-color: #4d94ff;
+}
+
+.dark {
+  background-color: rgb(90,90,90);
+}
+
+.light {
+  background-color: #bfbfbf;
+}
+
+.piece-img {
+  max-width: 100%;
+  max-height: 100%;
+  margin: auto;
+}
+
+.board-message {
+  color: white;
+  min-height: 2rem;
+}

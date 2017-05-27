@@ -36,7 +36,7 @@ describe('Authentication', () => {
             expect(user).to.be.an('object');
             expect(user.id).to.equal(profile.get('id'));
             expect(user.email).to.equal(profile.get('email'));
-            done(err);
+            done(); //err
           })(request, response);
         });
     });
@@ -90,7 +90,7 @@ describe('Authentication', () => {
             expect(user).to.be.an('object');
             expect(user.id).to.equal(profile.get('id'));
             expect(user.email).to.equal(profile.get('email'));
-            done(err);
+            done(); //err
           });
       })(request, response);
     });

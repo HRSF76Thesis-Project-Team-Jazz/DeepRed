@@ -34,6 +34,12 @@ module.exports = (grunt) => {
         },
         name: config.connection.database,
       },
+      travis: {
+        connection: {
+          url: config.connection.url,
+        },
+        name: config.connection.database,
+      },
     },
   });
 
@@ -44,4 +50,3 @@ module.exports = (grunt) => {
   grunt.registerTask('default', ['eslint']);
   grunt.registerTask('test', ['mochaTest']);
 };
-
