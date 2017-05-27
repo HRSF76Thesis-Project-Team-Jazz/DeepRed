@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -8,6 +9,7 @@ import ContentSave from 'material-ui/svg-icons/content/save';
 import ActionExit from 'material-ui/svg-icons/action/exit-to-app';
 import NavigationArrowUpward from 'material-ui/svg-icons/navigation/arrow-upward';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
+import ActionSettings from 'material-ui/svg-icons/action/settings';
 
 class SettingsDrawer extends Component {
 
@@ -30,21 +32,55 @@ class SettingsDrawer extends Component {
     return (
       <div>
         <RaisedButton
-          label="Settings"
+          label=""
           onTouchTap={this.handleToggle}
+          icon={<ActionSettings />}
         />
         <Drawer
           width={'30%'}
           openSecondary
           docked={false}
           open={this.state.open}
+          onRequestChange={open => this.setState({ open })}
         >
-          <MenuItem onTouchTap={this.handleClose} leftIcon={<SocialPerson />}>User Profile</MenuItem>
-          <MenuItem onTouchTap={this.handleClose} leftIcon={<ContentSave />}>Save Game</MenuItem>
-          <MenuItem onTouchTap={this.handleClose} leftIcon={<NavigationArrowUpward />}>Load Game</MenuItem>
-          <MenuItem onTouchTap={this.handleClose} leftIcon={<NavigationClose />}>Quit Game</MenuItem>
-          <MenuItem onTouchTap={this.handleClose} leftIcon={<SocialShare />}>Share</MenuItem>
-          <MenuItem onTouchTap={this.handleClose} leftIcon={<ActionExit />}>Logout</MenuItem>
+          <Link to="/settings">
+            <MenuItem
+              onTouchTap={this.handleClose}
+              leftIcon={<SocialPerson />}
+            >
+              User Profile
+            </MenuItem>
+          </Link>
+          <MenuItem
+            onTouchTap={this.handleClose}
+            leftIcon={<ContentSave />}
+          >
+            Save Game
+          </MenuItem>
+          <MenuItem
+            onTouchTap={this.handleClose}
+            leftIcon={<NavigationArrowUpward />}
+          >
+            Load Game
+          </MenuItem>
+          <MenuItem
+            onTouchTap={this.handleClose}
+            leftIcon={<NavigationClose />}
+          >
+            Quit Game
+          </MenuItem>
+          <MenuItem
+            onTouchTap={this.handleClose}
+            leftIcon={<SocialShare />}
+          >
+            Share
+          </MenuItem>
+          <MenuItem
+            onTouchTap={this.handleClose}
+            leftIcon={<ActionExit />}
+          >
+            Logout
+          </MenuItem>
         </Drawer>
       </div>
     );
