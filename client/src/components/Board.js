@@ -60,7 +60,6 @@ class Board extends Component {
             originDestCoord: coord + ',' + [x, y],
           })
         }
-      this.state.originDestCoord.push([x, y]);
       this.props.checkLegalMove(this.state.originDestCoord);
       const board = this.state.board;
       board[x][y] = this.state.selectedPiece;
