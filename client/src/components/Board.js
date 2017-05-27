@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import { connect } from 'react-redux';
 import './css/Board.css';
 
 class Board extends Component {
@@ -33,6 +33,10 @@ class Board extends Component {
   }
 
   onClick(coordinates) {
+
+    const { dispatch } = this.props;
+    dispatch({ type: 'REQUEST_MOVE', move: [coordinates[0], coordinates[1]] });
+
     const x = coordinates[0];
     const y = coordinates[1];
     const selection = this.state.board[x][y];
@@ -74,8 +78,6 @@ class Board extends Component {
   }
 
   render() {
-    const board = [...Array(8).keys()];
-
     return (
       <div className="board">
         {this.state.board.map((row, rowIndex) => {
@@ -95,7 +97,10 @@ class Board extends Component {
       </div>
     );
   }
-
 }
 
-export default Board;
+function mapStateToProps(state) {
+  return {};
+}
+
+export default connect(mapStateToProps)(Board);
