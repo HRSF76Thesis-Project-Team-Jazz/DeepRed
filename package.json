@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "nodemon server",
+    "start:dev": "webpack-dev-server --inline --hot",
     "heroku-postbuild": "webpack -p && knex migrate:latest",
     "test": "NODE_ENV=test grunt test",
     "build": "webpack --watch",
@@ -61,6 +62,7 @@
     "grunt-cli": "^1.2.0",
     "grunt-eslint": "^19.0.0",
     "grunt-mocha-test": "^0.13.2",
+    "html-webpack-plugin": "^2.28.0",
     "mocha": "^3.2.0",
     "node-mocks-http": "^1.6.1",
     "style-loader": "^0.18.1",
