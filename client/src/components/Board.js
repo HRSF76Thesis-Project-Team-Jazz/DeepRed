@@ -58,9 +58,6 @@ class Board extends Component {
           const coord = [];
           coord[0] = this.state.originDestCoord;
           coord[1] = [x, y];
-          this.setState({
-            originDestCoord: coord,
-          })
           this.props.checkLegalMove(coord);
         }
       const board = this.state.board;
