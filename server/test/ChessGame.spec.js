@@ -63,30 +63,47 @@ describe('ChessGame.movePiece', () => {
   it('should allow move a2 to a3', () => {
     expect(testChessGame.movePiece([6, 0], [4, 0])).to.be.eql(expectedMoveBoard);
   });
-  it('should not allow move h1 to h4 and throw error', () => {
-    expect(() => testChessGame.movePiece([7, 7], [7, 4])).to.throw(Error);
+
+  it('should not allow out of order move', () => {
+    expect(() => testChessGame.movePiece([7, 7], [7, 6])).to.throw(Error);
   });
 });
 
 const captChessGame = new ChessGame();
+captChessGame.board = [
+  ['BR', 'BN', 'BB', 'BK', null, null, 'BN', 'BR'],
+  ['BP', 'BP', 'BP', null, 'BQ', 'BP', 'BP', 'BP'],
+  [null, null, null, null, 'BP', null, null, null],
+  [null, null, null, 'BP', null, null, 'WN', null],
+  ['WP', 'BB', null, null, 'WP', null, null, 'WP'],
+  [null, null, null, null, null, 'WP', null, null],
+  [null, 'WP', 'WP', 'WP', null, null, 'WP', null],
+  ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
+];
 
 describe('ChessGame.capturePiece', () => {
-  captChessGame.board = [
-    ['BR', 'BN', 'BB', 'BK', null, 'BB', 'BN', 'BR'],
+  const expectedMovePawnCapBoard1 = [
+    ['BR', 'BN', 'BB', 'BK', null, null, 'BN', 'BR'],
     ['BP', 'BP', 'BP', null, 'BQ', 'BP', 'BP', 'BP'],
     [null, null, null, null, 'BP', null, null, null],
-    [null, null, null, 'BP', null, null, 'WN', null],
-    ['WP', null, null, null, 'WP', null, null, 'WP'],
+    ['WP', null, null, 'BP', null, null, 'WN', null],
+    [null, 'BB', null, null, 'WP', null, null, 'WP'],
     [null, null, null, null, null, 'WP', null, null],
     [null, 'WP', 'WP', 'WP', null, null, 'WP', null],
     ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
   ];
+  it('should allow WP to move forward', () => {
+    expect(captChessGame.movePiece([4, 0], [3, 0])).to.eql(expectedMovePawnCapBoard1);
+  });
+  it('whiteCapPieces array is still empty', () => {
+    expect(captChessGame.blackCapPieces).to.eql([]);
+  });
   const expectedPawnCapBoard1 = [
-    ['BR', 'BN', 'BB', 'BK', null, 'BB', 'BN', 'BR'],
+    ['BR', 'BN', 'BB', 'BK', null, null, 'BN', 'BR'],
     ['BP', 'BP', 'BP', null, 'BQ', 'BP', 'BP', 'BP'],
     [null, null, null, null, 'BP', null, null, null],
-    [null, null, null, null, null, null, 'WN', null],
-    ['WP', null, null, null, 'BP', null, null, 'WP'],
+    ['WP', null, null, null, null, null, 'WN', null],
+    [null, 'BB', null, null, 'BP', null, null, 'WP'],
     [null, null, null, null, null, 'WP', null, null],
     [null, 'WP', 'WP', 'WP', null, null, 'WP', null],
     ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
@@ -94,15 +111,15 @@ describe('ChessGame.capturePiece', () => {
   it('should allow BP to capture WP', () => {
     expect(captChessGame.movePiece([3, 3], [4, 4])).to.eql(expectedPawnCapBoard1);
   });
-  it('should add WP to whiteCapPieces array', () => {
+  it('should add WP to blackCapPieces array', () => {
     expect(captChessGame.blackCapPieces).to.eql(['WP']);
   });
   const expectedPawnCapBoard2 = [
-    ['BR', 'BN', 'BB', 'BK', null, 'BB', 'BN', 'BR'],
+    ['BR', 'BN', 'BB', 'BK', null, null, 'BN', 'BR'],
     ['BP', 'BP', 'BP', null, 'BQ', 'BP', 'BP', 'BP'],
     [null, null, null, null, 'BP', null, null, null],
-    [null, null, null, null, null, null, 'WN', null],
-    ['WP', null, null, null, 'WP', null, null, 'WP'],
+    ['WP', null, null, null, null, null, 'WN', null],
+    [null, 'BB', null, null, 'WP', null, null, 'WP'],
     [null, null, null, null, null, null, null, null],
     [null, 'WP', 'WP', 'WP', null, null, 'WP', null],
     ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
@@ -110,17 +127,33 @@ describe('ChessGame.capturePiece', () => {
   it('should allow WP to capture BP', () => {
     expect(captChessGame.movePiece([5, 5], [4, 4])).to.eql(expectedPawnCapBoard2);
   });
-  it('should add WP to whiteCapPieces array', () => {
+  it('should add BP to whiteCapPieces array', () => {
     expect(captChessGame.whiteCapPieces).to.eql(['BP']);
   });
+  const expectedBishopCapBoard = [
+    ['BR', 'BN', 'BB', 'BK', null, null, 'BN', 'BR'],
+    ['BP', 'BP', 'BP', null, 'BQ', 'BP', 'BP', 'BP'],
+    [null, null, null, null, 'BP', null, null, null],
+    ['WP', null, null, null, null, null, 'WN', null],
+    [null, null, null, null, 'WP', null, null, 'WP'],
+    [null, null, null, null, null, null, null, null],
+    [null, 'WP', 'WP', 'BB', null, null, 'WP', null],
+    ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
+  ];
+  it('should allow BB to capture WP', () => {
+    expect(captChessGame.movePiece([4, 1], [6, 3])).to.eql(expectedBishopCapBoard);
+  });
+  it('should add WP to blackCapPieces array', () => {
+    expect(captChessGame.blackCapPieces).to.eql(['WP', 'WP']);
+  });
   const expectedKnightCapBoard1 = [
-    ['BR', 'BN', 'BB', 'BK', null, 'BB', 'BN', 'BR'],
+    ['BR', 'BN', 'BB', 'BK', null, null, 'BN', 'BR'],
     ['BP', 'BP', 'BP', null, 'BQ', 'BP', 'BP', 'WN'],
     [null, null, null, null, 'BP', null, null, null],
+    ['WP', null, null, null, null, null, null, null],
+    [null, null, null, null, 'WP', null, null, 'WP'],
     [null, null, null, null, null, null, null, null],
-    ['WP', null, null, null, 'WP', null, null, 'WP'],
-    [null, null, null, null, null, null, null, null],
-    [null, 'WP', 'WP', 'WP', null, null, 'WP', null],
+    [null, 'WP', 'WP', 'BB', null, null, 'WP', null],
     ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
   ];
   it('should allow WK to capture BP', () => {
@@ -130,36 +163,52 @@ describe('ChessGame.capturePiece', () => {
     expect(captChessGame.whiteCapPieces).to.eql(['BP', 'BP']);
   });
   const expectedQueenCapBoard1 = [
-    ['BR', 'BN', 'BB', 'BK', null, 'BB', 'BN', 'BR'],
+    ['BR', 'BN', 'BB', 'BK', null, null, 'BN', 'BR'],
     ['BP', 'BP', 'BP', null, null, 'BP', 'BP', 'WN'],
     [null, null, null, null, 'BP', null, null, null],
+    ['WP', null, null, null, null, null, null, null],
+    [null, null, null, null, 'WP', null, null, 'BQ'],
     [null, null, null, null, null, null, null, null],
-    ['WP', null, null, null, 'WP', null, null, 'BQ'],
-    [null, null, null, null, null, null, null, null],
-    [null, 'WP', 'WP', 'WP', null, null, 'WP', null],
+    [null, 'WP', 'WP', 'BB', null, null, 'WP', null],
     ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
   ];
   it('should allow BQ to capture WP', () => {
     expect(captChessGame.movePiece([1, 4], [4, 7])).to.eql(expectedQueenCapBoard1);
   });
   it('should add WP to whiteCapPieces array', () => {
-    expect(captChessGame.blackCapPieces).to.eql(['WP', 'WP']);
+    expect(captChessGame.blackCapPieces).to.eql(['WP', 'WP', 'WP']);
+  });
+  const expectedKingCapBoard1 = [
+    ['BR', 'BN', 'BB', 'BK', null, null, 'BN', 'BR'],
+    ['BP', 'BP', 'BP', null, null, 'BP', 'BP', 'WN'],
+    [null, null, null, null, 'BP', null, null, null],
+    ['WP', null, null, null, null, null, null, null],
+    [null, null, null, null, 'WP', null, null, 'BQ'],
+    [null, null, null, null, null, null, null, null],
+    [null, 'WP', 'WP', 'WK', null, null, 'WP', null],
+    ['WR', 'WN', 'WB', null, 'WQ', 'WB', null, 'WR'],
+  ];
+  it('should allow WK to capture BB', () => {
+    expect(captChessGame.movePiece([7, 3], [6, 3])).to.eql(expectedKingCapBoard1);
+  });
+  it('should add BB to whiteCapPieces array', () => {
+    expect(captChessGame.whiteCapPieces).to.eql(['BP', 'BP', 'BB']);
   });
   const expectedRookCapBoard1 = [
-    ['BR', 'BN', 'BB', 'BK', null, 'BB', 'BN', null],
+    ['BR', 'BN', 'BB', 'BK', null, null, 'BN', null],
     ['BP', 'BP', 'BP', null, null, 'BP', 'BP', 'BR'],
     [null, null, null, null, 'BP', null, null, null],
+    ['WP', null, null, null, null, null, null, null],
+    [null, null, null, null, 'WP', null, null, 'BQ'],
     [null, null, null, null, null, null, null, null],
-    ['WP', null, null, null, 'WP', null, null, 'BQ'],
-    [null, null, null, null, null, null, null, null],
-    [null, 'WP', 'WP', 'WP', null, null, 'WP', null],
-    ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
+    [null, 'WP', 'WP', 'WK', null, null, 'WP', null],
+    ['WR', 'WN', 'WB', null, 'WQ', 'WB', null, 'WR'],
   ];
   it('should allow BR to capture WN', () => {
     expect(captChessGame.movePiece([0, 7], [1, 7])).to.eql(expectedRookCapBoard1);
   });
-  it('should add WP to whiteCapPieces array', () => {
-    expect(captChessGame.blackCapPieces).to.eql(['WP', 'WP', 'WN']);
+  it('should add WN to blackCapPieces array', () => {
+    expect(captChessGame.blackCapPieces).to.eql(['WP', 'WP', 'WP', 'WN']);
   });
 });
 
