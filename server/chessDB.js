@@ -3,6 +3,7 @@ const knex = require('knex')(require('../knexfile'));
 // 	userChoice: 'black/white',
 // 	display: 'user1',
 <<<<<<< HEAD
+<<<<<<< HEAD
 //  session_id: 'xxxx'
 // }
 
@@ -14,17 +15,29 @@ const newGame = (game) => {
 const newGame = (game) => {
 	console.log('new game!')
 >>>>>>> DB scheme / DB routes
+=======
+//  session_id: 'xxxx'
+// }
+
+const newGame = (game) => {
+  console.log('new game!');
+>>>>>>> DB functions
   if (game.userChoice == 'white') {
     knex.insert({
       white: game.display,
       black: null,
       result: null,
 <<<<<<< HEAD
+<<<<<<< HEAD
       rounds: 0,
 			// session_id: game.session_id
 =======
       rounds: 0,   
 >>>>>>> DB scheme / DB routes
+=======
+      rounds: 0,
+			// session_id: game.session_id
+>>>>>>> DB functions
     }).into('games').then((req, res) => {
       console.log(res);
     });
@@ -35,13 +48,18 @@ const newGame = (game) => {
       result: null,
       rounds: 0,
 <<<<<<< HEAD
+<<<<<<< HEAD
 			// session_id: game.session_id
 =======
 >>>>>>> DB scheme / DB routes
+=======
+			// session_id: game.session_id
+>>>>>>> DB functions
     }).into('games').then((req, res) => {
       console.log(res);
     });
   }
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 
@@ -51,6 +69,8 @@ const newGame = (game) => {
   console.log(res);
 });
 >>>>>>> DB scheme / DB routes
+=======
+>>>>>>> DB functions
 };
 
 
@@ -72,6 +92,7 @@ const joinGame = (game) => {
       white: game.display,
     }).then((req, res) => {
 <<<<<<< HEAD
+<<<<<<< HEAD
  			 console.log(res);
     });
   }
@@ -86,12 +107,20 @@ const joinGame = (game) => {
   console.log(res)
 	)
 >>>>>>> DB scheme / DB routes
+=======
+ 			 console.log(res);
+    });
+  }
+>>>>>>> DB functions
 };
 
 
 // // game = {
 // // 	id: 'game_id',
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> DB functions
 // // 	action: 'string of movement',
 //      round: 5
 
@@ -99,6 +128,7 @@ const joinGame = (game) => {
 		 // target: 'queen',
 		 // targetColor: 'white',
 
+<<<<<<< HEAD
 // // }
 
 const saveMove = (game) => {
@@ -129,27 +159,46 @@ const saveMove = (game) => {
   }
 =======
 // // 	move: 'string of movement',
+=======
+>>>>>>> DB functions
 // // }
 
 const saveMove = (game) => {
-	knex('games').where({ game: game.id })
-	.increment( 'rounds' , 1 )
-	.then((req, res) => 
+  knex('games').where({ game: game.id })
+	.increment('rounds', 1)
+	.then((req, res) =>
   console.log(res)
 	)
 
-	knex('game_moves').insert({
-		action: game.action,
-		game: game.id
-	}).then((req, res) => 
+  knex('game_moves').insert({
+    action: game.action,
+    game: game.id,
+    round: game.round,
+    capture: game.capture,
+  }).then((req, res) =>
   console.log(res)
 	)
+<<<<<<< HEAD
 >>>>>>> DB scheme / DB routes
+=======
+
+  if (game.capture === true) {
+    knex('game_pieces').insert({
+      piece_type: game.target,
+      game: game.id,
+      color: game.targetColor,
+      round: game.round,
+    }).then((req, res) =>
+  console.log(res)
+	);
+  }
+>>>>>>> DB functions
 };
 
 
 // // game = {
 // // 	id: 'game_id'
+<<<<<<< HEAD
 <<<<<<< HEAD
 // // 	result: 'name'
 // // 	user1: 'name',
@@ -202,42 +251,65 @@ const finishGame = (game) => {
 // // 	lose: 'name of loser' || 'draw',
 // // 	user1: null,
 // // 	user2: null,
+=======
+// // 	result: 'name'
+// // 	user1: 'name',
+// // 	user2: 'name2',
+>>>>>>> DB functions
 // // }
 
 const finishGame = (game) => {
-
-	if (game.result == 'draw'){
-		knex('games').where({game: game.id}).update({
-			result: 'Draw'
-		}).then((req, res) => 
+  if (game.result == 'draw') {
+    knex('games').where({ game: game.id }).update({
+      result: 'Draw',
+    }).then((req, res) =>
   console.log(res)
 	);
 
-		knex('profiles').where({display: game.user1}).increment('draw', 1)
-		.then((req, res) => 
+    knex('profiles').where({ display: game.user1 }).increment('draw', 1)
+		.then((req, res) =>
   console.log(res)
 	);
 
-		knex('profiles').where({display: game.user2}).increment('draw', 1)
-		.then((req, res) => 
+    knex('profiles').where({ display: game.user2 }).increment('draw', 1)
+		.then((req, res) =>
   console.log(res)
 	);
 
-	} else {
-
-	knex('games').where({game: game.id}).update({
-		result: game.result
-	}).then((req, res) => 
+    knex('profiles').where({ display: game.user1 }).increment('total_games', 1)
+		.then((req, res) =>
   console.log(res)
 	);
 
+    knex('profiles').where({ display: game.user2 }).increment('total_games', 1)
+		.then((req, res) =>
+  console.log(res)
+	);
+  } else {
+    knex('games').where({ game: game.id }).update({
+      result: game.result,
+    }).then((req, res) =>
+  console.log(res)
+	);
+
+    knex('profiles').where({ display: game.result }).increment('win', 1)
+	.then((req, res) =>
+  console.log(res)
+	);
+
+<<<<<<< HEAD
 	knex('profiles').where({display: game.result}).increment('win', 1)
 	.then((req, res) => 
 >>>>>>> DB scheme / DB routes
+=======
+    knex('profiles').where({ display: game.result }).increment('total_games', 1)
+	.then((req, res) =>
+>>>>>>> DB functions
   console.log(res)
 	);
 
 	// select user that is not result
+<<<<<<< HEAD
 <<<<<<< HEAD
     if (game.result == game.user1) {
       knex('profiles').where({ display: game.user2 }).increment('loss', 1)
@@ -290,49 +362,77 @@ const requestCapturedPieces = (game) => {
 		if (game.result == game.user1){
 			knex('profiles').where({display: game.user2}).increment('loss', 1)
 			.then((req, res) => 
+=======
+    if (game.result == game.user1) {
+      knex('profiles').where({ display: game.user2 }).increment('loss', 1)
+			.then((req, res) =>
+>>>>>>> DB functions
   console.log(res)
 	);
-		} else {
-			knex('profiles').where({display: game.user1}).increment('loss', 1)
-			.then((req, res) => 
+
+      knex('profiles').where({ display: game.user2 }).increment('total_games', 1)
+	.then((req, res) =>
   console.log(res)
 	);
-		}
-	}
+    } else {
+      knex('profiles').where({ display: game.user1 }).increment('loss', 1)
+						.then((req, res) =>
+				console.log(res)
+				);
+
+      knex('profiles').where({ display: game.user1 }).increment('total_games', 1)
+				.then((req, res) =>
+				console.log(res)
+				);
+    }
+  }
 };
 
+const requestClient = (user) => {
+  knex('profiles').where('display', user.display).then((req, res) =>
+  console.log(req)
+	);
+};
 
-// // user = {
-// // 	display: 'users name'
-// // }
+const requestGame = (game) => {
+  knex('games').where('game', game.id).then((req, res) => {
+    console.log(req)
+  });
+};
 
-// const requestInfo = (user) => {
-// 	knex('profiles').where('display', user.display)
-// }
+const requestGameMoves = (game) => {
+  knex('game_moves').where('game', game.id).then((req, res) =>
+  console.log(req)
+	);
+};
 
-
-// // game = {
-// // 	id: 'game_id',
-// // 	round: 'integer'
-// // }
-
-// const rewind = (game) => {
-// 	knex('games').where('game_id', game.id).select('game_log')[game.round]
-// }
-
+<<<<<<< HEAD
 >>>>>>> DB scheme / DB routes
+=======
+const requestCapturedPieces = (game) => {
+  knex('game_pieces').where('game', game.id).then((req, res) => {
+    console.log(req)
+  });
+};
+>>>>>>> DB functions
 
 // module.exports = newGame;
 // module.exports = joinGame;
 // module.exports = saveMove;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> DB functions
 // module.exports = finishGame;
 // module.exports = requestClient;
 // module.exports = requestGame;
 // module.exports = requestGameMoves;
 // module.exports = requestCapturedPieces;
+<<<<<<< HEAD
 =======
 module.exports = finishGame;
 // module.exports = requestInfo;
 // module.exports = rewind;
 >>>>>>> DB scheme / DB routes
+=======
+>>>>>>> DB functions
