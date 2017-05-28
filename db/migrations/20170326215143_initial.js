@@ -24,6 +24,7 @@ exports.up = function (knex, Promise) {
     }),
     knex.schema.createTableIfNotExists('games', function(table) {
       table.increments('game').unsigned().primary();
+      table.string('session_id').nullable();
       table.string('white').nullable();
       table.string('black').nullable();
       table.string('result').nullable();
@@ -33,7 +34,17 @@ exports.up = function (knex, Promise) {
     knex.schema.createTableIfNotExists('game_moves', function(table){
       table.increments('move').unsigned().primary();
       table.string('action').nullable();
+      table.boolean('capture').nullable();
+      table.integer('round').nullable();
       table.integer('game').nullable().references('games.game').onDelete('CASCADE');
+      table.timestamps(true, true);
+    }),
+    knex.schema.createTableIfNotExists('game_pieces', function(table){
+      table.increments('piece').unsigned().primary();
+      table.string('piece_type').nullable();
+      table.string('game').nullable();
+      table.string('color').nullable();
+      table.string('round').nullable();
       table.timestamps(true, true);
     })
   ]);
