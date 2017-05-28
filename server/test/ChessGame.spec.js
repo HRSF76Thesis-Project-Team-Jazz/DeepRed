@@ -210,6 +210,9 @@ describe('ChessGame.capturePiece', () => {
   it('should add WN to blackCapPieces array', () => {
     expect(captChessGame.blackCapPieces).to.eql(['WP', 'WP', 'WP', 'WN']);
   });
+  it('should have game history property with expected value', () => {
+    expect(captChessGame.blackCapPieces).to.eql(['WP', 'WP', 'WP', 'WN']);
+  });
 });
 
 describe('isLegalMovePawn', () => {
@@ -455,6 +458,75 @@ describe('isLegalMoveKnight', () => {
     expect(actualKnightResultBoard2).to.eql(expectedKnightResultBoard);
   });
 });
+
+describe('isLegalMoveBishop', () => {
+  const bishopTestBoard = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, 'WB', null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+  ];
+  const expectedBishopResultBoard = [
+    [true, false, false, false, false, false, false, false],
+    [false, true, false, false, false, false, false, true],
+    [false, false, true, false, false, false, true, false],
+    [false, false, false, true, false, true, false, false],
+    [false, false, false, false, false, false, false, false],
+    [false, false, false, true, false, true, false, false],
+    [false, false, true, false, false, false, true, false],
+    [false, true, false, false, false, false, false, true],
+  ];
+  const actualBishopResultBoard = [];
+  for (let i = 0; i < 8; i += 1) {
+    actualBishopResultBoard[i] = new Array(8);
+  }
+  for (let i = 0; i < 8; i += 1) {
+    for (let j = 0; j < 8; j += 1) {
+      actualBishopResultBoard[i][j] = isLegalMove(bishopTestBoard, [4, 4], [i, j]);
+    }
+  }
+  it('bishop moves as expected', () => {
+    expect(actualBishopResultBoard).to.eql(expectedBishopResultBoard);
+  });
+
+  const bishopTestBoard2 = [
+    ['BP', null, null, null, null, null, null, null],
+    [null, 'BP', null, null, null, null, null, null],
+    [null, null, null, null, 'BP', null, 'BP', null],
+    [null, null, null, null, null, null, null, null],
+    [null, 'BP', null, 'BP', 'WB', null, null, 'BP'],
+    [null, null, null, null, null, 'BP', null, null],
+    [null, null, null, null, 'BP', null, null, null],
+    [null, 'BP', null, null, null, null, null, null],
+  ];
+  const expectedBishopResultBoard2 = [
+    [false, false, false, false, false, false, false, false],
+    [false, true, false, false, false, false, false, false],
+    [false, false, true, false, false, false, true, false],
+    [false, false, false, true, false, true, false, false],
+    [false, false, false, false, false, false, false, false],
+    [false, false, false, true, false, true, false, false],
+    [false, false, true, false, false, false, false, false],
+    [false, true, false, false, false, false, false, false],
+  ];
+  const actualBishopResultBoard2 = [];
+  for (let i = 0; i < 8; i += 1) {
+    actualBishopResultBoard2[i] = new Array(8);
+  }
+  for (let i = 0; i < 8; i += 1) {
+    for (let j = 0; j < 8; j += 1) {
+      actualBishopResultBoard2[i][j] = isLegalMove(bishopTestBoard2, [4, 4], [i, j]);
+    }
+  }
+  it('bishop blocked as expected', () => {
+    expect(actualBishopResultBoard2).to.eql(expectedBishopResultBoard2);
+  });
+});
+
 
 describe('isLegalMoveQueen', () => {
   const queenTestBoard = [

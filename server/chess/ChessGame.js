@@ -61,7 +61,7 @@ class ChessGame {
       this.board[dest[0]][dest[1]] = originPiece;
       this.board[origin[0]][origin[1]] = null;
       // check for check/checkmate/stalemate
-      console.log('--------------', this.history);
+      // console.log('--------------', this.history);
       return this.board;
     }
     throw new Error('Attempted Move is Illegal');
