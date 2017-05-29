@@ -8,20 +8,6 @@ class Board extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      board: [
-        ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
-        ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
-        [null, null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null, null],
-        ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-        ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
-      ],
-      message: '  ',
-      selectedPosition: '',
-      selectedPiece: '',
-      originDestCoord: [],
     };
 
     this.onClick = this.onClick.bind(this);
