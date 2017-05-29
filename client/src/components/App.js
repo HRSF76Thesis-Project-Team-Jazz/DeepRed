@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import socket from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
+
 // Components
 import ChessMenu from './ChessMenu';
 import SettingsDrawer from './SettingsDrawer';
-import Board from './Board';
+import Board from '../containers/Board';
 import CapturedPieces from './CapturedPieces';
 import Clock from './Clock';
 import MoveHistory from './MoveHistory';
@@ -36,11 +36,11 @@ class App extends Component {
 
   getUserInfo() {
     axios.get('/api/profiles/')
-    .then(response => {
-      console.log('successfully fetched current user infomation');
+    .then((response) => {
+      console.log('successfully fetched current user infomation', response);
     })
-    .catch(err => {
-      console.error('failed to obtain current user infomation!');
+    .catch((err) => {
+      console.error('failed to obtain current user infomation!', err);
     });
   }
 

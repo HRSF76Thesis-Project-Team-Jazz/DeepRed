@@ -7,14 +7,14 @@ class Board extends Component {
     super(props);
     this.state = {
       board: [
-        ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+        ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
         ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
         [null, null, null, null, null, null, null, null],
         [null, null, null, null, null, null, null, null],
         [null, null, null, null, null, null, null, null],
         [null, null, null, null, null, null, null, null],
         ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-        ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+        ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
       ],
       message: '  ',
       selectedPosition: '',
@@ -35,7 +35,7 @@ class Board extends Component {
   onClick(coordinates) {
 
     const { dispatch } = this.props;
-    dispatch({ type: 'REQUEST_MOVE', move: [coordinates[0], coordinates[1]] });
+    dispatch({ type: 'REQUEST_MOVE', coordinates: [coordinates[0], coordinates[1]] });
 
     const x = coordinates[0];
     const y = coordinates[1];
@@ -78,13 +78,14 @@ class Board extends Component {
   }
 
   render() {
+    const { board } = this.props;
     return (
       <div className="board">
-        {this.state.board.map((row, rowIndex) => {
+        {board.map((row, rowIndex) => {
           return (<div key={Math.random()} className="board-row">
-            {row.map((col, colIndex) =>
-              (<div
-                className={((rowIndex + colIndex) % 2 !== 0) ? 'board-col dark' : 'board-col light'}
+            {row.map((col, colIndex) => (
+              <div
+                className={((rowIndex + colIndex) % 2 === 1) ? 'board-col dark' : 'board-col light'}
                 key={rowIndex.toString() + colIndex.toString()}
                 onClick={() => this.onClick([rowIndex, colIndex])}
               >
@@ -100,7 +101,11 @@ class Board extends Component {
 }
 
 function mapStateToProps(state) {
-  return {};
+  const { boardState } = state;
+  const { board } = boardState;
+  return {
+    board,
+  };
 }
 
 export default connect(mapStateToProps)(Board);

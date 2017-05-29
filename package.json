@@ -60,6 +60,7 @@
     "babel-plugin-transform-es2015-modules-commonjs": "^6.24.0",
     "babel-preset-latest": "^6.24.0",
     "babel-preset-react": "^6.23.0",
+    "babel-preset-stage-2": "^6.24.1",
     "chai": "^3.5.0",
     "css-loader": "^0.28.3",
     "eslint": "^3.19.0",

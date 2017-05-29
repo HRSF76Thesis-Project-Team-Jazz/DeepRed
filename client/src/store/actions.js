@@ -1,8 +1,9 @@
 import * as types from './actionTypes';
 
-export const requestMove = query => ({
+export const requestMove = coordinates => ({
   type: types.REQUEST_MOVE,
-  query,
+  coordinates,
+  receivedAt: Date.now(),
 });
 
 export const receiveMove = (query, move) => ({
