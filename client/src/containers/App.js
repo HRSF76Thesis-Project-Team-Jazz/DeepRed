@@ -35,7 +35,7 @@ class App extends Component {
       console.log('client side connected!');
     });
   }
-
+  
   getUserInfo() {
     axios.get('/api/profiles/')
     .then((response) => {
