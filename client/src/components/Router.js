@@ -2,7 +2,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import Settings from './Settings';
-import App from './App';
+import App from '../containers/App';
 
 class Router extends React.Component {
   constructor(props) {

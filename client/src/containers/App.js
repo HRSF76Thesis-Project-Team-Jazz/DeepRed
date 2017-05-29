@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import socket from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
 
 // Components
-import ChessMenu from './ChessMenu';
-import SettingsDrawer from './SettingsDrawer';
-import Board from '../containers/Board';
-import CapturedPieces from './CapturedPieces';
-import Clock from './Clock';
-import MoveHistory from './MoveHistory';
+import ChessMenu from '../components/ChessMenu';
+import SettingsDrawer from '../components/SettingsDrawer';
+import Board from './Board';
+import CapturedPieces from '../components/CapturedPieces';
+import Clock from '../components/Clock';
+import MoveHistory from '../components/MoveHistory';
 import './css/App.css';
 
 // Needed for onTouchTap
@@ -50,6 +51,8 @@ class App extends Component {
   }
 
   render() {
+    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite } = this.props;
+
     return (
       <div className="site-wrap">
         <ChessMenu />
@@ -71,14 +74,14 @@ class App extends Component {
           <div className="flex-row">
 
             <div className="flex-col">
-              <CapturedPieces color="Black" />
+              <CapturedPieces color="Black" capturedPieces={capturedPiecesBlack} />
               <Board checkLegalMove={this.checkLegalMove} />
-              <CapturedPieces color="White" />
+              <CapturedPieces color="White" capturedPieces={capturedPiecesWhite} />
             </div>
 
             <div className="flex-col right-col">
               <Clock />
-              <MoveHistory />
+              <MoveHistory moveHistory={moveHistory} />
               <Clock />
             </div>
 
@@ -90,4 +93,18 @@ class App extends Component {
 
 }
 
-export default App;
+function mapStateToProps(state) {
+  const { gameState } = state;
+  const {
+    moveHistory,
+    capturedPiecesBlack,
+    capturedPiecesWhite,
+  } = gameState;
+  return {
+    moveHistory,
+    capturedPiecesBlack,
+    capturedPiecesWhite,
+  };
+}
+
+export default connect(mapStateToProps)(App);

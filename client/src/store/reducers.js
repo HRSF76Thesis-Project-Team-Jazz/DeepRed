@@ -14,8 +14,8 @@ const gameState = (state = Immutable({
   clock_B: '',
   player_W: '',
   player_B: '',
-  capturedPieces_B: [],
-  capturedPieces_W: [],
+  capturedPiecesBlack: ['WP', 'WP', 'WN'],
+  capturedPiecesWhite: ['BP', 'BP', 'BQ'],
   gameTurn: 'W',
   moveHistory: [
     { from: 'e2', to: 'e4' },

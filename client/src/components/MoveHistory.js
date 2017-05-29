@@ -1,8 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { List, ListItem } from 'material-ui/List';
 
-import MobileTearSheet from './MobileTearSheet';
+import MobileTearSheet from '../components/MobileTearSheet';
 
 const MoveHistory = ({ moveHistory }) => {
   return (
@@ -19,12 +18,4 @@ const MoveHistory = ({ moveHistory }) => {
   );
 };
 
-function mapStateToProps(state) {
-  const { gameState } = state;
-  const { moveHistory } = gameState;
-  return {
-    moveHistory,
-  };
-}
-
-export default connect(mapStateToProps)(MoveHistory);
+export default MoveHistory;
