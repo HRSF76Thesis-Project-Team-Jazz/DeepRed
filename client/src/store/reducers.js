@@ -23,23 +23,17 @@ const gameState = (state = Immutable({
   capturedPiecesBlack: ['Reducer', 'WP', 'WP', 'WN'],
   capturedPiecesWhite: ['Reducer', 'BP', 'BP', 'BQ'],
   gameTurn: 'W',
-  moveHistory: [
-    { from: 'red', to: 'ucer' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-  ],
+  moveHistory: [],
 }), action) => {
   switch (action.type) {
+    case types.MOVE_PIECE:
+      const cols = 'abcdefgh';
+      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
+      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      return Immutable({
+        ...state,
+        moveHistory: state.moveHistory.concat({ from, to }),
+      });
     default:
       return state;
   }
@@ -56,6 +50,12 @@ const boardState = (state = Immutable({
   ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR']],
 }), action) => {
   switch (action.type) {
+    case types.MOVE_PIECE:
+      console.log('move board');  
+      const board = state.board.slice(0);
+      // board[action.fromPosition[0]][action.fromPosition[1]] = null;
+      // board[action.coordinates[0]][action.coordinates[1]] = action.selectedPiece;
+      return Immutable({ board });
     default:
       return state;
   }
@@ -63,10 +63,8 @@ const boardState = (state = Immutable({
 
 const moveState = (state = Immutable({
   message: ' reducer: moveState message ',
-  selectedPosition: '',
+  fromPosition: '',
   selectedPiece: '',
-  originDestCoord: '',
-  moveHistory: [],
 }), action) => {
   switch (action.type) {
     case types.INVALID_SELECTION:
@@ -77,8 +75,19 @@ const moveState = (state = Immutable({
     case types.SELECT_PIECE:
       return Immutable({
         ...state,
-        selectedPosition: action.coordinates,
+        fromPosition: action.coordinates,
+        selectedPiece: action.selectedPiece,
         message: `Selected: ${action.coordinates}`,
+      });
+    case types.MOVE_PIECE:
+      const cols = 'abcdefgh';
+      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
+      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      return Immutable({
+        ...state,
+        fromPosition: '',
+        selectedPiece: '',
+        message: `Move: ${from}-${to}`,
       });
     default:
       return state;

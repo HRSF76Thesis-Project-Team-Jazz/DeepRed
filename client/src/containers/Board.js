@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { invalidSelection, selectPiece, capturePiece } from '../store/actions';
+import { invalidSelection, selectPiece, movePiece, capturePiece } from '../store/actions';
 import './css/Board.css';
 
 class Board extends Component {
@@ -35,7 +35,7 @@ class Board extends Component {
   }
 
   onClick(coordinates) {
-    const { dispatch, board, selectedPosition, selectedPiece, playerColor } = this.props;
+    const { dispatch, board, fromPosition, selectedPiece, playerColor } = this.props;
 
     const x = coordinates[0];
     const y = coordinates[1];
@@ -44,33 +44,19 @@ class Board extends Component {
     // If no piece is currently selected
     if (selectedPiece === '') {
       if (selection && selection[0] === playerColor) {
-        dispatch(selectPiece(coordinates));
+        dispatch(selectPiece(selection, coordinates));
       } else {
         dispatch(invalidSelection(coordinates));
       }
-    } else if (selection !== null) {
-      if (selectedPiece[0] === board[x][y][0]) {
-        dispatch(invalidSelection(coordinates));
-      } else {
-        dispatch(capturePiece(coordinates));
-      }
+
+      // If a piece is already selected
+      /* NOTE: CHECK FOR VALID MOVE REQUIRED HERE    */
+    } else if (selection === null) {
+      dispatch(movePiece(selectedPiece, fromPosition, coordinates));
+    } else if (selectedPiece[0] === board[x][y][0]) {
+      dispatch(invalidSelection(coordinates));
     } else {
-      if (this.state.originDestCoord) {
-        const coord = [];
-        coord[0] = this.state.originDestCoord;
-        coord[1] = [x, y];
-        this.props.checkLegalMove(coord);
-      }
-      const board = this.state.board;
-      board[x][y] = this.state.selectedPiece;
-      board[this.state.selectedPosition[0]][this.state.selectedPosition[1]] = null;
-      this.setState({
-        board,
-        message: '  ',
-        selectedPosition: '',
-        selectedPiece: '',
-        originDestCoord: [],
-      });
+      dispatch(capturePiece(coordinates));
     }
   }
 
@@ -100,11 +86,11 @@ function mapStateToProps(state) {
   const { gameState, boardState, moveState } = state;
   const { playerColor } = gameState;
   const { board } = boardState;
-  const { selectedPosition, selectedPiece } = moveState;
+  const { fromPosition, selectedPiece } = moveState;
   return {
     playerColor,
     board,
-    selectedPosition,
+    fromPosition,
     selectedPiece,
   };
 }

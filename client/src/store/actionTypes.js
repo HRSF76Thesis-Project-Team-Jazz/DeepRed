@@ -4,4 +4,4 @@ export const SELECT_PIECE = 'SELECT_PIECE';
 
 export const CAPTURE_PIECE = 'CAPTURE_PIECE';
 
-export const RECEIVE_MOVE = 'RECEIVE_MOVE';
+export const MOVE_PIECE = 'MOVE_PIECE';

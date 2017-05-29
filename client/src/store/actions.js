@@ -12,18 +12,21 @@ export const invalidSelection = coordinates => ({
   coordinates,
 });
 
-export const selectPiece = coordinates => ({
+export const selectPiece = (selectedPiece, coordinates) => ({
   type: types.SELECT_PIECE,
+  selectedPiece,
   coordinates,
+});
+
+export const movePiece = (selectedPiece, fromPosition, coordinates) => ({
+  type: types.MOVE_PIECE,
+  coordinates,
+  selectedPiece,
+  fromPosition,
 });
 
 export const capturePiece = coordinates => ({
   type: types.CAPTURE_PIECE,
-  coordinates,
-});
-
-export const requestMove = coordinates => ({
-  type: types.REQUEST_MOVE,
   coordinates,
 });
 
