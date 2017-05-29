@@ -45,8 +45,8 @@ const boardState = (state = Immutable({
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+  [null, null, null, 'WP', null, null, null, null],
+  ['WP', 'WP', 'WP', null, 'WP', 'WP', 'WP', 'WP'],
   ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR']],
 }), action) => {
   switch (action.type) {

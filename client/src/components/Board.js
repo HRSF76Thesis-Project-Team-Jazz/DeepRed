@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import './css/Board.css';
 
 class Board extends Component {
@@ -33,7 +32,6 @@ class Board extends Component {
   }
 
   onClick(coordinates) {
-
     const { dispatch } = this.props;
     dispatch({ type: 'REQUEST_MOVE', coordinates: [coordinates[0], coordinates[1]] });
 
@@ -58,12 +56,12 @@ class Board extends Component {
         selectedPiece: '',
       });
     } else {
-        if (this.state.originDestCoord) {
-          const coord = [];
-          coord[0] = this.state.originDestCoord;
-          coord[1] = [x, y];
-          this.props.checkLegalMove(coord);
-        }
+      if (this.state.originDestCoord) {
+        const coord = [];
+        coord[0] = this.state.originDestCoord;
+        coord[1] = [x, y];
+        this.props.checkLegalMove(coord);
+      }
       const board = this.state.board;
       board[x][y] = this.state.selectedPiece;
       board[this.state.selectedPosition[0]][this.state.selectedPosition[1]] = null;
@@ -78,10 +76,9 @@ class Board extends Component {
   }
 
   render() {
-    const { board } = this.props;
     return (
       <div className="board">
-        {board.map((row, rowIndex) => {
+        {this.props.board.map((row, rowIndex) => {
           return (<div key={Math.random()} className="board-row">
             {row.map((col, colIndex) => (
               <div
@@ -100,12 +97,4 @@ class Board extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  const { boardState } = state;
-  const { board } = boardState;
-  return {
-    board,
-  };
-}
-
-export default connect(mapStateToProps)(Board);
+export default Board;
