@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import socket from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
+
 // Components
-import ChessMenu from './ChessMenu';
-import SettingsDrawer from './SettingsDrawer';
+import ChessMenu from '../components/ChessMenu';
+import SettingsDrawer from '../components/SettingsDrawer';
 import Board from './Board';
-import CapturedPieces from './CapturedPieces';
-import Clock from './Clock';
-import MoveHistory from './MoveHistory';
+import Message from '../components/Message';
+import CapturedPieces from '../components/CapturedPieces';
+import Clock from '../components/Clock';
+import MoveHistory from '../components/MoveHistory';
 import './css/App.css';
 
 // Needed for onTouchTap
@@ -36,11 +38,11 @@ class App extends Component {
 
   getUserInfo() {
     axios.get('/api/profiles/')
-    .then(response => {
-      console.log('successfully fetched current user infomation');
+    .then((response) => {
+      console.log('successfully fetched current user infomation', response);
     })
-    .catch(err => {
-      console.error('failed to obtain current user infomation!');
+    .catch((err) => {
+      console.error('failed to obtain current user infomation!', err);
     });
   }
 
@@ -50,6 +52,8 @@ class App extends Component {
   }
 
   render() {
+    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message } = this.props;
+
     return (
       <div className="site-wrap">
         <ChessMenu />
@@ -71,14 +75,15 @@ class App extends Component {
           <div className="flex-row">
 
             <div className="flex-col">
-              <CapturedPieces color="Black" />
+              <CapturedPieces color="Black" capturedPieces={capturedPiecesBlack} />
               <Board checkLegalMove={this.checkLegalMove} />
-              <CapturedPieces color="White" />
+              <CapturedPieces color="White" capturedPieces={capturedPiecesWhite} />
+              <Message message={message} />
             </div>
 
             <div className="flex-col right-col">
               <Clock />
-              <MoveHistory />
+              <MoveHistory moveHistory={moveHistory} />
               <Clock />
             </div>
 
@@ -87,7 +92,22 @@ class App extends Component {
       </div>
     );
   }
-
 }
 
-export default App;
+function mapStateToProps(state) {
+  const { gameState, moveState } = state;
+  const {
+    moveHistory,
+    capturedPiecesBlack,
+    capturedPiecesWhite,
+  } = gameState;
+  const { message } = moveState;
+  return {
+    message,
+    moveHistory,
+    capturedPiecesBlack,
+    capturedPiecesWhite,
+  };
+}
+
+export default connect(mapStateToProps)(App);

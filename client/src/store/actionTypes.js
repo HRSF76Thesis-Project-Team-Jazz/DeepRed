@@ -1,0 +1,3 @@
+export const SELECT_SQUARE = 'SELECT_SQUARE';
+
+export const RECEIVE_MOVE = 'RECEIVE_MOVE';

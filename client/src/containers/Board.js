@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
+import { selectSquare } from '../store/actions';
 import './css/Board.css';
 
 class Board extends Component {
@@ -7,14 +9,14 @@ class Board extends Component {
     super(props);
     this.state = {
       board: [
-        ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+        ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
         ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
         [null, null, null, null, null, null, null, null],
         [null, null, null, null, null, null, null, null],
         [null, null, null, null, null, null, null, null],
         [null, null, null, null, null, null, null, null],
         ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-        ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+        ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
       ],
       message: '  ',
       selectedPosition: '',
@@ -33,6 +35,9 @@ class Board extends Component {
   }
 
   onClick(coordinates) {
+    const { dispatch } = this.props;
+    dispatch(selectSquare(coordinates));
+
     const x = coordinates[0];
     const y = coordinates[1];
     const selection = this.state.board[x][y];
@@ -54,12 +59,12 @@ class Board extends Component {
         selectedPiece: '',
       });
     } else {
-        if (this.state.originDestCoord) {
-          const coord = [];
-          coord[0] = this.state.originDestCoord;
-          coord[1] = [x, y];
-          this.props.checkLegalMove(coord);
-        }
+      if (this.state.originDestCoord) {
+        const coord = [];
+        coord[0] = this.state.originDestCoord;
+        coord[1] = [x, y];
+        this.props.checkLegalMove(coord);
+      }
       const board = this.state.board;
       board[x][y] = this.state.selectedPiece;
       board[this.state.selectedPosition[0]][this.state.selectedPosition[1]] = null;
@@ -74,15 +79,14 @@ class Board extends Component {
   }
 
   render() {
-    const board = [...Array(8).keys()];
-
+    const { board } = this.props;
     return (
       <div className="board">
-        {this.state.board.map((row, rowIndex) => {
+        {board.map((row, rowIndex) => {
           return (<div key={Math.random()} className="board-row">
-            {row.map((col, colIndex) =>
-              (<div
-                className={((rowIndex + colIndex) % 2 !== 0) ? 'board-col dark' : 'board-col light'}
+            {row.map((col, colIndex) => (
+              <div
+                className={((rowIndex + colIndex) % 2 === 1) ? 'board-col dark' : 'board-col light'}
                 key={rowIndex.toString() + colIndex.toString()}
                 onClick={() => this.onClick([rowIndex, colIndex])}
               >
@@ -91,11 +95,17 @@ class Board extends Component {
             )}
           </div>);
         })}
-        <p className="board-message">{this.state.message}</p>
       </div>
     );
   }
-
 }
 
-export default Board;
+function mapStateToProps(state) {
+  const { boardState } = state;
+  const { board } = boardState;
+  return {
+    board,
+  };
+}
+
+export default connect(mapStateToProps)(Board);

@@ -13,8 +13,8 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 const ChessMenu = () => (
   <IconMenu
     iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-    anchorOrigin={{horizontal: 'left', vertical: 'top'}}
-    targetOrigin={{horizontal: 'left', vertical: 'top'}}
+    anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+    targetOrigin={{ horizontal: 'left', vertical: 'top' }}
   >
     <MenuItem
       primaryText="Copy & Paste"
