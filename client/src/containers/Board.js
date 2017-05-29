@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { selectSquare } from '../store/actions';
+import { invalidSelection, selectPiece, capturePiece } from '../store/actions';
 import './css/Board.css';
 
 class Board extends Component {
@@ -35,29 +35,25 @@ class Board extends Component {
   }
 
   onClick(coordinates) {
-    const { dispatch } = this.props;
-    dispatch(selectSquare(coordinates));
+    const { dispatch, board, selectedPosition, selectedPiece, playerColor } = this.props;
 
     const x = coordinates[0];
     const y = coordinates[1];
-    const selection = this.state.board[x][y];
-    if (this.state.selectedPiece === '') {
-      if (selection === null) {
-        this.setState({ message: 'Invalid selection' });
+    const selection = board[x][y];
+
+    // If no piece is currently selected
+    if (selectedPiece === '') {
+      if (selection && selection[0] === playerColor) {
+        dispatch(selectPiece(coordinates));
       } else {
-        this.setState({
-          originDestCoord: [x, y],
-          message: `${selection} selected`,
-          selectedPosition: coordinates,
-          selectedPiece: selection,
-        });
+        dispatch(invalidSelection(coordinates));
       }
     } else if (selection !== null) {
-      this.setState({
-        message: 'Invalid selection',
-        selectedPosition: '',
-        selectedPiece: '',
-      });
+      if (selectedPiece[0] === board[x][y][0]) {
+        dispatch(invalidSelection(coordinates));
+      } else {
+        dispatch(capturePiece(coordinates));
+      }
     } else {
       if (this.state.originDestCoord) {
         const coord = [];
@@ -101,10 +97,15 @@ class Board extends Component {
 }
 
 function mapStateToProps(state) {
-  const { boardState } = state;
+  const { gameState, boardState, moveState } = state;
+  const { playerColor } = gameState;
   const { board } = boardState;
+  const { selectedPosition, selectedPiece } = moveState;
   return {
+    playerColor,
     board,
+    selectedPosition,
+    selectedPiece,
   };
 }
 

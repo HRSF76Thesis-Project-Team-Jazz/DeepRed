@@ -7,16 +7,24 @@ import * as types from './actionTypes';
  */
 
 
-export const selectSquare = coordinates => ({
-  type: types.SELECT_SQUARE,
+export const invalidSelection = coordinates => ({
+  type: types.INVALID_SELECTION,
   coordinates,
-  receivedAt: Date.now(),
+});
+
+export const selectPiece = coordinates => ({
+  type: types.SELECT_PIECE,
+  coordinates,
+});
+
+export const capturePiece = coordinates => ({
+  type: types.CAPTURE_PIECE,
+  coordinates,
 });
 
 export const requestMove = coordinates => ({
   type: types.REQUEST_MOVE,
   coordinates,
-  receivedAt: Date.now(),
 });
 
 export const receiveMove = (query, move) => ({

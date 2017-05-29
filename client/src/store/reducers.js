@@ -14,6 +14,7 @@ import Immutable from 'seamless-immutable';
 import * as types from './actionTypes';
 
 const gameState = (state = Immutable({
+  playerColor: 'W',
   gameId: '',
   clock_W: '',
   clock_B: '',
@@ -68,12 +69,17 @@ const moveState = (state = Immutable({
   moveHistory: [],
 }), action) => {
   switch (action.type) {
-    case types.SELECT_SQUARE:
-      return {
+    case types.INVALID_SELECTION:
+      return Immutable({
+        ...state,
+        message: `Invalid selection [${action.coordinates}] - select again`,
+      });
+    case types.SELECT_PIECE:
+      return Immutable({
         ...state,
         selectedPosition: action.coordinates,
         message: `Selected: ${action.coordinates}`,
-      };
+      });
     default:
       return state;
   }
