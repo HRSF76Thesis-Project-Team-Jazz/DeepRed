@@ -9,7 +9,6 @@ import SettingsDrawer from './SettingsDrawer';
 import Board from './Board';
 import CapturedPieces from './CapturedPieces';
 import Clock from './Clock';
-// import MovesList from './MovesList';
 import MoveHistory from './MoveHistory';
 import './css/App.css';
 
@@ -61,7 +60,6 @@ class App extends Component {
                 <td><h1>Deep Red</h1></td>
                 <td className="button-cell">
                   <SettingsDrawer />
-                  <Link to="/settings">Settings</Link>
                   <a href="/profile" className="button">Home</a>
                   <a href="/logout" className="button">Logout</a>
                 </td>
