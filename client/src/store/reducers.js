@@ -45,14 +45,14 @@ const gameState = (state = Immutable({
 };
 
 const boardState = (state = Immutable({
-  board: [['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+  board: [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
   ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR']],
+  ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR']],
 }), action) => {
   switch (action.type) {
     default:
