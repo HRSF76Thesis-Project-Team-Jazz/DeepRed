@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import socket from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import axios from 'axios';
 // Components
 import ChessMenu from './ChessMenu';
 import SettingsDrawer from './SettingsDrawer';
@@ -22,15 +23,25 @@ class App extends Component {
     super(props);
     this.state = {
     };
-
+    this.getUserInfo = this.getUserInfo.bind(this);
     this.checkLegalMove = this.checkLegalMove.bind(this);
   }
 
   componentDidMount() {
+    this.getUserInfo();
     this.io = socket.connect();
     this.io.on('connect', () => {
       console.log('client side connected!');
-      console.log('logged in as user: ', this.io.id);
+    });
+  }
+
+  getUserInfo() {
+    axios.get('/api/profiles/')
+    .then(response => {
+      console.log('successfully fetched current user infomation');
+    })
+    .catch(err => {
+      console.error('failed to obtain current user infomation!');
     });
   }
 

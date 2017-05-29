@@ -18,6 +18,7 @@
   "author": "Hack Reactor",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.16.1",
     "babel-core": "^6.24.1",
     "bcrypt-nodejs": "^0.0.3",
     "bluebird": "^3.5.0",
@@ -39,14 +40,15 @@
     "passport-google-oauth": "^1.0.0",
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.4",
+    "passport.socketio": "^3.7.0",
     "pg": "^6.1.5",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-router-dom": "^4.1.1",
+    "react-tap-event-plugin": "^2.0.1",
     "redis": "^2.7.1",
     "socket.io": "^2.0.1",
-    "socket.io-client": "^2.0.1",
-    "react-tap-event-plugin": "^2.0.1"
+    "socket.io-client": "^2.0.1"
   },
   "devDependencies": {
     "babel-loader": "^7.0.0",

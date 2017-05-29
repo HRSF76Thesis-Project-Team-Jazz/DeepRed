@@ -5,6 +5,9 @@ const router = express.Router();
 
 router.route('/')
   .get(middleware.auth.verify, (req, res) => {
+    console.log('cookies: ', req.cookies);
+    console.log('sessionID: ', req.sessionID);
+    console.log('session: ', req.session);
     res.render('index.ejs');
   });
 

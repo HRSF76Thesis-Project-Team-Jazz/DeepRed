@@ -18,6 +18,8 @@ module.exports.verify = (req, res, next) => {
 module.exports.session = session({
   store: new RedisStore(redisConfig),
   secret: 'more laughter, more love, more life',
-  resave: config.url === undefined,
+  resave: false,
   saveUninitialized: config.url === undefined,
 });
+
+//config.url === undefined
