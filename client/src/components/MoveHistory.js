@@ -17,8 +17,8 @@ const MoveHistory = () => {
   return (
     <MobileTearSheet>
       <List>
-        { moveList.map((move, i) => ((i < 9) ? <ListItem key={`${i}-${move}`} primaryText={`_${i + 1}. ${move}`} /> : <ListItem key={`${i}-${move}`} primaryText={`${i + 1}. ${move}`} />))}
-      </List>
+        { moveList.map((move, i) => ((i < 9) ? <ListItem key={i} primaryText={`_${i + 1}. ${move}`} /> : <ListItem key={i} primaryText={`${i + 1}. ${move}`} />))}
+      </List> 
     </MobileTearSheet>
   );
 };

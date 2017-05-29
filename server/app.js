@@ -17,6 +17,7 @@ app.use(middleware.passport.initialize());
 app.use(middleware.passport.session());
 app.use(middleware.flash());
 
+
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/', routes.auth);

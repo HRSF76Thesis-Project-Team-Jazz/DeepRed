@@ -82,7 +82,7 @@ class Board extends Component {
           return (<div key={Math.random()} className="board-row">
             {row.map((col, colIndex) =>
               (<div
-                className={((rowIndex + colIndex) % 2 === 0) ? 'board-col dark' : 'board-col light'}
+                className={((rowIndex + colIndex) % 2 !== 0) ? 'board-col dark' : 'board-col light'}
                 key={rowIndex.toString() + colIndex.toString()}
                 onClick={() => this.onClick([rowIndex, colIndex])}
               >
