@@ -14,6 +14,7 @@ import Immutable from 'seamless-immutable';
 import * as types from './actionTypes';
 
 const gameState = (state = Immutable({
+  playerColor: 'W',
   gameId: '',
   clock_W: '',
   clock_B: '',
@@ -22,29 +23,24 @@ const gameState = (state = Immutable({
   capturedPiecesBlack: ['Reducer', 'WP', 'WP', 'WN'],
   capturedPiecesWhite: ['Reducer', 'BP', 'BP', 'BQ'],
   gameTurn: 'W',
-  moveHistory: [
-    { from: 'red', to: 'ucer' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-    { from: 'e2', to: 'e4' },
-  ],
+  moveHistory: [],
 }), action) => {
   switch (action.type) {
+    case types.MOVE_PIECE: {
+      const cols = 'abcdefgh';
+      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
+      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      return Immutable({
+        ...state,
+        moveHistory: state.moveHistory.concat({ from, to }),
+      });
+    }
     default:
       return state;
   }
 };
 
-const boardState = (state = Immutable({
+const boardState = (state = {
   board: [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
   ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
   [null, null, null, null, null, null, null, null],
@@ -53,8 +49,14 @@ const boardState = (state = Immutable({
   [null, null, null, null, null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
   ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR']],
-}), action) => {
+}, action) => {
   switch (action.type) {
+    case types.MOVE_PIECE: {
+      const board = state.board.slice(0);
+      board[action.fromPosition[0]][action.fromPosition[1]] = null;
+      board[action.coordinates[0]][action.coordinates[1]] = action.selectedPiece;
+      return { board };
+    }
     default:
       return state;
   }
@@ -62,18 +64,33 @@ const boardState = (state = Immutable({
 
 const moveState = (state = Immutable({
   message: ' reducer: moveState message ',
-  selectedPosition: '',
+  fromPosition: '',
   selectedPiece: '',
-  originDestCoord: '',
-  moveHistory: [],
 }), action) => {
   switch (action.type) {
-    case types.SELECT_SQUARE:
-      return {
+    case types.INVALID_SELECTION:
+      return Immutable({
         ...state,
-        selectedPosition: action.coordinates,
+        message: `Invalid selection [${action.coordinates}] - select again`,
+      });
+    case types.SELECT_PIECE:
+      return Immutable({
+        ...state,
+        fromPosition: action.coordinates,
+        selectedPiece: action.selectedPiece,
         message: `Selected: ${action.coordinates}`,
-      };
+      });
+    case types.MOVE_PIECE: {
+      const cols = 'abcdefgh';
+      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
+      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      return Immutable({
+        ...state,
+        fromPosition: '',
+        selectedPiece: '',
+        message: `Move: ${from}-${to}`,
+      });
+    }
     default:
       return state;
   }
