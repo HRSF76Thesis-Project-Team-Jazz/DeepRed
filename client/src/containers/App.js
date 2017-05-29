@@ -7,7 +7,8 @@ import axios from 'axios';
 // Components
 import ChessMenu from '../components/ChessMenu';
 import SettingsDrawer from '../components/SettingsDrawer';
-import Board from '../components/Board';
+import Board from './Board';
+import Message from '../components/Message';
 import CapturedPieces from '../components/CapturedPieces';
 import Clock from '../components/Clock';
 import MoveHistory from '../components/MoveHistory';
@@ -51,7 +52,7 @@ class App extends Component {
   }
 
   render() {
-    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, board } = this.props;
+    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message } = this.props;
 
     return (
       <div className="site-wrap">
@@ -75,8 +76,9 @@ class App extends Component {
 
             <div className="flex-col">
               <CapturedPieces color="Black" capturedPieces={capturedPiecesBlack} />
-              <Board checkLegalMove={this.checkLegalMove} board={board} />
+              <Board checkLegalMove={this.checkLegalMove} />
               <CapturedPieces color="White" capturedPieces={capturedPiecesWhite} />
+              <Message message={message} />
             </div>
 
             <div className="flex-col right-col">
@@ -90,19 +92,18 @@ class App extends Component {
       </div>
     );
   }
-
 }
 
 function mapStateToProps(state) {
-  const { gameState, boardState } = state;
+  const { gameState, moveState } = state;
   const {
     moveHistory,
     capturedPiecesBlack,
     capturedPiecesWhite,
   } = gameState;
-  const { board } = boardState;
+  const { message } = moveState;
   return {
-    board,
+    message,
     moveHistory,
     capturedPiecesBlack,
     capturedPiecesWhite,

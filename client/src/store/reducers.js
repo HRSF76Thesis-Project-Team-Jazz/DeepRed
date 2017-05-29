@@ -1,8 +1,13 @@
-// reducers hold the store's state (the initialState object defines it)
-// reducers also handle plain object actions and modify their state (immutably) accordingly
-// this is the only way to change the store's state
-// the other exports in this file are selectors, which is business logic that digests parts of the store's state
-// for easier consumption by views
+/**
+  reducers hold the store's state (the initialState object defines it)
+  reducers also handle plain object actions and modify their state (immutably) accordingly
+  this is the only way to change the store's state
+  the other exports in this file are selectors, which is business logic that digests parts of the store's state
+  for easier consumption by views
+
+  Reducers take state and action as arguments
+  and returns the next state
+ */
 
 import { combineReducers } from 'redux';
 import Immutable from 'seamless-immutable';
@@ -14,11 +19,11 @@ const gameState = (state = Immutable({
   clock_B: '',
   player_W: '',
   player_B: '',
-  capturedPiecesBlack: ['WP', 'WP', 'WN'],
-  capturedPiecesWhite: ['BP', 'BP', 'BQ'],
+  capturedPiecesBlack: ['Reducer', 'WP', 'WP', 'WN'],
+  capturedPiecesWhite: ['Reducer', 'BP', 'BP', 'BQ'],
   gameTurn: 'W',
   moveHistory: [
-    { from: 'e2', to: 'e4' },
+    { from: 'red', to: 'ucer' },
     { from: 'e2', to: 'e4' },
     { from: 'e2', to: 'e4' },
     { from: 'e2', to: 'e4' },
@@ -45,8 +50,8 @@ const boardState = (state = Immutable({
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
-  [null, null, null, 'WP', null, null, null, null],
-  ['WP', 'WP', 'WP', null, 'WP', 'WP', 'WP', 'WP'],
+  [null, null, null, null, null, null, null, null],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
   ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR']],
 }), action) => {
   switch (action.type) {
@@ -56,17 +61,18 @@ const boardState = (state = Immutable({
 };
 
 const moveState = (state = Immutable({
-  message: '  ',
+  message: ' reducer: moveState message ',
   selectedPosition: '',
   selectedPiece: '',
   originDestCoord: '',
   moveHistory: [],
 }), action) => {
   switch (action.type) {
-    case types.REQUEST_MOVE:
+    case types.SELECT_SQUARE:
       return {
         ...state,
         selectedPosition: action.coordinates,
+        message: `Selected: ${action.coordinates}`,
       };
     default:
       return state;

@@ -1,2 +1,3 @@
-export const REQUEST_MOVE = 'REQUEST_MOVE';
+export const SELECT_SQUARE = 'SELECT_SQUARE';
+
 export const RECEIVE_MOVE = 'RECEIVE_MOVE';

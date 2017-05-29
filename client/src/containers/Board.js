@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
+import { selectSquare } from '../store/actions';
 import './css/Board.css';
 
 class Board extends Component {
@@ -33,7 +36,7 @@ class Board extends Component {
 
   onClick(coordinates) {
     const { dispatch } = this.props;
-    dispatch({ type: 'REQUEST_MOVE', coordinates: [coordinates[0], coordinates[1]] });
+    dispatch(selectSquare(coordinates));
 
     const x = coordinates[0];
     const y = coordinates[1];
@@ -76,9 +79,10 @@ class Board extends Component {
   }
 
   render() {
+    const { board } = this.props;
     return (
       <div className="board">
-        {this.props.board.map((row, rowIndex) => {
+        {board.map((row, rowIndex) => {
           return (<div key={Math.random()} className="board-row">
             {row.map((col, colIndex) => (
               <div
@@ -91,10 +95,17 @@ class Board extends Component {
             )}
           </div>);
         })}
-        <p className="board-message">{this.state.message}</p>
       </div>
     );
   }
 }
 
-export default Board;
+function mapStateToProps(state) {
+  const { boardState } = state;
+  const { board } = boardState;
+  return {
+    board,
+  };
+}
+
+export default connect(mapStateToProps)(Board);
