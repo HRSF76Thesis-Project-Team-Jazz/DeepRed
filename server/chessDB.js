@@ -104,7 +104,6 @@ const saveMove = (game) => {
 	);
   }
 
-
 // // game = {
 // // 	id: 'game_id'
 // // 	result: 'name'
