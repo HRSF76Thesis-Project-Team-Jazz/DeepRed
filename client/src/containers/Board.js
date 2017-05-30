@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { invalidSelection, selectPiece, movePiece, capturePiece } from '../store/actions';
+import { invalidSelection, selectPiece, movePiece, capturePiece, fetchGame } from '../store/actions';
 import './css/Board.css';
 
 class Board extends Component {
@@ -14,6 +14,8 @@ class Board extends Component {
   }
 
   componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(fetchGame());
   }
 
   getImage(CP) {
