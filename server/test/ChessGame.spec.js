@@ -210,9 +210,6 @@ describe('ChessGame.capturePiece', () => {
   it('should add WN to blackCapPieces array', () => {
     expect(captChessGame.blackCapPieces).to.eql(['WP', 'WP', 'WP', 'WN']);
   });
-  it('should have game history property with expected value', () => {
-    expect(captChessGame.blackCapPieces).to.eql(['WP', 'WP', 'WP', 'WN']);
-  });
 });
 
 describe('isLegalMovePawn', () => {
