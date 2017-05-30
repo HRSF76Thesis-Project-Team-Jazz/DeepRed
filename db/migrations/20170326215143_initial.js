@@ -46,6 +46,8 @@ exports.up = function (knex, Promise) {
       table.string('color').nullable();
       table.string('round').nullable();
       table.timestamps(true, true);
+      table.integer('game').nullable().references('games.game').onDelete('CASCADE');
+      table.timestamps(true, true);
     })
   ]);
 };
