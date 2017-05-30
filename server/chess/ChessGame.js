@@ -75,6 +75,7 @@ class ChessGame {
     }
   }
 
+<<<<<<< HEAD
   pawnPromotion(piece, origin, dest) {
     let originPiece = this.board[origin[0]][origin[1]];
     
@@ -103,18 +104,50 @@ class ChessGame {
 
   castling(piece, origin, dest) {
     let originPiece = this.board[origin[0]][origin[1]];
+=======
+  pawnPromotion = (board, origin, dest) => {
+    let pieceColor = board[origin[0]][origin[1]][0];
+    let originPiece = this.board[dest[0]][dest[1]];
+    
+    if (isLegalMove(this.board, origin, dest)){
+      if (pieceColor === 'W' && origin[0] === 1){
+        if (dest[0] === 0){
+          board[dest[0]][dest[1]] = 'WQ';
+          originPiece = null;
+        }
+      }
+      if (pieceColor === 'B' && origin[0] === 6){
+        if (dest[0] === 7){
+          board[dest[0]][dest[1]] = 'BQ';
+          originPiece = null;
+        }
+      }
+    }
+  } 
+
+  castling = (board, origin, dest) => {
+    let piece = this.board[origin[0]][origin[1]];
+    let originPiece = this.board[dest[0]][dest[1]];
+>>>>>>> b88258c363a3b02e6a0a47dd4824487a252e33a9
     let destPiece = this.board[dest[0]][dest[1]];
 
     // if king and rook hasnt moved
     // king is not in Check
 
+<<<<<<< HEAD
     if (isHorizPathClear(this.board, origin, dest, limit = 7)){
       if (piece[0] === 'W'){ 
         if (dest[0] == 7 && dest[1] == 0){
+=======
+    if (isHorizPathClear(board, origin, dest, limit = 7)){
+      if (piece[0] === 'W' && origin === [7,4]){ 
+        if (dest === [7,0]){
+>>>>>>> b88258c363a3b02e6a0a47dd4824487a252e33a9
           this.board[7][2] = 'WK';
           this.board[7][3] = 'WR';
           originPiece = null;
           destPiece = null;
+<<<<<<< HEAD
         } else if (dest[0] == 7 && dest[1] == 7){
           this.board[7][6] = 'WK';
           this.board[7][5] = 'WR';
@@ -122,6 +155,16 @@ class ChessGame {
           destPiece = null;
         }
     } else if (piece[0] === 'B' && origin === [0,4]){ 
+=======
+        } else if (dest === [7,7]){
+          this.board[7][6] === 'WK';
+          this.board[7][5] === 'WR';
+          originPiece = null;
+          destPiece = null;
+        }
+    }
+      if (piece[0] === 'B' && origin === [0,4]){ 
+>>>>>>> b88258c363a3b02e6a0a47dd4824487a252e33a9
         if (dest === [0,0]){
           this.board[0][2] = 'BK';
           this.board[0][3] = 'BR';
@@ -134,6 +177,7 @@ class ChessGame {
           destPiece = null;
         }
       }
+<<<<<<< HEAD
       this.history[this.turn] = this.history[this.turn] || [];
       this.history[this.turn].push(origin);
       this.history[this.turn].push(dest);
@@ -141,6 +185,8 @@ class ChessGame {
         this.turn += 1;
       }
       this.count += 1;
+=======
+>>>>>>> b88258c363a3b02e6a0a47dd4824487a252e33a9
     }
   }
 
