@@ -59,7 +59,7 @@ const boardState = (state = {
   ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
-  [null, null, null, 'WP', null, null, null, null],
+  [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
   ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR']],
@@ -76,6 +76,12 @@ const boardState = (state = {
       board[action.fromPosition[0]][action.fromPosition[1]] = null;
       board[action.coordinates[0]][action.coordinates[1]] = action.selectedPiece;
       return { board };
+    }
+    case types.RECEIVE_GAME: {
+      return Immutable({
+        ...state,
+        board: action.game.board,
+      });
     }
     default:
       return state;
