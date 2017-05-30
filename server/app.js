@@ -2,8 +2,10 @@ const express = require('express');
 const path = require('path');
 const middleware = require('./middleware');
 const routes = require('./routes');
+const cors = require('cors');
 
 const app = express();
+app.use(cors());
 
 app.use(middleware.morgan('dev'));
 app.use(middleware.cookieParser());
@@ -22,6 +24,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/', routes.auth);
 app.use('/api', routes.api);
+app.use('/api/game', routes.game);
 app.use('/api/profiles', routes.profiles);
 
 module.exports = app;

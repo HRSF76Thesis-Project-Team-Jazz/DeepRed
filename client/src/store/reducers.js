@@ -77,6 +77,12 @@ const boardState = (state = {
       board[action.coordinates[0]][action.coordinates[1]] = action.selectedPiece;
       return { board };
     }
+    case types.RECEIVE_GAME: {
+      return Immutable({
+        ...state,
+        board: action.game.board,
+      });
+    }
     default:
       return state;
   }
