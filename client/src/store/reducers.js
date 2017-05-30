@@ -35,6 +35,20 @@ const gameState = (state = Immutable({
         moveHistory: state.moveHistory.concat({ from, to }),
       });
     }
+    case types.CAPTURE_PIECE: {
+      const cols = 'abcdefgh';
+      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
+      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      const capturedPiece = action.capturedPiece;
+      const capturedPiecesArray = (capturedPiece[0] === 'W') ? 'capturedPiecesBlack' : 'capturedPiecesWhite';
+      const newState = {
+        ...state,
+        moveHistory: state.moveHistory.concat({ from, to, capturedPiece }),
+        capturedPiecesArray: state[capturedPiecesArray].concat(capturedPiece),
+      };
+      newState[capturedPiecesArray] = state[capturedPiecesArray].concat(capturedPiece);
+      return Immutable(newState);
+    }
     default:
       return state;
   }
@@ -52,6 +66,12 @@ const boardState = (state = {
 }, action) => {
   switch (action.type) {
     case types.MOVE_PIECE: {
+      const board = state.board.slice(0);
+      board[action.fromPosition[0]][action.fromPosition[1]] = null;
+      board[action.coordinates[0]][action.coordinates[1]] = action.selectedPiece;
+      return { board };
+    }
+    case types.CAPTURE_PIECE: {
       const board = state.board.slice(0);
       board[action.fromPosition[0]][action.fromPosition[1]] = null;
       board[action.coordinates[0]][action.coordinates[1]] = action.selectedPiece;
@@ -89,6 +109,17 @@ const moveState = (state = Immutable({
         fromPosition: '',
         selectedPiece: '',
         message: `Move: ${from}-${to}`,
+      });
+    }
+    case types.CAPTURE_PIECE: {
+      const cols = 'abcdefgh';
+      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
+      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      return Immutable({
+        ...state,
+        fromPosition: '',
+        selectedPiece: '',
+        message: `Move: ${from}x${to}`,
       });
     }
     default:

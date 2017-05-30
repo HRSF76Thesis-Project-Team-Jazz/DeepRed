@@ -42,7 +42,8 @@ class Board extends Component {
     } else if (selectedPiece[0] === board[x][y][0]) {
       dispatch(invalidSelection(coordinates));
     } else {
-      dispatch(capturePiece(coordinates));
+      const capturedPiece = selection;
+      dispatch(capturePiece(selectedPiece, fromPosition, coordinates, capturedPiece));
     }
   }
 
@@ -50,8 +51,8 @@ class Board extends Component {
     const { board } = this.props;
     return (
       <div className="board">
-        {board.map((row, rowIndex) => {
-          return (<div key={Math.random()} className="board-row">
+        {board.map((row, rowIndex) => (
+            <div key={Math.random()} className="board-row">
             {row.map((col, colIndex) => (
               <div
                 className={((rowIndex + colIndex) % 2 === 1) ? 'board-col dark' : 'board-col light'}
@@ -61,8 +62,9 @@ class Board extends Component {
                 {(col) ? this.getImage(col) : ''}
               </div>),
             )}
-          </div>);
-        })}
+          </div>
+        )
+        )}
       </div>
     );
   }
