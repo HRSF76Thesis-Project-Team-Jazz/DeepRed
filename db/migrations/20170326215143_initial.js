@@ -36,7 +36,7 @@ exports.up = function (knex, Promise) {
       table.string('action').nullable();
       table.boolean('capture').nullable();
       table.integer('round').nullable();
-      table.integer('game').nullable().references('games.game').onDelete('CASCADE');
+      table.integer('game').nullable()
       table.timestamps(true, true);
     }),
     knex.schema.createTableIfNotExists('game_pieces', function(table){
@@ -54,7 +54,6 @@ exports.down = function (knex, Promise) {
   return Promise.all([
     knex.schema.dropTable('auths'),
     knex.schema.dropTable('profiles'),
-    knex.schema.dropTable('games')
   ]);
 };
 
