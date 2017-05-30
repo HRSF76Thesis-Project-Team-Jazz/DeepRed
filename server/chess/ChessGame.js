@@ -78,17 +78,18 @@ class ChessGame {
 
   pawnPromotion(piece, origin, dest) {
     let originPiece = this.board[origin[0]][origin[1]];
-    
+    let destPiece = this.board[dest[0]][dest[1]];
+
     if (isLegalMove(this.board, origin, dest)){
       if (piece[0] === 'W' && origin[0] === 1){
         if (dest[0] === 0){
-          this.board[dest[0]][dest[1]] = 'WQ';
+          destPiece = 'WQ';
           originPiece = null;
         }
       }
       if (piece[0] === 'B' && origin[0] === 6){
         if (dest[0] === 7){
-          this.board[dest[0]][dest[1]] = 'BQ';
+          destPiece = 'BQ';
           originPiece = null;
         }
       }
