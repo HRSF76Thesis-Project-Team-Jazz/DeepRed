@@ -1,0 +1,38 @@
+import * as types from './actionTypes';
+
+/**
+ * Action Creators:
+ * Functions that create actions:
+ * Actions = { type: TYPE, vars: VALS }
+ */
+
+
+export const invalidSelection = coordinates => ({
+  type: types.INVALID_SELECTION,
+  coordinates,
+});
+
+export const selectPiece = (selectedPiece, coordinates) => ({
+  type: types.SELECT_PIECE,
+  selectedPiece,
+  coordinates,
+});
+
+export const movePiece = (selectedPiece, fromPosition, coordinates) => ({
+  type: types.MOVE_PIECE,
+  coordinates,
+  selectedPiece,
+  fromPosition,
+});
+
+export const capturePiece = coordinates => ({
+  type: types.CAPTURE_PIECE,
+  coordinates,
+});
+
+export const receiveMove = (query, move) => ({
+  type: types.RECEIVE_MOVE,
+  query,
+  move,
+  receivedAt: Date.now(),
+});

@@ -3,9 +3,9 @@
 //   const destPiece = this.board[dest[0]][dest[1]];
 //   pieceType = originPiece
 //   if (originPiece[1] === 'P') {
-//
+
 //   }
 //   `${count}. `
 // };
-//
+
 // module.exports = moveToPGNString;

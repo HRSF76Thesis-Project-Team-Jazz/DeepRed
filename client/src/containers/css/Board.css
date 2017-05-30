@@ -10,22 +10,19 @@
 .board-row {
   height: 7vh;
   display: flex;
-  flex-direction: row;
   justify-content: center;
 }
 
 .board-col {
   width: 7vh;
-  display: flex;
-  flex-direction: column;
 }
 
 .board-col:hover {
-  background-color: #e6eeff;
+  background-color: #4d94ff;
 }
 
 .board-col:active {
-  background-color: #4d94ff;
+  background-color: #e6eeff;
 }
 
 .dark {
@@ -40,9 +37,4 @@
   max-width: 100%;
   max-height: 100%;
   margin: auto;
-}
-
-.board-message {
-  color: white;
-  min-height: 2rem;
 }
