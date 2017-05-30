@@ -59,7 +59,7 @@ const boardState = (state = {
   ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
+  [null, null, null, 'WP', null, null, null, null],
   [null, null, null, null, null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
   ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR']],
