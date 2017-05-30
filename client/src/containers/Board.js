@@ -59,7 +59,7 @@ class Board extends Component {
                 key={rowIndex.toString() + colIndex.toString()}
                 onClick={() => this.onClick([rowIndex, colIndex])}
               >
-                {(col) ? this.getImage(col) : ''}
+                {this.getImage(col)}
               </div>),
             )}
           </div>

@@ -20,8 +20,8 @@ const gameState = (state = Immutable({
   clock_B: '',
   player_W: '',
   player_B: '',
-  capturedPiecesBlack: ['Reducer', 'WP', 'WP', 'WN'],
-  capturedPiecesWhite: ['Reducer', 'BP', 'BP', 'BQ'],
+  capturedPiecesBlack: [],
+  capturedPiecesWhite: [],
   gameTurn: 'W',
   moveHistory: [],
 }), action) => {

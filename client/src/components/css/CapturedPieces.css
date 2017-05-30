@@ -5,3 +5,14 @@
   margin: 5px;
   padding: 5px;
 }
+
+.pieces-container {
+  display: -webkit-flex;
+  display: flex;
+  align-items: left;
+}
+
+.captured-img {
+  max-width: 4vh;
+  max-height: 4vh;
+}
