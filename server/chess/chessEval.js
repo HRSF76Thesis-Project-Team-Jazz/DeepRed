@@ -33,26 +33,28 @@ const capturedPiecesScore = (capturedWhite, capturedBlack) => {
 
 /**
  * Return the position (first occurring) for the input piece
- * @param {string} piece 
+ * @param {string} piece
  * @param {array} board
  * @return {array} : coordinates of piece [row, col]
  */
 
 const findPiecePosition = (piece, board) => {
-  if (piece[0] = 'B') {
-    for (let row = 0; row < 8; row++) {
-      for (let col = 0; col < 8; col++) {
+  if (piece[0] === 'B') {
+    for (let row = 0; row < 8; row += 1) {
+      for (let col = 0; col < 8; col += 1) {
         if (board[row][col] === piece) return [row, col];
       }
     }
   } else {
-    for (let row = 7; row >= 0; row--) {
-      for (let col = 0; col < 8; col++) {
+    for (let row = 7; row >= 0; row -= 1) {
+      for (let col = 0; col < 8; col += 1) {
         if (board[row][col] === piece) return [row, col];
       }
     }
   }
-}
+
+  return undefined;
+};
 
 const boardPositionScore = (board) => {
   let whiteScore = 0;
