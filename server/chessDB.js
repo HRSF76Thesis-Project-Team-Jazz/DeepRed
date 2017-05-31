@@ -29,11 +29,6 @@ const newGame = (game) => {
     });
   }
 
-  knex('profiles').where({ display: game.display }).increment(
-    'total_games', 1
-  ).then((req, res) => {
-    console.log(res);
-  });
 };
 
 
@@ -58,11 +53,6 @@ const joinGame = (game) => {
     });
   }
 
-  knex('profiles').where({ display: game.display }).increment(
-    'total_games', 1
-  ).then((req, res) => 
-  console.log(res)
-  )
 }
 
 
