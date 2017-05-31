@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import socket from 'socket.io-client';
+import io from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
 import { getRequestSuccess, getRequestFailure, getUserProfile } from '../store/actions';
@@ -23,17 +23,19 @@ injectTapEventPlugin();
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-    };
     this.getUserInfo = this.getUserInfo.bind(this);
     this.checkLegalMove = this.checkLegalMove.bind(this);
   }
 
   componentDidMount() {
     this.getUserInfo();
-    this.io = socket.connect();
-    this.io.on('connect', () => {
+    this.socket = io.connect();
+    this.socket.on('connect', () => {
       console.log('client side connected!');
+    });
+
+    this.socket.on('getRoomInfo', (roomObj) => {
+      console.log('roomInfo: ', roomObj);
     });
   }
 
@@ -41,7 +43,7 @@ class App extends Component {
     const { dispatch } = this.props;
     axios.get('/api/profiles/id')
     .then((response) => {
-      console.log('successfully fetched current user infomation', response);
+      console.log('successfully fetched current user infomation');
       dispatch(getRequestSuccess(response));
     })
     .catch((err) => {
