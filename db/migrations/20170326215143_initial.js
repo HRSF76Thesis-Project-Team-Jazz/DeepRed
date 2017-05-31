@@ -28,23 +28,10 @@ exports.up = function (knex, Promise) {
       table.string('white').nullable();
       table.string('black').nullable();
       table.string('result').nullable();
-      table.integer('rounds').nullable();
-      table.timestamps(true, true);
-    }),
-    knex.schema.createTableIfNotExists('game_moves', function(table){
-      table.increments('move').unsigned().primary();
-      table.string('action').nullable();
-      table.boolean('capture').nullable();
-      table.integer('round').nullable();
-      table.integer('game').nullable()
-      table.timestamps(true, true);
-    }),
-    knex.schema.createTableIfNotExists('game_pieces', function(table){
-      table.increments('piece').unsigned().primary();
-      table.string('piece_type').nullable();
-      table.string('game').nullable();
-      table.string('color').nullable();
-      table.string('round').nullable();
+      table.integer('turns').nullable();
+      table.string('history').nullable();
+      table.string('black_pieces').nullable();
+      table.string('white_pieces').nullable();
       table.timestamps(true, true);
     })
   ]);
@@ -54,6 +41,7 @@ exports.down = function (knex, Promise) {
   return Promise.all([
     knex.schema.dropTable('auths'),
     knex.schema.dropTable('profiles'),
+    knex.schema.dropTable('games')
   ]);
 };
 
