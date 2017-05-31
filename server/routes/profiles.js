@@ -8,7 +8,7 @@ router.route('/')
   // .post(ProfileController.create)
   ;
 
-router.route('/:id')
+router.route('/id')
   .get(ProfileController.getOne)
   .put(ProfileController.update)
   // .delete(ProfileController.deleteOne)

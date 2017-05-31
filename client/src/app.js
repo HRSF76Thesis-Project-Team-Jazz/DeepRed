@@ -21,6 +21,7 @@ if (process.env.NODE_ENV !== 'production') {
 const store = createStore(
   reducer,
   applyMiddleware(...middleware),
+  applyMiddleware(thunk),
 );
 
 ReactDOM.render((

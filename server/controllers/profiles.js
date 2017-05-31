@@ -25,15 +25,16 @@ module.exports.getAll = (req, res) => {
 //     });
 // };
 
+// req.params.id
 module.exports.getOne = (req, res) => {
-  models.Profile.where({ id: req.params.id }).fetch()
-    .then(profile => {
+  models.Profile.where({ id: req.session.passport.user }).fetch()
+    .then((profile) => {
       if (!profile) {
         throw profile;
       }
       res.status(200).send(profile);
     })
-    .error(err => {
+    .error((err) => {
       res.status(500).send(err);
     })
     .catch(() => {

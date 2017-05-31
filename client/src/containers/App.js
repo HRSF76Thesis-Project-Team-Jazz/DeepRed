@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import socket from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
+import { getRequestSuccess, getRequestFailure, getUserProfile } from '../store/actions';
 
 // Components
 import ChessMenu from '../components/ChessMenu';
@@ -35,13 +36,16 @@ class App extends Component {
       console.log('client side connected!');
     });
   }
-  
+
   getUserInfo() {
-    axios.get('/api/profiles/')
+    const { dispatch } = this.props;
+    axios.get('/api/profiles/id')
     .then((response) => {
       console.log('successfully fetched current user infomation', response);
+      dispatch(getRequestSuccess(response));
     })
     .catch((err) => {
+      dispatch(getRequestFailure(err));
       console.error('failed to obtain current user infomation!', err);
     });
   }
@@ -52,7 +56,7 @@ class App extends Component {
   }
 
   render() {
-    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message } = this.props;
+    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW } = this.props;
 
     return (
       <div className="site-wrap">
@@ -75,9 +79,9 @@ class App extends Component {
           <div className="flex-row">
 
             <div className="flex-col">
-              <CapturedPieces color="Black" capturedPieces={capturedPiecesBlack} />
+              <CapturedPieces color="Black" capturedPieces={capturedPiecesBlack} player={playerB} />
               <Board checkLegalMove={this.checkLegalMove} />
-              <CapturedPieces color="White" capturedPieces={capturedPiecesWhite} />
+              <CapturedPieces color="White" capturedPieces={capturedPiecesWhite} player={playerW} />
               <Message message={message} />
             </div>
 
@@ -95,14 +99,20 @@ class App extends Component {
 }
 
 function mapStateToProps(state) {
-  const { gameState, moveState } = state;
+  const { gameState, moveState, userState } = state;
   const {
     moveHistory,
     capturedPiecesBlack,
     capturedPiecesWhite,
   } = gameState;
+  const {
+    playerW,
+    playerB,
+  } = userState;
   const { message } = moveState;
   return {
+    playerB,
+    playerW,
     message,
     moveHistory,
     capturedPiecesBlack,
