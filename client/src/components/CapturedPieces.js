@@ -5,7 +5,16 @@ import './css/CapturedPieces.css';
 const CapturedPieces = ({ color, capturedPieces }) => (
   <div className="captured-pieces">
     <h5>Captured Pieces: {color}</h5>
-    {JSON.stringify(capturedPieces)}
+    <div className="pieces-container">
+      {capturedPieces.map(piece => (
+        <img
+          className="captured-img"
+          src={`/assets/${piece}.png`}
+          alt="captured pieces"
+        />
+      ),
+      )}
+    </div>
   </div>
 );
 

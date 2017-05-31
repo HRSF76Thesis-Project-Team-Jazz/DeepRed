@@ -20,15 +20,21 @@ export const selectPiece = (selectedPiece, coordinates) => ({
 
 export const movePiece = (selectedPiece, fromPosition, coordinates) => ({
   type: types.MOVE_PIECE,
-  coordinates,
   selectedPiece,
   fromPosition,
-});
-
-export const capturePiece = coordinates => ({
-  type: types.CAPTURE_PIECE,
   coordinates,
 });
+
+export const capturePiece = (selectedPiece, fromPosition, coordinates, capturedPiece) => ({
+  type: types.CAPTURE_PIECE,
+  selectedPiece,
+  fromPosition,
+  coordinates,
+  capturedPiece,
+});
+
+
+// TO BE IMPLEMENTED
 
 export const receiveMove = (query, move) => ({
   type: types.RECEIVE_MOVE,

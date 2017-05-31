@@ -9,7 +9,7 @@ const MoveHistory = ({ moveHistory }) => (
       {moveHistory.map((move, i) => (
         <ListItem
           key={`${i}-${move.from}-${move.to}`}
-          primaryText={`${(i < 9) ? `_${i + 1}` : i + 1}. ${move.from}-${move.to}`}
+          primaryText={`${(i < 9) ? `_${i + 1}` : i + 1}. ${move.from}${(move.capturedPiece) ? ' x ' : ' - '}${move.to}`}
         />
       ))}
     </List>
