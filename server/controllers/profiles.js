@@ -27,19 +27,35 @@ module.exports.getAll = (req, res) => {
 
 // req.params.id
 module.exports.getOne = (req, res) => {
-  models.Profile.where({ id: req.session.passport.user }).fetch()
-    .then((profile) => {
-      if (!profile) {
-        throw profile;
-      }
-      res.status(200).send(profile);
-    })
-    .error((err) => {
-      res.status(500).send(err);
-    })
-    .catch(() => {
-      res.sendStatus(404);
-    });
+  if (req.params.id) {
+    models.Profile.where({ id: req.params.id }).fetch()
+      .then((profile) => {
+        if (!profile) {
+          throw profile;
+        }
+        res.status(200).send(profile);
+      })
+      .error((err) => {
+        res.status(500).send(err);
+      })
+      .catch(() => {
+        res.sendStatus(404);
+      });
+  } else {
+    models.Profile.where({ id: req.session.passport.user }).fetch()
+      .then((profile) => {
+        if (!profile) {
+          throw profile;
+        }
+        res.status(200).send(profile);
+      })
+      .error((err) => {
+        res.status(500).send(err);
+      })
+      .catch(() => {
+        res.sendStatus(404);
+      });
+  }
 };
 
 module.exports.update = (req, res) => {
