@@ -1,203 +1,211 @@
 const knex = require('knex')(require('../knexfile'));
 // game = {
-//  userChoice: 'black/white',
+//  session_id: session_id  
+//  color: 'white',
 //  display: 'user1',
-//  session_id: 'xxxx'
+// 
 // }
 
 const newGame = (game) => {
   console.log('new game!')
-  if (game.userChoice == 'white') {
+  if (game.color == 'white') {
     knex.insert({
+      session_id: game.session_id,
       white: game.display,
       black: null,
       result: null,
-      rounds: 0,
-      // session_id: game.session_id
-    }).into('games').then((req, res) => {
+      turns: 0,
+    }).into('games').then((res) => {
       console.log(res);
     });
   } else {
     knex.insert({
+      session_id: game.session_id,
       white: null,
       black: game.display,
       result: null,
-      rounds: 0,
-      // session_id: game.session_id
-    }).into('games').then((req, res) => {
+      turns: 0,
+    }).into('games').then((res) => {
       console.log(res);
     });
   }
-
 };
 
 
 // // game = {
-// //   id: 'game_id',
-// //   display: 'user2',
-// //   color: 'black / white'
+// //   session_id: session_id,
+// //   color: 'black',
+// //   display: 'user2'
 // // }
 
 const joinGame = (game) => {
   if (game.color == 'black') {
-    knex('games').where({ game: game.id }).update({
+    knex('games').where({ session_id: game.session_id }).update({
       black: game.display,
-    }).then((req, res) => {
+    }).then((res) => {
       console.log(res);
     });
   } else {
-    knex('games').where({ game: game.id }).update({
+    knex('games').where({ session_id: game.session_id }).update({
       white: game.display,
-    }).then((req, res) => {
+    }).then((res) => {
        console.log(res);
     });
   }
 
 }
 
-
 // // game = {
-// //   id: 'game_id',
-// //   action: 'string of movement',
-//      round: 5
-
-     // capture: true,
-     // target: 'queen',
-     // targetColor: 'white',
-
+// //   session_id: 32155,
+// //   history: 'string of history'
+     // black_pieces: '',
+     // white_pieces: '',
 // // }
 
 const saveMove = (game) => {
-  knex('games').where({ game: game.id })
-  .increment('rounds', 1)
-  .then((req, res) =>
-  console.log(res)
-  )
+  knex('games').where({ session_id: game.session_id })
+    .increment('turns', 1)
+    .then((res) =>
+      console.log(res)
+   );
 
-  knex('game_moves').insert({
-    action: game.action,
-    game: game.id,
-    round: game.round,
-    capture: game.capture,
-  }).then((req, res) =>
-  console.log(res)
-  )
-
-  if (game.capture === true) {
-    knex('game_pieces').insert({
-      piece_type: game.target,
-      game: game.id,
-      color: game.targetColor,
-      round: game.round,
-    }).then((req, res) =>
-  console.log(res)
-  );
-  }
+  knex('games').where({ session_id: game.session_id }).update({
+    history: game.history,
+    black_pieces: game.black_pieces,
+    white_pieces: game.white_pieces
+  }).then((res) =>
+      console.log(res)
+   );
+}
 
 
 // // game = {
-// //   id: 'game_id'
-// //   result: 'name'
-// //   user1: 'name',
-// //   user2: 'name2',
+// //   session_id: 'session_id'
+// //   result: 'name/name2' || 'draw'
+// //   white: 'name',
+// //   black: 'name2',
 // // }
 
-
-// //   win: 'name of winner' || 'draw',
-// //   lose: 'name of loser' || 'draw',
-// //   user1: null,
-// //   user2: null,
-// // }
 
 const finishGame = (game) => {
   if (game.result == 'draw'){
-    knex('games').where({game: game.id}).update({
+    knex('games').where({session_id: game.session_id}).update({
       result: 'Draw'
-    }).then((req, res) => 
+    }).then((res) => 
       console.log(res)
     );
 
-    knex('profiles').where({display: game.user1}).increment('draw', 1)
-    .then((req, res) => 
+    knex('profiles').where({display: game.white}).increment('draw', 1)
+    .then((res) => 
       console.log(res)
     );
 
-    knex('profiles').where({display: game.user2}).increment('draw', 1)
-    .then((req, res) => 
+    knex('profiles').where({display: game.black}).increment('draw', 1)
+    .then((res) => 
       console.log(res)
     );
 
-    knex('profiles').where({ display: game.user1 }).increment('total_games', 1)
-    .then((req, res) =>
+    knex('profiles').where({ display: game.white }).increment('total_games', 1)
+    .then((res) =>
       console.log(res)
     );
 
-    knex('profiles').where({ display: game.user2 }).increment('total_games', 1)
-    .then((req, res) =>
+    knex('profiles').where({ display: game.black }).increment('total_games', 1)
+    .then((res) =>
       console.log(res)
     );
-  } else {
-    knex('games').where({game: game.id}).update({
+
+  } else if (game.result == game.white) {
+
+    knex('games').where({session_id: game.session_id}).update({
       result: game.result
-    }).then((req, res) => 
+    }).then((res) => 
       console.log(res)
     );
 
     knex('profiles').where({display: game.result}).increment('win', 1)
-    .then((req, res) => 
+    .then((res) => 
       console.log(res)
     );
 
-    knex('profiles').where({ display: game.user2 }).increment('total_games', 1)
-    .then((req, res) =>
+    knex('profiles').where({ display: game.black }).increment('loss', 1)
+    .then((res) =>
       console.log(res)
     );
 
-    knex('profiles').where({ display: game.user1 }).increment('total_games', 1)
-    .then((req, res) =>
+    knex('profiles').where({ display: game.white }).increment('total_games', 1)
+    .then((res) =>
       console.log(res)
     );
-  // select user that is not result
-    if (game.result == game.user1) {
-          knex('profiles').where({ display: game.user2 }).increment('loss', 1)
-          .then((req, res) =>
-            console.log(res)
-          );
 
-    } else {
-          knex('profiles').where({ display: game.user1 }).increment('loss', 1)
-          .then((req, res) =>
-            console.log(res)
-          );
-    }
+    knex('profiles').where({ display: game.black }).increment('total_games', 1)
+    .then((res) =>
+      console.log(res)
+    );
+  } else {
+
+    knex('games').where({session_id: game.session_id}).update({
+      result: game.result
+    }).then((res) => 
+      console.log(res)
+    );
+
+    knex('profiles').where({display: game.result}).increment('win', 1)
+    .then((res) =>
+      console.log(res)
+    );
+
+    knex('profiles').where({ display: game.white }).increment('loss', 1)
+    .then((res) =>
+      console.log(res)
+    );
+
+    knex('profiles').where({ display: game.white }).increment('total_games', 1)
+    .then((res) =>
+      console.log(res)
+    );
+
+    knex('profiles').where({ display: game.black }).increment('total_games', 1)
+    .then((res) =>
+      console.log(res)
+    );
+
   }
 };
 
+
+
+
+
 const requestClient = (user) => {
-  knex('profiles').where('display', user.display).then((req, res) =>
-  console.log(req)
+  knex('profiles').where('display', user.display).then((res) =>
+     console.log(res[0])
   );
 };
 
 const requestGame = (game) => {
-  knex('games').where('game', game.id).then((req, res) => {
-    console.log(req)
-  });
-};
-
-const requestGameMoves = (game) => {
-  knex('game_moves').where('game', game.id).then((req, res) =>
-  console.log(req)
+  knex('games').where('session_id', game.session_id).then((res) =>
+     console.log(res[0])
   );
 };
 
-const requestCapturedPieces = (game) => {
-  knex('game_pieces').where('game', game.id).then((req, res) => {
-    console.log(req)
-  });
+const requestHistory = (game) => {
+  knex('games').where('session_id', game.session_id).then((res) =>
+     console.log(res[0].history)
+  );
 };
 
+const requestWhitePieces = (game) => {
+  knex('games').where('session_id', game.session_id).then((res) =>
+     console.log(res[0].white_pieces)
+  );
+};
 
+const requestBlackPieces = (game) => {
+  knex('games').where('session_id', game.session_id).then((res) =>
+     console.log(res[0].black_pieces)
+  );
+};
 
 // module.exports = newGame;
 // module.exports = joinGame;
@@ -205,6 +213,7 @@ const requestCapturedPieces = (game) => {
 // module.exports = finishGame;
 // module.exports = requestClient;
 // module.exports = requestGame;
-// module.exports = requestGameMoves;
-// module.exports = requestCapturedPieces;
+// module.exports = requestHistory;
+// module.exports = requestWhitePieces;
+module.exports = requestBlackPieces;
 
