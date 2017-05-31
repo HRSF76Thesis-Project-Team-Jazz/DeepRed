@@ -14,4 +14,10 @@ router.route('/id')
   // .delete(ProfileController.deleteOne)
   ;
 
+router.route('/:id')
+  .get(ProfileController.getOne)
+  .put(ProfileController.update)
+  // .delete(ProfileController.deleteOne)
+  ;
+
 module.exports = router;
