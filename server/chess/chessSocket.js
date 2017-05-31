@@ -1,9 +1,28 @@
 module.exports = (io, client) => {
+  let allRoom = [];
+  let roomInfo = [];
+  let count = 1;
 
-  client.join('room', () => {
-    console.log('room object: ', client.rooms);
-    io.in('room').emit('getRoomInfo', client.rooms);
-  });
+  let room = 'room' + count;
+  console.log('room#: ', room);
+
+  if (roomInfo.length === 0) {
+    client.join(room, () => {
+      roomInfo[0] = count;
+      roomInfo[1] = client.id;
+      io.in(room).emit('newPlayerJoined', roomInfo);
+    });
+  } else if (roomInfo.length === 2) {
+    client.join(room, () => {
+      roomInfo[2] = client.id;
+      allRoom.push(roomInfo);
+      io.in(room).emit('newPlayerJoined', roomInfo);
+      // create a new game instance here
+      roomInfo = [];
+      count += 1;
+    });
+  }
+
   // triggered when user picks up a chess piece and
   // attenpt to drop it to a new grid
   client.on('checkLegalMove', (data) => {

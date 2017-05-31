@@ -34,8 +34,8 @@ class App extends Component {
       console.log('client side connected!');
     });
 
-    this.socket.on('getRoomInfo', (roomObj) => {
-      console.log('roomInfo: ', roomObj);
+    this.socket.on('newPlayerJoined', (roomInfo) => {
+      console.log('roomInfo: ', roomInfo);
     });
   }
 
