@@ -1,5 +1,13 @@
 
 
+const pieceScore = isEndGame => ({
+  P: (!isEndGame) ? 2 : 3.75,
+  N: 9.25,
+  B: 9.75,
+  R: 15,
+  Q: 23.75,
+  K: (!isEndGame) ? 2 : 6.5,
+});
 
 /**
  * Keep track of relative captured pieces score
@@ -10,23 +18,15 @@
  *                    (-) = black advantage
  */
 
-
 const capturedPiecesScore = (capturedWhite, capturedBlack) => {
   let whiteScore = 0;
   let blackScore = 0;
   const isEndGame = (capturedWhite.length + capturedBlack.length) >= 16;
 
-  const pieceScore = {
-    P: (!isEndGame) ? 2 : 3.75,
-    N: 9.25,
-    B: 9.75,
-    R: 15,
-    Q: 23.75,
-    K: (!isEndGame) ? 2 : 6.5,
-  };
+  const score = pieceScore(isEndGame);
 
-  capturedWhite.forEach((piece) => { whiteScore += pieceScore[piece[1]]; });
-  capturedBlack.forEach((piece) => { blackScore += pieceScore[piece[1]]; });
+  capturedWhite.forEach((piece) => { whiteScore += score[piece[1]]; });
+  capturedBlack.forEach((piece) => { blackScore += score[piece[1]]; });
 
   return whiteScore - blackScore;
 };
@@ -60,8 +60,8 @@ const boardPositionScore = (board) => {
   let whiteScore = 0;
   let blackScore = 0;
 
-  let whiteKing;
-  let blackKing;
+  const whiteKing = findPiecePosition('WK', board);
+  const blackKing = findPiecePosition('BK', board);
 
   const positionWeight = [
     [1, 1, 1, 1, 1, 1, 1, 1],
@@ -74,9 +74,9 @@ const boardPositionScore = (board) => {
     [1, 1, 1, 1, 1, 1, 1, 1],
   ];
 
-
-
 };
+
+
 
 module.exports.capturedPiecesScore = capturedPiecesScore;
 module.exports.findPiecePosition = findPiecePosition;
