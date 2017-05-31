@@ -80,7 +80,7 @@ const boardState = (state = {
     case types.RECEIVE_GAME: {
       return Immutable({
         ...state,
-        board: action.game.board,
+        board: action.board,
       });
     }
     default:

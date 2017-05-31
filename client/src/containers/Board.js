@@ -14,8 +14,8 @@ class Board extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(fetchGame());
+    // const { dispatch } = this.props;
+    // dispatch(fetchGame());
   }
 
   getImage(CP) {
@@ -36,11 +36,10 @@ class Board extends Component {
       } else {
         dispatch(invalidSelection(coordinates));
       }
-
       // If a piece is already selected
       /* NOTE: CHECK FOR VALID MOVE REQUIRED HERE    */
     } else if (selection === null) {
-      dispatch(movePiece(selectedPiece, fromPosition, coordinates));
+      this.props.attemptMove(selectedPiece, fromPosition, coordinates);
     } else if (selectedPiece[0] === board[x][y][0]) {
       dispatch(invalidSelection(coordinates));
     } else {

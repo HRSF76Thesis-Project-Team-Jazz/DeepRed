@@ -14,6 +14,8 @@ import CapturedPieces from '../components/CapturedPieces';
 import Clock from '../components/Clock';
 import MoveHistory from '../components/MoveHistory';
 import './css/App.css';
+import { receiveGame, movePiece } from '../store/actions';
+
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
@@ -24,7 +26,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.getUserInfo = this.getUserInfo.bind(this);
-    this.checkLegalMove = this.checkLegalMove.bind(this);
+    this.attemptMove = this.attemptMove.bind(this);
+    this.newChessGame = this.newChessGame.bind(this);
   }
 
   componentDidMount() {
@@ -66,9 +69,21 @@ class App extends Component {
     });
   }
 
-  checkLegalMove(originDestCoord) {
+  newChessGame() {
+    const { dispatch } = this.props;
+    console.log('make new game');
+    this.io.emit('newChessGame');
+    this.io.on('createdChessGame', game => dispatch(receiveGame(game)));
+  }
+
+  attemptMove(selectedPiece, origin, dest) {
+    const { dispatch } = this.props;
     console.log('sending origin and dest coordinates to server');
-    this.io.emit('checkLegalMove', originDestCoord);
+    this.io.emit('attemptMove', origin, dest);
+    this.io.on('attemptMoveResult', (board) => {
+      dispatch(receiveGame(board));
+      dispatch(movePiece(selectedPiece, origin, dest));
+    })
   }
 
   render() {
@@ -96,9 +111,15 @@ class App extends Component {
           <div className="flex-row">
 
             <div className="flex-col">
+<<<<<<< HEAD
               <CapturedPieces color="Black" capturedPieces={capturedPiecesBlack} player={playerB} />
               <Board checkLegalMove={this.checkLegalMove} />
               <CapturedPieces color="White" capturedPieces={capturedPiecesWhite} player={playerW} />
+=======
+              <CapturedPieces color="Black" capturedPieces={capturedPiecesBlack} />
+              <Board attemptMove={this.attemptMove} />
+              <CapturedPieces color="White" capturedPieces={capturedPiecesWhite} />
+>>>>>>> working on connecting redux
               <Message message={message} />
             </div>
 

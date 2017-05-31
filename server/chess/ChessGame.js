@@ -101,7 +101,7 @@ class ChessGame {
       }
       this.count += 1;
     }
-  } 
+  }
 
   castling(piece, origin, dest) {
     let originPiece = this.board[origin[0]][origin[1]];
@@ -111,7 +111,7 @@ class ChessGame {
     // king is not in Check
 
     if (isHorizPathClear(this.board, origin, dest, limit = 7)){
-      if (piece[0] === 'W'){ 
+      if (piece[0] === 'W'){
         if (dest[0] == 7 && dest[1] == 0){
           this.board[7][2] = 'WK';
           this.board[7][3] = 'WR';
@@ -123,7 +123,7 @@ class ChessGame {
           originPiece = null;
           destPiece = null;
         }
-    } else if (piece[0] == 'B'){ 
+    } else if (piece[0] == 'B'){
         if (dest[0] == 0 && dest[1] == 0){
           this.board[0][2] = 'BK';
           this.board[0][3] = 'BR';
