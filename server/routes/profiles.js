@@ -8,6 +8,12 @@ router.route('/')
   // .post(ProfileController.create)
   ;
 
+router.route('/id')
+  .get(ProfileController.getOne)
+  .put(ProfileController.update)
+  // .delete(ProfileController.deleteOne)
+  ;
+
 router.route('/:id')
   .get(ProfileController.getOne)
   .put(ProfileController.update)

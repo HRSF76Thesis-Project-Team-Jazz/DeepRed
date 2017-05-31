@@ -2,8 +2,9 @@ import React from 'react';
 
 import './css/CapturedPieces.css';
 
-const CapturedPieces = ({ color, capturedPieces }) => (
+const CapturedPieces = ({ color, capturedPieces, player }) => (
   <div className="captured-pieces">
+    <h5>Player: {player}</h5>
     <h5>Captured Pieces: {color}</h5>
     <div className="pieces-container">
       {capturedPieces.map(piece => (

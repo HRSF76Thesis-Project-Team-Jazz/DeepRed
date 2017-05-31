@@ -1,3 +1,4 @@
+import axios from 'axios';
 import * as types from './actionTypes';
 
 /**
@@ -33,7 +34,15 @@ export const capturePiece = (selectedPiece, fromPosition, coordinates, capturedP
   capturedPiece,
 });
 
+export const getRequestSuccess = player => ({
+  type: types.GET_REQUEST_SUCCESS,
+  player,
+});
 
+export const getRequestFailure = message => ({
+  type: types.GET_REQUEST_FAILURE,
+  message,
+});
 // TO BE IMPLEMENTED
 
 export const receiveMove = (query, move) => ({
@@ -42,3 +51,4 @@ export const receiveMove = (query, move) => ({
   move,
   receivedAt: Date.now(),
 });
+

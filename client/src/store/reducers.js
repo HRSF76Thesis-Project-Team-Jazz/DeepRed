@@ -127,10 +127,34 @@ const moveState = (state = Immutable({
   }
 };
 
+const userState = (state = Immutable({
+  message: '',
+  playerB: '',
+  playerW: '',
+}), action) => {
+  switch (action.type) {
+    case types.GET_REQUEST_SUCCESS: {
+      return Immutable({
+        ...state,
+        playerW: action.player.data.display,
+      });
+    }
+    case types.GET_REQUEST_FAILURE: {
+      return Immutable({
+        ...state,
+        message: action.message,
+      });
+    }
+    default:
+      return state;
+  }
+};
+
 const rootReducer = combineReducers({
   gameState,
   boardState,
   moveState,
+  userState,
 });
 
 export default rootReducer;
