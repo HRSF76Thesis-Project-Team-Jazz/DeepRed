@@ -19,6 +19,10 @@ export const selectPiece = (selectedPiece, coordinates) => ({
   coordinates,
 });
 
+export const unselectPiece = () => ({
+  type: types.UNSELECT_PIECE,
+});
+
 export const movePiece = (selectedPiece, fromPosition, coordinates) => ({
   type: types.MOVE_PIECE,
   selectedPiece,

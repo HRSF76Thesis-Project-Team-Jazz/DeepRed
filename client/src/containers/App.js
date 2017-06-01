@@ -14,7 +14,7 @@ import CapturedPieces from '../components/CapturedPieces';
 import Clock from '../components/Clock';
 import MoveHistory from '../components/MoveHistory';
 import './css/App.css';
-import { receiveGame, movePiece } from '../store/actions';
+import { receiveGame, movePiece, unselectPiece, capturePiece } from '../store/actions';
 
 
 // Needed for onTouchTap
@@ -35,6 +35,23 @@ class App extends Component {
     this.socket = io.connect();
     this.socket.on('connect', () => {
       console.log('client side connected!');
+      // this.newChessGame();
+    });
+    // this.newChessGame();
+    const { dispatch } = this.props;
+
+    this.io.on('attemptMoveResult', (board, error, selectedPiece, origin, dest, selection) => {
+      console.log('************** BOARD: ', board);
+      // dispatch(receiveGame(board));
+      if (error === null) {
+        dispatch(movePiece(selectedPiece, origin, dest));
+        if (selection) {
+          dispatch(capturePiece(selectedPiece, origin, dest, selection));
+        }
+      } else {
+        console.log('---------- ERROR: ', error);
+      }
+      dispatch(unselectPiece());
     });
 
     this.socket.on('disconnect', () => {
@@ -76,14 +93,10 @@ class App extends Component {
     this.io.on('createdChessGame', game => dispatch(receiveGame(game)));
   }
 
-  attemptMove(selectedPiece, origin, dest) {
-    const { dispatch } = this.props;
+  attemptMove(selectedPiece, origin, dest, selection) {
+    // const { dispatch } = this.props;
     console.log('sending origin and dest coordinates to server');
-    this.io.emit('attemptMove', origin, dest);
-    this.io.on('attemptMoveResult', (board) => {
-      dispatch(receiveGame(board));
-      dispatch(movePiece(selectedPiece, origin, dest));
-    })
+    this.io.emit('attemptMove', selectedPiece, origin, dest, selection);
   }
 
   render() {
@@ -111,15 +124,9 @@ class App extends Component {
           <div className="flex-row">
 
             <div className="flex-col">
-<<<<<<< HEAD
               <CapturedPieces color="Black" capturedPieces={capturedPiecesBlack} player={playerB} />
               <Board checkLegalMove={this.checkLegalMove} />
               <CapturedPieces color="White" capturedPieces={capturedPiecesWhite} player={playerW} />
-=======
-              <CapturedPieces color="Black" capturedPieces={capturedPiecesBlack} />
-              <Board attemptMove={this.attemptMove} />
-              <CapturedPieces color="White" capturedPieces={capturedPiecesWhite} />
->>>>>>> working on connecting redux
               <Message message={message} />
             </div>
 

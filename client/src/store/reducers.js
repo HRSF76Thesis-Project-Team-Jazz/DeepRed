@@ -55,21 +55,23 @@ const gameState = (state = Immutable({
 };
 
 const boardState = (state = {
-  board: [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
-  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR']],
+  board: [
+    ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+    ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+    ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
+  ],
 }, action) => {
   switch (action.type) {
     case types.MOVE_PIECE: {
       const board = state.board.slice(0);
       board[action.fromPosition[0]][action.fromPosition[1]] = null;
       board[action.coordinates[0]][action.coordinates[1]] = action.selectedPiece;
-      return { board };
+      return { ...state, board };
     }
     case types.CAPTURE_PIECE: {
       const board = state.board.slice(0);
@@ -80,7 +82,7 @@ const boardState = (state = {
     case types.RECEIVE_GAME: {
       return Immutable({
         ...state,
-        board: action.board,
+        board: action.game.board,
       });
     }
     default:
@@ -106,10 +108,19 @@ const moveState = (state = Immutable({
         selectedPiece: action.selectedPiece,
         message: `Selected: ${action.coordinates}`,
       });
+    case types.UNSELECT_PIECE:
+      return Immutable({
+        ...state,
+        fromPosition: '',
+        selectedPiece: '',
+        message: 'Selected: N/A',
+      });
     case types.MOVE_PIECE: {
       const cols = 'abcdefgh';
       const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
       const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      // const from = '';
+      // const to = '';
       return Immutable({
         ...state,
         fromPosition: '',

@@ -42,12 +42,13 @@ module.exports = (io, client) => {
   // attenpt to drop it to a new grid
   client.on('newChessGame', () => {
     console.log('client started new game');
+    // testGame = new ChessGame();
     io.emit('createdChessGame', testGame);
   });
-  client.on('attemptMove', (origin, dest) => {
+  client.on('attemptMove', (selectedPiece, origin, dest, selection) => {
     console.log('attempted Move', origin, dest);
-    const board = testGame.movePiece(origin, dest);
-    io.emit('attemptMoveResult', board);
+    const newState = testGame.movePiece(origin, dest);
+    io.emit('attemptMoveResult', newState.game.board, newState.error, selectedPiece, origin, dest, selection);
   });
   client.on('checkLegalMove', (data) => {
     console.log('coordinates received at server');
