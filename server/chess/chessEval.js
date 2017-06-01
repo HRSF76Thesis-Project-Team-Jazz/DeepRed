@@ -76,8 +76,6 @@ const boardPositionScore = (board) => {
 
 };
 
-
-
 module.exports.capturedPiecesScore = capturedPiecesScore;
 module.exports.findPiecePosition = findPiecePosition;
 module.exports.boardPositionScore = boardPositionScore;
