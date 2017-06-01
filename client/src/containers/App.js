@@ -34,8 +34,22 @@ class App extends Component {
       console.log('client side connected!');
     });
 
-    this.socket.on('newPlayerJoined', (roomInfo) => {
-      console.log('roomInfo: ', roomInfo);
+    this.socket.on('disconnect', () => {
+      this.socket.emit(roomInfo);
+      console.log('client side disconnected!');
+    })
+
+    this.socket.on('firstPlayerJoined', roomInfo => {
+      console.log(`first player has joined ${roomInfo[0]} as ${roomInfo[1]}`);
+    });
+
+    this.socket.on('secondPlayerJoined', roomInfo => {
+      console.log(`second player has joined ${roomInfo[0]} as ${roomInfo[2]}`);
+    });
+
+    this.socket.on('startGame', (roomInfo, newGame) => {
+      console.log('new game started: ', newGame);
+      console.log('inportant room information', roomInfo);
     });
   }
 
@@ -58,7 +72,8 @@ class App extends Component {
   }
 
   render() {
-    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW } = this.props;
+    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW }
+          = this.props;
 
     return (
       <div className="site-wrap">
