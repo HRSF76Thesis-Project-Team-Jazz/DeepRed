@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
+import { setPlayerW, setPlayerB, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece } from '../store/actions';
 
 // Components
 import ChessMenu from '../components/ChessMenu';
@@ -13,7 +14,6 @@ import CapturedPieces from '../components/CapturedPieces';
 import Clock from '../components/Clock';
 import MoveHistory from '../components/MoveHistory';
 import './css/App.css';
-import { getRequestSuccess, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece } from '../store/actions';
 
 
 // Needed for onTouchTap
@@ -27,19 +27,39 @@ class App extends Component {
     this.getUserInfo = this.getUserInfo.bind(this);
     this.attemptMove = this.attemptMove.bind(this);
     this.newChessGame = this.newChessGame.bind(this);
+    this.startSocket = this.startSocket.bind(this);
   }
 
   componentDidMount() {
+    const { dispatch, room, playerB, playerW } = this.props;
     this.getUserInfo();
+  }
+
+  startSocket() {
+    const { dispatch, room, playerB, playerW } = this.props;
+    
+    let name = playerW;
+    // instantiate socket instance on the cllient side
     this.socket = io.connect();
+
     this.socket.on('connect', () => {
       console.log('client side connected!');
-      // this.newChessGame();
+      this.socket.emit('sendCurrentUserName', name);
     });
-    // this.newChessGame();
-    const { dispatch } = this.props;
 
-    this.socket.on('attemptMoveResult', (board, error, selectedPiece, origin, dest, selection) => {
+    this.socket.on('firstPlayerJoined', (roomInfo) => {
+      console.log(`first player has joined ${roomInfo.room} as ${roomInfo.playerW}`);
+    });
+
+    this.socket.on('secondPlayerJoined', (roomInfo) => {
+      console.log(`second player has joined ${roomInfo.room} as ${roomInfo.playerB}`);
+    });
+
+    this.socket.on('startGame', (roomInfo, newGame) => {
+      dispatch(updateRoomInfo(roomInfo));
+    });
+
+    this.socket.on('attemptMoveResult', (board, error, selectedPiece, origin, dest, selection, room) => {
       console.log('************** BOARD: ', board);
       // dispatch(receiveGame(board));
       if (error === null) {
@@ -52,24 +72,6 @@ class App extends Component {
       }
       dispatch(unselectPiece());
     });
-
-    this.socket.on('disconnect', () => {
-      this.socket.emit(roomInfo);
-      console.log('client side disconnected!');
-    });
-
-    this.socket.on('firstPlayerJoined', (roomInfo) => {
-      console.log(`first player has joined ${roomInfo[0]} as ${roomInfo[1]}`);
-    });
-
-    this.socket.on('secondPlayerJoined', (roomInfo) => {
-      console.log(`second player has joined ${roomInfo[0]} as ${roomInfo[2]}`);
-    });
-
-    this.socket.on('startGame', (roomInfo, newGame) => {
-      console.log('new game started: ', newGame);
-      console.log('inportant room information', roomInfo);
-    });
   }
 
   getUserInfo() {
@@ -77,7 +79,10 @@ class App extends Component {
     axios.get('/api/profiles/id')
     .then((response) => {
       console.log('successfully fetched current user infomation');
-      dispatch(getRequestSuccess(response));
+        dispatch(setPlayerW(response));
+    })
+    .then(() => {
+        this.startSocket();
     })
     .catch((err) => {
       dispatch(getRequestFailure(err));
@@ -92,10 +97,11 @@ class App extends Component {
     this.socket.on('createdChessGame', game => dispatch(receiveGame(game)));
   }
 
-  attemptMove(selectedPiece, origin, dest, selection) {
+  attemptMove(selectedPiece, origin, dest, selection, room) {
     // const { dispatch } = this.props;
     console.log('sending origin and dest coordinates to server');
-    this.socket.emit('attemptMove', selectedPiece, origin, dest, selection);
+    this.socket.emit('attemptMove', selectedPiece, origin, dest, selection, room);
+    // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
   render() {
@@ -152,6 +158,7 @@ function mapStateToProps(state) {
   const {
     playerW,
     playerB,
+    room,
   } = userState;
   const { message } = moveState;
   return {
