@@ -4,6 +4,8 @@ import io from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
 
+import { setPlayerW, setPlayerB, getRequestFailure, getUserProfile, updateRoomInfo } from '../store/actions';
+
 // Components
 import ChessMenu from '../components/ChessMenu';
 import SettingsDrawer from '../components/SettingsDrawer';
@@ -25,13 +27,27 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.getUserInfo = this.getUserInfo.bind(this);
+    this.startSocket = this.startSocket.bind(this);
     this.attemptMove = this.attemptMove.bind(this);
     this.newChessGame = this.newChessGame.bind(this);
   }
 
-  componentDidMount() {
-    this.getUserInfo();
+  componentWillMount() {
+    const {dispatch, room, playerB, playerW} = this.props;
     this.socket = io.connect();
+    this.getUserInfo();
+    console.log('111: ', playerW);
+
+  }
+
+  componentDidMount() {
+    const {dispatch, room, playerB, playerW} = this.props;
+    this.startSocket();
+  }
+
+  startSocket() {
+    const {dispatch, room, playerB, playerW} = this.props;
+    console.log('222: ', playerW);
     this.socket.on('connect', () => {
       console.log('client side connected!');
       // this.newChessGame();
@@ -53,9 +69,15 @@ class App extends Component {
       dispatch(unselectPiece());
     });
 
+    this.socket.emit('sendUserInfo', playerW);
+      
     this.socket.on('disconnect', () => {
-      this.socket.emit(roomInfo);
+      // this.socket.emit(roomInfo);
       console.log('client side disconnected!');
+    });
+
+    this.socket.on('playerLeft', () => {
+      console.log('testing channel after player left');
     });
 
     this.socket.on('firstPlayerJoined', (roomInfo) => {
@@ -67,17 +89,25 @@ class App extends Component {
     });
 
     this.socket.on('startGame', (roomInfo, newGame) => {
-      console.log('new game started: ', newGame);
-      console.log('inportant room information', roomInfo);
+      dispatch(updateRoomInfo(roomInfo));
+      // console.log('new game started: ', newGame);
+      // console.log('inportant room information', roomInfo);
     });
   }
 
   getUserInfo() {
-    const { dispatch } = this.props;
+    const { dispatch, playerW, playerB} = this.props;
     axios.get('/api/profiles/id')
     .then((response) => {
       console.log('successfully fetched current user infomation');
-      dispatch(getRequestSuccess(response));
+      // console.log('playerW', playerW);
+      // console.log('playerB', playerB);
+      if (playerW === '') {
+        dispatch(setPlayerW(response));
+        this.socket.emit()
+      } else {
+        dispatch(setPlayerB(response));
+      }
     })
     .catch((err) => {
       dispatch(getRequestFailure(err));
@@ -95,6 +125,7 @@ class App extends Component {
   attemptMove(selectedPiece, origin, dest, selection) {
     // const { dispatch } = this.props;
     console.log('sending origin and dest coordinates to server');
+
     this.socket.emit('attemptMove', selectedPiece, origin, dest, selection);
   }
 
@@ -152,6 +183,7 @@ function mapStateToProps(state) {
   const {
     playerW,
     playerB,
+    room,
   } = userState;
   const { message } = moveState;
   return {

@@ -7,6 +7,12 @@ let count = 1;
 const testGame = new ChessGame();
 
 module.exports = (io, client) => {
+  console.log('testing1');
+  client.on('sendUserInfo', userInfo => {
+    console.log('testing3');
+    console.log('user: ', userInfo);
+  })
+  console.log('testing2');
   // dynamically create room number
   const room = `room${count}`;
   // if current room has no player
@@ -35,7 +41,8 @@ module.exports = (io, client) => {
   }
 
   client.on('disconnect', clientRoomInfo => {
-    client.leave
+    console.log('testing: ', clientRoomInfo);
+    io.in(clientRoomInfo[0]).emit('playerLeft');
   })
 
   // triggered when user picks up a chess piece and
