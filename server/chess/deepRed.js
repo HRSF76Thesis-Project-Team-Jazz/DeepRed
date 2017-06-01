@@ -136,46 +136,140 @@ let board = [
 
 console.log('[Knights] move from home: ', getAvailableMovesWhite(board));
 
+
+// ********** PAWNS VISUALIZATION ************
 board = [
   ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
   ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
   [null, null, null, null, null, null, null, null],
-  [null, null, 'WN', null, null, null, null, 'WN'],
+  [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', null, 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
+  ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
 ];
 
 console.log(board);
 let moves = getAvailableMovesWhite(board);
 
 let movesBoard = [
-  ['-', '-', '-', '-', '-', '-', '-', '-'],
-  ['-', '-', '-', '-', '-', '-', '-', '-'],
-  ['-', '-', '-', '-', '-', '-', '-', '-'],
-  ['-', '-', 'N', '-', '-', '-', '-', 'N'],
-  ['-', '-', '-', '-', '-', '-', '-', '-'],
-  ['-', '-', '-', '-', '-', '-', '-', '-'],
-  ['-', '-', '-', '-', '-', '-', '-', '-'],
-  ['-', '-', '-', '-', '-', '-', '-', '-'],
+  ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  ['--', '--', '--', '--', '--', '--', '--', '--'],
+  ['--', '--', '--', '--', '--', '--', '--', '--'],
+  ['--', '--', '--', '--', '--', '--', '--', '--'],
+  ['--', '--', '--', '--', '--', '--', '--', '--'],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+  ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
 ];
 
-console.log('-----------------------------');
+console.log();
+console.log('============== [PAWNS] ==============');
 
 movesBoard.forEach(row => console.log(row.join(' | ')));
 
-console.log('-----------------------------');
+console.log('-------------------------------------');
+
+const pawns = [60, 61, 62, 63, 64, 65, 66, 67];
+
+pawns.forEach((square) => {
+  moves[square].forEach((move) => {
+    movesBoard[move[0]][move[1]] = '<>';
+  });
+});
+
+movesBoard.forEach(row => console.log(row.join(' | ')));
+
+console.log('-------------------------------------');
+console.log();
+// ********** END ONE VISUALIZATION ************
+
+// ********** KNIGHTS VISUALIZATION ************
+board = [
+  ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  [null, null, null, null, null, null, null, null],
+  [null, null, 'WN', null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+  ['WR', null, 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+];
+
+moves = getAvailableMovesWhite(board);
+
+movesBoard = [
+  ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  ['--', '--', '--', '--', '--', '--', '--', '--'],
+  ['--', '--', 'WN', '--', '--', '--', '--', '--'],
+  ['--', '--', '--', '--', '--', '--', '--', '--'],
+  ['--', '--', '--', '--', '--', '--', '--', '--'],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+  ['WR', '--', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+];
+
+console.log();
+console.log('============== [KNIGHTS] ==============');
+
+movesBoard.forEach(row => console.log(row.join(' | ')));
+
+console.log('-------------------------------------');
 moves[32].forEach((move) => {
-  movesBoard[move[0]][move[1]] = 'X';
+  movesBoard[move[0]][move[1]] = '<>';
 });
-moves[37].forEach((move) => {
-  movesBoard[move[0]][move[1]] = 'X';
+moves[76].forEach((move) => {
+  movesBoard[move[0]][move[1]] = '<>';
 });
 
 movesBoard.forEach(row => console.log(row.join(' | ')));
 
-console.log('-----------------------------');
+console.log('-------------------------------------');
+console.log();
+// ********** END ONE VISUALIZATION ************
+
+// ********** ONE VISUALIZATION ************
+board = [
+  ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, 'WR', null, null, null],
+  [null, null, null, null, null, null, null, null],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+  ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', null],
+];
+
+moves = getAvailableMovesWhite(board);
+
+movesBoard = [
+  ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  ['--', '--', '--', '--', '--', '--', '--', '--'],
+  ['--', '--', '--', '--', '--', '--', '--', '--'],
+  ['--', '--', '--', '--', 'WR', '--', '--', '--'],
+  ['--', '--', '--', '--', '--', '--', '--', '--'],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+  ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', '--'],
+];
+
+console.log();
+console.log('============== [ROOKS] ==============');
+
+movesBoard.forEach(row => console.log(row.join(' | ')));
+
+console.log('-------------------------------------');
+moves[44].forEach((move) => {
+  movesBoard[move[0]][move[1]] = '<>';
+});
+
+movesBoard.forEach(row => console.log(row.join(' | ')));
+
+console.log('-------------------------------------');
+console.log();
+// ********** END ONE VISUALIZATION ************
+
+
 board = [
   ['WN', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'WN'],
   ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
@@ -187,7 +281,6 @@ board = [
   ['WN', null, 'WB', 'WK', 'WQ', 'WB', null, 'WN'],
 ];
 
-console.log(board);
 moves = getAvailableMovesWhite(board);
 
 movesBoard = [
