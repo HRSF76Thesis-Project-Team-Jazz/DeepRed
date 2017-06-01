@@ -31,12 +31,12 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const {dispatch, room, playerB, playerW} = this.props;
+    const { dispatch, room, playerB, playerW } = this.props;
     this.getUserInfo();
   }
 
   startSocket() {
-    const {dispatch, room, playerB, playerW} = this.props;
+    const { dispatch, room, playerB, playerW } = this.props;
     
     let name = playerW;
     // instantiate socket instance on the cllient side
@@ -45,6 +45,18 @@ class App extends Component {
     this.socket.on('connect', () => {
       console.log('client side connected!');
       this.socket.emit('sendCurrentUserName', name);
+    });
+
+    this.socket.on('firstPlayerJoined', (roomInfo) => {
+      console.log(`first player has joined ${roomInfo.room} as ${roomInfo.playerW}`);
+    });
+
+    this.socket.on('secondPlayerJoined', (roomInfo) => {
+      console.log(`second player has joined ${roomInfo.room} as ${roomInfo.playerB}`);
+    });
+
+    this.socket.on('startGame', (roomInfo, newGame) => {
+      dispatch(updateRoomInfo(roomInfo));
     });
 
     this.socket.on('attemptMoveResult', (board, error, selectedPiece, origin, dest, selection) => {
@@ -60,24 +72,10 @@ class App extends Component {
       }
       dispatch(unselectPiece());
     });
-
-    this.socket.on('firstPlayerJoined', (roomInfo) => {
-      console.log(`first player has joined ${roomInfo[0]} as ${roomInfo[1]}`);
-    });
-
-    this.socket.on('secondPlayerJoined', (roomInfo) => {
-      console.log(`second player has joined ${roomInfo[0]} as ${roomInfo[2]}`);
-    });
-
-    this.socket.on('startGame', (roomInfo, newGame) => {
-      dispatch(updateRoomInfo(roomInfo));
-      // console.log('new game started: ', newGame);
-      // console.log('inportant room information', roomInfo);
-    });
   }
 
   getUserInfo() {
-    const { dispatch, playerW, playerB} = this.props;
+    const { dispatch } = this.props;
     axios.get('/api/profiles/id')
     .then((response) => {
       console.log('successfully fetched current user infomation');

@@ -173,8 +173,8 @@ const userState = (state = Immutable({
     case types.UPDATE_ROOM_INFO: {
       return Immutable({
         ...state,
-        room: action.roomInfo[0],
-        playerB: action.roomInfo[2],
+        room: action.roomInfo.room,
+        playerB: action.roomInfo.playerB,
       })
     }
     default:
