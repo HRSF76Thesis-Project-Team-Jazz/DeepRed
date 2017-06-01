@@ -6,6 +6,10 @@ export const CAPTURE_PIECE = 'CAPTURE_PIECE';
 
 export const MOVE_PIECE = 'MOVE_PIECE';
 
-export const GET_REQUEST_SUCCESS = 'GET_REQUEST_SUCCESS';
+export const SET_PLAYER_W = 'SET_PLAYER_W';
+
+export const SET_PLAYER_B = 'SET_PLAYER_B';
 
 export const GET_REQUEST_FAILURE = 'GET_REQUEST_FAILURE';
+
+export const UPDATE_ROOM_INFO = 'UPDATE_ROOM_INFO';

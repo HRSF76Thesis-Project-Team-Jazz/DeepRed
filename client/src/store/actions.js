@@ -34,15 +34,25 @@ export const capturePiece = (selectedPiece, fromPosition, coordinates, capturedP
   capturedPiece,
 });
 
-export const getRequestSuccess = player => ({
-  type: types.GET_REQUEST_SUCCESS,
+export const setPlayerW = player => ({
+  type: types.SET_PLAYER_W,
   player,
 });
+
+export const setPlayerB = player => ({
+  type: types.SET_PLAYER_B,
+  player,
+})
 
 export const getRequestFailure = message => ({
   type: types.GET_REQUEST_FAILURE,
   message,
 });
+
+export const updateRoomInfo = roomInfo => ({
+  type: types.UPDATE_ROOM_INFO,
+  roomInfo,
+})
 // TO BE IMPLEMENTED
 
 export const receiveMove = (query, move) => ({
