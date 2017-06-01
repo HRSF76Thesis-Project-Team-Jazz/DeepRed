@@ -34,12 +34,12 @@ describe('【Deep Red】 evaluate available possible moves: ', () => {
           66: [[5, 6], [4, 6]],
           67: [[5, 7], [4, 7]],
           70: [],
-          71: [],
+          71: [[5, 0], [5, 2]],
           72: [],
           73: [],
           74: [],
           75: [],
-          76: [],
+          76: [[5, 5], [5, 7]],
           77: [],
         };
         expect(getAvailableMovesWhite(board)).to.eql(expected);
