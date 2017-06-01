@@ -40,7 +40,7 @@ class App extends Component {
     // this.newChessGame();
     const { dispatch } = this.props;
 
-    this.io.on('attemptMoveResult', (board, error, selectedPiece, origin, dest, selection) => {
+    this.socket.on('attemptMoveResult', (board, error, selectedPiece, origin, dest, selection) => {
       console.log('************** BOARD: ', board);
       // dispatch(receiveGame(board));
       if (error === null) {
@@ -89,14 +89,14 @@ class App extends Component {
   newChessGame() {
     const { dispatch } = this.props;
     console.log('make new game');
-    this.io.emit('newChessGame');
-    this.io.on('createdChessGame', game => dispatch(receiveGame(game)));
+    this.socket.emit('newChessGame');
+    this.socket.on('createdChessGame', game => dispatch(receiveGame(game)));
   }
 
   attemptMove(selectedPiece, origin, dest, selection) {
     // const { dispatch } = this.props;
     console.log('sending origin and dest coordinates to server');
-    this.io.emit('attemptMove', selectedPiece, origin, dest, selection);
+    this.socket.emit('attemptMove', selectedPiece, origin, dest, selection);
   }
 
   render() {
@@ -125,7 +125,7 @@ class App extends Component {
 
             <div className="flex-col">
               <CapturedPieces color="Black" capturedPieces={capturedPiecesBlack} player={playerB} />
-              <Board checkLegalMove={this.checkLegalMove} />
+              <Board attemptMove={this.attemptMove} />
               <CapturedPieces color="White" capturedPieces={capturedPiecesWhite} player={playerW} />
               <Message message={message} />
             </div>
