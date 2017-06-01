@@ -9,7 +9,9 @@ import ContentSave from 'material-ui/svg-icons/content/save';
 import ActionExit from 'material-ui/svg-icons/action/exit-to-app';
 import NavigationArrowUpward from 'material-ui/svg-icons/navigation/arrow-upward';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
-import ActionSettings from 'material-ui/svg-icons/action/settings';
+import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
+
+import './css/SettingsDrawer.css';
 
 class SettingsDrawer extends Component {
 
@@ -34,12 +36,13 @@ class SettingsDrawer extends Component {
         <RaisedButton
           label=""
           onTouchTap={this.handleToggle}
-          icon={<ActionSettings />}
+          icon={<NavigationMenu />}
+          className="drawer-button"
         />
         <Drawer
-          width={'30%'}
-          openSecondary
+          width={'20%'}
           docked={false}
+          openSecondary
           open={this.state.open}
           onRequestChange={open => this.setState({ open })}
         >
@@ -51,6 +54,12 @@ class SettingsDrawer extends Component {
               User Profile
             </MenuItem>
           </Link>
+          <MenuItem
+            onTouchTap={this.handleClose}
+            leftIcon={<SocialShare />}
+          >
+            Share
+          </MenuItem>
           <MenuItem
             onTouchTap={this.handleClose}
             leftIcon={<ContentSave />}
@@ -68,12 +77,6 @@ class SettingsDrawer extends Component {
             leftIcon={<NavigationClose />}
           >
             Quit Game
-          </MenuItem>
-          <MenuItem
-            onTouchTap={this.handleClose}
-            leftIcon={<SocialShare />}
-          >
-            Share
           </MenuItem>
           <MenuItem
             onTouchTap={this.handleClose}

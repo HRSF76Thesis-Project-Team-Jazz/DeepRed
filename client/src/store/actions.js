@@ -19,6 +19,10 @@ export const selectPiece = (selectedPiece, coordinates) => ({
   coordinates,
 });
 
+export const unselectPiece = () => ({
+  type: types.UNSELECT_PIECE,
+});
+
 export const movePiece = (selectedPiece, fromPosition, coordinates) => ({
   type: types.MOVE_PIECE,
   selectedPiece,
@@ -52,3 +56,20 @@ export const receiveMove = (query, move) => ({
   receivedAt: Date.now(),
 });
 
+export const requestGame = () => ({
+  type: types.REQUEST_GAME,
+});
+
+export const receiveGame = game => ({
+  type: types.RECEIVE_GAME,
+  game,
+});
+
+export const fetchGame = () => (dispatch) => {
+  dispatch(requestGame());
+  return fetch('http://127.0.0.1:3000/api/game')
+    .then(response => response.json())
+    .then(json =>
+      dispatch(receiveGame(json)),
+    );
+};

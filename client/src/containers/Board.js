@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { invalidSelection, selectPiece, movePiece, capturePiece } from '../store/actions';
+import { invalidSelection, selectPiece, movePiece, capturePiece, fetchGame } from '../store/actions';
 import './css/Board.css';
 
 class Board extends Component {
@@ -14,6 +14,8 @@ class Board extends Component {
   }
 
   componentDidMount() {
+    // const { dispatch } = this.props;
+    // dispatch(fetchGame());
   }
 
   getImage(CP) {
@@ -26,24 +28,25 @@ class Board extends Component {
     const x = coordinates[0];
     const y = coordinates[1];
     const selection = board[x][y];
-
+    console.log('SELECTION: ', selection);
     // If no piece is currently selected
     if (selectedPiece === '') {
-      if (selection && selection[0] === playerColor) {
+      // && selection[0] === playerColor
+      if (selection) {
         dispatch(selectPiece(selection, coordinates));
       } else {
         dispatch(invalidSelection(coordinates));
       }
-
       // If a piece is already selected
       /* NOTE: CHECK FOR VALID MOVE REQUIRED HERE    */
-    } else if (selection === null) {
-      dispatch(movePiece(selectedPiece, fromPosition, coordinates));
-    } else if (selectedPiece[0] === board[x][y][0]) {
-      dispatch(invalidSelection(coordinates));
+      // if (selection === null)
     } else {
-      const capturedPiece = selection;
-      dispatch(capturePiece(selectedPiece, fromPosition, coordinates, capturedPiece));
+      this.props.attemptMove(selectedPiece, fromPosition, coordinates, selection);
+    // } else if (selectedPiece[0] === board[x][y][0]) {
+    //   dispatch(invalidSelection(coordinates));
+    // } else {
+    //   const capturedPiece = selection;
+    //   dispatch(capturePiece(selectedPiece, fromPosition, coordinates, capturedPiece));
     }
   }
 
