@@ -173,6 +173,117 @@ const getAvailableMovesWhite = (board) => {
             }
           } // end of B-SW
         } // end of 'B'
+
+        if (piece[1] === 'Q') {
+          // NW
+          let currentRow = row;
+          let currentCol = col;
+          let continueMove = true;
+          while (continueMove && currentRow - 1 >= 0 && currentCol - 1 >= 0) {
+            currentRow -= 1;
+            currentCol -= 1;
+            if (!board[currentRow][currentCol]) {
+              result[key].push([currentRow, currentCol]);
+            } else {
+              continueMove = false;
+              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+            }
+          }
+
+          // NE
+          currentRow = row;
+          currentCol = col;
+          continueMove = true;
+          while (continueMove && currentRow - 1 >= 0 && currentCol + 1 <= 7) {
+            currentRow -= 1;
+            currentCol += 1;
+            if (!board[currentRow][currentCol]) {
+              result[key].push([currentRow, currentCol]);
+            } else {
+              continueMove = false;
+              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+            }
+          }
+
+          // SE
+          currentRow = row;
+          currentCol = col;
+          continueMove = true;
+          while (continueMove && currentRow + 1 <= 7 && currentCol + 1 <= 7) {
+            currentRow += 1;
+            currentCol += 1;
+            if (!board[currentRow][currentCol]) {
+              result[key].push([currentRow, currentCol]);
+            } else {
+              continueMove = false;
+              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+            }
+          }
+
+          // SW
+          currentRow = row;
+          currentCol = col;
+          continueMove = true;
+          while (continueMove && currentRow + 1 <= 7 && currentCol - 1 >= 0) {
+            currentRow += 1;
+            currentCol -= 1;
+            if (!board[currentRow][currentCol]) {
+              result[key].push([currentRow, currentCol]);
+            } else {
+              continueMove = false;
+              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+            }
+          } // end of Q-SW
+
+          // move up
+          currentRow = row;
+          continueMove = true;
+          while (continueMove && currentRow - 1 >= 0) {
+            currentRow -= 1;
+            if (!board[currentRow][col]) {
+              result[key].push([currentRow, col]);
+            } else {
+              continueMove = false;
+              if (board[currentRow][col][0] === 'B') result[key].push([currentRow, col]);
+            }
+          }
+          // move down
+          currentRow = row;
+          continueMove = true;
+          while (continueMove && currentRow + 1 <= 7) {
+            currentRow += 1;
+            if (!board[currentRow][col]) {
+              result[key].push([currentRow, col]);
+            } else {
+              continueMove = false;
+              if (board[currentRow][col][0] === 'B') result[key].push([currentRow, col]);
+            }
+          }
+          // move left
+          currentCol = col;
+          continueMove = true;
+          while (continueMove && currentCol - 1 >= 0) {
+            currentCol -= 1;
+            if (!board[row][currentCol]) {
+              result[key].push([row, currentCol]);
+            } else {
+              continueMove = false;
+              if (board[row][currentCol][0] === 'B') result[key].push([row, currentCol]);
+            }
+          }
+          // move right
+          currentCol = col;
+          continueMove = true;
+          while (continueMove && currentCol + 1 <= 7) {
+            currentCol += 1;
+            if (!board[row][currentCol]) {
+              result[key].push([row, currentCol]);
+            } else {
+              continueMove = false;
+              if (board[row][currentCol][0] === 'B') result[key].push([row, currentCol]);
+            }
+          }
+        } // end of 'Q'
       } // end of if 'W'
     } // for loop i
   } // for loop j
@@ -261,7 +372,20 @@ board = [
   [null, null, null, null, null, null, 'WB', null],
   [null, null, null, null, null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+  ['WR', 'WN', 'WB', 'WK', 'WQ', null, 'WN', 'WR'],
 ];
 
 showMovesByPiece(board, 'WB');
+
+board = [
+  ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, 'WQ', null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+  ['WR', 'WN', 'WB', 'WK', null, 'WB', 'WN', 'WR'],
+];
+
+showMovesByPiece(board, 'WQ');
