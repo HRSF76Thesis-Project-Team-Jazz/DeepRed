@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Clock from '../components/Clock';
 import './css/CapturedPieces.css';
 
 const CapturedPieces = ({ color, capturedPieces, player }) => (
@@ -16,6 +16,7 @@ const CapturedPieces = ({ color, capturedPieces, player }) => (
       ),
       )}
     </div>
+    <Clock />
   </div>
 );
 

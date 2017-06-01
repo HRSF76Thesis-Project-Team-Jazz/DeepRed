@@ -11,7 +11,6 @@ import SettingsDrawer from '../components/SettingsDrawer';
 import Board from './Board';
 import Message from '../components/Message';
 import CapturedPieces from '../components/CapturedPieces';
-import Clock from '../components/Clock';
 import MoveHistory from '../components/MoveHistory';
 import ErrorAlert from './ErrorAlert';
 import './css/App.css';
@@ -157,11 +156,8 @@ class App extends Component {
             </div>
 
             <div className="flex-col right-col">
-              <Clock />
               <MoveHistory moveHistory={moveHistory} />
-              <Clock />
             </div>
-
           </div>
         </div>
       </div>

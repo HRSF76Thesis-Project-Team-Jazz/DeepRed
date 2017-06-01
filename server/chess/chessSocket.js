@@ -7,8 +7,6 @@ let roomInfo = {};
 let count = 1;
 let currentUser = '';
 
-// const testGame = new ChessGame();
-
 module.exports = (io, client) => {
   client.on('sendCurrentUserName', currentUserName => {
     currentUser = currentUserName;
@@ -26,7 +24,7 @@ module.exports = (io, client) => {
       currentUser = '';
       io.in(room).emit('firstPlayerJoined', roomInfo);
     });
-    // if current room already has a player
+    // if current room already has one player
   } else if (roomInfo.playerB === undefined || roomInfo.playerB === '') {
       client.join(room, () => {
         // add second player into current room
