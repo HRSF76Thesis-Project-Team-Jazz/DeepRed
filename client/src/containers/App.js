@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
-import { getRequestSuccess, getRequestFailure, getUserProfile } from '../store/actions';
 
 // Components
 import ChessMenu from '../components/ChessMenu';
@@ -14,7 +13,7 @@ import CapturedPieces from '../components/CapturedPieces';
 import Clock from '../components/Clock';
 import MoveHistory from '../components/MoveHistory';
 import './css/App.css';
-import { receiveGame, movePiece, unselectPiece, capturePiece } from '../store/actions';
+import { getRequestSuccess, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece } from '../store/actions';
 
 
 // Needed for onTouchTap
@@ -57,13 +56,13 @@ class App extends Component {
     this.socket.on('disconnect', () => {
       this.socket.emit(roomInfo);
       console.log('client side disconnected!');
-    })
+    });
 
-    this.socket.on('firstPlayerJoined', roomInfo => {
+    this.socket.on('firstPlayerJoined', (roomInfo) => {
       console.log(`first player has joined ${roomInfo[0]} as ${roomInfo[1]}`);
     });
 
-    this.socket.on('secondPlayerJoined', roomInfo => {
+    this.socket.on('secondPlayerJoined', (roomInfo) => {
       console.log(`second player has joined ${roomInfo[0]} as ${roomInfo[2]}`);
     });
 

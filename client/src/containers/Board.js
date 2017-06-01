@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { invalidSelection, selectPiece, movePiece, capturePiece, fetchGame } from '../store/actions';
+import { invalidSelection, selectPiece } from '../store/actions';
 import './css/Board.css';
 
 class Board extends Component {
@@ -18,12 +18,8 @@ class Board extends Component {
     // dispatch(fetchGame());
   }
 
-  getImage(CP) {
-    return <img className="piece-img" src={`/assets/${CP}.png`} />;
-  }
-
   onClick(coordinates) {
-    const { dispatch, board, fromPosition, selectedPiece, playerColor } = this.props;
+    const { dispatch, board, fromPosition, selectedPiece, attemptMove } = this.props;
 
     const x = coordinates[0];
     const y = coordinates[1];
@@ -41,7 +37,7 @@ class Board extends Component {
       /* NOTE: CHECK FOR VALID MOVE REQUIRED HERE    */
       // if (selection === null)
     } else {
-      this.props.attemptMove(selectedPiece, fromPosition, coordinates, selection);
+      attemptMove(selectedPiece, fromPosition, coordinates, selection);
     // } else if (selectedPiece[0] === board[x][y][0]) {
     //   dispatch(invalidSelection(coordinates));
     // } else {
@@ -49,13 +45,15 @@ class Board extends Component {
     //   dispatch(capturePiece(selectedPiece, fromPosition, coordinates, capturedPiece));
     }
   }
-
+  getImage(CP) {
+    return <img className="piece-img" src={`/assets/${CP}.png`} />;
+  }
   render() {
     const { board } = this.props;
     return (
       <div className="board">
         {board.map((row, rowIndex) => (
-            <div key={Math.random()} className="board-row">
+          <div key={Math.random()} className="board-row">
             {row.map((col, colIndex) => (
               <div
                 className={((rowIndex + colIndex) % 2 === 1) ? 'board-col dark' : 'board-col light'}
@@ -66,7 +64,7 @@ class Board extends Component {
               </div>),
             )}
           </div>
-        )
+        ),
         )}
       </div>
     );

@@ -34,23 +34,23 @@ class ChessGame {
     let error = null;
     if (dest === undefined) {
       error = 'Attempted destination is invalid';
-      console.log(this.board);
-      console.log(error);
+      // console.log(this.board);
+      // console.log(error);
       return { game: this, error };
     } else if (!origin || !this.board[origin[0]] || !this.board[origin[0]][origin[1]]) {
       error = 'Origin is invalid';
-      console.log(this.board);
-      console.log(error);
+      // console.log(this.board);
+      // console.log(error);
       return { game: this, error };
     } else if (origin[0] === dest[0] && origin[1] === dest[1]) {
       error = 'Origin and destination cannot be the same';
-      console.log(this.board);
-      console.log(error);
+      // console.log(this.board);
+      // console.log(error);
       return { game: this, error };
     } else if ((this.count % 2 === 0 && this.board[origin[0]][origin[1]][0] === 'W') || (this.count % 2 === 1 && this.board[origin[0]][origin[1]][0] === 'B')) {
       error = 'Not your turn.';
-      console.log(error);
-      console.log(this.board);
+      // console.log(this.board);
+      // console.log(error);
       return { game: this, error };
     }
     const originPiece = this.board[origin[0]][origin[1]];
@@ -59,8 +59,8 @@ class ChessGame {
       if (destPiece) {
         if (originPiece[0] === destPiece[0]) {
           error = 'Attempted to capture own piece';
-          console.log(error);
-          console.log(this.board);
+          // console.log(this.board);
+          // console.log(error);
           return { game: this, error };
         }
         // this.history += moveToPGNString(this.board, origin, dest, this.count);
@@ -77,13 +77,13 @@ class ChessGame {
       this.board[origin[0]][origin[1]] = null;
       // check for check/checkmate/stalemate
       // console.log('--------------', this.history);
-      console.log('Move piece is successful');
-      console.log(this.board);
+      // console.log('Move piece is successful');
+      // console.log(this.board);
       return { game: this, error };
     }
     error = 'Attempted Move is Illegal';
-    console.log(this.board);
-    console.log(error);
+    // console.log(this.board);
+    // console.log(error);
     return { game: this, error };
   }
 
@@ -100,15 +100,15 @@ class ChessGame {
     let originPiece = this.board[origin[0]][origin[1]];
     let destPiece = this.board[dest[0]][dest[1]];
 
-    if (isLegalMove(this.board, origin, dest)){
-      if (piece[0] === 'W' && origin[0] === 1){
-        if (dest[0] === 0){
+    if (isLegalMove(this.board, origin, dest)) {
+      if (piece[0] === 'W' && origin[0] === 1) {
+        if (dest[0] === 0) {
           destPiece = 'WQ';
           originPiece = null;
         }
       }
-      if (piece[0] === 'B' && origin[0] === 6){
-        if (dest[0] === 7){
+      if (piece[0] === 'B' && origin[0] === 6) {
+        if (dest[0] === 7) {
           destPiece = 'BQ';
           originPiece = null;
         }
@@ -130,26 +130,26 @@ class ChessGame {
     // if king and rook hasnt moved
     // king is not in Check
 
-    if (isHorizPathClear(this.board, origin, dest, limit = 7)){
-      if (piece[0] === 'W'){
-        if (dest[0] == 7 && dest[1] == 0){
+    if (isHorizPathClear(this.board, origin, dest, limit = 7)) {
+      if (piece[0] === 'W') {
+        if (dest[0] == 7 && dest[1] == 0) {
           this.board[7][2] = 'WK';
           this.board[7][3] = 'WR';
           originPiece = null;
           destPiece = null;
-        } else if (dest[0] == 7 && dest[1] == 7){
+        } else if (dest[0] === 7 && dest[1] === 7) {
           this.board[7][6] = 'WK';
           this.board[7][5] = 'WR';
           originPiece = null;
           destPiece = null;
         }
-    } else if (piece[0] == 'B'){
-        if (dest[0] == 0 && dest[1] == 0){
+      } else if (piece[0] === 'B') {
+        if (dest[0] === 0 && dest[1] === 0) {
           this.board[0][2] = 'BK';
           this.board[0][3] = 'BR';
           originPiece = null;
           destPiece = null;
-        } else if (dest[0] == 0 && dest[1] == 7){
+        } else if (dest[0] === 0 && dest[1] === 7) {
           this.board[0][6] = 'BK';
           this.board[0][5] = 'BR';
           originPiece = null;
