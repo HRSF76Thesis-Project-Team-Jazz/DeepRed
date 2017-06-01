@@ -3,25 +3,30 @@ const ChessGame = require('./ChessGame');
 const allRoom = [];
 let roomInfo = [];
 let count = 1;
+let currentUser = '';
 
 const testGame = new ChessGame();
 
 module.exports = (io, client) => {
+  client.on('sendCurrentUserName', currentUserName => {
+    currentUser = currentUserName;
+    // console.log('user: ', currentUserName);
+  })
   // dynamically create room number
-  const room = `room${count}`;
+  const room = `room ${count}`;
   // if current room has no player
   if (roomInfo.length === 0) {
     client.join(room, () => {
       // add room number and first player into current room
       roomInfo[0] = room;
-      roomInfo[1] = client.id;
+      roomInfo[1] = currentUser;
       io.in(room).emit('firstPlayerJoined', roomInfo);
     });
     // if current room already has a player
   } else if (roomInfo.length === 2) {
     client.join(room, () => {
       // add second player into current room
-      roomInfo[2] = client.id;
+      roomInfo[2] = currentUser;
       allRoom.push(roomInfo);
       io.in(room).emit('secondPlayerJoined', roomInfo);
       // create new game instance
@@ -33,10 +38,6 @@ module.exports = (io, client) => {
       count += 1;
     });
   }
-
-  client.on('disconnect', clientRoomInfo => {
-    client.leave
-  })
 
   // triggered when user picks up a chess piece and
   // attenpt to drop it to a new grid

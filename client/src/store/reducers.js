@@ -149,19 +149,33 @@ const userState = (state = Immutable({
   message: '',
   playerB: '',
   playerW: '',
+  room: '',
 }), action) => {
   switch (action.type) {
-    case types.GET_REQUEST_SUCCESS: {
+    case types.SET_PLAYER_W: {
       return Immutable({
         ...state,
         playerW: action.player.data.display,
       });
+    }
+    case types.SET_PLAYER_B: {
+      return Immutable({
+        ...state,
+        playerB: action.player.data.display,
+      })
     }
     case types.GET_REQUEST_FAILURE: {
       return Immutable({
         ...state,
         message: action.message,
       });
+    }
+    case types.UPDATE_ROOM_INFO: {
+      return Immutable({
+        ...state,
+        room: action.roomInfo[0],
+        playerB: action.roomInfo[2],
+      })
     }
     default:
       return state;
