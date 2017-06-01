@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
-import { getRequestSuccess, getRequestFailure, getUserProfile } from '../store/actions';
 
 // Components
 import ChessMenu from '../components/ChessMenu';
@@ -14,6 +13,8 @@ import CapturedPieces from '../components/CapturedPieces';
 import Clock from '../components/Clock';
 import MoveHistory from '../components/MoveHistory';
 import './css/App.css';
+import { getRequestSuccess, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece } from '../store/actions';
+
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
@@ -24,7 +25,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.getUserInfo = this.getUserInfo.bind(this);
-    this.checkLegalMove = this.checkLegalMove.bind(this);
+    this.attemptMove = this.attemptMove.bind(this);
+    this.newChessGame = this.newChessGame.bind(this);
   }
 
   componentDidMount() {
@@ -32,10 +34,41 @@ class App extends Component {
     this.socket = io.connect();
     this.socket.on('connect', () => {
       console.log('client side connected!');
+      // this.newChessGame();
+    });
+    // this.newChessGame();
+    const { dispatch } = this.props;
+
+    this.socket.on('attemptMoveResult', (board, error, selectedPiece, origin, dest, selection) => {
+      console.log('************** BOARD: ', board);
+      // dispatch(receiveGame(board));
+      if (error === null) {
+        dispatch(movePiece(selectedPiece, origin, dest));
+        if (selection) {
+          dispatch(capturePiece(selectedPiece, origin, dest, selection));
+        }
+      } else {
+        console.log('---------- ERROR: ', error);
+      }
+      dispatch(unselectPiece());
     });
 
-    this.socket.on('newPlayerJoined', (roomInfo) => {
-      console.log('roomInfo: ', roomInfo);
+    this.socket.on('disconnect', () => {
+      this.socket.emit(roomInfo);
+      console.log('client side disconnected!');
+    });
+
+    this.socket.on('firstPlayerJoined', (roomInfo) => {
+      console.log(`first player has joined ${roomInfo[0]} as ${roomInfo[1]}`);
+    });
+
+    this.socket.on('secondPlayerJoined', (roomInfo) => {
+      console.log(`second player has joined ${roomInfo[0]} as ${roomInfo[2]}`);
+    });
+
+    this.socket.on('startGame', (roomInfo, newGame) => {
+      console.log('new game started: ', newGame);
+      console.log('inportant room information', roomInfo);
     });
   }
 
@@ -52,13 +85,22 @@ class App extends Component {
     });
   }
 
-  checkLegalMove(originDestCoord) {
+  newChessGame() {
+    const { dispatch } = this.props;
+    console.log('make new game');
+    this.socket.emit('newChessGame');
+    this.socket.on('createdChessGame', game => dispatch(receiveGame(game)));
+  }
+
+  attemptMove(selectedPiece, origin, dest, selection) {
+    // const { dispatch } = this.props;
     console.log('sending origin and dest coordinates to server');
-    this.io.emit('checkLegalMove', originDestCoord);
+    this.socket.emit('attemptMove', selectedPiece, origin, dest, selection);
   }
 
   render() {
-    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW } = this.props;
+    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW }
+          = this.props;
 
     return (
       <div className="site-wrap">
@@ -82,7 +124,7 @@ class App extends Component {
 
             <div className="flex-col">
               <CapturedPieces color="Black" capturedPieces={capturedPiecesBlack} player={playerB} />
-              <Board checkLegalMove={this.checkLegalMove} />
+              <Board attemptMove={this.attemptMove} />
               <CapturedPieces color="White" capturedPieces={capturedPiecesWhite} player={playerW} />
               <Message message={message} />
             </div>

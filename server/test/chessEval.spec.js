@@ -2,10 +2,8 @@ const expect = require('chai').expect;
 
 const chessEval = require('../chess/chessEval');
 
-describe('【ChessEval】 Evaluat Positioning / Game Metrics', () => {
-
+describe('【ChessEval】 Evaluate Positioning / Game Metrics', () => {
   describe('Compute Captured Pieces Score', () => {
-
     const capturedPiecesScore = chessEval.capturedPiecesScore;
 
     it('capturedPiecesScore should exist and should be function', () => {
