@@ -27,7 +27,6 @@ const getAvailableMovesWhite = (board) => {
           // move up
           let currentRow = row;
           let continueMove = true;
-
           while (continueMove && currentRow - 1 >= 0) {
             currentRow -= 1;
             if (!board[currentRow][col]) {
@@ -37,7 +36,6 @@ const getAvailableMovesWhite = (board) => {
               if (board[currentRow][col][0] === 'B') result[key].push([currentRow, col]);
             }
           }
-
           // move down
           currentRow = row;
           continueMove = true;
@@ -50,7 +48,6 @@ const getAvailableMovesWhite = (board) => {
               if (board[currentRow][col][0] === 'B') result[key].push([currentRow, col]);
             }
           }
-
           // move left
           let currentCol = col;
           continueMove = true;
@@ -63,7 +60,6 @@ const getAvailableMovesWhite = (board) => {
               if (board[row][currentCol][0] === 'B') result[key].push([row, currentCol]);
             }
           }
-
           // move right
           currentCol = col;
           continueMove = true;
@@ -77,6 +73,41 @@ const getAvailableMovesWhite = (board) => {
             }
           }
         }
+
+        if (piece[1] === 'N') {
+          // move NNW
+          if (col > 0 && row > 1 &&
+            (!board[row - 2][col - 1] || (board[row - 2][col - 1] && board[row - 2][col - 1][0] === 'B'))
+          ) result[key].push([row - 2, col - 1]);
+          // move NNE
+          if (col < 7 && row > 1 &&
+            (!board[row - 2][col + 1] || (board[row - 2][col + 1] && board[row - 2][col + 1][0] === 'B'))
+          ) result[key].push([row - 2, col + 1]);
+          // move EEN
+          if (col < 6 && row > 0 &&
+            (!board[row - 1][col + 2] || (board[row - 1][col + 2] && board[row - 1][col + 2][0] === 'B'))
+          ) result[key].push([row - 1, col + 2]);
+          // move EES
+          if (col < 6 && row < 7 &&
+            (!board[row + 1][col + 2] || (board[row + 1][col + 2] && board[row + 1][col + 2][0] === 'B'))
+          ) result[key].push([row + 1, col + 2]);
+          // move SSE
+          if (col < 7 && row < 6 &&
+            (!board[row + 2][col + 1] || (board[row + 2][col + 1] && board[row + 2][col + 1][0] === 'B'))
+          ) result[key].push([row + 2, col + 1]);
+          // move SSW
+          if (col > 0 && row < 6 &&
+            (!board[row + 2][col - 1] || (board[row + 2][col - 1] && board[row + 2][col - 1][0] === 'B'))
+          ) result[key].push([row + 2, col - 1]);
+          // move WWS
+          if (col > 1 && row < 7 &&
+            (!board[row + 1][col - 2] || (board[row + 1][col - 2] && board[row + 1][col - 2][0] === 'B'))
+          ) result[key].push([row + 1, col - 2]);
+          // move WWN
+          if (col > 1 && row > 0 &&
+            (!board[row - 1][col - 2] || (board[row - 1][col - 2] && board[row - 1][col - 2][0] === 'B'))
+          ) result[key].push([row - 1, col - 2]);
+        }
       }
     }
   }
@@ -85,6 +116,12 @@ const getAvailableMovesWhite = (board) => {
 
 module.exports.getAvailableMovesWhite = getAvailableMovesWhite;
 
+
+
+/**
+ *  Temporary tests for movement
+ *  To be implemented in tests
+ */
 
 let board = [
   ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
@@ -97,21 +134,94 @@ let board = [
   ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
 ];
 
-console.log('Pawns from start : ', getAvailableMovesWhite(board));
-
+console.log('[Knights] move from home: ', getAvailableMovesWhite(board));
 
 board = [
   ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
-  ['BP', 'BP', 'BP', null, 'BP', 'BP', 'BP', 'BP'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  [null, null, null, null, null, null, null, null],
+  [null, null, 'WN', null, null, null, null, 'WN'],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, 'BP', null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+  ['WR', null, 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
 ];
 
-console.log('Pawns with piece blocked / attack possible : ', getAvailableMovesWhite(board));
+console.log(board);
+let moves = getAvailableMovesWhite(board);
+
+let movesBoard = [
+  ['-', '-', '-', '-', '-', '-', '-', '-'],
+  ['-', '-', '-', '-', '-', '-', '-', '-'],
+  ['-', '-', '-', '-', '-', '-', '-', '-'],
+  ['-', '-', 'N', '-', '-', '-', '-', 'N'],
+  ['-', '-', '-', '-', '-', '-', '-', '-'],
+  ['-', '-', '-', '-', '-', '-', '-', '-'],
+  ['-', '-', '-', '-', '-', '-', '-', '-'],
+  ['-', '-', '-', '-', '-', '-', '-', '-'],
+];
+
+console.log('-----------------------------');
+
+movesBoard.forEach(row => console.log(row.join(' | ')));
+
+console.log('-----------------------------');
+moves[32].forEach((move) => {
+  movesBoard[move[0]][move[1]] = 'X';
+});
+moves[37].forEach((move) => {
+  movesBoard[move[0]][move[1]] = 'X';
+});
+
+movesBoard.forEach(row => console.log(row.join(' | ')));
+
+console.log('-----------------------------');
+board = [
+  ['WN', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'WN'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  ['WP', 'WP', null, 'WP', 'WP', null, 'WP', 'WP'],
+  ['WN', null, 'WB', 'WK', 'WQ', 'WB', null, 'WN'],
+];
+
+console.log(board);
+moves = getAvailableMovesWhite(board);
+
+movesBoard = [
+  ['N', '-', '-', '-', '-', '-', '-', 'N'],
+  ['-', '-', '-', '-', '-', '-', '-', '-'],
+  ['-', '-', '-', '-', '-', '-', '-', '-'],
+  ['-', '-', '-', '-', '-', '-', '-', '-'],
+  ['-', '-', '-', '-', '-', '-', '-', '-'],
+  ['-', '-', '-', '-', '-', '-', '-', '-'],
+  ['-', '-', '-', '-', '-', '-', '-', '-'],
+  ['N', '-', '-', '-', '-', '-', '-', 'N'],
+];
+
+console.log('-----------------------------');
+
+movesBoard.forEach(row => console.log(row.join(' | ')));
+
+console.log('-----------------------------');
+moves['00'].forEach((move) => {
+  movesBoard[move[0]][move[1]] = 'X';
+});
+moves['07'].forEach((move) => {
+  movesBoard[move[0]][move[1]] = 'X';
+});
+moves['70'].forEach((move) => {
+  movesBoard[move[0]][move[1]] = 'X';
+});
+moves['77'].forEach((move) => {
+  movesBoard[move[0]][move[1]] = 'X';
+});
+
+movesBoard.forEach(row => console.log(row.join(' | ')));
+console.log('[Knights] check all moves: ', getAvailableMovesWhite(board));
+console.log('---------------');
 
 board = [
   ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
