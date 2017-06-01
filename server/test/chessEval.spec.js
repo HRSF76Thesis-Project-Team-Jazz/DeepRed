@@ -105,15 +105,15 @@ describe('【ChessEval】 Evaluate Positioning / Game Metrics', () => {
       expect(findPiecePosition).to.be.a('function');
     });
 
-    it('should return undefined if piece position is not found captured', () => {
-      expect(findPiecePosition('QQ', board)).to.eql(undefined);
-      expect(findPiecePosition('WE', board)).to.eql(undefined);
-      expect(findPiecePosition('BA', board)).to.eql(undefined);
+    it('should return empty array if piece position is not found captured', () => {
+      expect(findPiecePosition('QQ', board)).to.eql([]);
+      expect(findPiecePosition('WE', board)).to.eql([]);
+      expect(findPiecePosition('BA', board)).to.eql([]);
     });
 
     it('should find the kings', () => {
-      expect(findPiecePosition('WK', board)).to.eql([7, 3]);
-      expect(findPiecePosition('BK', board)).to.eql([0, 3]);
+      expect(findPiecePosition('WK', board)).to.eql([[7, 3]]);
+      expect(findPiecePosition('BK', board)).to.eql([[0, 3]]);
 
       const board2 = [
         ['BR', 'BN', 'BB', null, 'BQ', 'BB', 'BN', 'BR'],
@@ -125,8 +125,13 @@ describe('【ChessEval】 Evaluate Positioning / Game Metrics', () => {
         ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
         ['WR', 'WN', 'WB', null, 'WQ', 'WB', 'WN', 'WR'],
       ];
-      expect(findPiecePosition('WK', board2)).to.eql([4, 1]);
-      expect(findPiecePosition('BK', board2)).to.eql([3, 5]);
+      expect(findPiecePosition('WK', board2)).to.eql([[4, 1]]);
+      expect(findPiecePosition('BK', board2)).to.eql([[3, 5]]);
+    });
+
+    it('should find multiple pieces', () => {
+      expect(findPiecePosition('WR', board)).to.eql([[7, 0], [7, 7]]);
+      expect(findPiecePosition('BR', board)).to.eql([[0, 0], [0, 7]]);
     });
   });
 });
