@@ -8,6 +8,10 @@ const server = app.listen(PORT, () => {
 
 const io = require('socket.io').listen(server);
 
+// global.allRoom = [];
+// global.roomInfo = [];
+// global.count = 1;
+
 io.on('connect', (client) => {
   console.log('server side socket connected!');
   require('./chess/chessSocket.js')(io, client);
