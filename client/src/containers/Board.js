@@ -19,7 +19,7 @@ class Board extends Component {
   }
 
   onClick(coordinates) {
-    const { dispatch, board, fromPosition, selectedPiece, attemptMove } = this.props;
+    const { dispatch, board, fromPosition, selectedPiece, attemptMove, room } = this.props;
 
     const x = coordinates[0];
     const y = coordinates[1];
@@ -37,7 +37,7 @@ class Board extends Component {
       /* NOTE: CHECK FOR VALID MOVE REQUIRED HERE    */
       // if (selection === null)
     } else {
-      attemptMove(selectedPiece, fromPosition, coordinates, selection);
+      attemptMove(selectedPiece, fromPosition, coordinates, selection, room);
     // } else if (selectedPiece[0] === board[x][y][0]) {
     //   dispatch(invalidSelection(coordinates));
     // } else {
@@ -72,15 +72,17 @@ class Board extends Component {
 }
 
 function mapStateToProps(state) {
-  const { gameState, boardState, moveState } = state;
+  const { gameState, boardState, moveState, userState } = state;
   const { playerColor } = gameState;
   const { board } = boardState;
   const { fromPosition, selectedPiece } = moveState;
+  const { room } = userState;
   return {
     playerColor,
     board,
     fromPosition,
     selectedPiece,
+    room,
   };
 }
 

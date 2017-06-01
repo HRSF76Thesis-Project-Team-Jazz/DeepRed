@@ -59,7 +59,7 @@ class App extends Component {
       dispatch(updateRoomInfo(roomInfo));
     });
 
-    this.socket.on('attemptMoveResult', (board, error, selectedPiece, origin, dest, selection) => {
+    this.socket.on('attemptMoveResult', (board, error, selectedPiece, origin, dest, selection, room) => {
       console.log('************** BOARD: ', board);
       // dispatch(receiveGame(board));
       if (error === null) {
@@ -97,10 +97,10 @@ class App extends Component {
     this.socket.on('createdChessGame', game => dispatch(receiveGame(game)));
   }
 
-  attemptMove(selectedPiece, origin, dest, selection) {
+  attemptMove(selectedPiece, origin, dest, selection, room) {
     // const { dispatch } = this.props;
     console.log('sending origin and dest coordinates to server');
-    this.socket.emit('attemptMove', selectedPiece, origin, dest, selection);
+    this.socket.emit('attemptMove', selectedPiece, origin, dest, selection, room);
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 

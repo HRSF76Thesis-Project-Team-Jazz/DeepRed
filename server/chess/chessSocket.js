@@ -5,7 +5,7 @@ let roomInfo = {};
 let count = 1;
 let currentUser = '';
 
-const testGame = new ChessGame();
+// const testGame = new ChessGame();
 
 module.exports = (io, client) => {
   client.on('sendCurrentUserName', currentUserName => {
@@ -40,9 +40,10 @@ module.exports = (io, client) => {
     });
   }
 
-  client.on('attemptMove', (selectedPiece, origin, dest, selection) => {
-    console.log('attempted Move', origin, dest);
-    const newState = testGame.movePiece(origin, dest);
-    io.emit('attemptMoveResult', newState.game.board, newState.error, selectedPiece, origin, dest, selection);
+  client.on('attemptMove', (selectedPiece, origin, dest, selection, room) => {
+    console.log('attempted Move: ', origin, dest);
+    console.log('room number: ', room);
+    const newState = allGames[room].movePiece(origin, dest);
+    io.in(room).emit('attemptMoveResult', newState.game.board, newState.error, selectedPiece, origin, dest, selection);
   });
 };
