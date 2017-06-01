@@ -39,21 +39,21 @@ const capturedPiecesScore = (capturedWhite, capturedBlack) => {
  */
 
 const findPiecePosition = (piece, board) => {
+  const result = [];
   if (piece[0] === 'B') {
     for (let row = 0; row < 8; row += 1) {
       for (let col = 0; col < 8; col += 1) {
-        if (board[row][col] === piece) return [row, col];
+        if (board[row][col] === piece) result.push([row, col]);
       }
     }
   } else {
     for (let row = 7; row >= 0; row -= 1) {
       for (let col = 0; col < 8; col += 1) {
-        if (board[row][col] === piece) return [row, col];
+        if (board[row][col] === piece) result.push([row, col]);
       }
     }
   }
-
-  return undefined;
+  return result;
 };
 
 const boardPositionScore = (board) => {

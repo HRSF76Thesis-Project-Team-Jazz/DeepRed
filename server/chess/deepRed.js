@@ -1,3 +1,6 @@
+const chessEval = require('./chessEval');
+
+
 /**
  * Chess Playing Brain
  */
@@ -108,13 +111,197 @@ const getAvailableMovesWhite = (board) => {
             (!board[row - 1][col - 2] || (board[row - 1][col - 2] && board[row - 1][col - 2][0] === 'B'))
           ) result[key].push([row - 1, col - 2]);
         }
-      }
-    }
-  }
+
+        if (piece[1] === 'B') {
+          // NW
+          let currentRow = row;
+          let currentCol = col;
+          let continueMove = true;
+          while (continueMove && currentRow - 1 >= 0 && currentCol - 1 >= 0) {
+            currentRow -= 1;
+            currentCol -= 1;
+            if (!board[currentRow][currentCol]) {
+              result[key].push([currentRow, currentCol]);
+            } else {
+              continueMove = false;
+              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+            }
+          }
+
+          // NE
+          currentRow = row;
+          currentCol = col;
+          continueMove = true;
+          while (continueMove && currentRow - 1 >= 0 && currentCol + 1 <= 7) {
+            currentRow -= 1;
+            currentCol += 1;
+            if (!board[currentRow][currentCol]) {
+              result[key].push([currentRow, currentCol]);
+            } else {
+              continueMove = false;
+              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+            }
+          }
+
+          // SE
+          currentRow = row;
+          currentCol = col;
+          continueMove = true;
+          while (continueMove && currentRow + 1 <= 7 && currentCol + 1 <= 7) {
+            currentRow += 1;
+            currentCol += 1;
+            if (!board[currentRow][currentCol]) {
+              result[key].push([currentRow, currentCol]);
+            } else {
+              continueMove = false;
+              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+            }
+          }
+
+          // SW
+          currentRow = row;
+          currentCol = col;
+          continueMove = true;
+          while (continueMove && currentRow + 1 <= 7 && currentCol - 1 >= 0) {
+            currentRow += 1;
+            currentCol -= 1;
+            if (!board[currentRow][currentCol]) {
+              result[key].push([currentRow, currentCol]);
+            } else {
+              continueMove = false;
+              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+            }
+          } // end of B-SW
+        } // end of 'B'
+
+        if (piece[1] === 'Q') {
+          // NW
+          let currentRow = row;
+          let currentCol = col;
+          let continueMove = true;
+          while (continueMove && currentRow - 1 >= 0 && currentCol - 1 >= 0) {
+            currentRow -= 1;
+            currentCol -= 1;
+            if (!board[currentRow][currentCol]) {
+              result[key].push([currentRow, currentCol]);
+            } else {
+              continueMove = false;
+              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+            }
+          }
+
+          // NE
+          currentRow = row;
+          currentCol = col;
+          continueMove = true;
+          while (continueMove && currentRow - 1 >= 0 && currentCol + 1 <= 7) {
+            currentRow -= 1;
+            currentCol += 1;
+            if (!board[currentRow][currentCol]) {
+              result[key].push([currentRow, currentCol]);
+            } else {
+              continueMove = false;
+              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+            }
+          }
+
+          // SE
+          currentRow = row;
+          currentCol = col;
+          continueMove = true;
+          while (continueMove && currentRow + 1 <= 7 && currentCol + 1 <= 7) {
+            currentRow += 1;
+            currentCol += 1;
+            if (!board[currentRow][currentCol]) {
+              result[key].push([currentRow, currentCol]);
+            } else {
+              continueMove = false;
+              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+            }
+          }
+
+          // SW
+          currentRow = row;
+          currentCol = col;
+          continueMove = true;
+          while (continueMove && currentRow + 1 <= 7 && currentCol - 1 >= 0) {
+            currentRow += 1;
+            currentCol -= 1;
+            if (!board[currentRow][currentCol]) {
+              result[key].push([currentRow, currentCol]);
+            } else {
+              continueMove = false;
+              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+            }
+          } // end of Q-SW
+
+          // move up
+          currentRow = row;
+          continueMove = true;
+          while (continueMove && currentRow - 1 >= 0) {
+            currentRow -= 1;
+            if (!board[currentRow][col]) {
+              result[key].push([currentRow, col]);
+            } else {
+              continueMove = false;
+              if (board[currentRow][col][0] === 'B') result[key].push([currentRow, col]);
+            }
+          }
+          // move down
+          currentRow = row;
+          continueMove = true;
+          while (continueMove && currentRow + 1 <= 7) {
+            currentRow += 1;
+            if (!board[currentRow][col]) {
+              result[key].push([currentRow, col]);
+            } else {
+              continueMove = false;
+              if (board[currentRow][col][0] === 'B') result[key].push([currentRow, col]);
+            }
+          }
+          // move left
+          currentCol = col;
+          continueMove = true;
+          while (continueMove && currentCol - 1 >= 0) {
+            currentCol -= 1;
+            if (!board[row][currentCol]) {
+              result[key].push([row, currentCol]);
+            } else {
+              continueMove = false;
+              if (board[row][currentCol][0] === 'B') result[key].push([row, currentCol]);
+            }
+          }
+          // move right
+          currentCol = col;
+          continueMove = true;
+          while (continueMove && currentCol + 1 <= 7) {
+            currentCol += 1;
+            if (!board[row][currentCol]) {
+              result[key].push([row, currentCol]);
+            } else {
+              continueMove = false;
+              if (board[row][currentCol][0] === 'B') result[key].push([row, currentCol]);
+            }
+          }
+        } // end of 'Q'
+      } // end of if 'W'
+    } // for loop i
+  } // for loop j
   return result;
 };
 
+const blackIsChecked = (board) => {
+  const whiteMoves = getAvailableMovesWhite(board);
+  const positionBK = JSON.stringify(chessEval.findPiecePosition('BK', board)[0]);
+  // console.log(whiteMoves, positionBK);
+  for (const key in whiteMoves) {
+    if (whiteMoves[key].map(x => JSON.stringify(x)).indexOf(positionBK) >= 0) return true;
+  }
+  return false;
+}
+
 module.exports.getAvailableMovesWhite = getAvailableMovesWhite;
+module.exports.blackIsChecked = blackIsChecked;
 
 
 
@@ -122,6 +309,32 @@ module.exports.getAvailableMovesWhite = getAvailableMovesWhite;
  *  Temporary tests for movement
  *  To be implemented in tests
  */
+
+const showMovesByPiece = (board, piece) => {
+  const label = {
+    P: 'Pawns',
+    R: 'Rooks',
+    N: 'Knights',
+    B: 'Bishops',
+    Q: 'Queen',
+    K: 'King',
+  };
+  const pieces = chessEval.findPiecePosition(piece, board)
+    .map(array => array[0].toString() + array[1].toString());
+  const moves = getAvailableMovesWhite(board);
+  const movesBoard = board.map(row => row.map(col => (!col ? '--' : col)));
+
+  console.log();
+  console.log(`=========== 【 ${label[piece[1]]} 】 =============`.substr(-35));
+  movesBoard.forEach(row => console.log(row.join(' | ')));
+  pieces.forEach(key => moves[key].forEach((move) => {
+    movesBoard[move[0]][move[1]] = '<>';
+  }));
+  console.log('-------------------------------------');
+  movesBoard.forEach(row => console.log(row.join(' | ')));
+  console.log('-------------------------------------');
+  console.log();
+};
 
 let board = [
   ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
@@ -134,57 +347,8 @@ let board = [
   ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
 ];
 
-console.log('[Knights] move from home: ', getAvailableMovesWhite(board));
+showMovesByPiece(board, 'WP');
 
-
-// ********** PAWNS VISUALIZATION ************
-board = [
-  ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
-  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
-];
-
-console.log(board);
-let moves = getAvailableMovesWhite(board);
-
-let movesBoard = [
-  ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
-  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
-  ['--', '--', '--', '--', '--', '--', '--', '--'],
-  ['--', '--', '--', '--', '--', '--', '--', '--'],
-  ['--', '--', '--', '--', '--', '--', '--', '--'],
-  ['--', '--', '--', '--', '--', '--', '--', '--'],
-  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
-];
-
-console.log();
-console.log('============== [PAWNS] ==============');
-
-movesBoard.forEach(row => console.log(row.join(' | ')));
-
-console.log('-------------------------------------');
-
-const pawns = [60, 61, 62, 63, 64, 65, 66, 67];
-
-pawns.forEach((square) => {
-  moves[square].forEach((move) => {
-    movesBoard[move[0]][move[1]] = '<>';
-  });
-});
-
-movesBoard.forEach(row => console.log(row.join(' | ')));
-
-console.log('-------------------------------------');
-console.log();
-// ********** END ONE VISUALIZATION ************
-
-// ********** KNIGHTS VISUALIZATION ************
 board = [
   ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
   ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
@@ -196,174 +360,99 @@ board = [
   ['WR', null, 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
 ];
 
-moves = getAvailableMovesWhite(board);
+showMovesByPiece(board, 'WN');
 
-movesBoard = [
-  ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
-  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
-  ['--', '--', '--', '--', '--', '--', '--', '--'],
-  ['--', '--', 'WN', '--', '--', '--', '--', '--'],
-  ['--', '--', '--', '--', '--', '--', '--', '--'],
-  ['--', '--', '--', '--', '--', '--', '--', '--'],
-  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', '--', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
-];
-
-console.log();
-console.log('============== [KNIGHTS] ==============');
-
-movesBoard.forEach(row => console.log(row.join(' | ')));
-
-console.log('-------------------------------------');
-moves[32].forEach((move) => {
-  movesBoard[move[0]][move[1]] = '<>';
-});
-moves[76].forEach((move) => {
-  movesBoard[move[0]][move[1]] = '<>';
-});
-
-movesBoard.forEach(row => console.log(row.join(' | ')));
-
-console.log('-------------------------------------');
-console.log();
-// ********** END ONE VISUALIZATION ************
-
-// ********** ONE VISUALIZATION ************
 board = [
   ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
   ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
-  [null, null, null, null, 'WR', null, null, null],
+  [null, null, null, null, null, null, 'WR', null],
   [null, null, null, null, null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
   ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', null],
 ];
 
-moves = getAvailableMovesWhite(board);
+showMovesByPiece(board, 'WR');
 
-movesBoard = [
+board = [
   ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
   ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
-  ['--', '--', '--', '--', '--', '--', '--', '--'],
-  ['--', '--', '--', '--', '--', '--', '--', '--'],
-  ['--', '--', '--', '--', 'WR', '--', '--', '--'],
-  ['--', '--', '--', '--', '--', '--', '--', '--'],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, 'WB', null],
+  [null, null, null, null, null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', '--'],
+  ['WR', 'WN', 'WB', 'WK', 'WQ', null, 'WN', 'WR'],
 ];
 
-console.log();
-console.log('============== [ROOKS] ==============');
-
-movesBoard.forEach(row => console.log(row.join(' | ')));
-
-console.log('-------------------------------------');
-moves[44].forEach((move) => {
-  movesBoard[move[0]][move[1]] = '<>';
-});
-
-movesBoard.forEach(row => console.log(row.join(' | ')));
-
-console.log('-------------------------------------');
-console.log();
-// ********** END ONE VISUALIZATION ************
-
-
-board = [
-  ['WN', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'WN'],
-  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  ['WP', 'WP', null, 'WP', 'WP', null, 'WP', 'WP'],
-  ['WN', null, 'WB', 'WK', 'WQ', 'WB', null, 'WN'],
-];
-
-moves = getAvailableMovesWhite(board);
-
-movesBoard = [
-  ['N', '-', '-', '-', '-', '-', '-', 'N'],
-  ['-', '-', '-', '-', '-', '-', '-', '-'],
-  ['-', '-', '-', '-', '-', '-', '-', '-'],
-  ['-', '-', '-', '-', '-', '-', '-', '-'],
-  ['-', '-', '-', '-', '-', '-', '-', '-'],
-  ['-', '-', '-', '-', '-', '-', '-', '-'],
-  ['-', '-', '-', '-', '-', '-', '-', '-'],
-  ['N', '-', '-', '-', '-', '-', '-', 'N'],
-];
-
-console.log('-----------------------------');
-
-movesBoard.forEach(row => console.log(row.join(' | ')));
-
-console.log('-----------------------------');
-moves['00'].forEach((move) => {
-  movesBoard[move[0]][move[1]] = 'X';
-});
-moves['07'].forEach((move) => {
-  movesBoard[move[0]][move[1]] = 'X';
-});
-moves['70'].forEach((move) => {
-  movesBoard[move[0]][move[1]] = 'X';
-});
-moves['77'].forEach((move) => {
-  movesBoard[move[0]][move[1]] = 'X';
-});
-
-movesBoard.forEach(row => console.log(row.join(' | ')));
-console.log('[Knights] check all moves: ', getAvailableMovesWhite(board));
-console.log('---------------');
-
-board = [
-  ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
-  ['BP', 'BP', 'BP', null, 'BP', 'BP', 'BP', 'BP'],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, 'WP', null, 'BP', null, null, null, null],
-  [null, 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
-];
-
-console.log('[Rooks] move up: ', getAvailableMovesWhite(board));
-
-board = [
-  ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
-  ['BP', 'BP', 'BP', null, 'BP', 'BP', 'BP', 'BP'],
-  ['WR', null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, 'WP', null, 'BP', null, null, null, null],
-  [null, 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  [null, 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
-];
-
-console.log('[Rooks] move down: ', getAvailableMovesWhite(board));
+showMovesByPiece(board, 'WB');
 
 board = [
   ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
   ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
   [null, null, null, null, null, null, null, null],
+  [null, null, null, null, 'WQ', null, null, null],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, 'WR'],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  [null, 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+  ['WR', 'WN', 'WB', 'WK', null, 'WB', 'WN', 'WR'],
 ];
 
-console.log('[Rooks] move left: ', getAvailableMovesWhite(board));
+showMovesByPiece(board, 'WQ');
 
 board = [
   ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
   ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
   [null, null, null, null, null, null, null, null],
+  [null, null, null, null, 'WQ', null, null, null],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
-  ['WR', null, null, null, null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  [null, 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+  ['WR', 'WN', 'WB', 'WK', null, 'WB', 'WN', 'WR'],
 ];
 
-console.log('[Rooks] move right: ', getAvailableMovesWhite(board));
+showMovesByPiece(board, 'WR');
+console.log('Is BK in check? ', blackIsChecked(board));
+
+board = [
+  ['BR', 'BN', 'BB', null, 'BQ', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  [null, null, null, null, null, null, null, null],
+  ['BK', null, null, null, 'WQ', null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+  ['WR', 'WN', 'WB', 'WK', null, 'WB', 'WN', 'WR'],
+];
+
+showMovesByPiece(board, 'WQ');
+console.log('Is BK in check? ', blackIsChecked(board));
+
+board = [
+  ['BR', 'BN', 'BB', null, 'BQ', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  ['BK', null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, 'WB', null, null, null, null],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+  ['WR', 'WN', null, 'WK', 'WQ', 'WB', 'WN', 'WR'],
+];
+
+showMovesByPiece(board, 'WB');
+console.log('Is BK in check? ', blackIsChecked(board));
+
+board = [
+  ['BR', 'BN', 'BB', null, 'BQ', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  ['BK', null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, 'WN', null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+  ['WR', null, 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+];
+
+showMovesByPiece(board, 'WN');
+console.log('Is BK in check? ', blackIsChecked(board));
