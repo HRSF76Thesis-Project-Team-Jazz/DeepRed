@@ -48,6 +48,7 @@ class App extends Component {
     });
 
     this.socket.on('firstPlayerJoined', (roomInfo) => {
+      dispatch(updateRoomInfo(roomInfo));
       console.log(`first player has joined ${roomInfo.room} as ${roomInfo.playerW}`);
     });
 
