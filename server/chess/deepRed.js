@@ -290,7 +290,18 @@ const getAvailableMovesWhite = (board) => {
   return result;
 };
 
+const blackIsChecked = (board) => {
+  const whiteMoves = getAvailableMovesWhite(board);
+  const positionBK = JSON.stringify(chessEval.findPiecePosition('BK', board)[0]);
+  // console.log(whiteMoves, positionBK);
+  for (const key in whiteMoves) {
+    if (whiteMoves[key].map(x => JSON.stringify(x)).indexOf(positionBK) >= 0) return true;
+  }
+  return false;
+}
+
 module.exports.getAvailableMovesWhite = getAvailableMovesWhite;
+module.exports.blackIsChecked = blackIsChecked;
 
 
 
@@ -314,7 +325,7 @@ const showMovesByPiece = (board, piece) => {
   const movesBoard = board.map(row => row.map(col => (!col ? '--' : col)));
 
   console.log();
-  console.log(`============= [ ${label[piece[1]]} ] =============`);
+  console.log(`=========== 【 ${label[piece[1]]} 】 =============`.substr(-35));
   movesBoard.forEach(row => console.log(row.join(' | ')));
   pieces.forEach(key => moves[key].forEach((move) => {
     movesBoard[move[0]][move[1]] = '<>';
@@ -389,3 +400,59 @@ board = [
 ];
 
 showMovesByPiece(board, 'WQ');
+
+board = [
+  ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, 'WQ', null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+  ['WR', 'WN', 'WB', 'WK', null, 'WB', 'WN', 'WR'],
+];
+
+showMovesByPiece(board, 'WR');
+console.log('Is BK in check? ', blackIsChecked(board));
+
+board = [
+  ['BR', 'BN', 'BB', null, 'BQ', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  [null, null, null, null, null, null, null, null],
+  ['BK', null, null, null, 'WQ', null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+  ['WR', 'WN', 'WB', 'WK', null, 'WB', 'WN', 'WR'],
+];
+
+showMovesByPiece(board, 'WQ');
+console.log('Is BK in check? ', blackIsChecked(board));
+
+board = [
+  ['BR', 'BN', 'BB', null, 'BQ', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  ['BK', null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, 'WB', null, null, null, null],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+  ['WR', 'WN', null, 'WK', 'WQ', 'WB', 'WN', 'WR'],
+];
+
+showMovesByPiece(board, 'WB');
+console.log('Is BK in check? ', blackIsChecked(board));
+
+board = [
+  ['BR', 'BN', 'BB', null, 'BQ', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  ['BK', null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, 'WN', null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+  ['WR', null, 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+];
+
+showMovesByPiece(board, 'WN');
+console.log('Is BK in check? ', blackIsChecked(board));
