@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { invalidSelection, selectPiece, movePiece, capturePiece } from '../store/actions';
+import { invalidSelection, selectPiece } from '../store/actions';
 import './css/Board.css';
 
 class Board extends Component {
@@ -14,45 +14,46 @@ class Board extends Component {
   }
 
   componentDidMount() {
-  }
-
-  getImage(CP) {
-    return <img className="piece-img" src={`/assets/${CP}.png`} />;
+    // const { dispatch } = this.props;
+    // dispatch(fetchGame());
   }
 
   onClick(coordinates) {
-    const { dispatch, board, fromPosition, selectedPiece, playerColor } = this.props;
+    const { dispatch, board, fromPosition, selectedPiece, attemptMove } = this.props;
 
     const x = coordinates[0];
     const y = coordinates[1];
     const selection = board[x][y];
-
+    console.log('SELECTION: ', selection);
     // If no piece is currently selected
     if (selectedPiece === '') {
-      if (selection && selection[0] === playerColor) {
+      // && selection[0] === playerColor
+      if (selection) {
         dispatch(selectPiece(selection, coordinates));
       } else {
         dispatch(invalidSelection(coordinates));
       }
-
       // If a piece is already selected
       /* NOTE: CHECK FOR VALID MOVE REQUIRED HERE    */
-    } else if (selection === null) {
-      dispatch(movePiece(selectedPiece, fromPosition, coordinates));
-    } else if (selectedPiece[0] === board[x][y][0]) {
-      dispatch(invalidSelection(coordinates));
+      // if (selection === null)
     } else {
-      const capturedPiece = selection;
-      dispatch(capturePiece(selectedPiece, fromPosition, coordinates, capturedPiece));
+      attemptMove(selectedPiece, fromPosition, coordinates, selection);
+    // } else if (selectedPiece[0] === board[x][y][0]) {
+    //   dispatch(invalidSelection(coordinates));
+    // } else {
+    //   const capturedPiece = selection;
+    //   dispatch(capturePiece(selectedPiece, fromPosition, coordinates, capturedPiece));
     }
   }
-
+  getImage(CP) {
+    return <img className="piece-img" src={`/assets/${CP}.png`} />;
+  }
   render() {
     const { board } = this.props;
     return (
       <div className="board">
         {board.map((row, rowIndex) => (
-            <div key={Math.random()} className="board-row">
+          <div key={Math.random()} className="board-row">
             {row.map((col, colIndex) => (
               <div
                 className={((rowIndex + colIndex) % 2 === 1) ? 'board-col dark' : 'board-col light'}
@@ -63,7 +64,7 @@ class Board extends Component {
               </div>),
             )}
           </div>
-        )
+        ),
         )}
       </div>
     );

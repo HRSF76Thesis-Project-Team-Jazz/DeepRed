@@ -14,14 +14,14 @@ class ChessGame {
 
   constructor() {
     this.board = [
-      ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+      ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
       ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-      ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+      ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
     ];
     this.blackCapPieces = [];
     this.whiteCapPieces = [];
@@ -31,25 +31,40 @@ class ChessGame {
   }
 
   movePiece(origin, dest) {
+    let error = null;
     if (dest === undefined) {
-      throw new Error('Attempted destination is invalid');
-    } else if (!this.board[origin[0]][origin[1]]) {
-      throw new Error('Origin is invalid');
+      error = 'Attempted destination is invalid';
+      // console.log(this.board);
+      // console.log(error);
+      return { game: this, error };
+    } else if (!origin || !this.board[origin[0]] || !this.board[origin[0]][origin[1]]) {
+      error = 'Origin is invalid';
+      // console.log(this.board);
+      // console.log(error);
+      return { game: this, error };
     } else if (origin[0] === dest[0] && origin[1] === dest[1]) {
-      throw new Error('Origin and destination cannot be the same');
+      error = 'Origin and destination cannot be the same';
+      // console.log(this.board);
+      // console.log(error);
+      return { game: this, error };
     } else if ((this.count % 2 === 0 && this.board[origin[0]][origin[1]][0] === 'W') || (this.count % 2 === 1 && this.board[origin[0]][origin[1]][0] === 'B')) {
-      throw new Error('Not your turn.');
+      error = 'Not your turn.';
+      // console.log(this.board);
+      // console.log(error);
+      return { game: this, error };
     }
     const originPiece = this.board[origin[0]][origin[1]];
     const destPiece = this.board[dest[0]][dest[1]];
     if (isLegalMove(this.board, origin, dest)) {
       if (destPiece) {
         if (originPiece[0] === destPiece[0]) {
-          throw new Error('Attempted to capture own piece');
-        } else {
-          // this.history += moveToPGNString(this.board, origin, dest, this.count);
-          this.capturePiece(destPiece);
+          error = 'Attempted to capture own piece';
+          // console.log(this.board);
+          // console.log(error);
+          return { game: this, error };
         }
+        // this.history += moveToPGNString(this.board, origin, dest, this.count);
+        this.capturePiece(destPiece);
       }
       this.history[this.turn] = this.history[this.turn] || [];
       this.history[this.turn].push(origin);
@@ -61,10 +76,15 @@ class ChessGame {
       this.board[dest[0]][dest[1]] = originPiece;
       this.board[origin[0]][origin[1]] = null;
       // check for check/checkmate/stalemate
-      console.log('--------------', this.history);
-      return this.board;
+      // console.log('--------------', this.history);
+      // console.log('Move piece is successful');
+      // console.log(this.board);
+      return { game: this, error };
     }
-    throw new Error('Attempted Move is Illegal');
+    error = 'Attempted Move is Illegal';
+    // console.log(this.board);
+    // console.log(error);
+    return { game: this, error };
   }
 
   capturePiece(piece) {
@@ -80,15 +100,15 @@ class ChessGame {
     let originPiece = this.board[origin[0]][origin[1]];
     let destPiece = this.board[dest[0]][dest[1]];
 
-    if (isLegalMove(this.board, origin, dest)){
-      if (piece[0] === 'W' && origin[0] === 1){
-        if (dest[0] === 0){
+    if (isLegalMove(this.board, origin, dest)) {
+      if (piece[0] === 'W' && origin[0] === 1) {
+        if (dest[0] === 0) {
           destPiece = 'WQ';
           originPiece = null;
         }
       }
-      if (piece[0] === 'B' && origin[0] === 6){
-        if (dest[0] === 7){
+      if (piece[0] === 'B' && origin[0] === 6) {
+        if (dest[0] === 7) {
           destPiece = 'BQ';
           originPiece = null;
         }
@@ -101,7 +121,7 @@ class ChessGame {
       }
       this.count += 1;
     }
-  } 
+  }
 
   castling(piece, origin, dest) {
     let originPiece = this.board[origin[0]][origin[1]];
@@ -110,26 +130,26 @@ class ChessGame {
     // if king and rook hasnt moved
     // king is not in Check
 
-    if (isHorizPathClear(this.board, origin, dest, limit = 7)){
-      if (piece[0] === 'W'){ 
-        if (dest[0] == 7 && dest[1] == 0){
+    if (isHorizPathClear(this.board, origin, dest, limit = 7)) {
+      if (piece[0] === 'W') {
+        if (dest[0] == 7 && dest[1] == 0) {
           this.board[7][2] = 'WK';
           this.board[7][3] = 'WR';
           originPiece = null;
           destPiece = null;
-        } else if (dest[0] == 7 && dest[1] == 7){
+        } else if (dest[0] === 7 && dest[1] === 7) {
           this.board[7][6] = 'WK';
           this.board[7][5] = 'WR';
           originPiece = null;
           destPiece = null;
         }
-    } else if (piece[0] == 'B'){ 
-        if (dest[0] == 0 && dest[1] == 0){
+      } else if (piece[0] === 'B') {
+        if (dest[0] === 0 && dest[1] === 0) {
           this.board[0][2] = 'BK';
           this.board[0][3] = 'BR';
           originPiece = null;
           destPiece = null;
-        } else if (dest[0] == 0 && dest[1] == 7){
+        } else if (dest[0] === 0 && dest[1] === 7) {
           this.board[0][6] = 'BK';
           this.board[0][5] = 'BR';
           originPiece = null;

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import * as types from './actionTypes';
 
 /**
@@ -17,6 +16,10 @@ export const selectPiece = (selectedPiece, coordinates) => ({
   type: types.SELECT_PIECE,
   selectedPiece,
   coordinates,
+});
+
+export const unselectPiece = () => ({
+  type: types.UNSELECT_PIECE,
 });
 
 export const movePiece = (selectedPiece, fromPosition, coordinates) => ({
@@ -62,3 +65,20 @@ export const receiveMove = (query, move) => ({
   receivedAt: Date.now(),
 });
 
+export const requestGame = () => ({
+  type: types.REQUEST_GAME,
+});
+
+export const receiveGame = game => ({
+  type: types.RECEIVE_GAME,
+  game,
+});
+
+export const fetchGame = () => (dispatch) => {
+  dispatch(requestGame());
+  return fetch('http://127.0.0.1:3000/api/game')
+    .then(response => response.json())
+    .then(json =>
+      dispatch(receiveGame(json)),
+    );
+};
