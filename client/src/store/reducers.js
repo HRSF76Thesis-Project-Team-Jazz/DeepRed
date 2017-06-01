@@ -175,6 +175,7 @@ const userState = (state = Immutable({
         ...state,
         room: action.roomInfo.room,
         playerB: action.roomInfo.playerB,
+        playerW: action.roomInfo.playerW,
       })
     }
     default:
