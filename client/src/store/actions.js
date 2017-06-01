@@ -5,7 +5,13 @@ import * as types from './actionTypes';
  * Functions that create actions:
  * Actions = { type: TYPE, vars: VALS }
  */
-
+export const displayError = error => ({
+  type: types.DISPLAY_ERROR,
+  error,
+});
+export const clearError = () => ({
+  type: types.CLEAR_ERROR,
+});
 
 export const invalidSelection = coordinates => ({
   type: types.INVALID_SELECTION,
@@ -45,7 +51,7 @@ export const setPlayerW = player => ({
 export const setPlayerB = player => ({
   type: types.SET_PLAYER_B,
   player,
-})
+});
 
 export const getRequestFailure = message => ({
   type: types.GET_REQUEST_FAILURE,
@@ -55,7 +61,7 @@ export const getRequestFailure = message => ({
 export const updateRoomInfo = roomInfo => ({
   type: types.UPDATE_ROOM_INFO,
   roomInfo,
-})
+});
 // TO BE IMPLEMENTED
 
 export const receiveMove = (query, move) => ({

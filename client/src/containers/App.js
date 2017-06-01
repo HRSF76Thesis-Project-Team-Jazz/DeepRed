@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
-import { setPlayerW, setPlayerB, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece } from '../store/actions';
+import { setPlayerW, setPlayerB, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece, displayError } from '../store/actions';
 
 // Components
 import ChessMenu from '../components/ChessMenu';
@@ -13,6 +13,7 @@ import Message from '../components/Message';
 import CapturedPieces from '../components/CapturedPieces';
 import Clock from '../components/Clock';
 import MoveHistory from '../components/MoveHistory';
+import ErrorAlert from './ErrorAlert';
 import './css/App.css';
 
 
@@ -37,7 +38,7 @@ class App extends Component {
 
   startSocket() {
     const { dispatch, room, playerB, playerW } = this.props;
-    
+
     let name = playerW;
     // instantiate socket instance on the cllient side
     this.socket = io.connect();
@@ -70,6 +71,7 @@ class App extends Component {
         }
       } else {
         console.log('---------- ERROR: ', error);
+        dispatch(displayError(error));
       }
       dispatch(unselectPiece());
     });
@@ -106,12 +108,11 @@ class App extends Component {
   }
 
   render() {
-    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW }
-          = this.props;
-
+    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW } = this.props;
     return (
       <div className="site-wrap">
         <ChessMenu />
+        <ErrorAlert />
         <div className="header">
           <table>
             <tbody>

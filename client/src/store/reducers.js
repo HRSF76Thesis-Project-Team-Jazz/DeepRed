@@ -95,8 +95,24 @@ const moveState = (state = Immutable({
   message: ' reducer: moveState message ',
   fromPosition: '',
   selectedPiece: '',
+  error: '',
+  open: false,
 }), action) => {
   switch (action.type) {
+    case types.DISPLAY_ERROR:
+      return Immutable({
+        ...state,
+        message: `ERROR: ${action.error}`,
+        error: action.error,
+        open: true,
+      });
+    case types.CLEAR_ERROR:
+      return Immutable({
+        ...state,
+        message: 'cleared error',
+        error: '',
+        open: false,
+      });
     case types.INVALID_SELECTION:
       return Immutable({
         ...state,

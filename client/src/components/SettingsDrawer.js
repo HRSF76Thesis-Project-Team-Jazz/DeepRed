@@ -78,12 +78,14 @@ class SettingsDrawer extends Component {
           >
             Quit Game
           </MenuItem>
-          <MenuItem
-            onTouchTap={this.handleClose}
-            leftIcon={<ActionExit />}
-          >
-            Logout
-          </MenuItem>
+          <Link to="/logout">
+            <MenuItem
+              onTouchTap={this.handleClose}
+              leftIcon={<ActionExit />}
+            >
+              Logout
+            </MenuItem>
+          </Link>
         </Drawer>
       </div>
     );

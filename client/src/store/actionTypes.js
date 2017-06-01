@@ -19,3 +19,7 @@ export const RECEIVE_GAME = 'RECEIVE_GAME';
 export const GET_REQUEST_FAILURE = 'GET_REQUEST_FAILURE';
 
 export const UPDATE_ROOM_INFO = 'UPDATE_ROOM_INFO';
+
+export const DISPLAY_ERROR = 'DISPLAY_ERROR';
+
+export const CLEAR_ERROR = 'CLEAR_ERROR';
