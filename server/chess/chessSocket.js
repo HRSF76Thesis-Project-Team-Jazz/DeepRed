@@ -1,4 +1,6 @@
 const ChessGame = require('./ChessGame');
+const isLegalMove = require('./isLegalMove');
+
 const allGames = {};
 const allRooms = {};
 let roomInfo = {};
@@ -46,11 +48,11 @@ module.exports = (io, client) => {
     const newState = allGames[room].movePiece(origin, dest);
     io.in(room).emit('attemptMoveResult', newState.game.board, newState.error, selectedPiece, origin, dest, selection);
   });
-  client.on('checkLegalMove', (selectedPiece, origin, dest, selection, room) => {
+  client.on('checkLegalMove', (origin, dest, room) => {
     console.log('checkLegalMove: ', origin, dest);
     console.log('room number: ', room);
-    const bool = allGames[room].isLegalMove(allGames[room], origin, dest);
-    io.in(room).emit('attemptMoveResult', dest, bool);
+    const bool = isLegalMove(allGames[room].board, origin, dest);
+    io.in(room).emit('isLegalMoveResult', dest, bool);
   });
 };
 

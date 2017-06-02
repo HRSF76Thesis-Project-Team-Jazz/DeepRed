@@ -27,6 +27,7 @@ class App extends Component {
     super(props);
     this.getUserInfo = this.getUserInfo.bind(this);
     this.attemptMove = this.attemptMove.bind(this);
+    this.checkLegalMove = this.checkLegalMove.bind(this);
     this.newChessGame = this.newChessGame.bind(this);
     this.startSocket = this.startSocket.bind(this);
   }
@@ -74,15 +75,16 @@ class App extends Component {
         dispatch(displayError(error));
       }
       dispatch(unselectPiece());
+      dispatch(colorSquare(null, dest));
     });
 
     this.socket.on('isLegalMoveResult', (dest, bool) => {
       // dispatch(receiveGame(board));
-      let color = 'red';
+      let color = 'board-col red';
       if (bool) {
-        color = 'green';
+        color = 'board-col green';
       }
-      dispatch(colorSquare(dest, color));
+      dispatch(colorSquare(color, dest));
     });
   }
 
@@ -91,10 +93,10 @@ class App extends Component {
     axios.get('/api/profiles/id')
     .then((response) => {
       console.log('successfully fetched current user infomation');
-        dispatch(setPlayerW(response));
+      dispatch(setPlayerW(response));
     })
     .then(() => {
-        this.startSocket();
+      this.startSocket();
     })
     .catch((err) => {
       dispatch(getRequestFailure(err));
@@ -116,10 +118,11 @@ class App extends Component {
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
-  checkLegalMove(selectedPiece, origin, dest, selection, room) {
+  checkLegalMove(origin, dest, room) {
     // const { dispatch } = this.props;
     console.log('checking legal move');
-    this.socket.emit('checkLegalMove', selectedPiece, origin, dest, selection, room);
+
+    this.socket.emit('checkLegalMove', origin, dest, room);
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
@@ -147,7 +150,7 @@ class App extends Component {
 
             <div className="flex-col">
               <CapturedPieces color="Black" capturedPieces={capturedPiecesBlack} player={playerB} />
-              <Board attemptMove={this.attemptMove} checkLegalMove={this.checkLegalMove}/>
+              <Board attemptMove={this.attemptMove} checkLegalMove={this.checkLegalMove} />
               <CapturedPieces color="White" capturedPieces={capturedPiecesWhite} player={playerW} />
               <Message message={message} />
               <Message message={error} />

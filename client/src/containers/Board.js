@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { invalidSelection, selectPiece, colorMouseEnter } from '../store/actions';
+import { invalidSelection, selectPiece, colorSquare } from '../store/actions';
 import './css/Board.css';
 
 class Board extends Component {
@@ -56,24 +56,25 @@ class Board extends Component {
   }
 
   onMouseLeave(coordinates) {
-    // const { dispatch, fromPosition, selectedPiece, room, checkLegalMove } = this.props;
+    const { dispatch } = this.props;
+    dispatch(colorSquare(null, coordinates));
     // if (selectedPiece) {
     //   checkLegalMove(fromPosition, coordinates, room);
     // }
   }
-
+  
   getImage(CP) {
-    return <img className="piece-img" src={`/assets/${CP}.png`} />;
+    return <img className="piece-img" src={`/assets/${CP}.png`} alt={''} />;
   }
   render() {
-    const { board } = this.props;
+    const { board, color, hover } = this.props;
     return (
       <div className="board">
         {board.map((row, rowIndex) => (
           <div key={Math.random()} className="board-row">
             {row.map((col, colIndex) => (
               <div
-                className={((rowIndex + colIndex) % 2 === 1) ? 'board-col dark' : 'board-col light'}
+                className={((rowIndex + colIndex) % 2 === 1) ? ((color && (hover[0] === rowIndex && hover[1] === colIndex)) ? color : 'board-col dark') : ((color && (hover[0] === rowIndex && hover[1] === colIndex)) ? color : 'board-col light')}
                 key={rowIndex.toString() + colIndex.toString()}
                 onClick={() => this.onClick([rowIndex, colIndex])}
                 onMouseEnter={() => this.onMouseEnter([rowIndex, colIndex])}
@@ -96,7 +97,7 @@ function mapStateToProps(state) {
   const { board } = boardState;
   const { fromPosition, selectedPiece } = moveState;
   const { room } = userState;
-  const { color } = squareState;
+  const { color, hover } = squareState;
   return {
     playerColor,
     board,
@@ -104,6 +105,7 @@ function mapStateToProps(state) {
     selectedPiece,
     room,
     color,
+    hover,
   };
 }
 
