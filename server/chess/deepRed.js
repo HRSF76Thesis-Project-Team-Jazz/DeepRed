@@ -4,6 +4,7 @@ const chessEval = require('./chessEval');
  * Chess Playing Brain
  */
 
+let whiteIsChecked;
 
 /**
  * Return new board after given move
@@ -154,10 +155,10 @@ const getAvailableMovesWhite = (board) => {
             currentRow -= 1;
             currentCol -= 1;
             if (!board[currentRow][currentCol]) {
-              result[key].push([currentRow, currentCol]);
+              if (!whiteIsChecked(mutateBoard(board, [key, [currentRow, currentCol]]))) result[key].push([currentRow, currentCol]);
             } else {
               continueMove = false;
-              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+              if (board[currentRow][currentCol][0] === 'B' && !whiteIsChecked(mutateBoard(board, [key, [currentRow, currentCol]]))) result[key].push([currentRow, currentCol]);
             }
           }
 
@@ -169,10 +170,10 @@ const getAvailableMovesWhite = (board) => {
             currentRow -= 1;
             currentCol += 1;
             if (!board[currentRow][currentCol]) {
-              result[key].push([currentRow, currentCol]);
+              if (!whiteIsChecked(mutateBoard(board, [key, [currentRow, currentCol]]))) result[key].push([currentRow, currentCol]);
             } else {
               continueMove = false;
-              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+              if (board[currentRow][currentCol][0] === 'B' && !whiteIsChecked(mutateBoard(board, [key, [currentRow, currentCol]]))) result[key].push([currentRow, currentCol]);
             }
           }
 
@@ -184,10 +185,10 @@ const getAvailableMovesWhite = (board) => {
             currentRow += 1;
             currentCol += 1;
             if (!board[currentRow][currentCol]) {
-              result[key].push([currentRow, currentCol]);
+              if (!whiteIsChecked(mutateBoard(board, [key, [currentRow, currentCol]]))) result[key].push([currentRow, currentCol]);
             } else {
               continueMove = false;
-              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+              if (board[currentRow][currentCol][0] === 'B' && !whiteIsChecked(mutateBoard(board, [key, [currentRow, currentCol]]))) result[key].push([currentRow, currentCol]);
             }
           }
 
@@ -199,10 +200,10 @@ const getAvailableMovesWhite = (board) => {
             currentRow += 1;
             currentCol -= 1;
             if (!board[currentRow][currentCol]) {
-              result[key].push([currentRow, currentCol]);
+              if (!whiteIsChecked(mutateBoard(board, [key, [currentRow, currentCol]]))) result[key].push([currentRow, currentCol]);
             } else {
               continueMove = false;
-              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+              if (board[currentRow][currentCol][0] === 'B' && !whiteIsChecked(mutateBoard(board, [key, [currentRow, currentCol]]))) result[key].push([currentRow, currentCol]);
             }
           } // end of B-SW
         } // end of 'B'
@@ -833,7 +834,7 @@ const blackIsChecked = (board) => {
  * @return {boolean}
  */
 
-const whiteIsChecked = (board) => {
+whiteIsChecked = (board) => {
   const blackMoves = getAvailableMovesBlack(board);
   const positionWK = JSON.stringify(chessEval.findPiecePosition('WK', board)[0]);
   for (const key in blackMoves) {
