@@ -148,6 +148,7 @@ const moveState = (state = Immutable({
         fromPosition: '',
         selectedPiece: '',
         message: `Move: ${from}-${to}`,
+        error: '',
       });
     }
     case types.CAPTURE_PIECE: {

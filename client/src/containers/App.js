@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
-import { setPlayerW, setPlayerB, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece, displayError } from '../store/actions';
+import { setPlayerW, setPlayerB, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece, displayError, colorSquare } from '../store/actions';
 
 // Components
 import ChessMenu from '../components/ChessMenu';
@@ -82,9 +82,9 @@ class App extends Component {
       if (bool) {
         color = 'green';
       }
-      dispatch(colorMouseEnter(dest, color));
-    }
-=  }
+      dispatch(colorSquare(dest, color));
+    });
+  }
 
   getUserInfo() {
     const { dispatch } = this.props;
@@ -124,11 +124,10 @@ class App extends Component {
   }
 
   render() {
-    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW } = this.props;
+    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, error } = this.props;
     return (
       <div className="site-wrap">
         <ChessMenu />
-        // <ErrorAlert />
         <div className="header">
           <table>
             <tbody>
@@ -151,6 +150,7 @@ class App extends Component {
               <Board attemptMove={this.attemptMove} checkLegalMove={this.checkLegalMove}/>
               <CapturedPieces color="White" capturedPieces={capturedPiecesWhite} player={playerW} />
               <Message message={message} />
+              <Message message={error} />
             </div>
 
             <div className="flex-col right-col">
@@ -178,7 +178,7 @@ function mapStateToProps(state) {
     playerB,
     room,
   } = userState;
-  const { message } = moveState;
+  const { message, error } = moveState;
   return {
     playerB,
     playerW,
@@ -186,6 +186,7 @@ function mapStateToProps(state) {
     moveHistory,
     capturedPiecesBlack,
     capturedPiecesWhite,
+    error,
   };
 }
 

@@ -23,8 +23,8 @@ describe('ChessGame', () => {
     expect(testChessGame.board).to.be.a('array');
     expect(testChessGame.blackCapPieces).to.be.a('array');
     expect(testChessGame.whiteCapPieces).to.be.a('array');
-    expect(testChessGame.turn).to.be.a('number');
-    expect(testChessGame.history).to.be.a('object');
+    expect(testChessGame.turn).to.be.a('string');
+    // expect(testChessGame.history).to.be.a('object');
   });
   it('should return object with starting board state', () => {
     expect(testChessGame.board).to.eql(initBoard);

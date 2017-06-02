@@ -51,10 +51,15 @@ class Board extends Component {
   onMouseEnter(coordinates) {
     const { dispatch, fromPosition, selectedPiece, room, checkLegalMove } = this.props;
     if (selectedPiece) {
-      if (checkLegalMove(fromPosition, coordinates, room)) {
-        dispatch(colorSquare(selectedPiece, fromPosition, coordinates));
-      }
+      checkLegalMove(fromPosition, coordinates, room);
     }
+  }
+
+  onMouseLeave(coordinates) {
+    // const { dispatch, fromPosition, selectedPiece, room, checkLegalMove } = this.props;
+    // if (selectedPiece) {
+    //   checkLegalMove(fromPosition, coordinates, room);
+    // }
   }
 
   getImage(CP) {
