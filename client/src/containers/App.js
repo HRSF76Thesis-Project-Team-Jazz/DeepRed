@@ -13,6 +13,7 @@ import Message from '../components/Message';
 import CapturedPieces from '../components/CapturedPieces';
 import Clock from '../components/Clock';
 import MoveHistory from '../components/MoveHistory';
+import ChatBox from '../components/ChatBox';
 import './css/App.css';
 
 
@@ -28,6 +29,10 @@ class App extends Component {
     this.attemptMove = this.attemptMove.bind(this);
     this.newChessGame = this.newChessGame.bind(this);
     this.startSocket = this.startSocket.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
+    this.state = {
+      messages: []
+    }
   }
 
   componentDidMount() {
@@ -58,6 +63,15 @@ class App extends Component {
     this.socket.on('startGame', (roomInfo, newGame) => {
       dispatch(updateRoomInfo(roomInfo));
     });
+
+    this.socket.on('message', (msg) => {
+      console.log('message sent back to client', msg)
+      var curr = this.state.messages;
+      curr.push(msg)
+      this.setState({
+        messages: curr
+      })
+    })
 
     this.socket.on('attemptMoveResult', (board, error, selectedPiece, origin, dest, selection, room) => {
       console.log('************** BOARD: ', board);
@@ -104,6 +118,10 @@ class App extends Component {
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
+  sendMessage(msg) {
+    this.socket.emit('message', msg);
+  }
+
   render() {
     const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW }
           = this.props;
@@ -138,6 +156,7 @@ class App extends Component {
             <div className="flex-col right-col">
               <Clock />
               <MoveHistory moveHistory={moveHistory} />
+              <ChatBox messages={this.state.messages} sendMessage={this.sendMessage}/>
               <Clock />
             </div>
 

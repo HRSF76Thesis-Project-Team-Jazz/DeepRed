@@ -46,4 +46,8 @@ module.exports = (io, client) => {
     const newState = allGames[room].movePiece(origin, dest);
     io.in(room).emit('attemptMoveResult', newState.game.board, newState.error, selectedPiece, origin, dest, selection);
   });
+
+  client.on('message', (msg) => {
+    io.in(room).emit('message', msg)
+  })
 };
