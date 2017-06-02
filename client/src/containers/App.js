@@ -15,11 +15,8 @@ import Board from './Board';
 import Message from '../components/Message';
 import CapturedPieces from '../components/CapturedPieces';
 import MoveHistory from '../components/MoveHistory';
-<<<<<<< HEAD
 import Alert from './Alert';
-=======
 import ChatBox from '../components/ChatBox';
->>>>>>> added chat feature
 import './css/App.css';
 
 
@@ -36,17 +33,11 @@ class App extends Component {
     this.checkLegalMove = this.checkLegalMove.bind(this);
     this.newChessGame = this.newChessGame.bind(this);
     this.startSocket = this.startSocket.bind(this);
-<<<<<<< HEAD
     this.sendPauseRequest = this.sendPauseRequest.bind(this);
     this.handlePauseOpen = this.handlePauseOpen.bind(this);
     this.handlePauseClose = this.handlePauseClose.bind(this);
     this.onRejectPauseRequest = this.onRejectPauseRequest.bind(this);
-=======
     this.sendMessage = this.sendMessage.bind(this);
-    this.state = {
-      messages: []
-    }
->>>>>>> added chat feature
   }
 
   componentDidMount() {
@@ -183,6 +174,7 @@ class App extends Component {
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
+
   checkLegalMove(origin, dest, room) {
     // const { dispatch } = this.props;
     console.log('checking legal move');
@@ -193,7 +185,6 @@ class App extends Component {
   sendMessage(msg) {
     this.socket.emit('message', msg);
   }
-
 
   render() {
     const { pauseOpen, moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, error, messages } = this.props;
