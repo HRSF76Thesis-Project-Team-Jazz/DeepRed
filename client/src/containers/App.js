@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
-import { setPlayerW, setPlayerB, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece } from '../store/actions';
+import { setPlayerW, setPlayerB, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece, displayError, colorSquare } from '../store/actions';
 
 // Components
 import ChessMenu from '../components/ChessMenu';
@@ -13,6 +13,7 @@ import Message from '../components/Message';
 import CapturedPieces from '../components/CapturedPieces';
 import Clock from '../components/Clock';
 import MoveHistory from '../components/MoveHistory';
+import ErrorAlert from './ErrorAlert';
 import './css/App.css';
 
 
@@ -37,7 +38,7 @@ class App extends Component {
 
   startSocket() {
     const { dispatch, room, playerB, playerW } = this.props;
-    
+
     let name = playerW;
     // instantiate socket instance on the cllient side
     this.socket = io.connect();
@@ -70,8 +71,18 @@ class App extends Component {
         }
       } else {
         console.log('---------- ERROR: ', error);
+        dispatch(displayError(error));
       }
       dispatch(unselectPiece());
+    });
+
+    this.socket.on('isLegalMoveResult', (dest, bool) => {
+      // dispatch(receiveGame(board));
+      let color = 'red';
+      if (bool) {
+        color = 'green';
+      }
+      dispatch(colorSquare(dest, color));
     });
   }
 
@@ -105,10 +116,15 @@ class App extends Component {
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
-  render() {
-    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW }
-          = this.props;
+  checkLegalMove(selectedPiece, origin, dest, selection, room) {
+    // const { dispatch } = this.props;
+    console.log('checking legal move');
+    this.socket.emit('checkLegalMove', selectedPiece, origin, dest, selection, room);
+    // this.socket.emit('checkLegalMove', originDestCoord);
+  }
 
+  render() {
+    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, error } = this.props;
     return (
       <div className="site-wrap">
         <ChessMenu />
@@ -131,9 +147,10 @@ class App extends Component {
 
             <div className="flex-col">
               <CapturedPieces color="Black" capturedPieces={capturedPiecesBlack} player={playerB} />
-              <Board attemptMove={this.attemptMove} />
+              <Board attemptMove={this.attemptMove} checkLegalMove={this.checkLegalMove}/>
               <CapturedPieces color="White" capturedPieces={capturedPiecesWhite} player={playerW} />
               <Message message={message} />
+              <Message message={error} />
             </div>
 
             <div className="flex-col right-col">
@@ -161,7 +178,7 @@ function mapStateToProps(state) {
     playerB,
     room,
   } = userState;
-  const { message } = moveState;
+  const { message, error } = moveState;
   return {
     playerB,
     playerW,
@@ -169,6 +186,7 @@ function mapStateToProps(state) {
     moveHistory,
     capturedPiecesBlack,
     capturedPiecesWhite,
+    error,
   };
 }
 
