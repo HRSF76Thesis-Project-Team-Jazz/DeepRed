@@ -284,6 +284,101 @@ const getAvailableMovesWhite = (board) => {
             }
           }
         } // end of 'Q'
+
+        if (piece[1] === 'K') {
+          // NW
+          let currentRow = row;
+          let currentCol = col;
+          if (currentRow - 1 >= 0 && currentCol - 1 >= 0) {
+            currentRow -= 1;
+            currentCol -= 1;
+            if (!board[currentRow][currentCol]) {
+              result[key].push([currentRow, currentCol]);
+            } else if (board[currentRow][currentCol][0] === 'B') {
+              result[key].push([currentRow, currentCol]);
+            }
+          }
+
+          // NE
+          currentRow = row;
+          currentCol = col;
+          if (currentRow - 1 >= 0 && currentCol + 1 <= 7) {
+            currentRow -= 1;
+            currentCol += 1;
+            if (!board[currentRow][currentCol]) {
+              result[key].push([currentRow, currentCol]);
+            } else if (board[currentRow][currentCol][0] === 'B') {
+              result[key].push([currentRow, currentCol]);
+            }
+          }
+
+          // SE
+          currentRow = row;
+          currentCol = col;
+          if (currentRow + 1 <= 7 && currentCol + 1 <= 7) {
+            currentRow += 1;
+            currentCol += 1;
+            if (!board[currentRow][currentCol]) {
+              result[key].push([currentRow, currentCol]);
+            } else if (board[currentRow][currentCol][0] === 'B') {
+              result[key].push([currentRow, currentCol]);
+            }
+          }
+
+          // SW
+          currentRow = row;
+          currentCol = col;
+          if (currentRow + 1 <= 7 && currentCol - 1 >= 0) {
+            currentRow += 1;
+            currentCol -= 1;
+            if (!board[currentRow][currentCol]) {
+              result[key].push([currentRow, currentCol]);
+            } else if (board[currentRow][currentCol][0] === 'B') {
+              result[key].push([currentRow, currentCol]);
+            }
+          } // end of K-SW
+
+          // move up
+          currentRow = row;
+          if (currentRow - 1 >= 0) {
+            currentRow -= 1;
+            if (!board[currentRow][col]) {
+              result[key].push([currentRow, col]);
+            } else if (board[currentRow][col][0] === 'B') {
+              result[key].push([currentRow, col]);
+            }
+          }
+          // move down
+          currentRow = row;
+          if (currentRow + 1 <= 7) {
+            currentRow += 1;
+            if (!board[currentRow][col]) {
+              result[key].push([currentRow, col]);
+            } else if (board[currentRow][col][0] === 'B') {
+              result[key].push([currentRow, col]);
+            }
+          }
+          // move left
+          currentCol = col;
+          if (currentCol - 1 >= 0) {
+            currentCol -= 1;
+            if (!board[row][currentCol]) {
+              result[key].push([row, currentCol]);
+            } else if (board[row][currentCol][0] === 'B') {
+              result[key].push([row, currentCol]);
+            }
+          }
+          // move right
+          currentCol = col;
+          if (currentCol + 1 <= 7) {
+            currentCol += 1;
+            if (!board[row][currentCol]) {
+              result[key].push([row, currentCol]);
+            } else if (board[row][currentCol][0] === 'B') {
+              result[key].push([row, currentCol]);
+            }
+          } // end of K move right
+        } // end of 'K'
       } // end of if 'W'
     } // for loop i
   } // for loop j
@@ -298,7 +393,29 @@ const blackIsChecked = (board) => {
     if (whiteMoves[key].map(x => JSON.stringify(x)).indexOf(positionBK) >= 0) return true;
   }
   return false;
-}
+};
+
+const piecesAttackedByWhite = (board) => {
+  const whiteMoves = getAvailableMovesWhite(board);
+  const result = [
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+  ];
+  for (const key in whiteMoves) {
+    whiteMoves[key].forEach((xy) => {
+      const x = xy[0];
+      const y = xy[1];
+      if (board[x][y]) result[x][y] = 1;
+    });
+  }
+  return result;
+};
 
 module.exports.getAvailableMovesWhite = getAvailableMovesWhite;
 module.exports.blackIsChecked = blackIsChecked;
@@ -322,94 +439,99 @@ const showMovesByPiece = (board, piece) => {
   const pieces = chessEval.findPiecePosition(piece, board)
     .map(array => array[0].toString() + array[1].toString());
   const moves = getAvailableMovesWhite(board);
-  const movesBoard = board.map(row => row.map(col => (!col ? '--' : col)));
+  const movesBoard = board.map(row => row.map(col => (!col ? ' -- ' : ` ${col} `)));
+  const blackPiecesAttacked = piecesAttackedByWhite(board);
 
   console.log();
-  console.log(`=========== 【 ${label[piece[1]]} 】 =============`.substr(-35));
+  console.log(`=================== 【 ${(piece.length === 1) ? 'ALL MOVES' : label[piece[1]]} 】 ======================`.substr(-50));
   movesBoard.forEach(row => console.log(row.join(' | ')));
   pieces.forEach(key => moves[key].forEach((move) => {
-    movesBoard[move[0]][move[1]] = '<>';
+    if (blackPiecesAttacked[move[0]][move[1]]) {
+      movesBoard[move[0]][move[1]] = `[${board[move[0]][move[1]]}]`;
+    } else {
+      movesBoard[move[0]][move[1]] = ' <> ';
+    }
   }));
-  console.log('-------------------------------------');
+  console.log('----------------------------------------------------');
   movesBoard.forEach(row => console.log(row.join(' | ')));
-  console.log('-------------------------------------');
+  console.log('----------------------------------------------------');
   console.log();
 };
 
 let board = [
-  ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+  ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
   ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+  ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
 ];
 
 showMovesByPiece(board, 'WP');
 
 board = [
-  ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+  ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
   ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
   [null, null, null, null, null, null, null, null],
   [null, null, 'WN', null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', null, 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+  ['WR', null, 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
 ];
 
 showMovesByPiece(board, 'WN');
 
 board = [
-  ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+  ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
   ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, 'WR', null],
   [null, null, null, null, null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', null],
+  ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', null],
 ];
 
 showMovesByPiece(board, 'WR');
 
 board = [
-  ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+  ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
   ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, 'WB', null],
   [null, null, null, null, null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', 'WN', 'WB', 'WK', 'WQ', null, 'WN', 'WR'],
+  ['WR', 'WN', 'WB', 'WQ', 'WK', null, 'WN', 'WR'],
 ];
 
 showMovesByPiece(board, 'WB');
 
 board = [
-  ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+  ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
   ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, 'WQ', null, null, null],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', 'WN', 'WB', 'WK', null, 'WB', 'WN', 'WR'],
+  ['WR', 'WN', 'WB', null, 'WK', 'WB', 'WN', 'WR'],
 ];
 
 showMovesByPiece(board, 'WQ');
 
 board = [
-  ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+  ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
   ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, 'WQ', null, null, null],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', 'WN', 'WB', 'WK', null, 'WB', 'WN', 'WR'],
+  ['WR', 'WN', 'WB', null, 'WK', 'WB', 'WN', 'WR'],
 ];
 
 showMovesByPiece(board, 'WR');
@@ -423,11 +545,12 @@ board = [
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', 'WN', 'WB', 'WK', null, 'WB', 'WN', 'WR'],
+  ['WR', 'WN', 'WB', null, 'WK', 'WB', 'WN', 'WR'],
 ];
 
 showMovesByPiece(board, 'WQ');
 console.log('Is BK in check? ', blackIsChecked(board));
+showMovesByPiece(board, 'W');
 
 board = [
   ['BR', 'BN', 'BB', null, 'BQ', 'BB', 'BN', 'BR'],
@@ -437,7 +560,7 @@ board = [
   [null, null, null, null, null, null, null, null],
   [null, null, null, 'WB', null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', 'WN', null, 'WK', 'WQ', 'WB', 'WN', 'WR'],
+  ['WR', 'WN', null, 'WQ', 'WK', 'WB', 'WN', 'WR'],
 ];
 
 showMovesByPiece(board, 'WB');
@@ -451,8 +574,63 @@ board = [
   [null, 'WN', null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', null, 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+  ['WR', null, 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
 ];
 
 showMovesByPiece(board, 'WN');
 console.log('Is BK in check? ', blackIsChecked(board));
+
+board = [
+  ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, 'WK', null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+  ['WR', 'WN', 'WB', 'WQ', null, 'WB', 'WN', 'WR'],
+];
+
+showMovesByPiece(board, 'WK');
+console.log('Is BK in check? ', blackIsChecked(board));
+
+board = [
+  ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  [null, null, null, null, 'WK', null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+  ['WR', 'WN', 'WB', 'WQ', null, 'WB', 'WN', 'WR'],
+];
+
+showMovesByPiece(board, 'WK');
+console.log('Is BK in check? ', blackIsChecked(board));
+
+board = [
+  ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, 'WK'],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+  ['WR', 'WN', 'WB', 'WQ', '--', 'WB', 'WN', 'WR'],
+];
+
+showMovesByPiece(board, 'WK');
+console.log('Is BK in check? ', blackIsChecked(board));
+
+board = [
+  ['BR', null, 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', null, 'BP', 'BP', 'BP'],
+  [null, null, 'BN', null, null, null, null, null],
+  [null, null, null, null, 'BP', null, null, null],
+  [null, null, null, null, 'WP', null, null, null],
+  [null, null, null, null, null, 'WN', null, null],
+  ['WP', 'WP', 'WP', 'WP', null, 'WP', 'WP', 'WP'],
+  ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', null, 'WR'],
+];
+
+showMovesByPiece(board, 'W');

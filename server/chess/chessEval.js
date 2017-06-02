@@ -40,7 +40,15 @@ const capturedPiecesScore = (capturedWhite, capturedBlack) => {
 
 const findPiecePosition = (piece, board) => {
   const result = [];
-  if (piece[0] === 'B') {
+
+  if (piece.length === 1) {
+    const color = piece;
+    for (let row = 0; row < 8; row += 1) {
+      for (let col = 0; col < 8; col += 1) {
+        if (board[row][col] && board[row][col][0] === color) result.push([row, col]);
+      }
+    }
+  } else if (piece[0] === 'B') {
     for (let row = 0; row < 8; row += 1) {
       for (let col = 0; col < 8; col += 1) {
         if (board[row][col] === piece) result.push([row, col]);
