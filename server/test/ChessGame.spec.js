@@ -39,19 +39,19 @@ describe('ChessGame', () => {
 
 describe('ChessGame.movePiece', () => {
   it('should return obj with error if destination is undefined', () => {
-    expect(testChessGame.movePiece([0, 0], undefined).error).to.eql('Attempted destination is invalid');
+    expect(testChessGame.movePiece([0, 0], undefined).error).to.eql('Attempted destination is invalid.');
   });
   it('should return obj with error if origin is undefined', () => {
-    expect(testChessGame.movePiece(undefined, [4, 4]).error).to.eql('Origin is invalid');
+    expect(testChessGame.movePiece(undefined, [4, 4]).error).to.eql('Origin is invalid.');
   });
   it('should return obj with error if origin is undefined', () => {
-    expect(testChessGame.movePiece([500, 500], [4, 4]).error).to.eql('Origin is invalid');
+    expect(testChessGame.movePiece([500, 500], [4, 4]).error).to.eql('Origin is invalid.');
   });
   it('should return obj with error if origin equals destination', () => {
-    expect(testChessGame.movePiece([0, 0], [0, 0]).error).to.eql('Origin and destination cannot be the same');
+    expect(testChessGame.movePiece([0, 0], [0, 0]).error).to.eql('Origin and destination cannot be the same.');
   });
   it('should return obj with error if capturing own piece', () => {
-    expect(testChessGame.movePiece([7, 0], [6, 0]).error).to.eql('Attempted to capture own piece');
+    expect(testChessGame.movePiece([7, 0], [6, 0]).error).to.eql('Cannot capture your own piece.');
   });
   const expectedMoveBoard = [
     ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],

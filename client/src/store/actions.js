@@ -28,6 +28,11 @@ export const unselectPiece = () => ({
   type: types.UNSELECT_PIECE,
 });
 
+export const colorSquare = (color) => ({
+  type: types.COLOR_SQUARE,
+  color,
+});
+
 export const movePiece = (selectedPiece, fromPosition, coordinates) => ({
   type: types.MOVE_PIECE,
   selectedPiece,

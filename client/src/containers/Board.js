@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { invalidSelection, selectPiece } from '../store/actions';
+import { invalidSelection, selectPiece, colorMouseEnter } from '../store/actions';
 import './css/Board.css';
 
 class Board extends Component {
@@ -11,6 +11,8 @@ class Board extends Component {
     };
 
     this.onClick = this.onClick.bind(this);
+    this.onMouseEnter = this.onMouseEnter.bind(this);
+    this.onMouseLeave = this.onMouseLeave.bind(this);
   }
 
   componentDidMount() {
@@ -45,6 +47,16 @@ class Board extends Component {
     //   dispatch(capturePiece(selectedPiece, fromPosition, coordinates, capturedPiece));
     }
   }
+
+  onMouseEnter(coordinates) {
+    const { dispatch, fromPosition, selectedPiece, room, checkLegalMove } = this.props;
+    if (selectedPiece) {
+      if (checkLegalMove(fromPosition, coordinates, room)) {
+        dispatch(colorSquare(selectedPiece, fromPosition, coordinates));
+      }
+    }
+  }
+
   getImage(CP) {
     return <img className="piece-img" src={`/assets/${CP}.png`} />;
   }
@@ -59,6 +71,8 @@ class Board extends Component {
                 className={((rowIndex + colIndex) % 2 === 1) ? 'board-col dark' : 'board-col light'}
                 key={rowIndex.toString() + colIndex.toString()}
                 onClick={() => this.onClick([rowIndex, colIndex])}
+                onMouseEnter={() => this.onMouseEnter([rowIndex, colIndex])}
+                onMouseLeave={() => this.onMouseLeave([rowIndex, colIndex])}
               >
                 {this.getImage(col)}
               </div>),
@@ -72,17 +86,19 @@ class Board extends Component {
 }
 
 function mapStateToProps(state) {
-  const { gameState, boardState, moveState, userState } = state;
+  const { gameState, boardState, moveState, userState, squareState } = state;
   const { playerColor } = gameState;
   const { board } = boardState;
   const { fromPosition, selectedPiece } = moveState;
   const { room } = userState;
+  const { color } = squareState;
   return {
     playerColor,
     board,
     fromPosition,
     selectedPiece,
     room,
+    color,
   };
 }
 

@@ -33,24 +33,24 @@ class ChessGame {
   movePiece(origin, dest) {
     let error = null;
     if (dest === undefined) {
-      error = 'Attempted destination is invalid';
-      // console.log(this.board);
-      // console.log(error);
+      error = 'Attempted destination is invalid.';
+      console.log(this.board);
+      console.log(error);
       return { game: this, error };
     } else if (!origin || !this.board[origin[0]] || !this.board[origin[0]][origin[1]]) {
-      error = 'Origin is invalid';
-      // console.log(this.board);
-      // console.log(error);
+      error = 'Origin is invalid.';
+      console.log(this.board);
+      console.log(error);
       return { game: this, error };
     } else if (origin[0] === dest[0] && origin[1] === dest[1]) {
-      error = 'Origin and destination cannot be the same';
-      // console.log(this.board);
-      // console.log(error);
+      error = 'Origin and destination cannot be the same.';
+      console.log(this.board);
+      console.log(error);
       return { game: this, error };
     } else if ((this.count % 2 === 0 && this.board[origin[0]][origin[1]][0] === 'W') || (this.count % 2 === 1 && this.board[origin[0]][origin[1]][0] === 'B')) {
       error = 'Not your turn.';
-      // console.log(this.board);
-      // console.log(error);
+      console.log(this.board);
+      console.log(error);
       return { game: this, error };
     }
     const originPiece = this.board[origin[0]][origin[1]];
@@ -58,9 +58,9 @@ class ChessGame {
     if (isLegalMove(this.board, origin, dest)) {
       if (destPiece) {
         if (originPiece[0] === destPiece[0]) {
-          error = 'Attempted to capture own piece';
-          // console.log(this.board);
-          // console.log(error);
+          error = 'Cannot capture your own piece.';
+          console.log(this.board);
+          console.log(error);
           return { game: this, error };
         }
         // this.history += moveToPGNString(this.board, origin, dest, this.count);
@@ -77,13 +77,13 @@ class ChessGame {
       this.board[origin[0]][origin[1]] = null;
       // check for check/checkmate/stalemate
       // console.log('--------------', this.history);
-      // console.log('Move piece is successful');
-      // console.log(this.board);
+      console.log('Move piece is successful');
+      console.log(this.board);
       return { game: this, error };
     }
-    error = 'Attempted Move is Illegal';
-    // console.log(this.board);
-    // console.log(error);
+    error = 'Move is not allowed.';
+    console.log(this.board);
+    console.log(error);
     return { game: this, error };
   }
 

@@ -75,7 +75,16 @@ class App extends Component {
       }
       dispatch(unselectPiece());
     });
-  }
+
+    this.socket.on('isLegalMoveResult', (dest, bool) => {
+      // dispatch(receiveGame(board));
+      let color = 'red';
+      if (bool) {
+        color = 'green';
+      }
+      dispatch(colorMouseEnter(dest, color));
+    }
+=  }
 
   getUserInfo() {
     const { dispatch } = this.props;
@@ -107,12 +116,19 @@ class App extends Component {
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
+  checkLegalMove(selectedPiece, origin, dest, selection, room) {
+    // const { dispatch } = this.props;
+    console.log('checking legal move');
+    this.socket.emit('checkLegalMove', selectedPiece, origin, dest, selection, room);
+    // this.socket.emit('checkLegalMove', originDestCoord);
+  }
+
   render() {
     const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW } = this.props;
     return (
       <div className="site-wrap">
         <ChessMenu />
-        <ErrorAlert />
+        // <ErrorAlert />
         <div className="header">
           <table>
             <tbody>
@@ -132,7 +148,7 @@ class App extends Component {
 
             <div className="flex-col">
               <CapturedPieces color="Black" capturedPieces={capturedPiecesBlack} player={playerB} />
-              <Board attemptMove={this.attemptMove} />
+              <Board attemptMove={this.attemptMove} checkLegalMove={this.checkLegalMove}/>
               <CapturedPieces color="White" capturedPieces={capturedPiecesWhite} player={playerW} />
               <Message message={message} />
             </div>

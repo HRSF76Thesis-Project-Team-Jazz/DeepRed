@@ -8,6 +8,8 @@ export const CAPTURE_PIECE = 'CAPTURE_PIECE';
 
 export const MOVE_PIECE = 'MOVE_PIECE';
 
+export const COLOR_SQUARE = 'COLOR_SQUARE';
+
 export const SET_PLAYER_W = 'SET_PLAYER_W';
 
 export const SET_PLAYER_B = 'SET_PLAYER_B';

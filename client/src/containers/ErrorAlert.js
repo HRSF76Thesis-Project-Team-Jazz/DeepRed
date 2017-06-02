@@ -1,15 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
+// import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import { displayError, clearError } from '../store/actions';
+import { clearError } from '../store/actions';
 /**
  * Dialog with action buttons. The actions are passed in as an array of React objects,
  * in this example [FlatButtons](/#/components/flat-button).
  *
  * You can also close this dialog by clicking outside the dialog, or with the 'Esc' key.
  */
+const customContentStyle = {
+  width: '25%',
+  maxWidth: 'none',
+};
 
 class ErrorAlert extends React.Component {
 
@@ -31,7 +35,7 @@ class ErrorAlert extends React.Component {
   render() {
     const { error, open } = this.props;
     const actions = [
-      <FlatButton
+      <RaisedButton
         label="OK"
         primary
         keyboardFocused
@@ -40,15 +44,15 @@ class ErrorAlert extends React.Component {
     ];
     return (
       <div>
-        <RaisedButton label="Dialog" onTouchTap={this.handleOpen} />
         <Dialog
           title="Dialog With Actions"
           actions={actions}
           modal={false}
           open={open}
           onRequestClose={this.handleClose}
+          contentStyle={customContentStyle}
         >
-          The actions in this window were passed in as an array of React objects.{error}
+          {error}
         </Dialog>
       </div>
     );
