@@ -82,3 +82,8 @@ export const fetchGame = () => (dispatch) => {
       dispatch(receiveGame(json)),
     );
 };
+
+export const sendMsg = msg => ({
+  type: types.SEND_MESSAGE,
+  msg,
+})
