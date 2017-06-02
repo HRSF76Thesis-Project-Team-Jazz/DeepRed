@@ -62,19 +62,12 @@ module.exports = (io, client) => {
     io.in(room).emit('attemptMoveResult', newState.game.board, newState.error, selectedPiece, origin, dest, selection);
   });
 
-  client.on('checkLegalMove', (selectedPiece, origin, dest, selection, room) => {
+  client.on('checkLegalMove', (origin, dest, room) => {
     console.log('checkLegalMove: ', origin, dest);
     console.log('room number: ', room);
     const bool = isLegalMove(allGames[room].board, origin, dest);
     io.in(room).emit('isLegalMoveResult', dest, bool);
   });
-
-
-  client.on('message', (msg) => {
-    io.in(room).emit('message', msg)
-  })
-
-};
 
   // control socket communications
   client.on('requestPause', room => {

@@ -89,7 +89,6 @@ class App extends Component {
     });
 
     this.socket.on('message', (msg) => {
-
       dispatch(sendMsg(msg));
     })
 
@@ -255,7 +254,6 @@ class App extends Component {
 
             <div className="flex-col right-col">
               <MoveHistory moveHistory={moveHistory} />
-              <ChatBox messages={this.state.messages} sendMessage={this.sendMessage}/>
               <Clock />
               <ChatBox messages={messages} sendMessage={this.sendMessage}/>
             </div>
