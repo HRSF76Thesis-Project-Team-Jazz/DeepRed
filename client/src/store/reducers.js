@@ -17,10 +17,10 @@ import * as types from './actionTypes';
 const gameState = (state = Immutable({
   playerColor: 'W',
   gameId: '',
-  clock_W: '',
-  clock_B: '',
-  player_W: '',
-  player_B: '',
+  clockW: '',
+  clockB: '',
+  pausedW: false,
+  pausedB: false,
   capturedPiecesBlack: [],
   capturedPiecesWhite: [],
   gameTurn: 'W',
@@ -49,6 +49,18 @@ const gameState = (state = Immutable({
       };
       newState[capturedPiecesArray] = state[capturedPiecesArray].concat(capturedPiece);
       return Immutable(newState);
+    }
+    case types.PAUSE_TIMER_B: {
+      return Immutable({
+        ...state,
+        pausedW: true,
+      });
+    }
+    case types.PAUSE_TIMER_W: {
+      return Immutable({
+        ...state,
+        pausedW: true,
+      });
     }
     default:
       return state;

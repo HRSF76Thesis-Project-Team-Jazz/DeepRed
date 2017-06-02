@@ -7,10 +7,15 @@ let roomInfo = {};
 let count = 1;
 let currentUser = '';
 
+const createAndSaveNewGame = (room) => {
+  const newGame = new ChessGame();
+  allGames[room] = newGame;
+};
+
 module.exports = (io, client) => {
-  client.on('sendCurrentUserName', currentUserName => {
+  client.on('sendCurrentUserName', (currentUserName) => {
     currentUser = currentUserName;
-  })
+  });
   // dynamically create room number
   const room = `room ${count}`;
   // if current room has no player
@@ -26,17 +31,17 @@ module.exports = (io, client) => {
     });
     // if current room already has one player
   } else if (roomInfo.playerB === undefined || roomInfo.playerB === '') {
-      client.join(room, () => {
-        // add second player into current room
-        roomInfo.playerB = currentUser;
-        allRooms[room] = roomInfo;
-        io.in(room).emit('secondPlayerJoined', roomInfo);
-        // create new game instance
-        createAndSaveNewGame(room);
-        io.in(room).emit('startGame', roomInfo, allGames[room]);
-        // empty room info array, increament count, and ready for creating new room)
-        roomInfo = {};
-        count += 1;
+    client.join(room, () => {
+      // add second player into current room
+      roomInfo.playerB = currentUser;
+      allRooms[room] = roomInfo;
+      io.in(room).emit('secondPlayerJoined', roomInfo);
+      // create new game instance
+      createAndSaveNewGame(room);
+      io.in(room).emit('startGame', roomInfo);
+      // empty room info array, increament count, and ready for creating new room)
+      roomInfo = {};
+      count += 1;
     });
   }
 
@@ -46,15 +51,16 @@ module.exports = (io, client) => {
     const newState = allGames[room].movePiece(origin, dest);
     io.in(room).emit('attemptMoveResult', newState.game.board, newState.error, selectedPiece, origin, dest, selection);
   });
+
   client.on('checkLegalMove', (origin, dest, room) => {
     console.log('checkLegalMove: ', origin, dest);
     console.log('room number: ', room);
     const bool = isLegalMove(allGames[room].board, origin, dest);
     io.in(room).emit('isLegalMoveResult', dest, bool);
   });
+
+  client.on('requestPause', room => {
+    io.in(room).emit('requestPauseDialogBox');
+  });
 };
 
-const createAndSaveNewGame = room => {
-  const newGame = new ChessGame();
-  allGames[room] = newGame;
-}

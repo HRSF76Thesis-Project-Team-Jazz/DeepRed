@@ -29,17 +29,34 @@ class App extends Component {
     this.checkLegalMove = this.checkLegalMove.bind(this);
     this.newChessGame = this.newChessGame.bind(this);
     this.startSocket = this.startSocket.bind(this);
+    this.sendPauseRequest = this.sendPauseRequest.bind(this);
   }
 
   componentDidMount() {
-    const { dispatch, room, playerB, playerW } = this.props;
     this.getUserInfo();
   }
 
-  startSocket() {
-    const { dispatch, room, playerB, playerW } = this.props;
+  getUserInfo() {
+    const { dispatch } = this.props;
+    axios.get('/api/profiles/id')
+    .then((response) => {
+      console.log('successfully fetched current user infomation');
+      dispatch(setPlayerW(response));
+    })
+    .then(() => {
+      this.startSocket();
+    })
+    .catch((err) => {
+      dispatch(getRequestFailure(err));
+      console.error('failed to obtain current user infomation!', err);
+    });
+  }
 
-    let name = playerW;
+  startSocket() {
+
+    const { dispatch, playerW } = this.props;
+
+    const name = playerW;
     // instantiate socket instance on the cllient side
     this.socket = io.connect();
 
@@ -57,7 +74,7 @@ class App extends Component {
       console.log(`second player has joined ${roomInfo.room} as ${roomInfo.playerB}`);
     });
 
-    this.socket.on('startGame', (roomInfo, newGame) => {
+    this.socket.on('startGame', (roomInfo) => {
       dispatch(updateRoomInfo(roomInfo));
     });
 
@@ -85,22 +102,15 @@ class App extends Component {
       }
       dispatch(colorSquare(color, dest));
     });
+
+    this.socket.on('requestPauseDialogBox', () => {
+      console.log('receieved request!');
+    });
   }
 
-  getUserInfo() {
-    const { dispatch } = this.props;
-    axios.get('/api/profiles/id')
-    .then((response) => {
-      console.log('successfully fetched current user infomation');
-      dispatch(setPlayerW(response));
-    })
-    .then(() => {
-      this.startSocket();
-    })
-    .catch((err) => {
-      dispatch(getRequestFailure(err));
-      console.error('failed to obtain current user infomation!', err);
-    });
+  sendPauseRequest() {
+    const { room } = this.props;
+    this.socket.emit('requestPause', room);
   }
 
   newChessGame() {
@@ -129,8 +139,8 @@ class App extends Component {
     const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, error } = this.props;
     return (
       <div className="site-wrap">
+        <div>
         <ChessMenu />
-        <div className="header">
           <table>
             <tbody>
               <tr>
@@ -151,6 +161,9 @@ class App extends Component {
               <CapturedPieces color="Black" capturedPieces={capturedPiecesBlack} player={playerB} />
               <Board attemptMove={this.attemptMove} checkLegalMove={this.checkLegalMove} />
               <CapturedPieces color="White" capturedPieces={capturedPiecesWhite} player={playerW} />
+              <CapturedPieces color="Black" capturedPieces={capturedPiecesBlack} player={playerB} sendPauseRequest={this.sendPauseRequest} />
+              <Board attemptMove={this.attemptMove} checkLegalMove={this.checkLegalMove} />
+              <CapturedPieces color="White" capturedPieces={capturedPiecesWhite} player={playerW} sendPauseRequest={this.sendPauseRequest} />
               <Message message={message} />
               <Message message={error} />
             </div>
@@ -179,6 +192,7 @@ function mapStateToProps(state) {
   } = userState;
   const { message, error } = moveState;
   return {
+    room,
     playerB,
     playerW,
     message,

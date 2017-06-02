@@ -25,3 +25,7 @@ export const UPDATE_ROOM_INFO = 'UPDATE_ROOM_INFO';
 export const DISPLAY_ERROR = 'DISPLAY_ERROR';
 
 export const CLEAR_ERROR = 'CLEAR_ERROR';
+
+export const PAUSE_TIMER_B = 'PAUSE_TIMER_B';
+
+export const PAUSE_TIMER_W = 'PAUSE_TIMER_W';

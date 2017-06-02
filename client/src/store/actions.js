@@ -86,6 +86,16 @@ export const receiveGame = game => ({
   game,
 });
 
+export const pauseTimerB = pausedB => ({
+  type: types.PAUSE_TIMER_B,
+  pausedB,
+});
+
+export const pauseTimerW = pausedW => ({
+  type: types.PAUSE_TIMER_W,
+  pausedW,
+});
+
 export const fetchGame = () => (dispatch) => {
   dispatch(requestGame());
   return fetch('http://127.0.0.1:3000/api/game')
