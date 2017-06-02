@@ -96,4 +96,9 @@ module.exports = (io, client) => {
       io.in(room).emit('cancelPauseNotification');
     }
   });
+
+  client.on('message', (msg) => {
+    io.in(room).emit('message', msg)
+  })
+
 };
