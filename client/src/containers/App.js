@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
-import { setPlayerW, setPlayerB, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece, displayError, colorSquare } from '../store/actions';
+import { setPlayerW, setPlayerB, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece, displayError, colorSquare, sendMsg } from '../store/actions';
 
 // Components
 import ChessMenu from '../components/ChessMenu';
@@ -13,11 +13,8 @@ import Message from '../components/Message';
 import CapturedPieces from '../components/CapturedPieces';
 import Clock from '../components/Clock';
 import MoveHistory from '../components/MoveHistory';
-<<<<<<< HEAD
 import ErrorAlert from './ErrorAlert';
-=======
 import ChatBox from '../components/ChatBox';
->>>>>>> added chat feature
 import './css/App.css';
 
 
@@ -34,9 +31,6 @@ class App extends Component {
     this.newChessGame = this.newChessGame.bind(this);
     this.startSocket = this.startSocket.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
-    this.state = {
-      messages: []
-    }
   }
 
   componentDidMount() {
@@ -70,12 +64,7 @@ class App extends Component {
     });
 
     this.socket.on('message', (msg) => {
-      console.log('message sent back to client', msg)
-      var curr = this.state.messages;
-      curr.push(msg)
-      this.setState({
-        messages: curr
-      })
+      dispatch(sendMsg(msg));
     })
 
     this.socket.on('attemptMoveResult', (board, error, selectedPiece, origin, dest, selection, room) => {
@@ -146,7 +135,7 @@ class App extends Component {
 
 
   render() {
-    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, error } = this.props;
+    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, error, messages } = this.props;
     return (
       <div className="site-wrap">
         <ChessMenu />
@@ -178,8 +167,7 @@ class App extends Component {
             <div className="flex-col right-col">
               <Clock />
               <MoveHistory moveHistory={moveHistory} />
-              <ChatBox messages={this.state.messages} sendMessage={this.sendMessage}/>
-              <Clock />
+              <ChatBox messages={messages} sendMessage={this.sendMessage}/>
             </div>
 
           </div>
@@ -195,6 +183,7 @@ function mapStateToProps(state) {
     moveHistory,
     capturedPiecesBlack,
     capturedPiecesWhite,
+    messages,
   } = gameState;
   const {
     playerW,
@@ -210,6 +199,7 @@ function mapStateToProps(state) {
     capturedPiecesBlack,
     capturedPiecesWhite,
     error,
+    messages,
   };
 }
 

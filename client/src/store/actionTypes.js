@@ -25,3 +25,6 @@ export const UPDATE_ROOM_INFO = 'UPDATE_ROOM_INFO';
 export const DISPLAY_ERROR = 'DISPLAY_ERROR';
 
 export const CLEAR_ERROR = 'CLEAR_ERROR';
+
+export const SEND_MESSAGE = 'SEND_MESSAGE';
+

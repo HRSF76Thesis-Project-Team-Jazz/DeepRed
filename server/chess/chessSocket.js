@@ -37,7 +37,7 @@ module.exports = (io, client) => {
         // empty room info array, increament count, and ready for creating new room)
         roomInfo = {};
         count += 1;
-    });
+    }); 
   }
 
   client.on('attemptMove', (selectedPiece, origin, dest, selection, room) => {
