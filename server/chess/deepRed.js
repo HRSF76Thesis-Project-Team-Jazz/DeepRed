@@ -217,10 +217,10 @@ const getAvailableMovesWhite = (board) => {
             currentRow -= 1;
             currentCol -= 1;
             if (!board[currentRow][currentCol]) {
-              result[key].push([currentRow, currentCol]);
+              !whiteIsChecked(mutateBoard(board, [key, [currentRow, currentCol]])) && result[key].push([currentRow, currentCol]);
             } else {
               continueMove = false;
-              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+              if (board[currentRow][currentCol][0] === 'B' && !whiteIsChecked(mutateBoard(board, [key, [currentRow, currentCol]]))) result[key].push([currentRow, currentCol]);
             }
           }
 
@@ -232,10 +232,10 @@ const getAvailableMovesWhite = (board) => {
             currentRow -= 1;
             currentCol += 1;
             if (!board[currentRow][currentCol]) {
-              result[key].push([currentRow, currentCol]);
+              !whiteIsChecked(mutateBoard(board, [key, [currentRow, currentCol]])) && result[key].push([currentRow, currentCol]);
             } else {
               continueMove = false;
-              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+              if (board[currentRow][currentCol][0] === 'B' && !whiteIsChecked(mutateBoard(board, [key, [currentRow, currentCol]]))) result[key].push([currentRow, currentCol]);
             }
           }
 
@@ -247,10 +247,10 @@ const getAvailableMovesWhite = (board) => {
             currentRow += 1;
             currentCol += 1;
             if (!board[currentRow][currentCol]) {
-              result[key].push([currentRow, currentCol]);
+              !whiteIsChecked(mutateBoard(board, [key, [currentRow, currentCol]])) && result[key].push([currentRow, currentCol]);
             } else {
               continueMove = false;
-              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+              if (board[currentRow][currentCol][0] === 'B' && !whiteIsChecked(mutateBoard(board, [key, [currentRow, currentCol]]))) result[key].push([currentRow, currentCol]);
             }
           }
 
@@ -262,10 +262,13 @@ const getAvailableMovesWhite = (board) => {
             currentRow += 1;
             currentCol -= 1;
             if (!board[currentRow][currentCol]) {
-              result[key].push([currentRow, currentCol]);
+              !whiteIsChecked(mutateBoard(board, [key, [currentRow, currentCol]])) &&
+                result[key].push([currentRow, currentCol]);
             } else {
               continueMove = false;
-              if (board[currentRow][currentCol][0] === 'B') result[key].push([currentRow, currentCol]);
+              if (board[currentRow][currentCol][0] === 'B' &&
+                !whiteIsChecked(mutateBoard(board, [key, [currentRow, currentCol]]))
+              ) result[key].push([currentRow, currentCol]);
             }
           } // end of Q-SW
 
@@ -275,10 +278,13 @@ const getAvailableMovesWhite = (board) => {
           while (continueMove && currentRow - 1 >= 0) {
             currentRow -= 1;
             if (!board[currentRow][col]) {
-              result[key].push([currentRow, col]);
+              !whiteIsChecked(mutateBoard(board, [key, [currentRow, col]])) &&
+                result[key].push([currentRow, col]);
             } else {
               continueMove = false;
-              if (board[currentRow][col][0] === 'B') result[key].push([currentRow, col]);
+              if (board[currentRow][col][0] === 'B' &&
+                !whiteIsChecked(mutateBoard(board, [key, [currentRow, col]]))
+              ) result[key].push([currentRow, col]);
             }
           }
           // move down
@@ -287,10 +293,13 @@ const getAvailableMovesWhite = (board) => {
           while (continueMove && currentRow + 1 <= 7) {
             currentRow += 1;
             if (!board[currentRow][col]) {
-              result[key].push([currentRow, col]);
+              !whiteIsChecked(mutateBoard(board, [key, [currentRow, col]])) &&
+                result[key].push([currentRow, col]);
             } else {
               continueMove = false;
-              if (board[currentRow][col][0] === 'B') result[key].push([currentRow, col]);
+              if (board[currentRow][col][0] === 'B' &&
+                !whiteIsChecked(mutateBoard(board, [key, [currentRow, col]]))
+              ) result[key].push([currentRow, col]);
             }
           }
           // move left
@@ -299,10 +308,13 @@ const getAvailableMovesWhite = (board) => {
           while (continueMove && currentCol - 1 >= 0) {
             currentCol -= 1;
             if (!board[row][currentCol]) {
-              result[key].push([row, currentCol]);
+              !whiteIsChecked(mutateBoard(board, [key, [row, currentCol]])) &&
+                result[key].push([row, currentCol]);
             } else {
               continueMove = false;
-              if (board[row][currentCol][0] === 'B') result[key].push([row, currentCol]);
+              if (board[row][currentCol][0] === 'B' &&
+                !whiteIsChecked(mutateBoard(board, [key, [row, currentCol]]))
+              ) result[key].push([row, currentCol]);
             }
           }
           // move right
@@ -311,10 +323,13 @@ const getAvailableMovesWhite = (board) => {
           while (continueMove && currentCol + 1 <= 7) {
             currentCol += 1;
             if (!board[row][currentCol]) {
-              result[key].push([row, currentCol]);
+              !whiteIsChecked(mutateBoard(board, [key, [row, currentCol]])) &&
+                result[key].push([row, currentCol]);
             } else {
               continueMove = false;
-              if (board[row][currentCol][0] === 'B') result[key].push([row, currentCol]);
+              if (board[row][currentCol][0] === 'B' &&
+                !whiteIsChecked(mutateBoard(board, [key, [row, currentCol]]))
+              ) result[key].push([row, currentCol]);
             }
           }
         } // end of 'Q'
