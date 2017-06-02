@@ -6,7 +6,7 @@ import axios from 'axios';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import { pauseDialogOpen, pauseDialogClose, setPlayerW, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece, displayError, colorSquare } from '../store/actions';
+import { pauseDialogOpen, pauseDialogClose, setPlayerW, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece, displayError, colorSquare, sendMsg } from '../store/actions';
 
 // Components
 import ChessMenu from '../components/ChessMenu';
@@ -88,12 +88,7 @@ class App extends Component {
     });
 
     this.socket.on('message', (msg) => {
-      console.log('message sent back to client', msg)
-      var curr = this.state.messages;
-      curr.push(msg)
-      this.setState({
-        messages: curr
-      })
+      dispatch(sendMsg(msg));
     })
 
     this.socket.on('attemptMoveResult', (board, error, selectedPiece, origin, dest, selection, room) => {
@@ -215,6 +210,9 @@ class App extends Component {
         onTouchTap={this.handlePauseClose}
       />,
     ]
+    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, messages }
+          = this.props;
+
     return (
       <div className="site-wrap">
         <ChessMenu />
@@ -286,6 +284,7 @@ function mapStateToProps(state) {
     moveHistory,
     capturedPiecesBlack,
     capturedPiecesWhite,
+    messages,
   } = gameState;
   const {
     playerW,
@@ -304,6 +303,7 @@ function mapStateToProps(state) {
     capturedPiecesBlack,
     capturedPiecesWhite,
     error,
+    messages,
   };
 }
 
