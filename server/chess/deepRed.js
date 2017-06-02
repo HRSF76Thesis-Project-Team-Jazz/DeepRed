@@ -105,35 +105,43 @@ const getAvailableMovesWhite = (board) => {
         if (piece[1] === 'N') {
           // move NNW
           if (col > 0 && row > 1 &&
-            (!board[row - 2][col - 1] || (board[row - 2][col - 1] && board[row - 2][col - 1][0] === 'B'))
+            ((!board[row - 2][col - 1] || (board[row - 2][col - 1] && board[row - 2][col - 1][0] === 'B')) &&
+              !whiteIsChecked(mutateBoard(board, [key, [row - 2, col - 1]])))
           ) result[key].push([row - 2, col - 1]);
           // move NNE
           if (col < 7 && row > 1 &&
-            (!board[row - 2][col + 1] || (board[row - 2][col + 1] && board[row - 2][col + 1][0] === 'B'))
+            ((!board[row - 2][col + 1] || (board[row - 2][col + 1] && board[row - 2][col + 1][0] === 'B')) &&
+            !whiteIsChecked(mutateBoard(board, [key, [row - 2, col + 1]])))
           ) result[key].push([row - 2, col + 1]);
           // move EEN
           if (col < 6 && row > 0 &&
-            (!board[row - 1][col + 2] || (board[row - 1][col + 2] && board[row - 1][col + 2][0] === 'B'))
+            (!board[row - 1][col + 2] || (board[row - 1][col + 2] && board[row - 1][col + 2][0] === 'B')) &&
+            !whiteIsChecked(mutateBoard(board, [key, [row - 1, col + 2]]))
           ) result[key].push([row - 1, col + 2]);
           // move EES
           if (col < 6 && row < 7 &&
-            (!board[row + 1][col + 2] || (board[row + 1][col + 2] && board[row + 1][col + 2][0] === 'B'))
+            (!board[row + 1][col + 2] || (board[row + 1][col + 2] && board[row + 1][col + 2][0] === 'B')) &&
+            !whiteIsChecked(mutateBoard(board, [key, [row + 1, col + 2]]))
           ) result[key].push([row + 1, col + 2]);
           // move SSE
           if (col < 7 && row < 6 &&
-            (!board[row + 2][col + 1] || (board[row + 2][col + 1] && board[row + 2][col + 1][0] === 'B'))
+            (!board[row + 2][col + 1] || (board[row + 2][col + 1] && board[row + 2][col + 1][0] === 'B')) &&
+            !whiteIsChecked(mutateBoard(board, [key, [row + 2, col + 1]]))
           ) result[key].push([row + 2, col + 1]);
           // move SSW
           if (col > 0 && row < 6 &&
-            (!board[row + 2][col - 1] || (board[row + 2][col - 1] && board[row + 2][col - 1][0] === 'B'))
+            (!board[row + 2][col - 1] || (board[row + 2][col - 1] && board[row + 2][col - 1][0] === 'B')) &&
+            !whiteIsChecked(mutateBoard(board, [key, [row + 2, col - 1]]))
           ) result[key].push([row + 2, col - 1]);
           // move WWS
           if (col > 1 && row < 7 &&
-            (!board[row + 1][col - 2] || (board[row + 1][col - 2] && board[row + 1][col - 2][0] === 'B'))
+            (!board[row + 1][col - 2] || (board[row + 1][col - 2] && board[row + 1][col - 2][0] === 'B')) &&
+            !whiteIsChecked(mutateBoard(board, [key, [row + 1, col - 2]]))
           ) result[key].push([row + 1, col - 2]);
           // move WWN
           if (col > 1 && row > 0 &&
-            (!board[row - 1][col - 2] || (board[row - 1][col - 2] && board[row - 1][col - 2][0] === 'B'))
+            (!board[row - 1][col - 2] || (board[row - 1][col - 2] && board[row - 1][col - 2][0] === 'B')) &&
+            !whiteIsChecked(mutateBoard(board, [key, [row - 1, col - 2]]))
           ) result[key].push([row - 1, col - 2]);
         }
 

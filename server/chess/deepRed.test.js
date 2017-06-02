@@ -19,31 +19,31 @@ let board = [
 
 showMovesByPiece(board, 'WP', 'WP movement from home');
 
-board = [
-  ['BR', 'BN', 'BB', null, 'BK', 'BB', 'BN', null],
-  ['BP', 'BP', 'BP', 'BP', 'BP', null, 'BP', 'BP'],
-  [null, null, null, null, 'BR', null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, 'BQ', null, null, null, null, null, null],
-  [null, null, null, null, null, 'BP', 'WP', null],
-  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', null, 'WP'],
-  ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
-];
+// board = [
+//   ['BR', 'BN', 'BB', null, 'BK', 'BB', 'BN', null],
+//   ['BP', 'BP', 'BP', 'BP', 'BP', null, 'BP', 'BP'],
+//   [null, null, null, null, 'BR', null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, 'BQ', null, null, null, null, null, null],
+//   [null, null, null, null, null, 'BP', 'WP', null],
+//   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', null, 'WP'],
+//   ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
+// ];
 
-showMovesByPiece(board, 'WP', 'WP movement from home / do not endanger WK');
+// showMovesByPiece(board, 'WP', 'WP movement from home / do not endanger WK');
 
-board = [
-  ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', null],
-  ['BP', 'BP', 'BP', 'BP', 'BP', null, 'BP', 'BP'],
-  [null, null, null, null, 'BR', null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, 'WP', 'BP', null, 'BP', 'WP', null],
-  ['WP', 'WP', null, 'WP', 'WP', 'WP', null, 'WP'],
-  ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
-];
+// board = [
+//   ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', null],
+//   ['BP', 'BP', 'BP', 'BP', 'BP', null, 'BP', 'BP'],
+//   [null, null, null, null, 'BR', null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, 'WP', 'BP', null, 'BP', 'WP', null],
+//   ['WP', 'WP', null, 'WP', 'WP', 'WP', null, 'WP'],
+//   ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
+// ];
 
-showMovesByPiece(board, 'WP', 'WP capture / do not endanger WK');
+// showMovesByPiece(board, 'WP', 'WP capture / do not endanger WK');
 
 board = [
   [null, null, null, null, 'BQ', null, null, null],
@@ -52,11 +52,24 @@ board = [
   ['BR', null, null, 'WR', 'WK', null, 'WR', 'BR'],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, 'WR', null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, 'BQ', null, null, null],
+  [null, null, null, null, null, null, 'WR', null],
+  [null, null, null, null, 'BQ', null, null, 'BB'],
 ];
 
 showMovesByPiece(board, 'WR', 'WR movement does not endanger WK');
+
+board = [
+  [null, null, null, null, 'BR', null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, 'WN', null, null, null],
+  ['BR', null, null, 'WN', 'WK', null, 'WN', 'BR'],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, 'WN', null, 'WN', null],
+  [null, null, null, null, null, null, null, 'BB'],
+  [null, null, null, null, 'BQ', null, null, null],
+];
+
+showMovesByPiece(board, 'WN', 'WN movement does not endanger WK');
 
 // board = [
 //   ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
