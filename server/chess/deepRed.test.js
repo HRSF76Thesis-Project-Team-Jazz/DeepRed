@@ -84,18 +84,44 @@ let board = [
 
 // showMovesByPiece(board, 'WB', 'WB movement does not endanger WK');
 
+// board = [
+//   [null, null, null, null, 'BR', null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, 'WQ', null, null, null],
+//   ['BR', null, null, 'WQ', 'WK', null, 'WQ', 'BR'],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, 'WQ', null, 'WQ', null],
+//   [null, null, null, null, null, null, null, 'BB'],
+//   [null, null, null, null, 'BQ', null, null, null],
+// ];
+
+// showMovesByPiece(board, 'WQ', 'WQ movement does not endanger WK');
+
 board = [
-  [null, null, null, null, 'BR', null, null, null],
   [null, null, null, null, null, null, null, null],
-  [null, null, null, null, 'WQ', null, null, null],
-  ['BR', null, null, 'WQ', 'WK', null, 'WQ', 'BR'],
   [null, null, null, null, null, null, null, null],
-  [null, null, null, null, 'WQ', null, 'WQ', null],
-  [null, null, null, null, null, null, null, 'BB'],
-  [null, null, null, null, 'BQ', null, null, null],
+  [null, null, null, null, 'BB', null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, 'WK', null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, 'BB', null, null, null],
+  [null, null, null, null, null, null, null, null],
 ];
 
-showMovesByPiece(board, 'WQ', 'WQ movement does not endanger WK');
+showMovesByPiece(board, 'WK', 'WK movement does not endanger WK');
+
+board = [
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, 'BB', null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, 'WK', null, null, null, null],
+  [null, null, null, null, null, 'BB', null, null],
+  [null, null, null, null, 'BB', null, null, null],
+  [null, null, null, null, null, null, null, null],
+];
+
+showMovesByPiece(board, 'WK', 'WK movement does not endanger WK');
 
 // board = [
 //   ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
