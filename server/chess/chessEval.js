@@ -32,8 +32,9 @@ const capturedPiecesScore = (capturedWhite, capturedBlack) => {
 };
 
 /**
- * Return the position (first occurring) for the input piece
- * @param {string} piece
+ * Return the positions for the input piece or input color
+ * @param {string} piece   1) piece
+ *                         2) 'W' or 'B': get all pieces of that color
  * @param {array} board
  * @return {array} : coordinates of piece [row, col]
  */
