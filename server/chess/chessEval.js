@@ -32,15 +32,24 @@ const capturedPiecesScore = (capturedWhite, capturedBlack) => {
 };
 
 /**
- * Return the position (first occurring) for the input piece
- * @param {string} piece
+ * Return the positions for the input piece or input color
+ * @param {string} piece   1) piece
+ *                         2) 'W' or 'B': get all pieces of that color
  * @param {array} board
  * @return {array} : coordinates of piece [row, col]
  */
 
 const findPiecePosition = (piece, board) => {
   const result = [];
-  if (piece[0] === 'B') {
+
+  if (piece.length === 1) {
+    const color = piece;
+    for (let row = 0; row < 8; row += 1) {
+      for (let col = 0; col < 8; col += 1) {
+        if (board[row][col] && board[row][col][0] === color) result.push([row, col]);
+      }
+    }
+  } else if (piece[0] === 'B') {
     for (let row = 0; row < 8; row += 1) {
       for (let col = 0; col < 8; col += 1) {
         if (board[row][col] === piece) result.push([row, col]);

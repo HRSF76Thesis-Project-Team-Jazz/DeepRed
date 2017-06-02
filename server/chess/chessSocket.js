@@ -19,6 +19,8 @@ module.exports = (io, client) => {
       // add room number and first player into current room
       roomInfo.room = room;
       roomInfo.playerW = currentUser;
+      // create new game instance
+      createAndSaveNewGame(room);
       currentUser = '';
       io.in(room).emit('firstPlayerJoined', roomInfo);
     });
@@ -30,10 +32,8 @@ module.exports = (io, client) => {
         allRooms[room] = roomInfo;
         io.in(room).emit('secondPlayerJoined', roomInfo);
         // create new game instance
-        const newGame = new ChessGame();
-        allGames[room] = newGame;
-        // send important room and player information to client for future use
-        io.in(room).emit('startGame', roomInfo, newGame);
+        createAndSaveNewGame(room);
+        io.in(room).emit('startGame', roomInfo, allGames[room]);
         // empty room info array, increament count, and ready for creating new room)
         roomInfo = {};
         count += 1;
@@ -46,4 +46,13 @@ module.exports = (io, client) => {
     const newState = allGames[room].movePiece(origin, dest);
     io.in(room).emit('attemptMoveResult', newState.game.board, newState.error, selectedPiece, origin, dest, selection);
   });
+
+  client.on('message', (msg) => {
+    io.in(room).emit('message', msg)
+  })
 };
+
+const createAndSaveNewGame = room => {
+  const newGame = new ChessGame();
+  allGames[room] = newGame;
+}
