@@ -946,6 +946,23 @@ const whiteCanMove = (board) => {
 const isCheckmateWhite = board => whiteIsChecked(board) && !whiteCanMove(board);
 const isStalemateWhite = board => !whiteIsChecked(board) && !whiteCanMove(board);
 
+/**
+ * Return if white has any possible available moves
+ * @param {array} board
+ */
+
+const blackCanMove = (board) => {
+  const moves = getAvailableMovesBlack(board);
+  const pieces = Object.keys(moves);
+  for (let i = 0; i < pieces.length; i += 1) {
+    if (moves[pieces[i]].length > 0) return true;
+  }
+  return false;
+};
+
+const isCheckmateBlack = board => blackIsChecked(board) && !blackCanMove(board);
+const isStalemateBlack = board => !blackIsChecked(board) && !blackCanMove(board);
+
 
 /**
  *  Temporary tests for movement
@@ -986,14 +1003,15 @@ const showMovesByPiece = (board, piece, description) => {
 };
 
 
-
-module.exports.getAvailableMovesBlack = getAvailableMovesBlack;
-module.exports.getAvailableMovesWhite = getAvailableMovesWhite;
-module.exports.blackIsChecked = blackIsChecked;
-module.exports.whiteIsChecked = whiteIsChecked;
-module.exports.whiteCanMove = whiteCanMove;
-module.exports.isCheckmateWhite = isCheckmateWhite;
-module.exports.isStalemateWhite = isStalemateWhite;
-
-module.exports.showMovesByPiece = showMovesByPiece;
-
+module.exports = {
+  getAvailableMovesBlack,
+  getAvailableMovesWhite,
+  blackIsChecked,
+  whiteIsChecked,
+  whiteCanMove,
+  isCheckmateWhite,
+  isStalemateWhite,
+  isCheckmateBlack,
+  isStalemateBlack,
+  showMovesByPiece,
+};
