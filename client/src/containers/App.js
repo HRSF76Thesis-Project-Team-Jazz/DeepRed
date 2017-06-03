@@ -87,17 +87,22 @@ class App extends Component {
       dispatch(updateRoomInfo(roomInfo));
     });
 
+<<<<<<< HEAD
     this.socket.on('message', (msg) => {
       dispatch(sendMsg(msg));
     })
 
     this.socket.on('attemptMoveResult', (board, error, selectedPiece, origin, dest, selection, room) => {
       console.log('************** BOARD: ', board);
+=======
+    this.socket.on('attemptMoveResult', (error, origin, dest, selection, room) => {
+>>>>>>> working on castling. fixed graphical bug
       // dispatch(receiveGame(board));
       if (error === null) {
-        dispatch(movePiece(selectedPiece, origin, dest));
         if (selection) {
-          dispatch(capturePiece(selectedPiece, origin, dest, selection));
+          dispatch(capturePiece(origin, dest, selection));
+        } else {
+          dispatch(movePiece(origin, dest));
         }
       } else {
         console.log('---------- ERROR: ', error);
@@ -162,10 +167,10 @@ class App extends Component {
     this.socket.on('createdChessGame', game => dispatch(receiveGame(game)));
   }
 
-  attemptMove(selectedPiece, origin, dest, selection, room) {
+  attemptMove(origin, dest, selection, room) {
     // const { dispatch } = this.props;
     console.log('sending origin and dest coordinates to server');
-    this.socket.emit('attemptMove', selectedPiece, origin, dest, selection, room);
+    this.socket.emit('attemptMove', origin, dest, selection, room);
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
