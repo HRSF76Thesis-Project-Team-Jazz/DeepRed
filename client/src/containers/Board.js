@@ -32,6 +32,7 @@ class Board extends Component {
       // && selection[0] === playerColor
       if (selection) {
         dispatch(selectPiece(selection, coordinates));
+        dispatch(colorSquare('board-col green', coordinates));
       } else {
         dispatch(invalidSelection(coordinates));
       }
@@ -56,25 +57,30 @@ class Board extends Component {
   }
 
   onMouseLeave(coordinates) {
-    const { dispatch } = this.props;
-    dispatch(colorSquare(null, coordinates));
+    const { dispatch, fromPosition } = this.props;
+    if (fromPosition) {
+      if (fromPosition[0] !== coordinates[0] && fromPosition[1] !== coordinates[1]) {
+        dispatch(colorSquare(null, coordinates));
+      }
+    }
+
     // if (selectedPiece) {
     //   checkLegalMove(fromPosition, coordinates, room);
     // }
   }
-  
+
   getImage(CP) {
     return <img className="piece-img" src={`/assets/${CP}.png`} alt={''} />;
   }
   render() {
-    const { board, color, hover } = this.props;
+    const { board, color, hover, fromPosition } = this.props;
     return (
       <div className="board">
         {board.map((row, rowIndex) => (
           <div key={Math.random()} className="board-row">
             {row.map((col, colIndex) => (
               <div
-                className={((rowIndex + colIndex) % 2 === 1) ? ((color && (hover[0] === rowIndex && hover[1] === colIndex)) ? color : 'board-col dark') : ((color && (hover[0] === rowIndex && hover[1] === colIndex)) ? color : 'board-col light')}
+                className={((rowIndex + colIndex) % 2 === 1) ? (((color && (hover[0] === rowIndex && hover[1] === colIndex)) || (fromPosition && ((fromPosition[0] === rowIndex) && (fromPosition[1] === colIndex)))) ? color : 'board-col dark') : (((color && (hover[0] === rowIndex && hover[1] === colIndex)) || (fromPosition && ((fromPosition[0] === rowIndex) && (fromPosition[1] === colIndex)))) ? color : 'board-col light')}
                 key={rowIndex.toString() + colIndex.toString()}
                 onClick={() => this.onClick([rowIndex, colIndex])}
                 onMouseEnter={() => this.onMouseEnter([rowIndex, colIndex])}
