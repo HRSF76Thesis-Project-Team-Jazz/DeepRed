@@ -213,7 +213,6 @@ class App extends Component {
 
     return (
       <div className="site-wrap">
-        <ChessMenu />
         <div className="header">
           <table>
             <tbody>
@@ -251,7 +250,7 @@ class App extends Component {
 
             <div className="flex-col right-col">
               <MoveHistory moveHistory={moveHistory} />
-              <ChatBox messages={messages} sendMessage={this.sendMessage}/>
+              <ChatBox messages={messages} sendMessage={this.sendMessage} />
             </div>
 
             <div>

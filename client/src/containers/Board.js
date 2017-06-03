@@ -51,7 +51,7 @@ class Board extends Component {
   }
 
   onMouseEnter(coordinates) {
-    const { dispatch, fromPosition, selectedPiece, room, checkLegalMove } = this.props;
+    const { selectedPiece, checkLegalMove, fromPosition, room } = this.props;
     if (selectedPiece) {
       checkLegalMove(fromPosition, coordinates, room);
     }
@@ -85,7 +85,7 @@ class Board extends Component {
   }
 
   render() {
-    const { board, color, hover, fromPosition } = this.props;
+    const { board } = this.props;
     return (
       <div className="board">
         {board.map((row, rowIndex) => (
