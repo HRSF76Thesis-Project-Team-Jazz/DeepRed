@@ -61,16 +61,15 @@ module.exports = (io, client) => {
     const newState = allGames[room].movePiece(origin, dest);
     io.in(room).emit('attemptMoveResult', newState.game.board, newState.error, selectedPiece, origin, dest, selection);
   });
-  
-  client.on('checkLegalMove', (selectedPiece, origin, dest, selection, room) => {
+
+  client.on('checkLegalMove', (origin, dest, room) => {
     console.log('checkLegalMove: ', origin, dest);
     console.log('room number: ', room);
     const bool = isLegalMove(allGames[room].board, origin, dest);
     io.in(room).emit('isLegalMoveResult', dest, bool);
   });
 
-};
-
+  // control socket communications
   client.on('requestPause', room => {
     io.in(room).emit('requestPauseDialogBox');
   });
@@ -99,7 +98,21 @@ module.exports = (io, client) => {
   });
 
   client.on('message', (msg) => {
-    io.in(room).emit('message', msg)
-  })
+    
+    let user = '';
+
+    for (var key in allRooms[room]){
+      if (allRooms[room][key] == client.id){
+        if (key == 'playerWid'){
+          user = allRooms[room].playerW;
+        } else {
+          user = allRooms[room].playerB;
+        }
+      }
+    }
+    
+    io.in(room).emit('message', user + ': ' + msg)
+
+  });
 
 };

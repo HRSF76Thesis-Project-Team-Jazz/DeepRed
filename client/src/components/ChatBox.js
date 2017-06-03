@@ -28,7 +28,7 @@ class ChatBox extends Component {
         <h4>ChatBox</h4>
         <ul id='messages'></ul>
          {this.props.messages.map((msg) => 
-             <h5>{msg}</h5>
+             <h6>{msg}</h6>
          )}
         <form>
         <input type='text' value={this.state.message} onChange={this.handleChange}/><button onClick={(info) => this.submit(info)}>Send</button>

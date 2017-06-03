@@ -16,7 +16,6 @@ import Message from '../components/Message';
 import CapturedPieces from '../components/CapturedPieces';
 import MoveHistory from '../components/MoveHistory';
 import Alert from './Alert';
-import ErrorAlert from './ErrorAlert';
 import ChatBox from '../components/ChatBox';
 import './css/App.css';
 
@@ -252,7 +251,6 @@ class App extends Component {
 
             <div className="flex-col right-col">
               <MoveHistory moveHistory={moveHistory} />
-              <Clock />
               <ChatBox messages={messages} sendMessage={this.sendMessage}/>
             </div>
 
