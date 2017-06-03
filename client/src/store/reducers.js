@@ -63,13 +63,11 @@ const gameState = (state = Immutable({
         ...state,
         pausedW: true,
       });
-
     case types.SEND_MESSAGE: {
       return Immutable({
         ...state,
         messages: state.messages.concat(action.msg)
       })
-
     }
     default:
       return state;

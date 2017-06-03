@@ -36,5 +36,6 @@ class ChatBox extends Component {
       </div>
     )
   }
+}
 
 export default ChatBox;
