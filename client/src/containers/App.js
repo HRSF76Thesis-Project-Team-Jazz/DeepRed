@@ -170,7 +170,6 @@ class App extends Component {
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
-
   checkLegalMove(origin, dest, room) {
     // const { dispatch } = this.props;
     console.log('checking legal move');
@@ -254,6 +253,7 @@ class App extends Component {
 
             <div className="flex-col right-col">
               <MoveHistory moveHistory={moveHistory} />
+              <ChatBox messages={this.state.messages} sendMessage={this.sendMessage}/>
               <Clock />
               <ChatBox messages={messages} sendMessage={this.sendMessage}/>
             </div>
