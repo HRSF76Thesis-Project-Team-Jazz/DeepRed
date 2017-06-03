@@ -15,7 +15,7 @@ import Board from './Board';
 import Message from '../components/Message';
 import CapturedPieces from '../components/CapturedPieces';
 import MoveHistory from '../components/MoveHistory';
-import ErrorAlert from './ErrorAlert';
+import Alert from './Alert';
 import './css/App.css';
 
 
@@ -33,8 +33,8 @@ class App extends Component {
     this.newChessGame = this.newChessGame.bind(this);
     this.startSocket = this.startSocket.bind(this);
     this.sendPauseRequest = this.sendPauseRequest.bind(this);
-    this.handleOpen = this.handleOpen.bind(this);
-    this.handleClose = this.handleClose.bind(this);
+    this.handlePauseOpen = this.handlePauseOpen.bind(this);
+    this.handlePauseClose = this.handlePauseClose.bind(this);
     this.onRejectPauseRequest = this.onRejectPauseRequest.bind(this);
   }
 
@@ -43,7 +43,8 @@ class App extends Component {
   }
 
   onRejectPauseRequest() {
-    const { room } = this.props;
+    const { dispatch, room } = this.props;
+    dispatch(pauseDialogClose());
     this.socket.emit('rejectPauseRequest', room);
   }
 
@@ -115,11 +116,18 @@ class App extends Component {
     });
 
     this.socket.on('requestPauseDialogBox', () => {
-      this.handleOpen();
+      this.handlePauseOpen();
     });
 
     this.socket.on('rejectPauseRequestNotification', () => {
+      const { room, playerB, playerW } = this.props;
       console.log('notification received');
+      this.socket.emit('handleRejectPauseRequest', room, playerB, playerW);
+    });
+
+    this.socket.on('cancelPauseNotification', () => {
+
+      console.log('someone canceled pause');
     });
   }
 
@@ -128,12 +136,12 @@ class App extends Component {
     this.socket.emit('requestPause', room);
   }
 
-  handleOpen() {
+  handlePauseOpen() {
     const { dispatch } = this.props;
     dispatch(pauseDialogOpen());
   }
 
-  handleClose() {
+  handlePauseClose() {
     const { dispatch } = this.props;
     dispatch(pauseDialogClose());
   }
@@ -161,8 +169,8 @@ class App extends Component {
   }
 
   render() {
-    const { open, moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, error } = this.props;
-    const actions = [
+    const { pauseOpen, moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, error } = this.props;
+    const pauseActions = [
       <FlatButton
         label="No"
         primary={true}
@@ -172,12 +180,11 @@ class App extends Component {
         label="Yes"
         primary={true}
         keyboardFocused={true}
-        onTouchTap={this.handleClose}
+        onTouchTap={this.handlePauseClose}
       />,
     ];
     return (
       <div className="site-wrap">
-        <div>
         <ChessMenu />
         <div className="header">
           <table>
@@ -219,13 +226,7 @@ class App extends Component {
             </div>
 
             <div>
-              <Dialog
-                title="Would you like to pause the game?"
-                actions={actions}
-                modal={false}
-                open={open}
-                onRequestClose={this.handleClose}
-              />
+              <Alert title="hello" actions={pauseActions} open={pauseOpen} handleClose={this.handlePauseClose} />
             </div>
           </div>
         </div>
@@ -247,9 +248,9 @@ function mapStateToProps(state) {
     room,
   } = userState;
   const { message, error } = moveState;
-  const { open } = controlState;
+  const { pauseOpen } = controlState;
   return {
-    open,
+    pauseOpen,
     room,
     playerB,
     playerW,

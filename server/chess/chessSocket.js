@@ -7,6 +7,11 @@ let roomInfo = {};
 let count = 1;
 let currentUser = '';
 
+// for dialog box controlling
+let playerWclicked = false;
+let playerBclicked = false;
+
+
 const createAndSaveNewGame = (room) => {
   const newGame = new ChessGame();
   allGames[room] = newGame;
@@ -65,5 +70,24 @@ module.exports = (io, client) => {
 
   client.on('rejectPauseRequest', room => {
     io.in(room).emit('rejectPauseRequestNotification');
+  });
+
+  client.on('handleRejectPauseRequest', (room, playerB, playerW) => {
+    // console.log('playerB: ', playerBclicked);
+    // console.log('playerW: ', playerWclicked);
+
+    // if (allRooms[room].playerB === playerB) {
+    //   playerBclicked = true;
+    // }
+    // if (allRooms[room].playerW === playerW) {
+    //   playerWclicked = true;
+    // }
+    // console.log('B: ', playerBclicked);
+    // console.log('W: ', playerWclicked);
+    if (playerBclicked === true && playerWclicked === true) {
+      playerBclicked = false;
+      playerWclicked = false;
+      io.in(room).emit('cancelPauseNotification');
+    }
   });
 };
