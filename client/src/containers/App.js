@@ -218,7 +218,7 @@ class App extends Component {
           <table>
             <tbody>
               <tr>
-                <td><h1>Deep Red</h1></td>
+                <td><img className="banner-img" src={'/assets/deepRed-dark-bg.png'} alt={''} /></td>
                 <td className="button-cell">
                   <SettingsDrawer />
                   <a href="/profile" className="button">Home</a>
