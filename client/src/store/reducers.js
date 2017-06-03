@@ -132,13 +132,6 @@ const moveState = (state = Immutable({
         selectedPiece: '',
         message: 'Selected: N/A',
       });
-    case types.COLOR_MOUSE_OVER: {
-      return Immutable({
-        ...state,
-        fromPosition: '',
-        selectedPiece: '',
-      });
-    }
     case types.MOVE_PIECE: {
       const cols = 'abcdefgh';
       const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
@@ -206,13 +199,15 @@ const userState = (state = Immutable({
 };
 
 const squareState = (state = Immutable({
-  color: 'default',
+  color: null,
+  hover: [],
 }), action) => {
   switch (action.type) {
     case types.COLOR_SQUARE: {
       return Immutable({
         ...state,
         color: action.color,
+        hover: action.hover,
       });
     }
     default:

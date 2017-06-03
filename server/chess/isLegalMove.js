@@ -166,24 +166,31 @@ const isLegalMoveKing = (board, origin, dest) => {
 };
 
 const isLegalMove = (board, origin, dest) => {
-  const pieceType = board[origin[0]][origin[1]][1];
-  if (pieceType === 'P') {
+  if (board[dest[0]][dest[1]]) {
+    const originColor = board[origin[0]][origin[1]][0];
+    const destColor = board[dest[0]][dest[1]][0];
+    if (originColor === destColor) {
+      return false;
+    }
+  }
+  const originType = board[origin[0]][origin[1]][1];
+  if (originType === 'P') {
     return isLegalMovePawn(board, origin, dest);
-  } else if (pieceType === 'R') {
+  } else if (originType === 'R') {
     return isLegalMoveRook(board, origin, dest);
-  } else if (pieceType === 'N') {
+  } else if (originType === 'N') {
     return isLegalMoveKnight(board, origin, dest);
-  } else if (pieceType === 'B') {
+  } else if (originType === 'B') {
     return isLegalMoveBishop(board, origin, dest);
-  } else if (pieceType === 'Q') {
+  } else if (originType === 'Q') {
     return isLegalMoveQueen(board, origin, dest);
-  } else if (pieceType === 'K') {
+  } else if (originType === 'K') {
     return isLegalMoveKing(board, origin, dest);
   }
+
   return false;
 };
 
 module.exports = isLegalMove;
 module.exports.isDiagPathClear = isDiagPathClear;
 module.exports.isLegalMoveBishop = isLegalMoveBishop;
-

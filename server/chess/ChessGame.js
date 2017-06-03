@@ -63,6 +63,14 @@ class ChessGame {
     }
     const originPiece = this.board[origin[0]][origin[1]];
     const destPiece = this.board[dest[0]][dest[1]];
+    if (destPiece) {
+      if (originPiece[0] === destPiece[0]) {
+        error = 'Cannot capture your own piece.';
+        console.log(this.board);
+        console.log(error);
+        return { game: this, error };
+      }
+    }
     if (isLegalMove(this.board, origin, dest)) {
       // if (originPiece === 'WK' && origin === [7, 4]) {
       //   this.hasMovedWK = true;
@@ -72,12 +80,12 @@ class ChessGame {
       // }
       // }
       if (destPiece) {
-        if (originPiece[0] === destPiece[0]) {
-          error = 'Cannot capture your own piece.';
-          console.log(this.board);
-          console.log(error);
-          return { game: this, error };
-        }
+        // if (originPiece[0] === destPiece[0]) {
+        //   error = 'Cannot capture your own piece.';
+        //   console.log(this.board);
+        //   console.log(error);
+        //   return { game: this, error };
+        // }
         // this.history += moveToPGNString(this.board, origin, dest, this.count);
         this.capturePiece(destPiece);
       }
@@ -183,6 +191,5 @@ class ChessGame {
   //
 
 }
-
 
 module.exports = ChessGame;

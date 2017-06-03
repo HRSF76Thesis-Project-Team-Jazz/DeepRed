@@ -28,9 +28,10 @@ export const unselectPiece = () => ({
   type: types.UNSELECT_PIECE,
 });
 
-export const colorSquare = (color) => ({
+export const colorSquare = (color, hover) => ({
   type: types.COLOR_SQUARE,
   color,
+  hover,
 });
 
 export const movePiece = (selectedPiece, fromPosition, coordinates) => ({

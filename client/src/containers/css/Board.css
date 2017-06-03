@@ -17,9 +17,9 @@
   width: 7vh;
 }
 
-.board-col:hover {
+/*.board-col:hover {
   background-color: #4d94ff;
-}
+}*/
 
 .board-col:active {
   background-color: #e6eeff;
@@ -31,6 +31,14 @@
 
 .light {
   background-color: #bfbfbf;
+}
+
+.red {
+  background-color: #cc0000;
+}
+
+.green {
+  background-color: #006600;
 }
 
 .piece-img {
