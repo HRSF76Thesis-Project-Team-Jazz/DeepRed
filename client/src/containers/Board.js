@@ -76,7 +76,8 @@ class Board extends Component {
 
   selectSquareClass(rowIndex, colIndex) {
     const { color, hover, fromPosition } = this.props;
-    if ((color && hover[0] === rowIndex && hover[1] === colIndex) || (fromPosition && (fromPosition[0] === rowIndex && fromPosition[1] === colIndex))) {
+    if ((color && hover[0] === rowIndex && hover[1] === colIndex) ||
+    (fromPosition && (fromPosition[0] === rowIndex && fromPosition[1] === colIndex))) {
       return color;
     } else if ((rowIndex + colIndex) % 2 === 1) {
       return 'board-col dark';
