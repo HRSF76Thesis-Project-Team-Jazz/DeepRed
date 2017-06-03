@@ -196,6 +196,7 @@ class App extends Component {
         onTouchTap={this.handlePauseClose}
       />,
     ];
+
     const cancelPauseOpen = false;
     const cancelPauseActions = [
       <FlatButton
@@ -210,8 +211,6 @@ class App extends Component {
         onTouchTap={this.handlePauseClose}
       />,
     ]
-    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, messages }
-          = this.props;
 
     return (
       <div className="site-wrap">
@@ -253,7 +252,6 @@ class App extends Component {
 
             <div className="flex-col right-col">
               <MoveHistory moveHistory={moveHistory} />
-              <ChatBox messages={this.state.messages} sendMessage={this.sendMessage}/>
               <Clock />
               <ChatBox messages={messages} sendMessage={this.sendMessage}/>
             </div>

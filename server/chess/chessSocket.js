@@ -69,6 +69,8 @@ module.exports = (io, client) => {
     io.in(room).emit('isLegalMoveResult', dest, bool);
   });
 
+};
+
   client.on('requestPause', room => {
     io.in(room).emit('requestPauseDialogBox');
   });
