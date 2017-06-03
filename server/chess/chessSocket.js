@@ -57,7 +57,6 @@ module.exports = (io, client) => {
     io.in(room).emit('attemptMoveResult', newState.game.board, newState.error, selectedPiece, origin, dest, selection);
   });
 
-<<<<<<< HEAD
   client.on('checkLegalMove', (origin, dest, room) => {
     console.log('checkLegalMove: ', origin, dest);
     console.log('room number: ', room);
@@ -91,9 +90,9 @@ module.exports = (io, client) => {
       io.in(room).emit('cancelPauseNotification');
     }
   });
-=======
+
   client.on('message', (msg) => {
     io.in(room).emit('message', msg)
   })
->>>>>>> added chat feature
+
 };

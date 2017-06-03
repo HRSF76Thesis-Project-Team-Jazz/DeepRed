@@ -15,11 +15,8 @@ import Board from './Board';
 import Message from '../components/Message';
 import CapturedPieces from '../components/CapturedPieces';
 import MoveHistory from '../components/MoveHistory';
-<<<<<<< HEAD
 import Alert from './Alert';
-=======
 import ChatBox from '../components/ChatBox';
->>>>>>> added chat feature
 import './css/App.css';
 
 
@@ -177,6 +174,7 @@ class App extends Component {
   checkLegalMove(origin, dest, room) {
     // const { dispatch } = this.props;
     console.log('checking legal move');
+
   sendMessage(msg) {
     this.socket.emit('message', msg);
   }
@@ -190,7 +188,7 @@ class App extends Component {
   }
 
   render() {
-    const { pauseOpen, moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, error } = this.props;
+    const { pauseOpen, moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, error, messages } = this.props;
     const pauseActions = [
       <FlatButton
         label="No"
@@ -245,7 +243,7 @@ class App extends Component {
             <div className="flex-col right-col">
               <MoveHistory moveHistory={moveHistory} />
               <Clock />
-              <ChatBox messages={this.state.messages} sendMessage={this.sendMessage}/>
+              <ChatBox messages={messages} sendMessage={this.sendMessage}/>
             </div>
 
             <div>
