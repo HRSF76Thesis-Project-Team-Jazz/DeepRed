@@ -4,6 +4,11 @@ const deepRed = require('../chess/deepRed');
 const showMovesByPiece = deepRed.showMovesByPiece;
 const blackIsChecked = deepRed.blackIsChecked;
 const whiteIsChecked = deepRed.whiteIsChecked;
+const getAvailableMovesWhite = deepRed.getAvailableMovesWhite;
+const getAvailableMovesBlack = deepRed.getAvailableMovesBlack;
+const isStalemateWhite = deepRed.isStalemateWhite;
+const isCheckmateWhite = deepRed.isCheckmateWhite;
+const whiteCanMove = deepRed.whiteCanMove;
 
 
 let board = [
@@ -257,7 +262,7 @@ showMovesByPiece(board, 'WK', 'WK movement does not endanger WK');
 //   ['WR', 'WN', 'WB', 'WQ', null, 'WB', 'WN', 'WR'],
 // ];
 
-// showMovesByPiece(board, 'WK movement & attack');
+// showMovesByPiece(board, 'WK', 'WK movement & attack');
 // console.log('Is BK in check? ', blackIsChecked(board));
 
 // board = [
@@ -368,3 +373,37 @@ showMovesByPiece(board, 'WK', 'WK movement does not endanger WK');
 // ];
 
 // showMovesByPiece(board, 'B', 'All black moves');
+
+board = [
+  ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  [null, null, null, null, null, null, null, null],
+  [null, null, 'BB', null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'BQ', 'WP', 'WP'],
+  ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
+];
+
+showMovesByPiece(board, 'W', 'All white moves');
+console.log('getAvailableMovesWhite: ', getAvailableMovesWhite(board));
+console.log('whiteCanMove: ', whiteCanMove(board));
+console.log('isStalemateWhite: ', isStalemateWhite(board));
+console.log('isCheckmateWhite: ', isCheckmateWhite(board));
+
+board = [
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, 'BB', null, null, null, null, null],
+  [null, null, 'BQ', null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, 'WK', null, null, null, null],
+];
+
+showMovesByPiece(board, 'W', 'All white moves');
+console.log('getAvailableMovesWhite: ', getAvailableMovesWhite(board));
+console.log('whiteCanMove: ', whiteCanMove(board));
+console.log('isStalemateWhite: ', isStalemateWhite(board));
+console.log('isCheckmateWhite: ', isCheckmateWhite(board));

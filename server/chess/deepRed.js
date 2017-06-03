@@ -925,6 +925,28 @@ const piecesAttackedByBlack = (board) => {
 };
 
 
+
+
+// ************  GAME END CHECKS  *********** //
+
+/**
+ * Return if white has any possible available moves
+ * @param {array} board
+ */
+
+const whiteCanMove = (board) => {
+  const moves = getAvailableMovesWhite(board);
+  const pieces = Object.keys(moves);
+  for (let i = 0; i < pieces.length; i += 1) {
+    if (moves[pieces[i]].length > 0) return true;
+  }
+  return false;
+};
+
+const isCheckmateWhite = board => whiteIsChecked(board) && !whiteCanMove(board);
+const isStalemateWhite = board => !whiteIsChecked(board) && !whiteCanMove(board);
+
+
 /**
  *  Temporary tests for movement
  *  To be implemented in tests
@@ -969,6 +991,9 @@ module.exports.getAvailableMovesBlack = getAvailableMovesBlack;
 module.exports.getAvailableMovesWhite = getAvailableMovesWhite;
 module.exports.blackIsChecked = blackIsChecked;
 module.exports.whiteIsChecked = whiteIsChecked;
+module.exports.whiteCanMove = whiteCanMove;
+module.exports.isCheckmateWhite = isCheckmateWhite;
+module.exports.isStalemateWhite = isStalemateWhite;
 
 module.exports.showMovesByPiece = showMovesByPiece;
 
