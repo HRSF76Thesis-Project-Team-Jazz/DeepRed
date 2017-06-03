@@ -6,7 +6,7 @@ import axios from 'axios';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import { pauseDialogOpen, pauseDialogClose, setPlayerW, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece, displayError, colorSquare } from '../store/actions';
+import { pauseDialogOpen, pauseDialogClose, setPlayerW, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece, displayError, colorSquare, sendMsg } from '../store/actions';
 
 // Components
 import ChessMenu from '../components/ChessMenu';
@@ -203,6 +203,9 @@ class App extends Component {
         onTouchTap={this.handlePauseClose}
       />,
     ];
+
+    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, error, messages } = this.props;
+
     return (
       <div className="site-wrap">
         <ChessMenu />
@@ -243,8 +246,6 @@ class App extends Component {
 
             <div className="flex-col right-col">
               <MoveHistory moveHistory={moveHistory} />
-              <ChatBox messages={this.state.messages} sendMessage={this.sendMessage}/>
-              <Clock />
               <ChatBox messages={messages} sendMessage={this.sendMessage}/>
             </div>
 

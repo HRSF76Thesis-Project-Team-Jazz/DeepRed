@@ -3,6 +3,9 @@ import React, {Component} from 'react';
 class ChatBox extends Component {
   constructor (props) {
 		super(props);
+    this.state = {
+     message: ''
+    }
     this.submit = this.submit.bind(this);
     this.handleChange = this.handleChange.bind(this);
         // this.socket = this.socket.bind(this)

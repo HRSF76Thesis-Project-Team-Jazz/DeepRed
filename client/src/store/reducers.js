@@ -66,7 +66,7 @@ const gameState = (state = Immutable({
       return Immutable({
         ...state,
         messages: state.messages.concat(action.msg)
-      })
+      });
     }
     default:
       return state;
