@@ -227,6 +227,26 @@ const squareState = (state = Immutable({
   }
 };
 
+const controlState = (state = Immutable({
+  open: false,
+}), action) => {
+  switch (action.type) {
+    case types.PAUSE_DIALOG_OPEN: {
+      return Immutable({
+        ...state,
+        open: true,
+      });
+    }
+    case types.PAUSE_DIALOG_CLOSE: {
+      return Immutable({
+        ...state,
+        open: false,
+      });
+    }
+    default:
+      return state;
+  }
+};
 
 const rootReducer = combineReducers({
   gameState,
@@ -234,6 +254,8 @@ const rootReducer = combineReducers({
   moveState,
   userState,
   squareState,
+  controlState,
 });
 
 export default rootReducer;
+

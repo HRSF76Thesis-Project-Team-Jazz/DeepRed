@@ -62,5 +62,8 @@ module.exports = (io, client) => {
   client.on('requestPause', room => {
     io.in(room).emit('requestPauseDialogBox');
   });
-};
 
+  client.on('rejectPauseRequest', room => {
+    io.in(room).emit('rejectPauseRequestNotification');
+  });
+};
