@@ -71,14 +71,49 @@ class ChessGame {
         return { game: this, error };
       }
     }
-    if (isLegalMove(this.board, origin, dest)) {
-      // if (originPiece === 'WK' && origin === [7, 4]) {
-      //   this.hasMovedWK = true;
-      // }
-      // if (originPiece === 'BK' && origin === [0, 4]) {
-      //   this.hasMovedBK = true;
-      // }
-      // }
+    const legalMoveResult = isLegalMove(this, origin, dest);
+    if (legalMoveResult.bool) {
+      if (legalMoveResult.castling) {
+        if (legalMoveResult.castling === 'BRQ') {
+          this.board[0][3] = 'BR';
+          this.board[0][0] = null;
+          this.hasMovedBRQ = true;
+          this.hasMovedBK = true;
+        } else if (legalMoveResult.castling === 'BRK') {
+          this.board[0][5] = 'BR';
+          this.board[0][7] = null;
+          this.hasMovedBRK = true;
+          this.hasMovedBK = true;
+        } else if (legalMoveResult.castling === 'WRQ') {
+          this.board[7][3] = 'WR';
+          this.board[7][0] = null;
+          this.hasMovedWRQ = true;
+          this.hasMovedWK = true;
+        } else if (legalMoveResult.castling === 'BRQ') {
+          this.board[7][5] = 'WR';
+          this.board[7][7] = null;
+          this.hasMovedWRK = true;
+          this.hasMovedWK = true;
+        }
+      }
+      if (originPiece === 'WK' && JSON.stringify(origin) === JSON.stringify([7, 4])) {
+        this.hasMovedWK = true;
+      }
+      if (originPiece === 'BK' && JSON.stringify(origin) === JSON.stringify([0, 4])) {
+        this.hasMovedBK = true;
+      }
+      if (originPiece === 'WR' && JSON.stringify(origin) === JSON.stringify([7, 0])) {
+        this.hasMovedWRQ = true;
+      }
+      if (originPiece === 'WR' && JSON.stringify(origin) === JSON.stringify([7, 7])) {
+        this.hasMovedWRK = true;
+      }
+      if (originPiece === 'BR' && JSON.stringify(origin) === JSON.stringify([0, 0])) {
+        this.hasMovedBRQ = true;
+      }
+      if (originPiece === 'BR' && JSON.stringify(origin) === JSON.stringify([0, 7])) {
+        this.hasMovedBRK = true;
+      }
       if (destPiece) {
         // if (originPiece[0] === destPiece[0]) {
         //   error = 'Cannot capture your own piece.';

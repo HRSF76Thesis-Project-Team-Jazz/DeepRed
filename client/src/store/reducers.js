@@ -91,21 +91,18 @@ const boardState = (state = {
   switch (action.type) {
     case types.MOVE_PIECE: {
       const board = state.board.slice(0);
+      board[action.coordinates[0]][action.coordinates[1]] = board[action.fromPosition[0]][action.fromPosition[1]];
       board[action.fromPosition[0]][action.fromPosition[1]] = null;
-      board[action.coordinates[0]][action.coordinates[1]] = action.selectedPiece;
-      return { ...state, board };
+      return { board };
     }
     case types.CAPTURE_PIECE: {
       const board = state.board.slice(0);
+      board[action.coordinates[0]][action.coordinates[1]] = board[action.fromPosition[0]][action.fromPosition[1]];
       board[action.fromPosition[0]][action.fromPosition[1]] = null;
-      board[action.coordinates[0]][action.coordinates[1]] = action.selectedPiece;
       return { board };
     }
     case types.RECEIVE_GAME: {
-      return Immutable({
-        ...state,
-        board: action.game.board,
-      });
+      return { board: action.game.board };
     }
     default:
       return state;
@@ -113,7 +110,7 @@ const boardState = (state = {
 };
 
 const moveState = (state = Immutable({
-  message: ' reducer: moveState message ',
+  message: 'New Game',
   fromPosition: '',
   selectedPiece: '',
   error: '',
@@ -123,14 +120,14 @@ const moveState = (state = Immutable({
     case types.DISPLAY_ERROR:
       return Immutable({
         ...state,
-        message: `ERROR: ${action.error}`,
+        message: action.error,
         error: action.error,
         open: true,
       });
     case types.CLEAR_ERROR:
       return Immutable({
         ...state,
-        message: 'cleared error',
+        message: 'No Errors.',
         error: '',
         open: false,
       });
@@ -151,7 +148,7 @@ const moveState = (state = Immutable({
         ...state,
         fromPosition: '',
         selectedPiece: '',
-        message: 'Selected: N/A',
+        message: '',
       });
     case types.MOVE_PIECE: {
       const cols = 'abcdefgh';

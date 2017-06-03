@@ -34,16 +34,14 @@ export const colorSquare = (color, hover) => ({
   hover,
 });
 
-export const movePiece = (selectedPiece, fromPosition, coordinates) => ({
+export const movePiece = (fromPosition, coordinates) => ({
   type: types.MOVE_PIECE,
-  selectedPiece,
   fromPosition,
   coordinates,
 });
 
-export const capturePiece = (selectedPiece, fromPosition, coordinates, capturedPiece) => ({
+export const capturePiece = (fromPosition, coordinates, capturedPiece) => ({
   type: types.CAPTURE_PIECE,
-  selectedPiece,
   fromPosition,
   coordinates,
   capturedPiece,

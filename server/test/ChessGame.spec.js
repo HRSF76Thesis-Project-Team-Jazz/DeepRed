@@ -219,7 +219,8 @@ describe('isLegalMovePawn', () => {
   it('function should exist', () => {
     expect(isLegalMove).to.be.a('function');
   });
-  const pawnTestBoard = [
+  const pawnGame = new ChessGame();
+  pawnGame.board = [
     ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
     ['BP', 'BP', 'BP', null, null, 'BP', 'BP', 'BP'],
     [null, null, null, 'BP', null, null, null, 'WP'],
@@ -230,111 +231,112 @@ describe('isLegalMovePawn', () => {
     ['WR', 'WN', 'WB', 'BK', 'WK', 'WB', 'WN', 'WR'],
   ];
   it('black pawn moves backward 1', () => {
-    expect(isLegalMove(pawnTestBoard, [2, 3], [1, 3])).to.eql(false);
+    expect(isLegalMove(pawnGame, [2, 3], [1, 3]).bool).to.eql(false);
   });
   it('black pawn moves back diagonal left 1', () => {
-    expect(isLegalMove(pawnTestBoard, [2, 3], [1, 2])).to.eql(false);
+    expect(isLegalMove(pawnGame, [2, 3], [1, 2]).bool).to.eql(false);
   });
   it('black pawn moves back diagonal right 1', () => {
-    expect(isLegalMove(pawnTestBoard, [2, 3], [1, 4])).to.eql(false);
+    expect(isLegalMove(pawnGame, [2, 3], [1, 4]).bool).to.eql(false);
   });
   it('black pawn moves left 1', () => {
-    expect(isLegalMove(pawnTestBoard, [2, 3], [2, 2])).to.eql(false);
+    expect(isLegalMove(pawnGame, [2, 3], [2, 2]).bool).to.eql(false);
   });
   it('black pawn moves right 1', () => {
-    expect(isLegalMove(pawnTestBoard, [2, 3], [2, 4])).to.eql(false);
+    expect(isLegalMove(pawnGame, [2, 3], [2, 4]).bool).to.eql(false);
   });
   it('black pawn moves forward 1 (opening)', () => {
-    expect(isLegalMove(pawnTestBoard, [1, 1], [2, 1])).to.eql(true);
+    expect(isLegalMove(pawnGame, [1, 1], [2, 1]).bool).to.eql(true);
   });
   it('black pawn moves forward 2 (opening)', () => {
-    expect(isLegalMove(pawnTestBoard, [1, 1], [3, 1])).to.eql(true);
+    expect(isLegalMove(pawnGame, [1, 1], [3, 1]).bool).to.eql(true);
   });
   it('black pawn moves forward 3 (opening)', () => {
-    expect(isLegalMove(pawnTestBoard, [1, 1], [4, 1])).to.eql(false);
+    expect(isLegalMove(pawnGame, [1, 1], [4, 1]).bool).to.eql(false);
   });
   it('black pawn moves forward 1 (opening, blocked)', () => {
-    expect(isLegalMove(pawnTestBoard, [1, 7], [2, 7])).to.eql(false);
+    expect(isLegalMove(pawnGame, [1, 7], [2, 7]).bool).to.eql(false);
   });
   it('black pawn moves forward 2 (opening, blocked)', () => {
-    expect(isLegalMove(pawnTestBoard, [1, 6], [3, 6])).to.eql(false);
+    expect(isLegalMove(pawnGame, [1, 6], [3, 6]).bool).to.eql(false);
   });
   it('black pawn moves forward 1 (not opening)', () => {
-    expect(isLegalMove(pawnTestBoard, [3, 4], [4, 4])).to.eql(true);
+    expect(isLegalMove(pawnGame, [3, 4], [4, 4]).bool).to.eql(true);
   });
   it('black pawn moves forward 2 (not opening)', () => {
-    expect(isLegalMove(pawnTestBoard, [3, 4], [5, 4])).to.eql(false);
+    expect(isLegalMove(pawnGame, [3, 4], [5, 4]).bool).to.eql(false);
   });
   it('black pawn moves forward 3 (not opening)', () => {
-    expect(isLegalMove(pawnTestBoard, [1, 1], [4, 1])).to.eql(false);
+    expect(isLegalMove(pawnGame, [1, 1], [4, 1]).bool).to.eql(false);
   });
   it('black pawn moves diagonal 1 (no capture)', () => {
-    expect(isLegalMove(pawnTestBoard, [1, 1], [2, 2])).to.eql(false);
+    expect(isLegalMove(pawnGame, [1, 1], [2, 2]).bool).to.eql(false);
   });
   it('black pawn moves diagonal 1 (self capture)', () => {
-    expect(isLegalMove(pawnTestBoard, [2, 3], [3, 4])).to.eql(false);
+    expect(isLegalMove(pawnGame, [2, 3], [3, 4]).bool).to.eql(false);
   });
   it('black pawn test diagonal 1 (capture)', () => {
-    expect(isLegalMove(pawnTestBoard, [3, 4], [4, 5])).to.eql(true);
+    expect(isLegalMove(pawnGame, [3, 4], [4, 5]).bool).to.eql(true);
   });
   it('white pawn moves backward 1', () => {
-    expect(isLegalMove(pawnTestBoard, [4, 5], [5, 5])).to.eql(false);
+    expect(isLegalMove(pawnGame, [4, 5], [5, 5]).bool).to.eql(false);
   });
   it('white pawn moves back diagonal left 1', () => {
-    expect(isLegalMove(pawnTestBoard, [4, 5], [5, 4])).to.eql(false);
+    expect(isLegalMove(pawnGame, [4, 5], [5, 4]).bool).to.eql(false);
   });
   it('white pawn moves back diagonal right 1', () => {
-    expect(isLegalMove(pawnTestBoard, [4, 5], [5, 6])).to.eql(false);
+    expect(isLegalMove(pawnGame, [4, 5], [5, 6]).bool).to.eql(false);
   });
   it('white pawn moves left 1', () => {
-    expect(isLegalMove(pawnTestBoard, [4, 5], [4, 4])).to.eql(false);
+    expect(isLegalMove(pawnGame, [4, 5], [4, 4]).bool).to.eql(false);
   });
   it('white pawn moves right 1', () => {
-    expect(isLegalMove(pawnTestBoard, [4, 5], [4, 6])).to.eql(false);
+    expect(isLegalMove(pawnGame, [4, 5], [4, 6]).bool).to.eql(false);
   });
   it('white pawn moves forward 1 (opening)', () => {
-    expect(isLegalMove(pawnTestBoard, [6, 3], [5, 3])).to.eql(true);
+    expect(isLegalMove(pawnGame, [6, 3], [5, 3]).bool).to.eql(true);
   });
   it('white pawn moves forward 2 (opening)', () => {
-    expect(isLegalMove(pawnTestBoard, [6, 3], [4, 3])).to.eql(true);
+    expect(isLegalMove(pawnGame, [6, 3], [4, 3]).bool).to.eql(true);
   });
   it('white pawn moves forward 3 (opening)', () => {
-    expect(isLegalMove(pawnTestBoard, [6, 3], [3, 3])).to.eql(false);
+    expect(isLegalMove(pawnGame, [6, 3], [3, 3]).bool).to.eql(false);
   });
   it('white pawn moves forward 1 (opening, blocked)', () => {
-    expect(isLegalMove(pawnTestBoard, [6, 1], [5, 1])).to.eql(false);
+    expect(isLegalMove(pawnGame, [6, 1], [5, 1]).bool).to.eql(false);
   });
   it('white pawn moves forward 2 (opening, blocked)', () => {
-    expect(isLegalMove(pawnTestBoard, [6, 1], [4, 1])).to.eql(false);
+    expect(isLegalMove(pawnGame, [6, 1], [4, 1]).bool).to.eql(false);
   });
   it('white pawn moves forward 1 (not opening)', () => {
-    expect(isLegalMove(pawnTestBoard, [5, 2], [4, 2])).to.eql(true);
+    expect(isLegalMove(pawnGame, [5, 2], [4, 2]).bool).to.eql(true);
   });
   it('white pawn moves forward 2 (not opening)', () => {
-    expect(isLegalMove(pawnTestBoard, [5, 2], [3, 2])).to.eql(false);
+    expect(isLegalMove(pawnGame, [5, 2], [3, 2]).bool).to.eql(false);
   });
   it('white pawn moves forward 3 (not opening)', () => {
-    expect(isLegalMove(pawnTestBoard, [5, 2], [2, 2])).to.eql(false);
+    expect(isLegalMove(pawnGame, [5, 2], [2, 2]).bool).to.eql(false);
   });
   it('white pawn moves left diagonal 1 (no capture)', () => {
-    expect(isLegalMove(pawnTestBoard, [5, 2], [4, 1])).to.eql(false);
+    expect(isLegalMove(pawnGame, [5, 2], [4, 1]).bool).to.eql(false);
   });
   it('white pawn moves right diagonal 1 (no capture)', () => {
-    expect(isLegalMove(pawnTestBoard, [5, 2], [4, 3])).to.eql(false);
+    expect(isLegalMove(pawnGame, [5, 2], [4, 3]).bool).to.eql(false);
   });
   it('white pawn moves left diagonal 1 (self capture)', () => {
-    expect(isLegalMove(pawnTestBoard, [6, 3], [5, 2])).to.eql(false);
+    expect(isLegalMove(pawnGame, [6, 3], [5, 2]).bool).to.eql(false);
   });
   it('white pawn moves right diagonal 1 (self capture)', () => {
-    expect(isLegalMove(pawnTestBoard, [4, 5], [3, 6])).to.eql(false);
+    expect(isLegalMove(pawnGame, [4, 5], [3, 6]).bool).to.eql(false);
   });
   it('white pawn test diagonal 1 (capture)', () => {
-    expect(isLegalMove(pawnTestBoard, [4, 5], [3, 4])).to.eql(true);
+    expect(isLegalMove(pawnGame, [4, 5], [3, 4]).bool).to.eql(true);
   });
 });
-
+//
 describe('isLegalMoveRook', () => {
-  const rookTestBoard = [
+  const rookGame = new ChessGame();
+  rookGame.board = [
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
@@ -360,14 +362,14 @@ describe('isLegalMoveRook', () => {
   }
   for (let i = 0; i < 8; i += 1) {
     for (let j = 0; j < 8; j += 1) {
-      actualRookResultBoard[i][j] = isLegalMove(rookTestBoard, [4, 4], [i, j]);
+      actualRookResultBoard[i][j] = isLegalMove(rookGame, [4, 4], [i, j]).bool;
     }
   }
   it('rook moves as expected', () => {
     expect(actualRookResultBoard).to.eql(expectedRookResultBoard);
   });
-
-  const rookTestBoard2 = [
+  const rookGame2 = new ChessGame();
+  rookGame2.board = [
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, 'WP', null, null, null],
     [null, null, null, null, null, null, null, null],
@@ -393,7 +395,7 @@ describe('isLegalMoveRook', () => {
   }
   for (let i = 0; i < 8; i += 1) {
     for (let j = 0; j < 8; j += 1) {
-      actualRookResultBoard2[i][j] = isLegalMove(rookTestBoard2, [4, 4], [i, j]);
+      actualRookResultBoard2[i][j] = isLegalMove(rookGame2, [4, 4], [i, j]).bool;
     }
   }
   it('rook blocked as expected', () => {
@@ -402,7 +404,8 @@ describe('isLegalMoveRook', () => {
 });
 
 describe('isLegalMoveKnight', () => {
-  const knightTestBoard = [
+  const knightGame = new ChessGame();
+  knightGame.board = [
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
@@ -428,14 +431,14 @@ describe('isLegalMoveKnight', () => {
   }
   for (let i = 0; i < 8; i += 1) {
     for (let j = 0; j < 8; j += 1) {
-      actualKnightResultBoard[i][j] = isLegalMove(knightTestBoard, [4, 4], [i, j]);
+      actualKnightResultBoard[i][j] = isLegalMove(knightGame, [4, 4], [i, j]).bool;
     }
   }
   it('knight moves as expected', () => {
     expect(actualKnightResultBoard).to.eql(expectedKnightResultBoard);
   });
-
-  const knightTestBoard2 = [
+  const knightGame2 = new ChessGame();
+  knightGame2.board = [
     ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
     ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
     ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
@@ -451,7 +454,7 @@ describe('isLegalMoveKnight', () => {
   }
   for (let i = 0; i < 8; i += 1) {
     for (let j = 0; j < 8; j += 1) {
-      actualKnightResultBoard2[i][j] = isLegalMove(knightTestBoard2, [4, 4], [i, j]);
+      actualKnightResultBoard2[i][j] = isLegalMove(knightGame2, [4, 4], [i, j]).bool;
     }
   }
   it('knight cannot be blocked', () => {
@@ -460,7 +463,8 @@ describe('isLegalMoveKnight', () => {
 });
 
 describe('isLegalMoveBishop', () => {
-  const bishopTestBoard = [
+  const bishopGame = new ChessGame();
+  bishopGame.board = [
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
@@ -486,14 +490,14 @@ describe('isLegalMoveBishop', () => {
   }
   for (let i = 0; i < 8; i += 1) {
     for (let j = 0; j < 8; j += 1) {
-      actualBishopResultBoard[i][j] = isLegalMove(bishopTestBoard, [4, 4], [i, j]);
+      actualBishopResultBoard[i][j] = isLegalMove(bishopGame, [4, 4], [i, j]).bool;
     }
   }
   it('bishop moves as expected', () => {
     expect(actualBishopResultBoard).to.eql(expectedBishopResultBoard);
   });
-
-  const bishopTestBoard2 = [
+  const bishopGame2 = new ChessGame();
+  bishopGame2.board = [
     ['BP', null, null, null, null, null, null, null],
     [null, 'BP', null, null, null, null, null, null],
     [null, null, null, null, 'BP', null, 'BP', null],
@@ -519,7 +523,7 @@ describe('isLegalMoveBishop', () => {
   }
   for (let i = 0; i < 8; i += 1) {
     for (let j = 0; j < 8; j += 1) {
-      actualBishopResultBoard2[i][j] = isLegalMove(bishopTestBoard2, [4, 4], [i, j]);
+      actualBishopResultBoard2[i][j] = isLegalMove(bishopGame2, [4, 4], [i, j]).bool;
     }
   }
   it('bishop blocked as expected', () => {
@@ -529,7 +533,8 @@ describe('isLegalMoveBishop', () => {
 
 
 describe('isLegalMoveQueen', () => {
-  const queenTestBoard = [
+  const queenGame = new ChessGame();
+  queenGame.board = [
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
@@ -555,14 +560,14 @@ describe('isLegalMoveQueen', () => {
   }
   for (let i = 0; i < 8; i += 1) {
     for (let j = 0; j < 8; j += 1) {
-      actualQueenResultBoard[i][j] = isLegalMove(queenTestBoard, [4, 4], [i, j]);
+      actualQueenResultBoard[i][j] = isLegalMove(queenGame, [4, 4], [i, j]).bool;
     }
   }
   it('queen moves as expected', () => {
     expect(actualQueenResultBoard).to.eql(expectedQueenResultBoard);
   });
-
-  const queenTestBoard2 = [
+  const queenGame2 = new ChessGame();
+  queenGame2.board = [
     ['BP', null, null, null, null, null, null, null],
     [null, 'BP', null, null, null, null, null, null],
     [null, null, null, null, 'BP', null, 'BP', null],
@@ -588,7 +593,7 @@ describe('isLegalMoveQueen', () => {
   }
   for (let i = 0; i < 8; i += 1) {
     for (let j = 0; j < 8; j += 1) {
-      actualQueenResultBoard2[i][j] = isLegalMove(queenTestBoard2, [4, 4], [i, j]);
+      actualQueenResultBoard2[i][j] = isLegalMove(queenGame2, [4, 4], [i, j]).bool;
     }
   }
   it('queen blocked as expected', () => {
@@ -597,7 +602,9 @@ describe('isLegalMoveQueen', () => {
 });
 
 describe('isLegalMoveKing', () => {
-  const kingTestBoard = [
+  const kingGame = new ChessGame();
+  kingGame.hasMovedWK = true;
+  kingGame.board = [
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
@@ -623,14 +630,14 @@ describe('isLegalMoveKing', () => {
   }
   for (let i = 0; i < 8; i += 1) {
     for (let j = 0; j < 8; j += 1) {
-      actualKingResultBoard[i][j] = isLegalMove(kingTestBoard, [4, 4], [i, j]);
+      actualKingResultBoard[i][j] = isLegalMove(kingGame, [4, 4], [i, j]).bool;
     }
   }
   it('king moves as expected', () => {
     expect(actualKingResultBoard).to.eql(expectedKingResultBoard);
   });
-
-  const kingTestBoard2 = [
+  const kingGame2 = new ChessGame();
+  kingGame2.board = [
     ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
     ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
     ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
@@ -646,7 +653,7 @@ describe('isLegalMoveKing', () => {
   }
   for (let i = 0; i < 8; i += 1) {
     for (let j = 0; j < 8; j += 1) {
-      actualKingResultBoard2[i][j] = isLegalMove(kingTestBoard2, [4, 4], [i, j]);
+      actualKingResultBoard2[i][j] = isLegalMove(kingGame2, [4, 4], [i, j]).bool;
     }
   }
   it('king cannot be blocked', () => {

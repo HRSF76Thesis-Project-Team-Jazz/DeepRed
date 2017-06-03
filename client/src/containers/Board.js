@@ -13,6 +13,7 @@ class Board extends Component {
     this.onClick = this.onClick.bind(this);
     this.onMouseEnter = this.onMouseEnter.bind(this);
     this.onMouseLeave = this.onMouseLeave.bind(this);
+    this.selectSquareClass = this.selectSquareClass.bind(this);
   }
 
   componentDidMount() {
@@ -40,7 +41,7 @@ class Board extends Component {
       /* NOTE: CHECK FOR VALID MOVE REQUIRED HERE    */
       // if (selection === null)
     } else {
-      attemptMove(selectedPiece, fromPosition, coordinates, selection, room);
+      attemptMove(fromPosition, coordinates, selection, room);
     // } else if (selectedPiece[0] === board[x][y][0]) {
     //   dispatch(invalidSelection(coordinates));
     // } else {
@@ -60,7 +61,11 @@ class Board extends Component {
     const { dispatch, fromPosition } = this.props;
     if (fromPosition) {
       if (fromPosition[0] !== coordinates[0] && fromPosition[1] !== coordinates[1]) {
-        dispatch(colorSquare(null, coordinates));
+        if ((coordinates[0] + coordinates[1]) % 2 === 1) {
+          dispatch(colorSquare('board-col dark', coordinates));
+        } else {
+          dispatch(colorSquare('board-col dark', coordinates));
+        }
       }
     }
 
@@ -69,9 +74,16 @@ class Board extends Component {
     // }
   }
 
-  getImage(CP) {
-    return <img className="piece-img" src={`/assets/${CP}.png`} alt={''} />;
+  selectSquareClass(rowIndex, colIndex) {
+    const { color, hover, fromPosition } = this.props;
+    if ((color && hover[0] === rowIndex && hover[1] === colIndex) || (fromPosition && (fromPosition[0] === rowIndex && fromPosition[1] === colIndex))) {
+      return color;
+    } else if ((rowIndex + colIndex) % 2 === 1) {
+      return 'board-col dark';
+    }
+    return 'board-col light';
   }
+
   render() {
     const { board, color, hover, fromPosition } = this.props;
     return (
@@ -80,13 +92,14 @@ class Board extends Component {
           <div key={Math.random()} className="board-row">
             {row.map((col, colIndex) => (
               <div
-                className={((rowIndex + colIndex) % 2 === 1) ? (((color && (hover[0] === rowIndex && hover[1] === colIndex)) || (fromPosition && ((fromPosition[0] === rowIndex) && (fromPosition[1] === colIndex)))) ? color : 'board-col dark') : (((color && (hover[0] === rowIndex && hover[1] === colIndex)) || (fromPosition && ((fromPosition[0] === rowIndex) && (fromPosition[1] === colIndex)))) ? color : 'board-col light')}
+                className={this.selectSquareClass(rowIndex, colIndex)}
                 key={rowIndex.toString() + colIndex.toString()}
+                role={'button'}
                 onClick={() => this.onClick([rowIndex, colIndex])}
                 onMouseEnter={() => this.onMouseEnter([rowIndex, colIndex])}
                 onMouseLeave={() => this.onMouseLeave([rowIndex, colIndex])}
               >
-                {this.getImage(col)}
+                <img className="piece-img" src={`/assets/${col}.png`} alt={''} />
               </div>),
             )}
           </div>

@@ -108,6 +108,3 @@ describe('isLegalMoveBishop', () => {
     expect(isLegalMoveBishop(boardWithClearPath, origin, destOffDiagonalPath)).to.eql(false);
   });
 });
-
-
-
