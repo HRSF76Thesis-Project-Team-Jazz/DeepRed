@@ -3,7 +3,10 @@ import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
-import { setPlayerW, setPlayerB, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece, displayError, colorSquare } from '../store/actions';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import { pauseDialogOpen, pauseDialogClose, setPlayerW, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece, displayError, colorSquare } from '../store/actions';
 
 // Components
 import ChessMenu from '../components/ChessMenu';
@@ -11,9 +14,8 @@ import SettingsDrawer from '../components/SettingsDrawer';
 import Board from './Board';
 import Message from '../components/Message';
 import CapturedPieces from '../components/CapturedPieces';
-import Clock from '../components/Clock';
 import MoveHistory from '../components/MoveHistory';
-import ErrorAlert from './ErrorAlert';
+import Alert from './Alert';
 import './css/App.css';
 
 
@@ -30,17 +32,43 @@ class App extends Component {
     this.checkLegalMove = this.checkLegalMove.bind(this);
     this.newChessGame = this.newChessGame.bind(this);
     this.startSocket = this.startSocket.bind(this);
+    this.sendPauseRequest = this.sendPauseRequest.bind(this);
+    this.handlePauseOpen = this.handlePauseOpen.bind(this);
+    this.handlePauseClose = this.handlePauseClose.bind(this);
+    this.onRejectPauseRequest = this.onRejectPauseRequest.bind(this);
   }
 
   componentDidMount() {
-    const { dispatch, room, playerB, playerW } = this.props;
     this.getUserInfo();
   }
 
-  startSocket() {
-    const { dispatch, room, playerB, playerW } = this.props;
+  onRejectPauseRequest() {
+    const { dispatch, room } = this.props;
+    dispatch(pauseDialogClose());
+    this.socket.emit('rejectPauseRequest', room);
+  }
 
-    let name = playerW;
+  getUserInfo() {
+    const { dispatch } = this.props;
+    axios.get('/api/profiles/id')
+    .then((response) => {
+      console.log('successfully fetched current user infomation');
+      dispatch(setPlayerW(response));
+    })
+    .then(() => {
+      this.startSocket();
+    })
+    .catch((err) => {
+      dispatch(getRequestFailure(err));
+      console.error('failed to obtain current user infomation!', err);
+    });
+  }
+
+
+  startSocket() {
+    const { dispatch, playerW } = this.props;
+
+    const name = playerW;
     // instantiate socket instance on the cllient side
     this.socket = io.connect();
 
@@ -58,7 +86,7 @@ class App extends Component {
       console.log(`second player has joined ${roomInfo.room} as ${roomInfo.playerB}`);
     });
 
-    this.socket.on('startGame', (roomInfo, newGame) => {
+    this.socket.on('startGame', (roomInfo) => {
       dispatch(updateRoomInfo(roomInfo));
     });
 
@@ -86,22 +114,36 @@ class App extends Component {
       }
       dispatch(colorSquare(color, dest));
     });
+
+    this.socket.on('requestPauseDialogBox', () => {
+      this.handlePauseOpen();
+    });
+
+    this.socket.on('rejectPauseRequestNotification', () => {
+      const { room, playerB, playerW } = this.props;
+      console.log('notification received');
+      this.socket.emit('handleRejectPauseRequest', room, playerB, playerW);
+    });
+
+    this.socket.on('cancelPauseNotification', () => {
+
+      console.log('someone canceled pause');
+    });
   }
 
-  getUserInfo() {
+  sendPauseRequest() {
+    const { room } = this.props;
+    this.socket.emit('requestPause', room);
+  }
+
+  handlePauseOpen() {
     const { dispatch } = this.props;
-    axios.get('/api/profiles/id')
-    .then((response) => {
-      console.log('successfully fetched current user infomation');
-      dispatch(setPlayerW(response));
-    })
-    .then(() => {
-      this.startSocket();
-    })
-    .catch((err) => {
-      dispatch(getRequestFailure(err));
-      console.error('failed to obtain current user infomation!', err);
-    });
+    dispatch(pauseDialogOpen());
+  }
+
+  handlePauseClose() {
+    const { dispatch } = this.props;
+    dispatch(pauseDialogClose());
   }
 
   newChessGame() {
@@ -127,7 +169,20 @@ class App extends Component {
   }
 
   render() {
-    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, error } = this.props;
+    const { pauseOpen, moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, error } = this.props;
+    const pauseActions = [
+      <FlatButton
+        label="No"
+        primary={true}
+        onTouchTap={this.onRejectPauseRequest}
+      />,
+      <FlatButton
+        label="Yes"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={this.handlePauseClose}
+      />,
+    ];
     return (
       <div className="site-wrap">
         <ChessMenu />
@@ -149,19 +204,30 @@ class App extends Component {
           <div className="flex-row">
 
             <div className="flex-col">
-              <CapturedPieces color="Black" capturedPieces={capturedPiecesBlack} player={playerB} />
+              <CapturedPieces
+                color="Black"
+                capturedPieces={capturedPiecesBlack}
+                player={playerB}
+                sendPauseRequest={this.sendPauseRequest}
+              />
               <Board attemptMove={this.attemptMove} checkLegalMove={this.checkLegalMove} />
-              <CapturedPieces color="White" capturedPieces={capturedPiecesWhite} player={playerW} />
+              <CapturedPieces
+                color="White"
+                capturedPieces={capturedPiecesWhite}
+                player={playerW}
+                sendPauseRequest={this.sendPauseRequest}
+              />
               <Message message={message} />
               <Message message={error} />
             </div>
 
             <div className="flex-col right-col">
-              <Clock />
               <MoveHistory moveHistory={moveHistory} />
-              <Clock />
             </div>
 
+            <div>
+              <Alert title="hello" actions={pauseActions} open={pauseOpen} handleClose={this.handlePauseClose} />
+            </div>
           </div>
         </div>
       </div>
@@ -170,7 +236,7 @@ class App extends Component {
 }
 
 function mapStateToProps(state) {
-  const { gameState, moveState, userState } = state;
+  const { gameState, moveState, userState, controlState } = state;
   const {
     moveHistory,
     capturedPiecesBlack,
@@ -182,7 +248,10 @@ function mapStateToProps(state) {
     room,
   } = userState;
   const { message, error } = moveState;
+  const { pauseOpen } = controlState;
   return {
+    pauseOpen,
+    room,
     playerB,
     playerW,
     message,

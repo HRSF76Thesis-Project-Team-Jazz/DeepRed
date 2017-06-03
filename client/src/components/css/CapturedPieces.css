@@ -4,15 +4,25 @@
   border-radius: 2px;
   margin: 5px;
   padding: 5px;
+  position: relative;
 }
 
 .pieces-container {
   display: -webkit-flex;
   display: flex;
-  align-items: left;
+  /*align-items: left;*/
 }
 
 .captured-img {
   max-width: 4vh;
   max-height: 4vh;
+}
+
+.countdown-clock {
+  align-items: right;
+  position: absolute;
+  right: 60px;
+  top: 10px;
+  width: 60px;
+  height: 60px;
 }

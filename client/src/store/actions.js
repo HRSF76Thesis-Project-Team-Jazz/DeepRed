@@ -49,6 +49,23 @@ export const capturePiece = (selectedPiece, fromPosition, coordinates, capturedP
   capturedPiece,
 });
 
+export const receiveMove = (query, move) => ({
+  type: types.RECEIVE_MOVE,
+  query,
+  move,
+  receivedAt: Date.now(),
+});
+
+export const requestGame = () => ({
+  type: types.REQUEST_GAME,
+});
+
+export const receiveGame = game => ({
+  type: types.RECEIVE_GAME,
+  game,
+});
+
+// userState actions
 export const setPlayerW = player => ({
   type: types.SET_PLAYER_W,
   player,
@@ -68,24 +85,27 @@ export const updateRoomInfo = roomInfo => ({
   type: types.UPDATE_ROOM_INFO,
   roomInfo,
 });
-// TO BE IMPLEMENTED
 
-export const receiveMove = (query, move) => ({
-  type: types.RECEIVE_MOVE,
-  query,
-  move,
-  receivedAt: Date.now(),
+// controlState actions
+export const pauseTimerB = pausedB => ({
+  type: types.PAUSE_TIMER_B,
+  pausedB,
 });
 
-export const requestGame = () => ({
-  type: types.REQUEST_GAME,
+export const pauseTimerW = pausedW => ({
+  type: types.PAUSE_TIMER_W,
+  pausedW,
 });
 
-export const receiveGame = game => ({
-  type: types.RECEIVE_GAME,
-  game,
+export const pauseDialogOpen = () => ({
+  type: types.PAUSE_DIALOG_OPEN,
 });
 
+export const pauseDialogClose = () => ({
+  type: types.PAUSE_DIALOG_CLOSE,
+});
+
+// other requests
 export const fetchGame = () => (dispatch) => {
   dispatch(requestGame());
   return fetch('http://127.0.0.1:3000/api/game')
