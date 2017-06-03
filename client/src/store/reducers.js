@@ -203,6 +203,8 @@ const userState = (state = Immutable({
         room: action.roomInfo.room,
         playerB: action.roomInfo.playerB,
         playerW: action.roomInfo.playerW,
+        playerBid: action.roomInfo.playerBid,
+        playerWid: action.roomInfo.playerWid,
       });
     }
     default:
@@ -228,6 +230,7 @@ const squareState = (state = Immutable({
 };
 
 const controlState = (state = Immutable({
+  cancelPauseOpen: false,
   pauseOpen: false,
 }), action) => {
   switch (action.type) {
@@ -242,6 +245,18 @@ const controlState = (state = Immutable({
         ...state,
         pauseOpen: false,
       });
+    }
+    case types.CANCEL_PAUSE_DIALOG_OPEN: {
+      return Immutable({
+        ...state,
+        cancelPauseOpen: true,
+      })
+    }
+    case types.CANCEL_PAUSE_DIALOG_CLOSE: {
+      return Immutable({
+        ...state,
+        cancelPauseOpen: false,
+      })
     }
     default:
       return state;

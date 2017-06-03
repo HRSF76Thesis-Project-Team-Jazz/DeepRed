@@ -18,6 +18,7 @@ const createAndSaveNewGame = (room) => {
 };
 
 module.exports = (io, client) => {
+  // user socket communications
   client.on('sendCurrentUserName', (currentUserName) => {
     currentUser = currentUserName;
   });
@@ -29,6 +30,8 @@ module.exports = (io, client) => {
       // add room number and first player into current room
       roomInfo.room = room;
       roomInfo.playerW = currentUser;
+      console.log('client.client.id: ', client.client.id);
+      roomInfo.playerWid = client.client.id;
       // create new game instance
       createAndSaveNewGame(room);
       currentUser = '';
@@ -39,6 +42,7 @@ module.exports = (io, client) => {
     client.join(room, () => {
       // add second player into current room
       roomInfo.playerB = currentUser;
+      roomInfo.playerBid = client.client.id;
       allRooms[room] = roomInfo;
       io.in(room).emit('secondPlayerJoined', roomInfo);
       // create new game instance
@@ -49,7 +53,8 @@ module.exports = (io, client) => {
       count += 1;
     });
   }
-
+  
+  // logic socket communications
   client.on('attemptMove', (selectedPiece, origin, dest, selection, room) => {
     console.log('attempted Move: ', origin, dest);
     console.log('room number: ', room);
@@ -64,6 +69,7 @@ module.exports = (io, client) => {
     io.in(room).emit('isLegalMoveResult', dest, bool);
   });
 
+  // control socket communications
   client.on('requestPause', room => {
     io.in(room).emit('requestPauseDialogBox');
   });

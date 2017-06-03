@@ -33,7 +33,10 @@ module.exports.getOne = (req, res) => {
         if (!profile) {
           throw profile;
         }
-        res.status(200).send(profile);
+        const payload = profile;
+        payload.session = req.session;
+        payload.cookies = req.cookies;
+        res.status(200).send(payload);
       })
       .error((err) => {
         res.status(500).send(err);
@@ -47,7 +50,10 @@ module.exports.getOne = (req, res) => {
         if (!profile) {
           throw profile;
         }
-        res.status(200).send(profile);
+        const payload = profile;
+        payload.session = req.session;
+        payload.cookies = req.cookies;
+        res.status(200).send(payload);
       })
       .error((err) => {
         res.status(500).send(err);
