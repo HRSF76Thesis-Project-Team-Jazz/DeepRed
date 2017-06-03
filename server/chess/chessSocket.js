@@ -56,13 +56,19 @@ module.exports = (io, client) => {
     const newState = allGames[room].movePiece(origin, dest);
     io.in(room).emit('attemptMoveResult', newState.game.board, newState.error, selectedPiece, origin, dest, selection);
   });
-
-  client.on('checkLegalMove', (origin, dest, room) => {
+  
+  client.on('checkLegalMove', (selectedPiece, origin, dest, selection, room) => {
     console.log('checkLegalMove: ', origin, dest);
     console.log('room number: ', room);
     const bool = isLegalMove(allGames[room].board, origin, dest);
     io.in(room).emit('isLegalMoveResult', dest, bool);
   });
+
+  client.on('message', (msg) => {
+    io.in(room).emit('message', msg)
+  })
+
+};
 
   client.on('requestPause', room => {
     io.in(room).emit('requestPauseDialogBox');

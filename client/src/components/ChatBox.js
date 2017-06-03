@@ -3,10 +3,6 @@ import React, {Component} from 'react';
 class ChatBox extends Component {
   constructor (props) {
 		super(props);
-    this.state = {
-     message: '',
-		 user: 'jay'
-    }
     this.submit = this.submit.bind(this);
     this.handleChange = this.handleChange.bind(this);
         // this.socket = this.socket.bind(this)
@@ -14,9 +10,7 @@ class ChatBox extends Component {
 
 	submit (info) {
     info.preventDefault();
-		// reassign state.user as current user
-		console.log('========>',this.userState)
-    this.props.sendMessage(this.state.user + ': ' + this.state.message)
+    this.props.sendMessage(this.state.message)
 		this.state.message = '';
   }
 

@@ -16,6 +16,7 @@ import Message from '../components/Message';
 import CapturedPieces from '../components/CapturedPieces';
 import MoveHistory from '../components/MoveHistory';
 import Alert from './Alert';
+import ErrorAlert from './ErrorAlert';
 import ChatBox from '../components/ChatBox';
 import './css/App.css';
 
@@ -182,6 +183,11 @@ class App extends Component {
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
+  sendMessage(msg) {
+    this.socket.emit('message', msg);
+  }
+
+
   render() {
     const { pauseOpen, moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, error, messages } = this.props;
     const pauseActions = [
@@ -237,6 +243,7 @@ class App extends Component {
 
             <div className="flex-col right-col">
               <MoveHistory moveHistory={moveHistory} />
+              <ChatBox messages={this.state.messages} sendMessage={this.sendMessage}/>
               <Clock />
               <ChatBox messages={messages} sendMessage={this.sendMessage}/>
             </div>
