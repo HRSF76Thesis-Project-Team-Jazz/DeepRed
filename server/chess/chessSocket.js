@@ -60,23 +60,23 @@ module.exports = (io, client) => {
     io.in(room).emit('attemptMoveResult', newState.error, origin, dest, selection);
   });
 
-  client.on('checkLegalMove', (origin, dest, room) => {
+  client.on('checkLegalMove', (origin, dest, clientRoom) => {
     // console.log('checkLegalMove: ', origin, dest);
     // console.log('room number: ', room);
-    const bool = isLegalMove(allGames[room], origin, dest).bool;
-    io.in(room).emit('isLegalMoveResult', dest, bool);
+    const bool = isLegalMove(allGames[clientRoom], origin, dest).bool;
+    io.in(clientRoom).emit('isLegalMoveResult', dest, bool);
   });
 
   // control socket communications
-  client.on('requestPause', room => {
-    io.in(room).emit('requestPauseDialogBox');
+  client.on('requestPause', clientRoom => {
+    io.in(clientRoom).emit('requestPauseDialogBox');
   });
 
-  client.on('rejectPauseRequest', room => {
-    io.in(room).emit('rejectPauseRequestNotification');
+  client.on('rejectPauseRequest', clientRoom => {
+    io.in(clientRoom).emit('rejectPauseRequestNotification');
   });
 
-  client.on('handleRejectPauseRequest', (room, playerB, playerW) => {
+  client.on('handleRejectPauseRequest', (clientRoom, playerB, playerW) => {
     // console.log('playerB: ', playerBclicked);
     // console.log('playerW: ', playerWclicked);
 
@@ -91,17 +91,15 @@ module.exports = (io, client) => {
     if (playerBclicked === true && playerWclicked === true) {
       playerBclicked = false;
       playerWclicked = false;
-      io.in(room).emit('cancelPauseNotification');
+      io.in(clientRoom).emit('cancelPauseNotification');
     }
   });
 
   client.on('message', (msg) => {
-
     let user = '';
-
-    for (var key in allRooms[room]){
-      if (allRooms[room][key] == client.id){
-        if (key == 'playerWid'){
+    for (let key in allRooms[room]) {
+      if (allRooms[room][key] === client.id) {
+        if (key === 'playerWid') {
           user = allRooms[room].playerW;
         } else {
           user = allRooms[room].playerB;
@@ -109,8 +107,6 @@ module.exports = (io, client) => {
       }
     }
 
-    io.in(room).emit('message', user + ': ' + msg)
-
+    io.in(room).emit('message', user + ': ' + msg);
   });
-
 };

@@ -51,7 +51,7 @@ class Board extends Component {
   }
 
   onMouseEnter(coordinates) {
-    const { dispatch, fromPosition, selectedPiece, room, checkLegalMove } = this.props;
+    const { selectedPiece, checkLegalMove, fromPosition, room } = this.props;
     if (selectedPiece) {
       checkLegalMove(fromPosition, coordinates, room);
     }
@@ -76,7 +76,8 @@ class Board extends Component {
 
   selectSquareClass(rowIndex, colIndex) {
     const { color, hover, fromPosition } = this.props;
-    if ((color && hover[0] === rowIndex && hover[1] === colIndex) || (fromPosition && (fromPosition[0] === rowIndex && fromPosition[1] === colIndex))) {
+    if ((color && hover[0] === rowIndex && hover[1] === colIndex) ||
+    (fromPosition && (fromPosition[0] === rowIndex && fromPosition[1] === colIndex))) {
       return color;
     } else if ((rowIndex + colIndex) % 2 === 1) {
       return 'board-col dark';
@@ -85,7 +86,7 @@ class Board extends Component {
   }
 
   render() {
-    const { board, color, hover, fromPosition } = this.props;
+    const { board } = this.props;
     return (
       <div className="board">
         {board.map((row, rowIndex) => (
