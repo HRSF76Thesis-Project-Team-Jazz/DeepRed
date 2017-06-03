@@ -93,12 +93,7 @@ class App extends Component {
     });
 
     this.socket.on('message', (msg) => {
-      console.log('message sent back to client', msg)
-      var curr = this.state.messages;
-      curr.push(msg)
-      this.setState({
-        messages: curr
-      })
+      dispatch(sendMsg(msg));
     })
 
     this.socket.on('attemptMoveResult', (board, error, selectedPiece, origin, dest, selection, room) => {
@@ -180,7 +175,7 @@ class App extends Component {
   }
 
   render() {
-    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW }
+    const { moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, messages }
           = this.props;
 
     this.socket.emit('checkLegalMove', origin, dest, room);
@@ -262,6 +257,7 @@ function mapStateToProps(state) {
     moveHistory,
     capturedPiecesBlack,
     capturedPiecesWhite,
+    messages,
   } = gameState;
   const {
     playerW,
@@ -280,6 +276,7 @@ function mapStateToProps(state) {
     capturedPiecesBlack,
     capturedPiecesWhite,
     error,
+    messages,
   };
 }
 
