@@ -6,7 +6,7 @@ import axios from 'axios';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import { pauseDialogOpen, pauseDialogClose, setPlayerW, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece, displayError, colorSquare } from '../store/actions';
+import { pauseDialogOpen, pauseDialogClose, setPlayerW, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece, displayError, colorSquare, sendMsg } from '../store/actions';
 
 // Components
 import ChessMenu from '../components/ChessMenu';
@@ -16,6 +16,7 @@ import Message from '../components/Message';
 import CapturedPieces from '../components/CapturedPieces';
 import MoveHistory from '../components/MoveHistory';
 import Alert from './Alert';
+import ChatBox from '../components/ChatBox';
 import './css/App.css';
 
 
@@ -36,6 +37,7 @@ class App extends Component {
     this.handlePauseOpen = this.handlePauseOpen.bind(this);
     this.handlePauseClose = this.handlePauseClose.bind(this);
     this.onRejectPauseRequest = this.onRejectPauseRequest.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
   }
 
   componentDidMount() {
@@ -84,6 +86,10 @@ class App extends Component {
     this.socket.on('startGame', (roomInfo) => {
       dispatch(updateRoomInfo(roomInfo));
     });
+
+    this.socket.on('message', (msg) => {
+      dispatch(sendMsg(msg));
+    })
 
     this.socket.on('attemptMoveResult', (board, error, selectedPiece, origin, dest, selection, room) => {
       console.log('************** BOARD: ', board);
@@ -166,13 +172,16 @@ class App extends Component {
   checkLegalMove(origin, dest, room) {
     // const { dispatch } = this.props;
     console.log('checking legal move');
-
     this.socket.emit('checkLegalMove', origin, dest, room);
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
+  sendMessage(msg) {
+    this.socket.emit('message', msg);
+  }
+
   render() {
-    const { pauseOpen, moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, error } = this.props;
+    const { pauseOpen, moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, error, messages } = this.props;
     const pauseActions = [
       <FlatButton
         label="No"
@@ -186,6 +195,7 @@ class App extends Component {
         onTouchTap={this.handlePauseClose}
       />,
     ];
+
     const cancelPauseOpen = false;
     const cancelPauseActions = [
       <FlatButton
@@ -200,6 +210,7 @@ class App extends Component {
         onTouchTap={this.handlePauseClose}
       />,
     ]
+
     return (
       <div className="site-wrap">
         <ChessMenu />
@@ -240,6 +251,7 @@ class App extends Component {
 
             <div className="flex-col right-col">
               <MoveHistory moveHistory={moveHistory} />
+              <ChatBox messages={messages} sendMessage={this.sendMessage}/>
             </div>
 
             <div>
@@ -269,6 +281,7 @@ function mapStateToProps(state) {
     moveHistory,
     capturedPiecesBlack,
     capturedPiecesWhite,
+    messages,
   } = gameState;
   const {
     playerW,
@@ -287,6 +300,7 @@ function mapStateToProps(state) {
     capturedPiecesBlack,
     capturedPiecesWhite,
     error,
+    messages,
   };
 }
 

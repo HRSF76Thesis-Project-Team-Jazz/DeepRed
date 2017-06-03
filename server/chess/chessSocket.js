@@ -96,4 +96,23 @@ module.exports = (io, client) => {
       io.in(room).emit('cancelPauseNotification');
     }
   });
+
+  client.on('message', (msg) => {
+    
+    let user = '';
+
+    for (var key in allRooms[room]){
+      if (allRooms[room][key] == client.id){
+        if (key == 'playerWid'){
+          user = allRooms[room].playerW;
+        } else {
+          user = allRooms[room].playerB;
+        }
+      }
+    }
+    
+    io.in(room).emit('message', user + ': ' + msg)
+
+  });
+
 };

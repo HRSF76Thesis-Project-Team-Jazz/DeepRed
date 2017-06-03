@@ -25,6 +25,7 @@ const gameState = (state = Immutable({
   capturedPiecesWhite: [],
   gameTurn: 'W',
   moveHistory: [],
+  messages: [],
 }), action) => {
   switch (action.type) {
     case types.MOVE_PIECE: {
@@ -50,6 +51,7 @@ const gameState = (state = Immutable({
       newState[capturedPiecesArray] = state[capturedPiecesArray].concat(capturedPiece);
       return Immutable(newState);
     }
+
     case types.PAUSE_TIMER_B: {
       return Immutable({
         ...state,
@@ -62,6 +64,13 @@ const gameState = (state = Immutable({
         pausedW: true,
       });
     }
+    case types.SEND_MESSAGE: {
+      return Immutable({
+        ...state,
+        messages: state.messages.concat(action.msg)
+      })
+    }
+    
     default:
       return state;
   }
