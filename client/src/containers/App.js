@@ -87,16 +87,11 @@ class App extends Component {
       dispatch(updateRoomInfo(roomInfo));
     });
 
-<<<<<<< HEAD
     this.socket.on('message', (msg) => {
       dispatch(sendMsg(msg));
-    })
+    });
 
-    this.socket.on('attemptMoveResult', (board, error, selectedPiece, origin, dest, selection, room) => {
-      console.log('************** BOARD: ', board);
-=======
     this.socket.on('attemptMoveResult', (error, origin, dest, selection, room) => {
->>>>>>> working on castling. fixed graphical bug
       // dispatch(receiveGame(board));
       if (error === null) {
         if (selection) {
@@ -260,11 +255,11 @@ class App extends Component {
             </div>
 
             <div>
-              <Alert 
-                title="Would you like to pause this game?" 
-                actions={pauseActions} 
-                open={pauseOpen} 
-                handleClose={this.handlePauseClose} 
+              <Alert
+                title="Would you like to pause this game?"
+                actions={pauseActions}
+                open={pauseOpen}
+                handleClose={this.handlePauseClose}
               />
               <Alert
                 title="Pause request has been canceled"
