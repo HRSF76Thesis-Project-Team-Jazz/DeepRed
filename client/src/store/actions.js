@@ -105,6 +105,14 @@ export const pauseDialogClose = () => ({
   type: types.PAUSE_DIALOG_CLOSE,
 });
 
+export const cancelPauseDialogOpen = () => ({
+  type: types.CANCEL_PAUSE_DIALOG_OPEN
+});
+
+export const cancelPauseDialogClose = () => ({
+  type: types.CANCEL_PAUSE_DIALOG_CLOSE
+});
+
 // other requests
 export const fetchGame = () => (dispatch) => {
   dispatch(requestGame());
