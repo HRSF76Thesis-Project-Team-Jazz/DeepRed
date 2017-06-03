@@ -3,6 +3,7 @@ const deepRed = require('../chess/deepRed');
 
 const {
   showMovesByPiece,
+  showEvaluatedMoves,
   blackIsChecked,
   whiteIsChecked,
   getAvailableMovesWhite,
@@ -12,8 +13,11 @@ const {
   isCheckmateBlack,
   isCheckmateWhite,
   cleanBlackMoves,
+  cleanWhiteMoves,
   whiteCanMove,
 } = deepRed;
+
+let blackMoves;
 
 let board = [
   ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
@@ -320,11 +324,34 @@ board = [
   ['WB', null, null, null, null, null, null, null],
 ];
 
-const blackMoves = getAvailableMovesBlack(board);
+blackMoves = getAvailableMovesBlack(board);
 console.log('Black moves before cleaning: ', blackMoves);
 console.log('Black moves after cleaning: ', cleanBlackMoves(board, blackMoves));
 
 showMovesByPiece(board, 'BP', 'BP movement from home does not endanger BK');
+
+board = [
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, 'WK', null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, 'BK', null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+];
+
+blackMoves = getAvailableMovesBlack(board);
+const cleanedBlackMoves = cleanBlackMoves(board, blackMoves);
+
+showMovesByPiece(board, 'B', 'All B moves: BK checks allowed');
+showEvaluatedMoves(board, cleanedBlackMoves, 'B', 'All B moves: BK checks disallowed');
+
+const whiteMoves = getAvailableMovesWhite(board);
+const cleanedWhiteMoves = cleanWhiteMoves(board, whiteMoves);
+
+showMovesByPiece(board, 'W', 'All W moves: WK checks allowed');
+showEvaluatedMoves(board, cleanedWhiteMoves, 'W', 'All W moves: WK checks disallowed');
 
 // board = [
 //   ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', null],
