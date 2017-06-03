@@ -5,6 +5,8 @@ const chessEval = require('./chessEval');
  */
 
 let whiteIsChecked;
+let blackIsChecked;
+let cleanBlackMoves;
 
 /**
  * Return new board after given move
@@ -840,6 +842,21 @@ const getAvailableMovesBlack = (board) => {
 };
 
 
+
+cleanBlackMoves = (board, moves) => {
+  const result = {};
+  const pieces = Object.keys(moves);
+  for (let i = 0; i < pieces.length; i += 1) {
+    result[pieces[i]] = [];
+    moves[pieces[i]].forEach((move) => {
+      !blackIsChecked(mutateBoard(board, [pieces[i], [move[0], move[1]]])) &&
+        result[pieces[i]].push(move);
+    });
+  }
+  return result;
+};
+
+
 // *************************************** //
 // ************  ATTACK CHECKS *********** //
 // *************************************** //
@@ -850,7 +867,7 @@ const getAvailableMovesBlack = (board) => {
  * @return {boolean}
  */
 
-const blackIsChecked = (board) => {
+blackIsChecked = (board) => {
   const whiteMoves = getAvailableMovesWhite(board);
   const positionBK = JSON.stringify(chessEval.findPiecePosition('BK', board)[0]);
   for (const key in whiteMoves) {
@@ -1002,16 +1019,17 @@ const showMovesByPiece = (board, piece, description) => {
   console.log();
 };
 
-
 module.exports = {
   getAvailableMovesBlack,
   getAvailableMovesWhite,
   blackIsChecked,
   whiteIsChecked,
   whiteCanMove,
+  blackCanMove,
   isCheckmateWhite,
   isStalemateWhite,
   isCheckmateBlack,
   isStalemateBlack,
   showMovesByPiece,
+  cleanBlackMoves,
 };
