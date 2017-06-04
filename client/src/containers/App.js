@@ -6,7 +6,10 @@ import axios from 'axios';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import { updateTimer, pauseTimer, cancelPauseDialogClose, updateAlertName, cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece, displayError, colorSquare, sendMsg } from '../store/actions';
+import { updateTimer, pauseTimer, cancelPauseDialogClose, updateAlertName,
+  cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW,
+  updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece,
+  capturePiece, displayError, colorSquare, sendMsg } from '../store/actions';
 
 // Components
 import ChessMenu from '../components/ChessMenu';
@@ -267,10 +270,10 @@ class App extends Component {
               <Message message={error} />
             </div>
 
-            {/* <div className="flex-col right-col">
+            <div className="flex-col right-col">
               <MoveHistory moveHistory={moveHistory} />
               <ChatBox messages={messages} sendMessage={this.sendMessage} />
-            </div> */}
+            </div>
 
             <div>
               <Alert
