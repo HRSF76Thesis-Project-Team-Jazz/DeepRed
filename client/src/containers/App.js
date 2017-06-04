@@ -6,9 +6,7 @@ import axios from 'axios';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import { updateTimer, pauseTimer, cancelPauseDialogClose, updateAlertName, cancelPauseDialogOpen,
-   pauseDialogOpen, pauseDialogClose, setPlayerW, updateRoomInfo, getRequestFailure, receiveGame,
-    movePiece, unselectPiece, capturePiece, displayError, colorSquare , sendMsg } from '../store/actions';
+import { updateTimer, pauseTimer, cancelPauseDialogClose, updateAlertName, cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece, displayError, colorSquare, sendMsg } from '../store/actions';
 
 // Components
 import ChessMenu from '../components/ChessMenu';
@@ -69,7 +67,7 @@ class App extends Component {
 
     const name = playerW;
     const email = playerWemail;
-    // instantiate socket instance on the cllient side
+    // instantiate socket instance on the client side
     this.socket = io.connect();
 
     this.socket.on('connect', () => {
@@ -203,7 +201,7 @@ class App extends Component {
   }
 
   sendMessage(msg) {
-    const { room } = this.props; 
+    const { room } = this.props;
     this.socket.emit('message', msg, room);
   }
 
@@ -269,18 +267,18 @@ class App extends Component {
               <Message message={error} />
             </div>
 
-            <div className="flex-col right-col">
+            {/* <div className="flex-col right-col">
               <MoveHistory moveHistory={moveHistory} />
               <ChatBox messages={messages} sendMessage={this.sendMessage} />
-            </div>
+            </div> */}
 
             <div>
-              <Alert 
+              <Alert
                 className="pauseRequest"
-                title="Would you like to pause this game?" 
-                actions={pauseActions} 
-                open={pauseOpen} 
-                handleClose={this.handlePauseClose} 
+                title="Would you like to pause this game?"
+                actions={pauseActions}
+                open={pauseOpen}
+                handleClose={this.handlePauseClose}
               />
               <Alert
                 className="cancelPauseRequest"
