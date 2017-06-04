@@ -6,9 +6,7 @@ import axios from 'axios';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import { updateTimer, pauseTimer, cancelPauseDialogClose, updateAlertName, cancelPauseDialogOpen,
-   pauseDialogOpen, pauseDialogClose, setPlayerW, updateRoomInfo, getRequestFailure, receiveGame,
-    movePiece, unselectPiece, capturePiece, displayError, colorSquare , sendMsg } from '../store/actions';
+import { updateTimer, pauseTimer, cancelPauseDialogClose, updateAlertName, cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece, displayError, colorSquare, sendMsg } from '../store/actions';
 
 // Components
 import ChessMenu from '../components/ChessMenu';
@@ -69,7 +67,7 @@ class App extends Component {
 
     const name = playerW;
     const email = playerWemail;
-    // instantiate socket instance on the cllient side
+    // instantiate socket instance on the client side
     this.socket = io.connect();
 
     this.socket.on('connect', () => {

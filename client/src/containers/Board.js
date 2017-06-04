@@ -12,12 +12,10 @@ class Board extends Component {
     this.onMouseLeave = this.onMouseLeave.bind(this);
     this.selectSquareClass = this.selectSquareClass.bind(this);
   }
-
   componentDidMount() {
     // const { dispatch } = this.props;
     // dispatch(fetchGame());
   }
-
   onClick(coordinates) {
     const { dispatch, board, fromPosition, selectedPiece, attemptMove, room } = this.props;
 
@@ -27,7 +25,6 @@ class Board extends Component {
     console.log('SELECTION: ', selection);
     // If no piece is currently selected
     if (selectedPiece === '') {
-      // && selection[0] === playerColor
       if (selection) {
         dispatch(selectPiece(selection, coordinates));
         dispatch(colorSquare('board-col green', coordinates));
@@ -47,14 +44,12 @@ class Board extends Component {
     //   dispatch(capturePiece(selectedPiece, fromPosition, coordinates, capturedPiece));
     }
   }
-
   onMouseEnter(coordinates) {
     const { selectedPiece, checkLegalMove, fromPosition, room } = this.props;
     if (selectedPiece) {
       checkLegalMove(fromPosition, coordinates, room);
     }
   }
-
   onMouseLeave(coordinates) {
     const { dispatch, fromPosition } = this.props;
     if (fromPosition) {
@@ -66,10 +61,6 @@ class Board extends Component {
         }
       }
     }
-
-    // if (selectedPiece) {
-    //   checkLegalMove(fromPosition, coordinates, room);
-    // }
   }
 
   selectSquareClass(rowIndex, colIndex) {
