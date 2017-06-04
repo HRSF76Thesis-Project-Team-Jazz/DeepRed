@@ -12,10 +12,13 @@ const createAndSaveNewGame = (room) => {
 };
 
 module.exports = (io, client) => {
-  let currentUser = '';
+  let currentName = '';
+  let currentEmail = '';
   // user socket communications
-  client.on('sendCurrentUserName', (currentUserName) => {
-    currentUser = currentUserName; 
+  client.on('sendCurrentUserNameAndEmail', (currentUserName, currentUserEmail) => {
+    currentName = currentUserName; 
+    currentEmail = currentUserEmail;
+
     // dynamically create room number
     const room = `room ${count}`;
     // if current room has no player
@@ -23,20 +26,21 @@ module.exports = (io, client) => {
       client.join(room, () => {
         // add room number and first player into current room
         roomInfo.room = room;
-        roomInfo.playerW = currentUser;
+        roomInfo.playerW = currentName;
+        roomInfo.playerWemail = currentEmail;
         roomInfo.playerWid = client.client.id;
         roomInfo.playerWclicked = false;
         roomInfo.playerWtime = 600;
         // create new game instance
         createAndSaveNewGame(room);
-        currentUser = '';
         io.in(room).emit('firstPlayerJoined', roomInfo);
       });
       // if current room already has one player
     } else if (roomInfo.playerB === undefined || roomInfo.playerB === '') {
       client.join(room, () => {
         // add second player into current room
-        roomInfo.playerB = currentUser;
+        roomInfo.playerB = currentName;
+        roomInfo.playerBemail = currentEmail;
         roomInfo.playerBid = client.client.id;
         roomInfo.playerBclicked = false;
         roomInfo.playerBtime = 600;
@@ -46,26 +50,25 @@ module.exports = (io, client) => {
         createAndSaveNewGame(room);
         io.in(room).emit('startGame', roomInfo);
         // empty room info array, increament count, and ready for creating new room)
-        currentUser = '';
         roomInfo = {};
         count += 1;
       });
     }
   });
-//selectedPiece, 
+
   // logic socket communications
-  client.on('attemptMove', (origin, dest, selection, room) => {
+  client.on('attemptMove', (origin, dest, selection, clientRoom) => {
     console.log('attempted Move: ', origin, dest);
-    console.log('room number: ', room);
-    const newState = allGames[room].movePiece(origin, dest);
-    io.in(room).emit('attemptMoveResult', newState.error, origin, dest, selection);
+    console.log('room number: ', clientRoom);
+    const newState = allGames[clientRoom].movePiece(origin, dest);
+    io.in(clientRoom).emit('attemptMoveResult', newState.error, origin, dest, selection);
   });
 
-  client.on('checkLegalMove', (origin, dest, clientRoom) => {
+  client.on('checkLegalMove', (origin, dest, clientRoom, id) => {
     // console.log('checkLegalMove: ', origin, dest);
     // console.log('room number: ', room);
     const bool = isLegalMove(allGames[clientRoom], origin, dest).bool;
-    io.in(clientRoom).emit('isLegalMoveResult', dest, bool);
+    io.to(id).emit('isLegalMoveResult', dest, bool);
   });
 
   // control socket communications

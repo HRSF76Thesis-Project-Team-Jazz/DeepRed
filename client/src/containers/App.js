@@ -6,7 +6,9 @@ import axios from 'axios';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import { updateTimer, pauseTimer, cancelPauseDialogClose, updateAlertName, cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece, displayError, colorSquare , sendMsg } from '../store/actions';
+import { updateTimer, pauseTimer, cancelPauseDialogClose, updateAlertName, cancelPauseDialogOpen,
+   pauseDialogOpen, pauseDialogClose, setPlayerW, updateRoomInfo, getRequestFailure, receiveGame,
+    movePiece, unselectPiece, capturePiece, displayError, colorSquare , sendMsg } from '../store/actions';
 
 // Components
 import ChessMenu from '../components/ChessMenu';
@@ -63,28 +65,27 @@ class App extends Component {
   }
 
   startSocket() {
-    const { dispatch, playerW } = this.props;
+    const { dispatch, playerW, playerWemail } = this.props;
 
     const name = playerW;
+    const email = playerWemail;
     // instantiate socket instance on the cllient side
     this.socket = io.connect();
 
     this.socket.on('connect', () => {
-      console.log('client side connected!');
-      this.socket.emit('sendCurrentUserName', name);
+      console.log('client side socket connected!');
+      this.socket.emit('sendCurrentUserNameAndEmail', name, email);
     });
 
     this.socket.on('firstPlayerJoined', (roomInfo) => {
       dispatch(updateRoomInfo(roomInfo));
-      // dispatch(updateTimer(roomInfo));
       console.log(`first player (White) has joined ${roomInfo.room} as ${roomInfo.playerW} with socket id ${roomInfo.playerWid}`);
-      console.log(`first player local socket id is: ${this.socket.id}`);
+      // console.log(`first player local socket id is: ${this.socket.id}`);
     });
 
     this.socket.on('secondPlayerJoined', (roomInfo) => {
       console.log(`second player (White) has joined ${roomInfo.room} as ${roomInfo.playerB} with socket id ${roomInfo.playerBid}`);
-      console.log(`second player local socket id is: ${this.socket.id}`);
-      dispatch(updateTimer(roomInfo));
+      // console.log(`second player local socket id is: ${this.socket.id}`);
     });
 
     this.socket.on('startGame', (roomInfo) => {
@@ -190,19 +191,19 @@ class App extends Component {
   attemptMove(origin, dest, selection, room) {
     // const { dispatch, room} = this.props;
     console.log('sending origin and dest coordinates to server');
-    this.socket.emit('attemptMove', origin, dest, selection, room);
+    this.socket.emit('attemptMove', origin, dest, selection, room, this.socket.id);
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
   checkLegalMove(origin, dest, room) {
     // const { dispatch } = this.props;
     console.log('checking legal move');
-    this.socket.emit('checkLegalMove', origin, dest, room);
+    this.socket.emit('checkLegalMove', origin, dest, room, this.socket.id);
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
   sendMessage(msg) {
-    const { room } = this.props;
+    const { room } = this.props; 
     this.socket.emit('message', msg, room);
   }
 
@@ -222,7 +223,6 @@ class App extends Component {
       />,
     ];
 
-    // const cancelPauseOpen = false;
     const cancelPauseActions = [
       <FlatButton
         label="Ok"
@@ -309,6 +309,7 @@ function mapStateToProps(state) {
     messages,
   } = gameState;
   const {
+    playerWemail,
     playerW,
     playerB,
     room,
@@ -316,6 +317,7 @@ function mapStateToProps(state) {
   const { message, error } = moveState;
   const { pauseOpen, cancelPauseOpen, alertName } = controlState;
   return {
+    playerWemail,
     timeB,
     timeW,
     alertName,

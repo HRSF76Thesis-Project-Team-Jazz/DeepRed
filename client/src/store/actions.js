@@ -79,11 +79,6 @@ export const setPlayerW = player => ({
   player,
 });
 
-export const setPlayerB = player => ({
-  type: types.SET_PLAYER_B,
-  player,
-});
-
 export const getRequestFailure = message => ({
   type: types.GET_REQUEST_FAILURE,
   message,
@@ -104,11 +99,11 @@ export const pauseDialogClose = () => ({
 });
 
 export const cancelPauseDialogOpen = () => ({
-  type: types.CANCEL_PAUSE_DIALOG_OPEN
+  type: types.CANCEL_PAUSE_DIALOG_OPEN,
 });
 
 export const cancelPauseDialogClose = () => ({
-  type: types.CANCEL_PAUSE_DIALOG_CLOSE
+  type: types.CANCEL_PAUSE_DIALOG_CLOSE,
 });
 
 export const updateAlertName = alertName => ({
