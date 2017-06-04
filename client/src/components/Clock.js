@@ -19,9 +19,9 @@ class Clock extends Component {
     if (this.props.color === 'White') {
       time = timeW;
     }
-    console.log('timeB: ', timeB);
-    console.log('timeW: ', timeW);
-    console.log('color: ', this.props.color);
+    // console.log('timeB: ', timeB);
+    // console.log('timeW: ', timeW);
+    // console.log('color: ', this.props.color);
     return (
       <div>
         <ReactCountdownClock
