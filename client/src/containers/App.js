@@ -36,7 +36,6 @@ class App extends Component {
     this.sendPauseRequest = this.sendPauseRequest.bind(this);
     this.handlePauseOpen = this.handlePauseOpen.bind(this);
     this.handlePauseClose = this.handlePauseClose.bind(this);
-    this.onRejectPauseRequest = this.onRejectPauseRequest.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
     this.onCancelPauseRequest = this.onCancelPauseRequest.bind(this);
     this.handleCancelPauseClose = this.handleCancelPauseClose.bind(this);
