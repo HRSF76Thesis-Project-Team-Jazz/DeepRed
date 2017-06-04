@@ -11,6 +11,7 @@ class ChatBox extends Component {
     };
     this.submit = this.submit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   submit(info) {
@@ -23,6 +24,13 @@ class ChatBox extends Component {
     this.setState({
       message: info.target.value,
     });
+  }
+
+  handleKeyDown(event) {
+    console.log(event.key)
+    if (event.key === 'Enter'){
+      this.submit(event)
+    }
   }
 
   render() {
@@ -40,6 +48,7 @@ class ChatBox extends Component {
             underlineFocusStyle={{ borderColor: red900 }}
             value={this.state.message}
             onChange={this.handleChange}
+            onKeyDown={this.handleKeyDown}
             style={{ width: 150 }}
           />
           <RaisedButton
