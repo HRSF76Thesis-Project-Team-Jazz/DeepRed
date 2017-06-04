@@ -21,7 +21,7 @@ class Clock extends Component {
     }
     // console.log('timeB: ', timeB);
     // console.log('timeW: ', timeW);
-    console.log('color: ', this.props.color);
+    // console.log('color: ', this.props.color);
     return (
       <div>
         <ReactCountdownClock

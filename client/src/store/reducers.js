@@ -190,6 +190,9 @@ const userState = (state = Immutable({
   room: '',
   playerBid: '',
   playerWid: '',
+  playerBemail: '',
+  playerWemail: '',
+  thisEmail: '',
   thisUser: '',
 }), action) => {
   switch (action.type) {
@@ -197,7 +200,9 @@ const userState = (state = Immutable({
       return Immutable({
         ...state,
         playerW: action.player.data.display,
+        playerWemail: action.player.data.email,
         thisUser: action.player.data.display,
+        thisEmail: action.player.data.email,
       });
     }
     case types.SET_PLAYER_B: {
@@ -220,6 +225,8 @@ const userState = (state = Immutable({
         playerW: action.roomInfo.playerW,
         playerBid: action.roomInfo.playerBid,
         playerWid: action.roomInfo.playerWid,
+        playerBemail: action.roomInfo.playerBemail,
+        playerWemail: action.roomInfo.playerWemail,
       });
     }
     default:

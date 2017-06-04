@@ -50,7 +50,7 @@ class App extends Component {
     const { dispatch } = this.props;
     axios.get('/api/profiles/id')
     .then((response) => {
-      console.log('successfully fetched current user infomation');
+      console.log('successfully fetched current user infomation', response);
       dispatch(setPlayerW(response));
     })
     .then(() => {
@@ -63,27 +63,28 @@ class App extends Component {
   }
 
   startSocket() {
-    const { dispatch, playerW } = this.props;
+    const { dispatch, playerW, playerWemail } = this.props;
 
     const name = playerW;
+    const email = playerWemail;
     // instantiate socket instance on the cllient side
     this.socket = io.connect();
 
     this.socket.on('connect', () => {
-      console.log('client side connected!');
-      this.socket.emit('sendCurrentUserName', name);
+      console.log('client side connected!', playerWemail);
+      this.socket.emit('sendCurrentUserNameAndEmail', name, email);
     });
 
     this.socket.on('firstPlayerJoined', (roomInfo) => {
       dispatch(updateRoomInfo(roomInfo));
       // dispatch(updateTimer(roomInfo));
       console.log(`first player (White) has joined ${roomInfo.room} as ${roomInfo.playerW} with socket id ${roomInfo.playerWid}`);
-      console.log(`first player local socket id is: ${this.socket.id}`);
+      // console.log(`first player local socket id is: ${this.socket.id}`);
     });
 
     this.socket.on('secondPlayerJoined', (roomInfo) => {
       console.log(`second player (White) has joined ${roomInfo.room} as ${roomInfo.playerB} with socket id ${roomInfo.playerBid}`);
-      console.log(`second player local socket id is: ${this.socket.id}`);
+      // console.log(`second player local socket id is: ${this.socket.id}`);
       dispatch(updateTimer(roomInfo));
     });
 
@@ -309,6 +310,7 @@ function mapStateToProps(state) {
     messages,
   } = gameState;
   const {
+    playerWemail,
     playerW,
     playerB,
     room,
@@ -316,6 +318,7 @@ function mapStateToProps(state) {
   const { message, error } = moveState;
   const { pauseOpen, cancelPauseOpen, alertName } = controlState;
   return {
+    playerWemail,
     timeB,
     timeW,
     alertName,

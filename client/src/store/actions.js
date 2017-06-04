@@ -79,11 +79,6 @@ export const setPlayerW = player => ({
   player,
 });
 
-export const setPlayerB = player => ({
-  type: types.SET_PLAYER_B,
-  player,
-});
-
 export const getRequestFailure = message => ({
   type: types.GET_REQUEST_FAILURE,
   message,
