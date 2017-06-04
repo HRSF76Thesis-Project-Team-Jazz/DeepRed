@@ -1,37 +1,35 @@
 import React, { Component } from 'react';
 import ReactCountdownClock from 'react-countdown-clock';
 import { connect } from 'react-redux';
-import { pauseTimerB, pauseTimerW } from '../store/actions';
+import { pauseTimer } from '../store/actions';
 import './css/Clock.css';
 
 class Clock extends Component {
   constructor(props) {
     super(props);
-    this.readyForGame = this.readyForGame.bind(this);
-  }
-
-  readyForGame(e) {
-    const {dispatch, pausedW, pausedB, gameTurn, clockW, clockB} = this.props;
-    console.log('hello from ready for game: ', this.props.color);
-    if (this.props.color === 'Black') {
-      console.log('black triggered');
-      dispatch(pauseTimerB(pausedB));
-    } else if (this.props.color === 'White') {
-      console.log('white triggered');
-      dispatch(pauseTimerB(pausedW));
-    }
   }
 
   render() {
-    const { sendPauseRequest } = this.props;
+    const { sendPauseRequest, paused, timeB, timeW } = this.props;
+    let time = 0;
+
+    if (this.props.color === 'Black') {
+      time = timeB;
+    } 
+    if (this.props.color === 'White') {
+      time = timeW;
+    }
+    console.log('timeB: ', timeB);
+    console.log('timeW: ', timeW);
+    console.log('color: ', this.props.color);
     return (
       <div>
         <ReactCountdownClock
-          seconds={600}
+          seconds={time}
           color="#000"
           alpha={0.8}
           size={100}
-          paused={false}
+          paused={paused}
           onClick={sendPauseRequest}
         />
       </div>
@@ -42,8 +40,9 @@ class Clock extends Component {
 function mapStateToProps(state) {
   const { gameState, userState } = state;
   const {
-    pausedB,
-    pausedW,
+    timeB, 
+    timeW,
+    paused,
     moveHistory,
     capturedPiecesBlack,
     capturedPiecesWhite,
@@ -52,9 +51,10 @@ function mapStateToProps(state) {
     room,
   } = userState;
   return {
+    timeB,
+    timeW,
     room,
-    pausedB,
-    pausedW,
+    paused,
     moveHistory,
     capturedPiecesBlack,
     capturedPiecesWhite,
