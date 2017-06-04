@@ -55,20 +55,20 @@ module.exports = (io, client) => {
       });
     }
   });
-  
+
   // logic socket communications
   client.on('attemptMove', (origin, dest, selection, room) => {
     console.log('attempted Move: ', origin, dest);
     console.log('room number: ', room);
     const newState = allGames[room].movePiece(origin, dest);
-    io.in(room).emit('attemptMoveResult', newState.error, origin, dest, selection);
+    io.local.emit('attemptMoveResult', newState.error, origin, dest, selection);
   });
 
   client.on('checkLegalMove', (origin, dest, clientRoom) => {
     // console.log('checkLegalMove: ', origin, dest);
     // console.log('room number: ', room);
     const bool = isLegalMove(allGames[clientRoom], origin, dest).bool;
-    io.in(clientRoom).emit('isLegalMoveResult', dest, bool);
+    io.local.emit('isLegalMoveResult', dest, bool);
   });
 
   // control socket communications

@@ -1,5 +1,6 @@
 .captured-pieces {
-  min-height: 8vh;
+  /*min-height: 8vh;*/
+  min-height: 115px;
   background-color: #e6e6e6;
   border-radius: 2px;
   margin: 5px;
@@ -19,10 +20,11 @@
 }
 
 .countdown-clock {
-  align-items: right;
   position: absolute;
-  right: 60px;
-  top: 10px;
-  width: 60px;
-  height: 60px;
+  top: 14px;
+  left: 82%;
+}
+
+.display-color-text {
+  color: #600003;
 }

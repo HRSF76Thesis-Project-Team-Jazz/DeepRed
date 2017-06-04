@@ -99,11 +99,11 @@ export const pauseDialogClose = () => ({
 });
 
 export const cancelPauseDialogOpen = () => ({
-  type: types.CANCEL_PAUSE_DIALOG_OPEN
+  type: types.CANCEL_PAUSE_DIALOG_OPEN,
 });
 
 export const cancelPauseDialogClose = () => ({
-  type: types.CANCEL_PAUSE_DIALOG_CLOSE
+  type: types.CANCEL_PAUSE_DIALOG_CLOSE,
 });
 
 export const updateAlertName = alertName => ({

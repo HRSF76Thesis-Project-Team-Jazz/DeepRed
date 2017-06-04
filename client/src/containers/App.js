@@ -6,7 +6,9 @@ import axios from 'axios';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import { updateTimer, pauseTimer, cancelPauseDialogClose, updateAlertName, cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW, updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece, capturePiece, displayError, colorSquare , sendMsg } from '../store/actions';
+import { updateTimer, pauseTimer, cancelPauseDialogClose, updateAlertName, cancelPauseDialogOpen,
+   pauseDialogOpen, pauseDialogClose, setPlayerW, updateRoomInfo, getRequestFailure, receiveGame,
+    movePiece, unselectPiece, capturePiece, displayError, colorSquare , sendMsg } from '../store/actions';
 
 // Components
 import ChessMenu from '../components/ChessMenu';
@@ -50,7 +52,7 @@ class App extends Component {
     const { dispatch } = this.props;
     axios.get('/api/profiles/id')
     .then((response) => {
-      console.log('successfully fetched current user infomation', response);
+      console.log('successfully fetched current user infomation');
       dispatch(setPlayerW(response));
     })
     .then(() => {
@@ -71,13 +73,12 @@ class App extends Component {
     this.socket = io.connect();
 
     this.socket.on('connect', () => {
-      console.log('client side connected!', playerWemail);
+      console.log('client side socket connected!');
       this.socket.emit('sendCurrentUserNameAndEmail', name, email);
     });
 
     this.socket.on('firstPlayerJoined', (roomInfo) => {
       dispatch(updateRoomInfo(roomInfo));
-      // dispatch(updateTimer(roomInfo));
       console.log(`first player (White) has joined ${roomInfo.room} as ${roomInfo.playerW} with socket id ${roomInfo.playerWid}`);
       // console.log(`first player local socket id is: ${this.socket.id}`);
     });
@@ -85,7 +86,6 @@ class App extends Component {
     this.socket.on('secondPlayerJoined', (roomInfo) => {
       console.log(`second player (White) has joined ${roomInfo.room} as ${roomInfo.playerB} with socket id ${roomInfo.playerBid}`);
       // console.log(`second player local socket id is: ${this.socket.id}`);
-      dispatch(updateTimer(roomInfo));
     });
 
     this.socket.on('startGame', (roomInfo) => {
@@ -223,7 +223,6 @@ class App extends Component {
       />,
     ];
 
-    // const cancelPauseOpen = false;
     const cancelPauseActions = [
       <FlatButton
         label="Ok"

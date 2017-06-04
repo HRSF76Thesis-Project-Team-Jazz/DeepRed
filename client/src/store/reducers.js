@@ -17,8 +17,8 @@ import * as types from './actionTypes';
 const gameState = (state = Immutable({
   playerColor: 'W',
   gameId: '',
-  timeW: 0,
-  timeB: 0,
+  timeW: 600,
+  timeB: 600,
   paused: false,
   capturedPiecesBlack: [],
   capturedPiecesWhite: [],
@@ -73,9 +73,8 @@ const gameState = (state = Immutable({
       return Immutable({
         ...state,
         messages: state.messages.concat(action.msg)
-      })
+      });
     }
-    
     default:
       return state;
   }
@@ -96,13 +95,15 @@ const boardState = (state = {
   switch (action.type) {
     case types.MOVE_PIECE: {
       const board = state.board.slice(0);
-      board[action.coordinates[0]][action.coordinates[1]] = board[action.fromPosition[0]][action.fromPosition[1]];
+      board[action.coordinates[0]][action.coordinates[1]]
+        = board[action.fromPosition[0]][action.fromPosition[1]];
       board[action.fromPosition[0]][action.fromPosition[1]] = null;
       return { board };
     }
     case types.CAPTURE_PIECE: {
       const board = state.board.slice(0);
-      board[action.coordinates[0]][action.coordinates[1]] = board[action.fromPosition[0]][action.fromPosition[1]];
+      board[action.coordinates[0]][action.coordinates[1]]
+         = board[action.fromPosition[0]][action.fromPosition[1]];
       board[action.fromPosition[0]][action.fromPosition[1]] = null;
       return { board };
     }
