@@ -1,3 +1,10 @@
+// gameState types
+export const PAUSE_TIMER = 'PAUSE_TIMER';
+
+export const RESUME_TIMER = 'RESUME_TIMER';
+
+export const UPDATE_TIMER = 'UPDATE_TIMER';
+
 export const INVALID_SELECTION = 'INVALID_SELECTION';
 
 export const SELECT_PIECE = 'SELECT_PIECE';
@@ -20,7 +27,6 @@ export const DISPLAY_ERROR = 'DISPLAY_ERROR';
 
 export const CLEAR_ERROR = 'CLEAR_ERROR';
 
-
 // userState action types
 export const SET_PLAYER_W = 'SET_PLAYER_W';
 
@@ -33,9 +39,12 @@ export const PAUSE_DIALOG_OPEN = 'PAUSE_DIALOG_OPEN';
 
 export const PAUSE_DIALOG_CLOSE = 'PAUSE_DIALOG_CLOSE';
 
-export const CANCEL_PAUSE_DIALOG_OPEN = 'PAUSE_DIALOG_OPEN';
+export const CANCEL_PAUSE_DIALOG_OPEN = 'CANCEL_PAUSE_DIALOG_OPEN';
 
-export const CANCEL_PAUSE_DIALOG_CLOSE = 'PAUSE_DIALOG_CLOST'
+export const CANCEL_PAUSE_DIALOG_CLOSE = 'CANCEL_PAUSE_DIALOG_CLOSE';
+
+export const UPDATE_ALERT_NAME = 'UPDATE_ALERT_NAME';
+
 
 export const SEND_MESSAGE = 'SEND_MESSAGE';
 

@@ -17,10 +17,9 @@ import * as types from './actionTypes';
 const gameState = (state = Immutable({
   playerColor: 'W',
   gameId: '',
-  clockW: '',
-  clockB: '',
-  pausedW: false,
-  pausedB: false,
+  timeW: 0,
+  timeB: 0,
+  paused: false,
   capturedPiecesBlack: [],
   capturedPiecesWhite: [],
   gameTurn: 'W',
@@ -51,17 +50,23 @@ const gameState = (state = Immutable({
       newState[capturedPiecesArray] = state[capturedPiecesArray].concat(capturedPiece);
       return Immutable(newState);
     }
-
-    case types.PAUSE_TIMER_B: {
+    case types.PAUSE_TIMER: {
       return Immutable({
         ...state,
-        pausedW: true,
+        paused: true,
       });
     }
-    case types.PAUSE_TIMER_W: {
+    case types.RESUME_TIMER: {
       return Immutable({
         ...state,
-        pausedW: true,
+        paused: false,
+      });
+    }
+    case types.UPDATE_TIMER: {
+      return Immutable({
+        ...state,
+        timeW: action.roomInfo.playerWtime,
+        timeB: action.roomInfo.playerBtime,
       });
     }
     case types.SEND_MESSAGE: {
@@ -236,6 +241,7 @@ const squareState = (state = Immutable({
 };
 
 const controlState = (state = Immutable({
+  alertName: '',
   cancelPauseOpen: false,
   pauseOpen: false,
 }), action) => {
@@ -256,13 +262,19 @@ const controlState = (state = Immutable({
       return Immutable({
         ...state,
         cancelPauseOpen: true,
-      })
+      });
     }
     case types.CANCEL_PAUSE_DIALOG_CLOSE: {
       return Immutable({
         ...state,
         cancelPauseOpen: false,
-      })
+      });
+    }
+    case types.UPDATE_ALERT_NAME: {
+      return Immutable({
+        ...state,
+        alertName: action.alertName,
+      });
     }
     default:
       return state;
