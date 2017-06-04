@@ -27,9 +27,8 @@ class ChatBox extends Component {
   }
 
   handleKeyDown(event) {
-    console.log(event.key)
     if (event.key === 'Enter'){
-      this.submit(event)
+      this.submit(event);
     }
   }
 
