@@ -132,7 +132,6 @@ class App extends Component {
     });
 
     this.socket.on('cancelPauseNotification', playerName => {
-      console.log(`${playerName} canceled pause`);
       dispatch(updateAlertName(playerName));
       dispatch(cancelPauseDialogOpen());
       setTimeout(()=> {
@@ -142,15 +141,12 @@ class App extends Component {
     });
 
     this.socket.on('executePauseRequest', () => {
-    console.log('1123');
     dispatch(pauseTimer());
-    console.log('done');
     });
   }
   // CONTROL functions
   onAgreePauseRequest() {
     const { dispatch, room } = this.props;
-    console.log('123');
     dispatch(pauseDialogClose());
     this.socket.emit('agreePauseRequest', room, this.socket.id);
   }
@@ -192,7 +188,7 @@ class App extends Component {
   }
 
   attemptMove(origin, dest, selection, room) {
-    // const { dispatch } = this.props;
+    // const { dispatch, room} = this.props;
     console.log('sending origin and dest coordinates to server');
     this.socket.emit('attemptMove', origin, dest, selection, room);
     // this.socket.emit('checkLegalMove', originDestCoord);
@@ -206,7 +202,8 @@ class App extends Component {
   }
 
   sendMessage(msg) {
-    this.socket.emit('message', msg);
+    const { room } = this.props;
+    this.socket.emit('message', msg, room);
   }
 
   render() {

@@ -16,14 +16,12 @@ module.exports = (io, client) => {
   // user socket communications
   client.on('sendCurrentUserName', (currentUserName) => {
     currentUser = currentUserName; 
-    console.log('currentUser: ', currentUser);
     // dynamically create room number
     const room = `room ${count}`;
     // if current room has no player
     if (roomInfo.playerW === undefined || roomInfo.playerW === '') {
       client.join(room, () => {
         // add room number and first player into current room
-        console.log('cu: ', currentUser);
         roomInfo.room = room;
         roomInfo.playerW = currentUser;
         roomInfo.playerWid = client.client.id;
@@ -54,9 +52,9 @@ module.exports = (io, client) => {
       });
     }
   });
-
+//selectedPiece, 
   // logic socket communications
-  client.on('attemptMove', (selectedPiece, origin, dest, selection, room) => {
+  client.on('attemptMove', (origin, dest, selection, room) => {
     console.log('attempted Move: ', origin, dest);
     console.log('room number: ', room);
     const newState = allGames[room].movePiece(origin, dest);
@@ -79,7 +77,29 @@ module.exports = (io, client) => {
     io.in(clientRoom).emit('rejectPauseRequestNotification');
   });
 
-  client.on('message', (msg) => {
+  client.on('handleRejectPauseRequest', (room, id) => {
+    if (id === allRooms[room].playerBid) {
+      io.in(room).emit('cancelPauseNotification', allRooms[room].playerB);
+    } else {
+      io.in(room).emit('cancelPauseNotification', allRooms[room].playerW);
+    }
+  });
+
+  client.on('agreePauseRequest', (room, id) => {
+    if (id === allRooms[room].playerBid) {
+      allRooms[room].playerBclicked = true;
+    } 
+    if (id === allRooms[room]. playerWid) {
+      allRooms[room].playerWclicked = true;
+    }
+    if (allRooms[room].playerBclicked === true && allRooms[room].playerWclicked === true) {
+      io.in(room).emit('executePauseRequest');
+      allRooms[room].playerBclicked === false;
+      allRooms[room].playerWclicked === false;
+    }
+  })
+
+  client.on('message', (msg, room) => {
     let user = '';
     for (let key in allRooms[room]) {
       if (allRooms[room][key] === client.id) {
@@ -92,30 +112,4 @@ module.exports = (io, client) => {
     }
     io.in(room).emit('message', user + ': ' + msg);
   });
-
-  client.on('handleRejectPauseRequest', (room, id) => {
-    if (id === allRooms[room].playerBid) {
-      io.in(room).emit('cancelPauseNotification', allRooms[room].playerB);
-    } else {
-      io.in(room).emit('cancelPauseNotification', allRooms[room].playerW);
-    }
-  });
-
-  client.on('agreePauseRequest', (room, id) => {
-    // console.log('room: ', room);
-    // console.log('allRooms: ', allRooms);
-    // console.log('id: ', id);
-    if (id === allRooms[room].playerBid) {
-      allRooms[room].playerBclicked = true;
-    } 
-    if (id === allRooms[room]. playerWid) {
-      allRooms[room].playerWclicked = true;
-    }
-    // console.log('allRooms: ', allRooms);
-    if (allRooms[room].playerBclicked === true && allRooms[room].playerWclicked === true) {
-      io.in(room).emit('executePauseRequest');
-      allRooms[room].playerBclicked === false;
-      allRooms[room].playerWclicked === false;
-    }
-  })
 };
