@@ -1,13 +1,6 @@
 const knex = require('knex')(require('../knexfile'));
-// game = {
-//  session_id: session_id  
-//  color: 'white',
-//  display: 'user1',
-// 
-// }
 
 const newGame = (game) => {
-  console.log('new game!')
   if (game.color == 'white') {
     knex.insert({
       session_id: game.session_id,
@@ -31,13 +24,6 @@ const newGame = (game) => {
   }
 };
 
-
-// // game = {
-// //   session_id: session_id,
-// //   color: 'black',
-// //   display: 'user2'
-// // }
-
 const joinGame = (game) => {
   if (game.color == 'black') {
     knex('games').where({ session_id: game.session_id }).update({
@@ -52,8 +38,7 @@ const joinGame = (game) => {
        console.log(res);
     });
   }
-
-}
+};
 
 // // game = {
 // //   session_id: 32155,
@@ -207,13 +192,13 @@ const requestBlackPieces = (game) => {
   );
 };
 
-// module.exports = newGame;
-// module.exports = joinGame;
+module.exports.newGame = newGame;
+module.exports.joinGame = joinGame;
 // module.exports = saveMove;
 // module.exports = finishGame;
 // module.exports = requestClient;
 // module.exports = requestGame;
 // module.exports = requestHistory;
 // module.exports = requestWhitePieces;
-module.exports = requestBlackPieces;
+// module.exports = requestBlackPieces;
 

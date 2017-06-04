@@ -1,5 +1,6 @@
 const ChessGame = require('./ChessGame');
 const isLegalMove = require('./isLegalMove');
+const chessDB = require('../ChessDB');
 
 const allGames = {};
 const allRooms = {};
@@ -33,7 +34,16 @@ module.exports = (io, client) => {
         roomInfo.playerWtime = 600;
         // create new game instance
         createAndSaveNewGame(room);
+        // save to DB
+        chessDB.newGame({
+          session_id: room,
+          color: 'white',
+          display: currentUser,
+        })
+
+        currentUser = '';
         io.in(room).emit('firstPlayerJoined', roomInfo);
+
       });
       // if current room already has one player
     } else if (roomInfo.playerB === undefined || roomInfo.playerB === '') {
@@ -46,6 +56,12 @@ module.exports = (io, client) => {
         roomInfo.playerBtime = 600;
         allRooms[room] = roomInfo;
         io.in(room).emit('secondPlayerJoined', roomInfo);
+        // save playerB to current game in DB
+        chessDB.joinGame({
+          session_id: room,
+          color: 'black',
+          display: currentUser,
+        })
         // create new game instance
         createAndSaveNewGame(room);
         io.in(room).emit('startGame', roomInfo);
