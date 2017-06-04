@@ -57,18 +57,18 @@ module.exports = (io, client) => {
   });
 
   // logic socket communications
-  client.on('attemptMove', (origin, dest, selection, room) => {
+  client.on('attemptMove', (origin, dest, selection, clientRoom) => {
     console.log('attempted Move: ', origin, dest);
-    console.log('room number: ', room);
-    const newState = allGames[room].movePiece(origin, dest);
-    io.local.emit('attemptMoveResult', newState.error, origin, dest, selection);
+    console.log('room number: ', clientRoom);
+    const newState = allGames[clientRoom].movePiece(origin, dest);
+    io.in(clientRoom).emit('attemptMoveResult', newState.error, origin, dest, selection);
   });
 
-  client.on('checkLegalMove', (origin, dest, clientRoom) => {
+  client.on('checkLegalMove', (origin, dest, clientRoom, id) => {
     // console.log('checkLegalMove: ', origin, dest);
     // console.log('room number: ', room);
     const bool = isLegalMove(allGames[clientRoom], origin, dest).bool;
-    io.local.emit('isLegalMoveResult', dest, bool);
+    io.to(id).emit('isLegalMoveResult', dest, bool);
   });
 
   // control socket communications

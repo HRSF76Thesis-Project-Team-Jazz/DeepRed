@@ -191,19 +191,19 @@ class App extends Component {
   attemptMove(origin, dest, selection, room) {
     // const { dispatch, room} = this.props;
     console.log('sending origin and dest coordinates to server');
-    this.socket.emit('attemptMove', origin, dest, selection, room);
+    this.socket.emit('attemptMove', origin, dest, selection, room, this.socket.id);
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
   checkLegalMove(origin, dest, room) {
     // const { dispatch } = this.props;
     console.log('checking legal move');
-    this.socket.emit('checkLegalMove', origin, dest, room);
+    this.socket.emit('checkLegalMove', origin, dest, room, this.socket.id);
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
   sendMessage(msg) {
-    const { room } = this.props;
+    const { room } = this.props; 
     this.socket.emit('message', msg, room);
   }
 
