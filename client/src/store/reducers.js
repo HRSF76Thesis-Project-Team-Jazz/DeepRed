@@ -188,12 +188,16 @@ const userState = (state = Immutable({
   playerB: '',
   playerW: '',
   room: '',
+  playerBid: '',
+  playerWid: '',
+  thisUser: '',
 }), action) => {
   switch (action.type) {
     case types.SET_PLAYER_W: {
       return Immutable({
         ...state,
         playerW: action.player.data.display,
+        thisUser: action.player.data.display,
       });
     }
     case types.SET_PLAYER_B: {
