@@ -314,6 +314,8 @@ function mapStateToProps(state) {
     playerW,
     playerB,
     room,
+    thisEmail,
+    playerBemail,
   } = userState;
   const { message, error } = moveState;
   const { pauseOpen, cancelPauseOpen, alertName } = controlState;
@@ -333,6 +335,8 @@ function mapStateToProps(state) {
     capturedPiecesWhite,
     error,
     messages,
+    thisEmail,
+    playerBemail,
   };
 }
 

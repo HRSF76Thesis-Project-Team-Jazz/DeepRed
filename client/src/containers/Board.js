@@ -11,6 +11,11 @@ class Board extends Component {
     this.onMouseEnter = this.onMouseEnter.bind(this);
     this.onMouseLeave = this.onMouseLeave.bind(this);
     this.selectSquareClass = this.selectSquareClass.bind(this);
+
+    // TEMPORARY STATE FOR RENDERING BLACK
+    this.state = {
+      isBlack: true,
+    }
   }
   componentDidMount() {
     // const { dispatch } = this.props;
@@ -75,10 +80,28 @@ class Board extends Component {
   }
 
   render() {
-    const { board } = this.props;
+    const { board, thisEmail, playerBemail } = this.props;
+    const offset = (thisEmail === playerBemail) ? 7 : 0;
     return (
       <div className="board">
         {board.map((row, rowIndex) => (
+          <div key={Math.random()} className="board-row">
+            {row.map((col, colIndex) => (
+              <div
+                className={this.selectSquareClass(Math.abs(offset - rowIndex), Math.abs(offset - colIndex))}
+                key={(Math.abs(offset - rowIndex)).toString() + (Math.abs(offset - colIndex)).toString()}
+                role={'button'}
+                onClick={() => this.onClick([(Math.abs(offset - rowIndex)), (Math.abs(offset - colIndex))])}
+                onMouseEnter={() => this.onMouseEnter([(Math.abs(offset - rowIndex)), (Math.abs(offset - colIndex))])}
+                onMouseLeave={() => this.onMouseLeave([(Math.abs(offset - rowIndex)), (Math.abs(offset - colIndex))])}
+              >
+                <img className="piece-img" src={`/assets/${board[Math.abs(offset - rowIndex)][Math.abs(offset - colIndex)]}.png`} alt={''} />
+              </div>),
+            )}
+          </div>
+        ),
+        )}
+        {/*{board.map((row, rowIndex) => (
           <div key={Math.random()} className="board-row">
             {row.map((col, colIndex) => (
               <div
@@ -94,7 +117,7 @@ class Board extends Component {
             )}
           </div>
         ),
-        )}
+        )}*/}
       </div>
     );
   }
@@ -105,7 +128,7 @@ function mapStateToProps(state) {
   const { playerColor } = gameState;
   const { board } = boardState;
   const { fromPosition, selectedPiece } = moveState;
-  const { room } = userState;
+  const { room, thisEmail, playerBemail } = userState;
   const { color, hover } = squareState;
   return {
     playerColor,
@@ -115,6 +138,8 @@ function mapStateToProps(state) {
     room,
     color,
     hover,
+    thisEmail,
+    playerBemail,
   };
 }
 
