@@ -5,6 +5,16 @@ import * as types from './actionTypes';
  * Functions that create actions:
  * Actions = { type: TYPE, vars: VALS }
  */
+// gameState actions
+export const pauseTimer = () => ({
+  type: types.PAUSE_TIMER,
+});
+
+export const updateTimer = roomInfo => ({
+  type: types.UPDATE_TIMER,
+  roomInfo,
+});
+
 export const displayError = error => ({
   type: types.DISPLAY_ERROR,
   error,
@@ -85,16 +95,6 @@ export const updateRoomInfo = roomInfo => ({
 });
 
 // controlState actions
-export const pauseTimerB = pausedB => ({
-  type: types.PAUSE_TIMER_B,
-  pausedB,
-});
-
-export const pauseTimerW = pausedW => ({
-  type: types.PAUSE_TIMER_W,
-  pausedW,
-});
-
 export const pauseDialogOpen = () => ({
   type: types.PAUSE_DIALOG_OPEN,
 });
@@ -109,6 +109,11 @@ export const cancelPauseDialogOpen = () => ({
 
 export const cancelPauseDialogClose = () => ({
   type: types.CANCEL_PAUSE_DIALOG_CLOSE
+});
+
+export const updateAlertName = alertName => ({
+  type: types.UPDATE_ALERT_NAME,
+  alertName,
 });
 
 // other requests

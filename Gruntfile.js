@@ -16,7 +16,7 @@ module.exports = (grunt) => {
         src: ['server/test/**/*.js'],
       },
     },
-
+// config.connection.database
     pgcreatedb: {
       default: {
         connection: {
@@ -24,7 +24,7 @@ module.exports = (grunt) => {
           password: config.connection.password,
           host: config.connection.host,
           port: config.connection.port,
-          database: config.connection.database,
+          database: 'template1',
         },
         name: config.connection.database,
       },
