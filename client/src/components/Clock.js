@@ -26,8 +26,8 @@ class Clock extends Component {
         <ReactCountdownClock
           seconds={ time === true ? timeB : timeW}
           color="#000"
-          alpha={0.9}
-          size={90}
+          alpha={0.8}
+          size={85}
           paused={paused}
           onClick={sendPauseRequest}
         />

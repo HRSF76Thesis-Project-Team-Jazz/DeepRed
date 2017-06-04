@@ -22,7 +22,7 @@
 .countdown-clock {
   position: absolute;
   top: 14px;
-  left: 82%;
+  right: 90px;
 }
 
 .display-color-text {
