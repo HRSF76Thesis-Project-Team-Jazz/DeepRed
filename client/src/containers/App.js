@@ -53,7 +53,7 @@ class App extends Component {
     const { dispatch } = this.props;
     axios.get('/api/profiles/id')
     .then((response) => {
-      console.log('successfully fetched current user infomation');
+      console.log('successfully fetched current user infomation: ', response);
       dispatch(setPlayerW(response));
     })
     .then(() => {
