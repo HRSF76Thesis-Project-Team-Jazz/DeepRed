@@ -203,7 +203,7 @@ class App extends Component {
   }
 
   sendMessage(msg) {
-    const { room } = this.props; 
+    const { room } = this.props;
     this.socket.emit('message', msg, room);
   }
 
@@ -269,18 +269,18 @@ class App extends Component {
               <Message message={error} />
             </div>
 
-            <div className="flex-col right-col">
+            {/* <div className="flex-col right-col">
               <MoveHistory moveHistory={moveHistory} />
               <ChatBox messages={messages} sendMessage={this.sendMessage} />
-            </div>
+            </div> */}
 
             <div>
-              <Alert 
+              <Alert
                 className="pauseRequest"
-                title="Would you like to pause this game?" 
-                actions={pauseActions} 
-                open={pauseOpen} 
-                handleClose={this.handlePauseClose} 
+                title="Would you like to pause this game?"
+                actions={pauseActions}
+                open={pauseOpen}
+                handleClose={this.handlePauseClose}
               />
               <Alert
                 className="cancelPauseRequest"

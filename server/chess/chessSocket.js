@@ -1,6 +1,6 @@
 const ChessGame = require('./ChessGame');
 const isLegalMove = require('./isLegalMove');
-const chessDB = require('../ChessDB');
+const chessDB = require('../chessDB');
 
 const allGames = {};
 const allRooms = {};
@@ -17,7 +17,7 @@ module.exports = (io, client) => {
   let currentEmail = '';
   // user socket communications
   client.on('sendCurrentUserNameAndEmail', (currentUserName, currentUserEmail) => {
-    currentName = currentUserName; 
+    currentName = currentUserName;
     currentEmail = currentUserEmail;
 
     // dynamically create room number
@@ -35,15 +35,14 @@ module.exports = (io, client) => {
         // create new game instance
         createAndSaveNewGame(room);
         // save to DB
-        chessDB.newGame({
-          session_id: room,
-          color: 'white',
-          display: currentUser,
-        })
-
-        currentUser = '';
+        // chessDB.newGame({
+        //   session_id: room,
+        //   color: 'white',
+        //   display: currentUser,
+        // });
+        //
+        // currentUser = '';
         io.in(room).emit('firstPlayerJoined', roomInfo);
-
       });
       // if current room already has one player
     } else if (roomInfo.playerB === undefined || roomInfo.playerB === '') {
@@ -57,11 +56,11 @@ module.exports = (io, client) => {
         allRooms[room] = roomInfo;
         io.in(room).emit('secondPlayerJoined', roomInfo);
         // save playerB to current game in DB
-        chessDB.joinGame({
-          session_id: room,
-          color: 'black',
-          display: currentUser,
-        })
+        // chessDB.joinGame({
+        //   session_id: room,
+        //   color: 'black',
+        //   display: currentUser,
+        // });
         // create new game instance
         createAndSaveNewGame(room);
         io.in(room).emit('startGame', roomInfo);
@@ -107,7 +106,7 @@ module.exports = (io, client) => {
   client.on('agreePauseRequest', (room, id) => {
     if (id === allRooms[room].playerBid) {
       allRooms[room].playerBclicked = true;
-    } 
+    }
     if (id === allRooms[room]. playerWid) {
       allRooms[room].playerWclicked = true;
     }

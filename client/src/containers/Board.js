@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { invalidSelection, selectPiece, colorSquare } from '../store/actions';
+import { invalidSelection, selectPiece, colorSquare, displayError } from '../store/actions';
 import './css/Board.css';
 
 class Board extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-    };
-
     this.onClick = this.onClick.bind(this);
     this.onMouseEnter = this.onMouseEnter.bind(this);
     this.onMouseLeave = this.onMouseLeave.bind(this);
@@ -34,6 +31,7 @@ class Board extends Component {
       if (selection) {
         dispatch(selectPiece(selection, coordinates));
         dispatch(colorSquare('board-col green', coordinates));
+        dispatch(displayError(''));
       } else {
         dispatch(invalidSelection(coordinates));
       }
