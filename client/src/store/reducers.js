@@ -34,6 +34,7 @@ const gameState = (state = Immutable({
       return Immutable({
         ...state,
         moveHistory: state.moveHistory.concat({ from, to }),
+        gameTurn: action.gameTurn,
       });
     }
     case types.CAPTURE_PIECE: {
@@ -46,6 +47,7 @@ const gameState = (state = Immutable({
         ...state,
         moveHistory: state.moveHistory.concat({ from, to, capturedPiece }),
         capturedPiecesArray: state[capturedPiecesArray].concat(capturedPiece),
+        gameTurn: action.gameTurn,
       };
       newState[capturedPiecesArray] = state[capturedPiecesArray].concat(capturedPiece);
       return Immutable(newState);
