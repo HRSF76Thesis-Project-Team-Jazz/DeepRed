@@ -3,14 +3,12 @@ import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
-import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
 import {
   updateTimer, pauseTimer, cancelPauseDialogClose, updateAlertName,
   cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW,
   updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece,
-  capturePiece, displayError, colorSquare, sendMsg,
+  capturePiece, displayError, colorSquare, sendMsg, resumeTimerB, resumeTimerW,
 } from '../store/actions';
 
 // Components
@@ -55,7 +53,7 @@ class App extends Component {
     const { dispatch } = this.props;
     axios.get('/api/profiles/id')
       .then((response) => {
-        console.log('successfully fetched current user infomation: ', response);
+        console.log('successfully fetched current user infomation: ');
         dispatch(setPlayerW(response));
       })
       .then(() => {
@@ -68,7 +66,7 @@ class App extends Component {
   }
 
   startSocket() {
-    const { dispatch, playerW, playerWemail } = this.props;
+    const { dispatch, playerW, playerWemail, gameTurn } = this.props;
 
     const name = playerW;
     const email = playerWemail;
@@ -94,6 +92,7 @@ class App extends Component {
     this.socket.on('startGame', (roomInfo) => {
       dispatch(updateRoomInfo(roomInfo));
       dispatch(updateTimer(roomInfo));
+      dispatch(resumeTimerW());
     });
 
     this.socket.on('message', (msg) => {
@@ -105,8 +104,22 @@ class App extends Component {
       if (error === null) {
         if (selection) {
           dispatch(capturePiece(origin, dest, selection, gameTurn));
+          if (gameTurn === 'B') {
+            dispatch(pauseTimer());
+            dispatch(resumeTimerB());
+          } else {
+            dispatch(pauseTimer());
+            dispatch(resumeTimerW());
+          }
         } else {
           dispatch(movePiece(origin, dest, gameTurn));
+          if (gameTurn === 'W') {
+            dispatch(pauseTimer());
+            dispatch(resumeTimerW());
+          } else {
+            dispatch(pauseTimer());
+            dispatch(resumeTimerB());
+          }
         }
       } else {
         console.log('---------- ERROR: ', error);
@@ -147,6 +160,16 @@ class App extends Component {
     this.socket.on('executePauseRequest', () => {
       dispatch(pauseTimer());
     });
+
+    this.socket.on('executeResumeRequest', () => {
+      if (gameTurn === 'B') {
+        dispatch(pauseTimer());
+        dispatch(resumeTimerB());
+      } else {
+        dispatch(pauseTimer());
+        dispatch(resumeTimerW());
+      }
+    })
   }
   // CONTROL functions
   onAgreePauseRequest() {
@@ -168,8 +191,12 @@ class App extends Component {
   }
 
   sendPauseRequest() {
-    const { room } = this.props;
-    this.socket.emit('requestPause', room);
+    const { dispatch, room, pausedB, pausedW } = this.props;
+    if (pausedB === true && pausedW === true) {
+      this.socket.emit('requestResume', room);
+    } else {
+      this.socket.emit('requestPause', room);
+    }
   }
 
   handlePauseOpen() {
@@ -213,7 +240,7 @@ class App extends Component {
   render() {
     const {
       alertName, cancelPauseOpen, pauseOpen, moveHistory,
-      capturedPiecesBlack, capturedPiecesWhite, message,
+      capturedPiecesBlack, capturedPiecesWhite,
       playerB, playerW, error, messages, isWhite,
     } = this.props;
 
@@ -258,17 +285,19 @@ class App extends Component {
         </div>
         <div className="content">
           <div className="flex-row">
-
             <div className="flex-col left-col">
               <div className="countdown-top-clock">
-                <Clock color="Black" sendPauseRequest={this.sendPauseRequest} />
+                {(playerB !== undefined) ?
+                  <Clock color={(!isWhite) ? 'White' : 'Black'} sendPauseRequest={this.sendPauseRequest} /> : null
+                }
               </div>
               <MoveHistory className="move-history" moveHistory={moveHistory} />
               <div className="countdown-bot-clock">
-                <Clock color="White" sendPauseRequest={this.sendPauseRequest} />
+                {(playerB !== undefined) ?
+                  <Clock color={(isWhite) ? 'White' : 'Black'} sendPauseRequest={this.sendPauseRequest} /> : null
+                }
               </div>
             </div>
-
             <div className="flex-col">
               <CapturedPieces
                 color={(!isWhite) ? 'White' : 'Black'}
@@ -320,7 +349,8 @@ function mapStateToProps(state) {
   const {
     timeB,
     timeW,
-    paused,
+    pausedB,
+    pausedW,
     moveHistory,
     capturedPiecesBlack,
     capturedPiecesWhite,
@@ -339,7 +369,8 @@ function mapStateToProps(state) {
     playerWemail,
     timeB,
     timeW,
-    paused,
+    pausedB,
+    pausedW,
     alertName,
     cancelPauseOpen,
     pauseOpen,

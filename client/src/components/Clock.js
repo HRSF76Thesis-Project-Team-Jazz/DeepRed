@@ -9,24 +9,16 @@ class Clock extends Component {
   }
 
   render() {
-    const { sendPauseRequest, paused, timeB, timeW } = this.props;
-
-    let time = true;
-    if (this.props.color === 'Black') {
-      time = true;
-    }
-    if (this.props.color === 'White') {
-      time = false;
-    }
+    const { sendPauseRequest, pausedB, pausedW, timeB, timeW, gameTurn } = this.props;
 
     return (
       <div>
         <ReactCountdownClock
-          seconds={time === true ? timeB : timeW}
+          seconds={(this.props.color === 'Black') ? timeB : timeW}
           color="#000"
           alpha={0.8}
           size={85}
-          paused={paused}
+          paused={(this.props.color === 'Black') ? pausedW : pausedB}
           onClick={sendPauseRequest}
         />
       </div>
@@ -39,7 +31,8 @@ function mapStateToProps(state) {
   const {
     timeB,
     timeW,
-    paused,
+    pausedB,
+    pausedW,
     moveHistory,
     capturedPiecesBlack,
     capturedPiecesWhite,
@@ -51,7 +44,8 @@ function mapStateToProps(state) {
     timeB,
     timeW,
     room,
-    paused,
+    pausedB,
+    pausedW,
     moveHistory,
     capturedPiecesBlack,
     capturedPiecesWhite,

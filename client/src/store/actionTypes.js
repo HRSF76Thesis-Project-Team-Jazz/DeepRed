@@ -1,7 +1,9 @@
 // gameState types
 export const PAUSE_TIMER = 'PAUSE_TIMER';
 
-export const RESUME_TIMER = 'RESUME_TIMER';
+export const RESUME_TIMER_B = 'RESUME_TIMER_B';
+
+export const RESUME_TIMER_W = 'RESUME_TIMER_W';
 
 export const UPDATE_TIMER = 'UPDATE_TIMER';
 

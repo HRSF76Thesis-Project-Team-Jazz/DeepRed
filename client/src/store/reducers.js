@@ -19,7 +19,8 @@ const gameState = (state = Immutable({
   gameId: '',
   timeW: 600,
   timeB: 600,
-  paused: false,
+  pausedB: true,
+  pausedW: true,
   capturedPiecesBlack: [],
   capturedPiecesWhite: [],
   gameTurn: 'W',
@@ -55,13 +56,20 @@ const gameState = (state = Immutable({
     case types.PAUSE_TIMER: {
       return Immutable({
         ...state,
-        paused: true,
+        pausedB: true,
+        pausedW: true,
       });
     }
-    case types.RESUME_TIMER: {
+    case types.RESUME_TIMER_B: {
       return Immutable({
         ...state,
-        paused: false,
+        pausedW: false,
+      });
+    }
+    case types.RESUME_TIMER_W: {
+      return Immutable({
+        ...state,
+        pausedB: false,
       });
     }
     case types.UPDATE_TIMER: {
