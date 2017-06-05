@@ -21,6 +21,7 @@ import MoveHistory from '../components/MoveHistory';
 import Alert from './Alert';
 import ChatBox from '../components/ChatBox';
 import PlayerName from '../components/PlayerName';
+import Clock from '../components/Clock';
 import './css/App.css';
 
 
@@ -44,6 +45,7 @@ class App extends Component {
     this.onCancelPauseRequest = this.onCancelPauseRequest.bind(this);
     this.handleCancelPauseClose = this.handleCancelPauseClose.bind(this);
     this.onAgreePauseRequest = this.onAgreePauseRequest.bind(this);
+    this.onChangePlayerTurn = this.onChangePlayerTurn.bind(this);
   }
 
   componentDidMount() {
@@ -106,10 +108,10 @@ class App extends Component {
         if (selection) {
           dispatch(capturePiece(origin, dest, selection, gameTurn));
           if (gameTurn === 'B') {
-            dispatch(pauseTimer());
-            dispatch(resumeTimerB())
+            this.onChangePlayerTurn();
+            dispatch(resumeTimerB());
           } else {
-            dispatch(pauseTimer());
+            this.onChangePlayerTurn();
             dispatch(resumeTimerW());
           }
         } else if (castling) {
@@ -117,10 +119,10 @@ class App extends Component {
         } else {
           dispatch(movePiece(origin, dest, gameTurn));
           if (gameTurn === 'W') {
-            dispatch(pauseTimer());
+            this.onChangePlayerTurn();
             dispatch(resumeTimerW());
           } else {
-            dispatch(pauseTimer());
+            this.onChangePlayerTurn();
             dispatch(resumeTimerB());
           }
         }
@@ -167,15 +169,26 @@ class App extends Component {
 
     this.socket.on('executeResumeRequest', () => {
       if (gameTurn === 'B') {
-        dispatch(pauseTimer());
+        this.onChangePlayerTurn();
         dispatch(resumeTimerB());
       } else {
-        dispatch(pauseTimer());
+        this.onChangePlayerTurn();
         dispatch(resumeTimerW());
       }
     });
+
+    this.socket.on('sendUpdateTime', (roomInfo) => {
+      dispatch(updateTimer(roomInfo));
+    });
   }
-  // CONTROL functions
+
+  // CONTROL function
+  onChangePlayerTurn() {
+    const { dispatch, room, timeB, timeW } = this.props;
+    dispatch(pauseTimer());
+    this.socket.emit('updateTime', room, timeB, timeW);
+  }
+
   onAgreePauseRequest() {
     const { dispatch, room } = this.props;
     dispatch(pauseDialogClose());
@@ -277,11 +290,11 @@ class App extends Component {
         <div className="content">
           <div className="flex-row">
             <div className="flex-col left-col">
-              {/* <div className="countdown-top-clock">
+               <div className="countdown-top-clock">
                 {(playerB !== undefined) ?
                   <Clock color={(!isWhite) ? 'White' : 'Black'} sendPauseRequest={this.sendPauseRequest} /> : null
                 }
-              </div> */}
+              </div> 
               <PlayerName
                 color={(!isWhite) ? 'White' : 'Black'}
                 player={(!isWhite) ? playerW : playerB}
@@ -295,11 +308,11 @@ class App extends Component {
                 player={(isWhite) ? playerW : playerB}
                 position="bot"
               />
-              {/* <div className="countdown-bot-clock">
+               <div className="countdown-bot-clock">
                 {(playerB !== undefined) ?
                   <Clock color={(isWhite) ? 'White' : 'Black'} sendPauseRequest={this.sendPauseRequest} /> : null
                 }
-              </div> */}
+              </div> 
             </div>
             <div className="flex-col capt-col">
               <div className="flex-col capt-black-col">
