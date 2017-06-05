@@ -92,6 +92,7 @@ class App extends Component {
     this.socket.on('startGame', (roomInfo) => {
       dispatch(updateRoomInfo(roomInfo));
       dispatch(updateTimer(roomInfo));
+      dispatch(resumeTimerW());
     });
 
     this.socket.on('message', (msg) => {
@@ -103,16 +104,16 @@ class App extends Component {
       if (error === null) {
         if (selection) {
           dispatch(capturePiece(origin, dest, selection, gameTurn));
-          if (gameTurn === 'W') {
-            dispatch(pauseTimer());
-            dispatch(resumeTimerW());
-          } else {
+          if (gameTurn === 'B') {
             dispatch(pauseTimer());
             dispatch(resumeTimerB());
+          } else {
+            dispatch(pauseTimer());
+            dispatch(resumeTimerW());
           }
         } else {
           dispatch(movePiece(origin, dest, gameTurn));
-          if (gameTurn === 'B') {
+          if (gameTurn === 'W') {
             dispatch(pauseTimer());
             dispatch(resumeTimerW());
           } else {
@@ -180,8 +181,24 @@ class App extends Component {
   }
 
   sendPauseRequest() {
-    const { room } = this.props;
-    this.socket.emit('requestPause', room);
+    const { dispatch, room, pausedB, pausedW, gameTurn } = this.props;
+    if (pausedB === true && pausedW === true) {
+      if (gameTurn === 'B') {
+        dispatch(pauseTimer());
+        dispatch(resumeTimerB());
+      } else {
+        dispatch(pauseTimer());
+        dispatch(resumeTimerW());
+      }
+      // send the user resume timer request
+      // once both parties agree to resume the game,
+      // the timer will start to count down based on
+      // the game turn.
+      // for mvp demo, we are only going to resume
+      // the timer without asking user permission
+    } else {
+      this.socket.emit('requestPause', room);
+    }
   }
 
   handlePauseOpen() {
@@ -334,7 +351,8 @@ function mapStateToProps(state) {
   const {
     timeB,
     timeW,
-    paused,
+    pausedB,
+    pausedW,
     moveHistory,
     capturedPiecesBlack,
     capturedPiecesWhite,
@@ -353,7 +371,8 @@ function mapStateToProps(state) {
     playerWemail,
     timeB,
     timeW,
-    paused,
+    pausedB,
+    pausedW,
     alertName,
     cancelPauseOpen,
     pauseOpen,

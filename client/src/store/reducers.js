@@ -63,13 +63,13 @@ const gameState = (state = Immutable({
     case types.RESUME_TIMER_B: {
       return Immutable({
         ...state,
-        pausedB: false,
+        pausedW: false,
       });
     }
     case types.RESUME_TIMER_W: {
       return Immutable({
         ...state,
-        pausedW: false,
+        pausedB: false,
       });
     }
     case types.UPDATE_TIMER: {
