@@ -288,7 +288,8 @@ class App extends Component {
             </div>
 
             <div className="flex-col right-col">
-              <ChatBox className="chat-box" messages={messages} sendMessage={this.sendMessage} />
+              <Message message={error} />
+              <ChatBox messages={messages} sendMessage={this.sendMessage} />
             </div>
 
             <div>

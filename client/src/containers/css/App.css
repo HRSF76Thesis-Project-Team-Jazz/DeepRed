@@ -75,7 +75,7 @@ body {
 
 .right-col {
   background-color: #808080;
-  margin: 15px auto;
+  margin: 10px auto;
   border-radius: 2px;
   color: white;
   width: 30vh;
@@ -90,8 +90,4 @@ body {
   position: relative;
   bottom: 12vh;
   left: 3vh;
-}
-.move-history {
-}
-.chat-box {
 }
