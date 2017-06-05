@@ -119,6 +119,10 @@ module.exports = (io, client) => {
     }
   });
 
+  client.on('requestResume', (room) => {
+    io.in(room).emit('executeResumeRequest');
+  });
+
   client.on('message', (msg, room) => {
     let user = '';
     for (let key in allRooms[room]) {

@@ -66,7 +66,7 @@ class App extends Component {
   }
 
   startSocket() {
-    const { dispatch, playerW, playerWemail } = this.props;
+    const { dispatch, playerW, playerWemail, gameTurn } = this.props;
 
     const name = playerW;
     const email = playerWemail;
@@ -160,6 +160,16 @@ class App extends Component {
     this.socket.on('executePauseRequest', () => {
       dispatch(pauseTimer());
     });
+
+    this.socket.on('executeResumeRequest', () => {
+      if (gameTurn === 'B') {
+        dispatch(pauseTimer());
+        dispatch(resumeTimerB());
+      } else {
+        dispatch(pauseTimer());
+        dispatch(resumeTimerW());
+      }
+    })
   }
   // CONTROL functions
   onAgreePauseRequest() {
@@ -181,21 +191,9 @@ class App extends Component {
   }
 
   sendPauseRequest() {
-    const { dispatch, room, pausedB, pausedW, gameTurn } = this.props;
+    const { dispatch, room, pausedB, pausedW } = this.props;
     if (pausedB === true && pausedW === true) {
-      if (gameTurn === 'B') {
-        dispatch(pauseTimer());
-        dispatch(resumeTimerB());
-      } else {
-        dispatch(pauseTimer());
-        dispatch(resumeTimerW());
-      }
-      // send the user resume timer request
-      // once both parties agree to resume the game,
-      // the timer will start to count down based on
-      // the game turn.
-      // for mvp demo, we are only going to resume
-      // the timer without asking user permission
+      this.socket.emit('requestResume', room);
     } else {
       this.socket.emit('requestPause', room);
     }
