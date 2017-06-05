@@ -17,23 +17,30 @@ class Board extends Component {
   }
 
   onClick(coordinates) {
-    const { dispatch, board, fromPosition, selectedPiece, attemptMove, room } = this.props;
+    const {
+      dispatch, board, fromPosition, selectedPiece,
+      attemptMove, room, gameTurn, isWhite,
+    } = this.props;
 
-    const x = coordinates[0];
-    const y = coordinates[1];
-    const selection = board[x][y];
-    console.log('SELECTION: ', selection);
-    // If no piece is currently selected
-    if (selectedPiece === '') {
-      if (selection) {
-        dispatch(selectPiece(selection, coordinates));
-        dispatch(colorSquare('board-col green', coordinates));
-        dispatch(displayError(''));
-      } else {
-        dispatch(invalidSelection(coordinates));
-      }
+    if ((isWhite && gameTurn === 'B') || (!isWhite && gameTurn === 'W')) {
+      dispatch(displayError('Not your turn'));
     } else {
-      attemptMove(fromPosition, coordinates, selection, room);
+      const x = coordinates[0];
+      const y = coordinates[1];
+      const selection = board[x][y];
+      console.log('SELECTION: ', selection);
+      // If no piece is currently selected
+      if (selectedPiece === '') {
+        if (selection) {
+          dispatch(selectPiece(selection, coordinates));
+          dispatch(colorSquare('board-col green', coordinates));
+          dispatch(displayError(''));
+        } else {
+          dispatch(invalidSelection(coordinates));
+        }
+      } else {
+        attemptMove(fromPosition, coordinates, selection, room);
+      }
     }
   }
 
@@ -115,7 +122,7 @@ class Board extends Component {
 
 function mapStateToProps(state) {
   const { gameState, boardState, moveState, userState, squareState } = state;
-  const { playerColor } = gameState;
+  const { playerColor, gameTurn } = gameState;
   const { board } = boardState;
   const { fromPosition, selectedPiece } = moveState;
   const { room, isWhite } = userState;
@@ -129,6 +136,7 @@ function mapStateToProps(state) {
     color,
     hover,
     isWhite,
+    gameTurn,
   };
 }
 

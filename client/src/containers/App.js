@@ -99,13 +99,13 @@ class App extends Component {
       dispatch(sendMsg(msg));
     });
 
-    this.socket.on('attemptMoveResult', (error, origin, dest, selection, room) => {
+    this.socket.on('attemptMoveResult', (error, origin, dest, selection, gameTurn) => {
       // dispatch(receiveGame(board));
       if (error === null) {
         if (selection) {
-          dispatch(capturePiece(origin, dest, selection));
+          dispatch(capturePiece(origin, dest, selection, gameTurn));
         } else {
-          dispatch(movePiece(origin, dest));
+          dispatch(movePiece(origin, dest, gameTurn));
         }
       } else {
         console.log('---------- ERROR: ', error);

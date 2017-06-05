@@ -44,17 +44,19 @@ export const colorSquare = (color, hover) => ({
   hover,
 });
 
-export const movePiece = (fromPosition, coordinates) => ({
+export const movePiece = (fromPosition, coordinates, gameTurn) => ({
   type: types.MOVE_PIECE,
   fromPosition,
   coordinates,
+  gameTurn,
 });
 
-export const capturePiece = (fromPosition, coordinates, capturedPiece) => ({
+export const capturePiece = (fromPosition, coordinates, capturedPiece, gameTurn) => ({
   type: types.CAPTURE_PIECE,
   fromPosition,
   coordinates,
   capturedPiece,
+  gameTurn,
 });
 
 export const receiveMove = (query, move) => ({
