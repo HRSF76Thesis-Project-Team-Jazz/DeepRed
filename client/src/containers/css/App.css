@@ -65,9 +65,29 @@ body {
   padding: 5px;
 }
 
-.right-col {
+.left-col {
   background-color: #808080;
   margin: 15px auto;
   border-radius: 2px;
   color: white;
+  width: 15vh;
+}
+
+.right-col {
+  background-color: #808080;
+  margin: 10px auto;
+  border-radius: 2px;
+  color: white;
+  width: 30vh;
+}
+
+.countdown-top-clock {
+  position: relative;
+  top: 2vh;
+  left: 3vh;
+}
+.countdown-bot-clock {
+  position: relative;
+  bottom: 12vh;
+  left: 3vh;
 }
