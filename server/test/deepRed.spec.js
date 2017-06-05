@@ -3,11 +3,11 @@ const expect = require('chai').expect;
 const deepRed = require('../chess/deepRed');
 
 describe('【Deep Red】 evaluate available possible moves: ', () => {
-  const getAvailableMovesWhite = deepRed.getAvailableMovesWhite;
+  const getAllMovesWhite = deepRed.getAllMovesWhite;
 
   describe('Check available moves for white', () => {
-    it('getAvailableMovesWhite should exist and should be function', () => {
-      expect(getAvailableMovesWhite).to.be.a('function');
+    it('getAllMovesWhite should exist and should be function', () => {
+      expect(getAllMovesWhite).to.be.a('function');
     });
 
     describe('[White pawn movement]', () => {
@@ -42,7 +42,7 @@ describe('【Deep Red】 evaluate available possible moves: ', () => {
           76: [[5, 5], [5, 7]],
           77: [],
         };
-        expect(getAvailableMovesWhite(board)).to.eql(expected);
+        expect(getAllMovesWhite(board)).to.eql(expected);
       });
     });
 
@@ -59,15 +59,15 @@ describe('【Deep Red】 evaluate available possible moves: ', () => {
       ];
 
       it('should not be able to move blocked pawns', () => {
-        expect(getAvailableMovesWhite(board)[63]).to.eql([]);
+        expect(getAllMovesWhite(board)[63]).to.eql([]);
       });
 
       it('should show piece capture moves', () => {
-        let result = getAvailableMovesWhite(board)[62];
+        let result = getAllMovesWhite(board)[62];
         result = result.map(x => JSON.stringify(x));
         expect(result).to.deep.include(JSON.stringify([5, 3]));
 
-        result = getAvailableMovesWhite(board)[64];
+        result = getAllMovesWhite(board)[64];
         result = result.map(x => JSON.stringify(x));
         expect(result).to.deep.include(JSON.stringify([5, 3]));
       });
@@ -136,22 +136,22 @@ describe('End of game checks', () => {
     it('should check if white has valid available moves', () => {
       expect(deepRed.whiteCanMove(board)).to.eql(true);
       expect(deepRed.whiteCanMove(safeBoard)).to.eql(true);
-      // expect(deepRed.whiteCanMove(checkmateBoard)).to.eql(false);
-      // expect(deepRed.whiteCanMove(stalemateBoard)).to.eql(false);
+      expect(deepRed.whiteCanMove(checkmateBoard)).to.eql(false);
+      expect(deepRed.whiteCanMove(stalemateBoard)).to.eql(false);
     });
 
     it('should check if white is in checkmate', () => {
       expect(deepRed.isCheckmateWhite(board)).to.eql(false);
       expect(deepRed.isCheckmateWhite(safeBoard)).to.eql(false);
-      // expect(deepRed.isCheckmateWhite(checkmateBoard)).to.eql(true);
-      // expect(deepRed.isCheckmateWhite(stalemateBoard)).to.eql(false);
+      expect(deepRed.isCheckmateWhite(checkmateBoard)).to.eql(true);
+      expect(deepRed.isCheckmateWhite(stalemateBoard)).to.eql(false);
     });
 
     it('should check if white is in checkmate', () => {
       expect(deepRed.isStalemateWhite(board)).to.eql(false);
       expect(deepRed.isStalemateWhite(safeBoard)).to.eql(false);
-      // expect(deepRed.isStalemateWhite(checkmateBoard)).to.eql(false);
-      // expect(deepRed.isStalemateWhite(stalemateBoard)).to.eql(true);
+      expect(deepRed.isStalemateWhite(checkmateBoard)).to.eql(false);
+      expect(deepRed.isStalemateWhite(stalemateBoard)).to.eql(true);
     });
   });
 
@@ -209,22 +209,22 @@ describe('End of game checks', () => {
     it('should check if black has valid available moves', () => {
       expect(deepRed.blackCanMove(board)).to.eql(true);
       expect(deepRed.blackCanMove(safeBoard)).to.eql(true);
-      // expect(deepRed.blackCanMove(checkmateBoard)).to.eql(false);
-      // expect(deepRed.blackCanMove(stalemateBoard)).to.eql(false);
+      expect(deepRed.blackCanMove(checkmateBoard)).to.eql(false);
+      expect(deepRed.blackCanMove(stalemateBoard)).to.eql(false);
     });
 
     it('should check if black is in checkmate', () => {
       expect(deepRed.isCheckmateBlack(board)).to.eql(false);
       expect(deepRed.isCheckmateBlack(safeBoard)).to.eql(false);
-      // expect(deepRed.isCheckmateBlack(checkmateBoard)).to.eql(true);
-      // expect(deepRed.isCheckmateBlack(stalemateBoard)).to.eql(false);
+      expect(deepRed.isCheckmateBlack(checkmateBoard)).to.eql(true);
+      expect(deepRed.isCheckmateBlack(stalemateBoard)).to.eql(false);
     });
 
     it('should check if black is in checkmate', () => {
       expect(deepRed.isStalemateBlack(board)).to.eql(false);
       expect(deepRed.isStalemateBlack(safeBoard)).to.eql(false);
       expect(deepRed.isStalemateBlack(checkmateBoard)).to.eql(false);
-      // expect(deepRed.isStalemateBlack(stalemateBoard)).to.eql(true);
+      expect(deepRed.isStalemateBlack(stalemateBoard)).to.eql(true);
     });
   });
 });

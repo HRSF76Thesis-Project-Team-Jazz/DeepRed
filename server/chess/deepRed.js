@@ -6,8 +6,6 @@ const chessEval = require('./chessEval');
 
 let whiteIsChecked;
 let blackIsChecked;
-let cleanBlackMoves;
-let cleanWhiteMoves;
 
 /**
  * Return new board after given move
@@ -23,6 +21,7 @@ const mutateBoard = (board, move) => {
 };
 
 // Check for white's possible moves
+// No King checks
 
 /**
  * @param {array} board
@@ -32,7 +31,7 @@ const mutateBoard = (board, move) => {
  *                          [[6, 5], [6, 4]]
  */
 
-const getAvailableMovesWhite = (board) => {
+const getAllMovesWhite = (board) => {
   const result = {};
   for (let row = 0; row < 8; row += 1) {
     for (let col = 0; col < 8; col += 1) {
@@ -424,7 +423,7 @@ const getAvailableMovesWhite = (board) => {
  *                          [[6, 5], [6, 4]]
  */
 
-const getAvailableMovesBlack = (board) => {
+const getAllMovesBlack = (board) => {
   const result = {};
   for (let row = 0; row < 8; row += 1) {
     for (let col = 0; col < 8; col += 1) {
@@ -804,8 +803,8 @@ const getAvailableMovesBlack = (board) => {
 };
 
 
-
-cleanBlackMoves = (board, moves) => {
+const getSafeMovesBlack = (board) => {
+  const moves = getAllMovesBlack(board);
   const result = {};
   const pieces = Object.keys(moves);
   for (let i = 0; i < pieces.length; i += 1) {
@@ -818,7 +817,8 @@ cleanBlackMoves = (board, moves) => {
   return result;
 };
 
-cleanWhiteMoves = (board, moves) => {
+const getSafeMovesWhite = (board) => {
+  const moves = getAllMovesWhite(board);
   const result = {};
   const pieces = Object.keys(moves);
   for (let i = 0; i < pieces.length; i += 1) {
@@ -843,7 +843,7 @@ cleanWhiteMoves = (board, moves) => {
  */
 
 blackIsChecked = (board) => {
-  const whiteMoves = getAvailableMovesWhite(board);
+  const whiteMoves = getAllMovesWhite(board);
   const positionBK = JSON.stringify(chessEval.findPiecePosition('BK', board)[0]);
   for (const key in whiteMoves) {
     if (whiteMoves[key].map(x => JSON.stringify(x)).indexOf(positionBK) >= 0) return true;
@@ -858,7 +858,7 @@ blackIsChecked = (board) => {
  */
 
 whiteIsChecked = (board) => {
-  const blackMoves = getAvailableMovesBlack(board);
+  const blackMoves = getAllMovesBlack(board);
   const positionWK = JSON.stringify(chessEval.findPiecePosition('WK', board)[0]);
   for (const key in blackMoves) {
     if (blackMoves[key].map(x => JSON.stringify(x)).indexOf(positionWK) >= 0) return true;
@@ -873,7 +873,7 @@ whiteIsChecked = (board) => {
  */
 
 const piecesAttackedByWhite = (board) => {
-  const whiteMoves = getAvailableMovesWhite(board);
+  const whiteMoves = getAllMovesWhite(board);
   const result = [
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -895,7 +895,7 @@ const piecesAttackedByWhite = (board) => {
 };
 
 const piecesAttackedByBlack = (board) => {
-  const blackMoves = getAvailableMovesBlack(board);
+  const blackMoves = getAllMovesBlack(board);
   const result = [
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -927,7 +927,7 @@ const piecesAttackedByBlack = (board) => {
  */
 
 const whiteCanMove = (board) => {
-  const moves = getAvailableMovesWhite(board);
+  const moves = getSafeMovesWhite(board);
   const pieces = Object.keys(moves);
   for (let i = 0; i < pieces.length; i += 1) {
     if (moves[pieces[i]].length > 0) return true;
@@ -944,7 +944,7 @@ const isStalemateWhite = board => !whiteIsChecked(board) && !whiteCanMove(board)
  */
 
 const blackCanMove = (board) => {
-  const moves = getAvailableMovesBlack(board);
+  const moves = getSafeMovesBlack(board);
   const pieces = Object.keys(moves);
   for (let i = 0; i < pieces.length; i += 1) {
     if (moves[pieces[i]].length > 0) return true;
@@ -973,7 +973,7 @@ const showMovesByPiece = (board, piece, description) => {
   };
   const pieces = chessEval.findPiecePosition(piece, board)
     .map(array => array[0].toString() + array[1].toString());
-  const moves = (color === 'W') ? getAvailableMovesWhite(board) : getAvailableMovesBlack(board);
+  const moves = (color === 'W') ? getAllMovesWhite(board) : getAllMovesBlack(board);
   const movesBoard = board.map(row => row.map(col => (!col ? ' -- ' : ` ${col} `)));
   const piecesAttacked = (color === 'W') ? piecesAttackedByWhite(board) : piecesAttackedByBlack(board);
 
@@ -1029,8 +1029,8 @@ const showEvaluatedMoves = (board, moves, piece, description) => {
 };
 
 module.exports = {
-  getAvailableMovesBlack,
-  getAvailableMovesWhite,
+  getAllMovesBlack,
+  getAllMovesWhite,
   blackIsChecked,
   whiteIsChecked,
   whiteCanMove,
@@ -1040,7 +1040,7 @@ module.exports = {
   isCheckmateBlack,
   isStalemateBlack,
   showMovesByPiece,
-  cleanBlackMoves,
-  cleanWhiteMoves,
+  getSafeMovesBlack,
+  getSafeMovesWhite,
   showEvaluatedMoves,
 };

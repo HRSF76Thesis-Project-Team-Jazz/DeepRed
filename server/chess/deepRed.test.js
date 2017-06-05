@@ -6,8 +6,10 @@ const {
   showEvaluatedMoves,
   blackIsChecked,
   whiteIsChecked,
-  getAvailableMovesWhite,
-  getAvailableMovesBlack,
+  getAllMovesWhite,
+  getAllMovesBlack,
+  getSafeMovesWhite,
+  getSafeMovesBlack,
   isStalemateBlack,
   isStalemateWhite,
   isCheckmateBlack,
@@ -15,6 +17,7 @@ const {
   cleanBlackMoves,
   cleanWhiteMoves,
   whiteCanMove,
+  blackCanMove,
 } = deepRed;
 
 let blackMoves;
@@ -290,7 +293,7 @@ board = [
 ];
 
 // showMovesByPiece(board, 'W', 'All white moves');
-// // console.log('getAvailableMovesWhite: ', getAvailableMovesWhite(board));
+// // console.log('getAllMovesWhite: ', getAllMovesWhite(board));
 // console.log('whiteCanMove: ', whiteCanMove(board));
 // console.log('isStalemateWhite: ', isStalemateWhite(board));
 // console.log('isCheckmateWhite: ', isCheckmateWhite(board));
@@ -307,51 +310,46 @@ board = [
 // ];
 
 // showMovesByPiece(board, 'W', 'All white moves');
-// // console.log('getAvailableMovesWhite: ', getAvailableMovesWhite(board));
+// // console.log('getAllMovesWhite: ', getAllMovesWhite(board));
 // console.log('whiteCanMove: ', whiteCanMove(board));
 // console.log('isStalemateWhite: ', isStalemateWhite(board));
 // console.log('isCheckmateWhite: ', isCheckmateWhite(board));
 
 
-board = [
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, 'WR', null, 'BP', 'BK', 'BP', null, 'WQ'],
-  [null, null, null, null, 'BP', null, null, null],
-  [null, null, 'BP', null, null, 'WP', null, null],
-  [null, null, null, null, 'WR', null, null, null],
-  ['WB', null, null, null, null, null, null, null],
-];
+// board = [
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, 'WR', null, 'BP', 'BK', 'BP', null, 'WQ'],
+//   [null, null, null, null, 'BP', null, null, null],
+//   [null, null, 'BP', null, null, 'WP', null, null],
+//   [null, null, null, null, 'WR', null, null, null],
+//   ['WB', null, null, null, null, null, null, null],
+// ];
 
-blackMoves = getAvailableMovesBlack(board);
-console.log('Black moves before cleaning: ', blackMoves);
-console.log('Black moves after cleaning: ', cleanBlackMoves(board, blackMoves));
+// showMovesByPiece(board, 'BP', 'BP movement from home does not endanger BK');
+// showEvaluatedMoves(board, getSafeMovesBlack(board), 'BP', 'All BP moves: BK checks disallowed');
 
-showMovesByPiece(board, 'BP', 'BP movement from home does not endanger BK');
+// board = [
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, 'WK', null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, 'BK', null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+// ];
 
-board = [
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, 'WK', null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, 'BK', null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-];
+// const cleanedBlackMoves = getSafeMovesBlack(board);
 
-blackMoves = getAvailableMovesBlack(board);
-const cleanedBlackMoves = cleanBlackMoves(board, blackMoves);
+// showMovesByPiece(board, 'B', 'All B moves: BK checks allowed');
+// showEvaluatedMoves(board, cleanedBlackMoves, 'B', 'All B moves: BK checks disallowed');
 
-showMovesByPiece(board, 'B', 'All B moves: BK checks allowed');
-showEvaluatedMoves(board, cleanedBlackMoves, 'B', 'All B moves: BK checks disallowed');
+// const cleanedWhiteMoves = getSafeMovesWhite(board);
 
-const whiteMoves = getAvailableMovesWhite(board);
-const cleanedWhiteMoves = cleanWhiteMoves(board, whiteMoves);
-
-showMovesByPiece(board, 'W', 'All W moves: WK checks allowed');
-showEvaluatedMoves(board, cleanedWhiteMoves, 'W', 'All W moves: WK checks disallowed');
+// showMovesByPiece(board, 'W', 'All W moves: WK checks allowed');
+// showEvaluatedMoves(board, cleanedWhiteMoves, 'W', 'All W moves: WK checks disallowed');
 
 // board = [
 //   ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', null],
@@ -445,24 +443,41 @@ showEvaluatedMoves(board, cleanedWhiteMoves, 'W', 'All W moves: WK checks disall
 // showMovesByPiece(board, 'WK', 'WK movement does not endanger WK');
 
 // showMovesByPiece(board, 'W', 'All white moves');
-// // console.log('getAvailableMovesWhite: ', getAvailableMovesWhite(board));
+// // console.log('getAllMovesWhite: ', getAllMovesWhite(board));
 // console.log('whiteCanMove: ', whiteCanMove(board));
 // console.log('isStalemateWhite: ', isStalemateWhite(board));
 // console.log('isCheckmateWhite: ', isCheckmateWhite(board));
 
-// board = [
-//   [null, null, null, null, null, null, null, null],
-//   [null, null, null, null, null, null, null, null],
-//   [null, null, null, null, null, null, null, null],
-//   [null, null, null, null, null, null, null, null],
-//   [null, null, 'BB', null, null, null, null, null],
-//   [null, null, 'BQ', null, null, null, null, null],
-//   [null, null, null, null, null, null, null, null],
-//   [null, null, null, 'WK', null, null, null, null],
-// ];
+board = [
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, 'BB', null, null, null, null, null],
+  [null, null, 'BQ', null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, 'WK', null, null, null, null],
+];
 
-// showMovesByPiece(board, 'W', 'All white moves');
-// // console.log('getAvailableMovesWhite: ', getAvailableMovesWhite(board));
-// console.log('whiteCanMove: ', whiteCanMove(board));
-// console.log('isStalemateWhite: ', isStalemateWhite(board));
-// console.log('isCheckmateWhite: ', isCheckmateWhite(board));
+showMovesByPiece(board, 'W', 'All white moves');
+console.log('getAllMovesWhite: ', getAllMovesWhite(board));
+console.log('whiteCanMove: ', whiteCanMove(board));
+console.log('isStalemateWhite: ', isStalemateWhite(board));
+console.log('isCheckmateWhite: ', isCheckmateWhite(board));
+
+board = [
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, 'WB', null, null, null, null, null],
+  [null, null, 'WQ', null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, 'BK', null, null, null, null],
+];
+
+showMovesByPiece(board, 'B', 'All white moves');
+// console.log('getAllMovesWhite: ', getAllMovesWhite(board));
+console.log('blackCanMove: ', blackCanMove(board));
+console.log('isStalemateBlack: ', isStalemateBlack(board));
+console.log('isCheckmateBlack: ', isCheckmateBlack(board));
