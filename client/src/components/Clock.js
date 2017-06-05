@@ -11,18 +11,18 @@ class Clock extends Component {
   render() {
     const { sendPauseRequest, paused, timeB, timeW } = this.props;
 
-    let time = true;
-    if (this.props.color === 'Black') {
-      time = true;
-    }
-    if (this.props.color === 'White') {
-      time = false;
-    }
+    // let time = true;
+    // if (this.props.color === 'Black') {
+    //   time = true;
+    // }
+    // if (this.props.color === 'White') {
+    //   time = false;
+    // }
 
     return (
       <div>
         <ReactCountdownClock
-          seconds={time === true ? timeB : timeW}
+          seconds={(this.props.color === 'Black') ? timeB : timeW}
           color="#000"
           alpha={0.8}
           size={85}

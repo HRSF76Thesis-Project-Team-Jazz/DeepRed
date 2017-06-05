@@ -126,4 +126,4 @@ export const fetchGame = () => (dispatch) => {
 export const sendMsg = msg => ({
   type: types.SEND_MESSAGE,
   msg,
-})
+});

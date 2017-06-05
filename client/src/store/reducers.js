@@ -18,7 +18,7 @@ const gameState = (state = Immutable({
   playerColor: 'W',
   gameId: '',
   timeW: 600,
-  timeB: 600,
+  timeB: 300,
   paused: false,
   capturedPiecesBlack: [],
   capturedPiecesWhite: [],

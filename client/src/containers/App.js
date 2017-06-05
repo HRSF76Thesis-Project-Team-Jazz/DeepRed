@@ -3,9 +3,7 @@ import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
-import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
 import {
   updateTimer, pauseTimer, cancelPauseDialogClose, updateAlertName,
   cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW,
@@ -213,7 +211,7 @@ class App extends Component {
   render() {
     const {
       alertName, cancelPauseOpen, pauseOpen, moveHistory,
-      capturedPiecesBlack, capturedPiecesWhite, message,
+      capturedPiecesBlack, capturedPiecesWhite,
       playerB, playerW, error, messages, isWhite,
     } = this.props;
 
@@ -258,14 +256,15 @@ class App extends Component {
         </div>
         <div className="content">
           <div className="flex-row">
-
             <div className="flex-col left-col">
+            {renderif()(
               <div className="countdown-top-clock">
-                <Clock color="Black" sendPauseRequest={this.sendPauseRequest} />
+                <Clock color={(!isWhite) ? 'White' : 'Black'} sendPauseRequest={this.sendPauseRequest} />
               </div>
+            )}
               <MoveHistory className="move-history" moveHistory={moveHistory} />
               <div className="countdown-bot-clock">
-                <Clock color="White" sendPauseRequest={this.sendPauseRequest} />
+                <Clock color={(isWhite) ? 'White' : 'Black'} sendPauseRequest={this.sendPauseRequest} />
               </div>
             </div>
 
