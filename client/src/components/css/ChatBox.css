@@ -1,0 +1,14 @@
+.message-list {
+  border-radius: 5px;
+  margin: 5px;
+  padding: 0px;
+}
+.message {
+  border-radius: 5px;
+  margin: 5px;
+  padding: 0px;
+}
+.text-field {
+  width: '80%';
+  margin: 0 auto !important;
+}

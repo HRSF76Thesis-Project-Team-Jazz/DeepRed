@@ -260,8 +260,11 @@ class App extends Component {
           <div className="flex-row">
 
             <div className="flex-col left-col">
-              <div className="countdown-clock">
+              <div className="countdown-top-clock">
                 <Clock color="Black" sendPauseRequest={this.sendPauseRequest} />
+              </div>
+              <MoveHistory className="move-history" moveHistory={moveHistory} />
+              <div className="countdown-bot-clock">
                 <Clock color="White" sendPauseRequest={this.sendPauseRequest} />
               </div>
             </div>
@@ -280,12 +283,11 @@ class App extends Component {
                 player={(isWhite) ? playerW : playerB}
                 sendPauseRequest={this.sendPauseRequest}
               />
-              <Message message={message} />
-              <Message message={error} />
+              {/* <Message message={message} />
+              <Message message={error} /> */}
             </div>
 
             <div className="flex-col right-col">
-              <MoveHistory className="move-history" moveHistory={moveHistory} />
               <ChatBox className="chat-box" messages={messages} sendMessage={this.sendMessage} />
             </div>
 

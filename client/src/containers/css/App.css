@@ -70,6 +70,7 @@ body {
   margin: 15px auto;
   border-radius: 2px;
   color: white;
+  width: 15vh;
 }
 
 .right-col {
@@ -77,12 +78,20 @@ body {
   margin: 15px auto;
   border-radius: 2px;
   color: white;
+  width: 30vh;
 }
 
-.countdown-clock {
+.countdown-top-clock {
+  position: relative;
+  top: 2vh;
+  left: 3vh;
 }
-
+.countdown-bot-clock {
+  position: relative;
+  bottom: 12vh;
+  left: 3vh;
+}
+.move-history {
+}
 .chat-box {
-  position: absolute;
-  bottom: 70px;
 }

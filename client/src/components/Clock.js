@@ -12,11 +12,11 @@ class Clock extends Component {
 
   render() {
     const { sendPauseRequest, paused, timeB, timeW } = this.props;
-    
+
     let time = true;
     if (this.props.color === 'Black') {
       time = true;
-    } 
+    }
     if (this.props.color === 'White') {
       time = false;
     }
@@ -27,7 +27,7 @@ class Clock extends Component {
           seconds={ time === true ? timeB : timeW}
           color="#000"
           alpha={0.8}
-          size={85}
+          size={'85'}
           paused={paused}
           onClick={sendPauseRequest}
         />
@@ -39,7 +39,7 @@ class Clock extends Component {
 function mapStateToProps(state) {
   const { gameState, userState } = state;
   const {
-    timeB, 
+    timeB,
     timeW,
     paused,
     moveHistory,

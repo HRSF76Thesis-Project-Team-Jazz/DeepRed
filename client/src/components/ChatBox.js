@@ -3,6 +3,8 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { red50, red900 } from 'material-ui/styles/colors';
 
+import './css/ChatBox.css';
+
 class ChatBox extends Component {
   constructor(props) {
     super(props);
@@ -35,28 +37,28 @@ class ChatBox extends Component {
   render() {
     return (
       <div>
-        <ul id="messages">
+        <ul className="message-list">
           {this.props.messages.map((msg, i) =>
-            <h6 key={i + msg}>{msg}</h6>,
+            <div className="message" key={i + msg}>{msg}</div>,
           )}
         </ul>
         <form>
           <TextField
+            className="text-field"
             hintText="Message Opponent"
             underlineStyle={{ borderColor: red900 }}
             underlineFocusStyle={{ borderColor: red900 }}
             value={this.state.message}
             onChange={this.handleChange}
             onKeyDown={this.handleKeyDown}
-            style={{ width: 150 }}
           />
-          <RaisedButton
+          {/* <RaisedButton
             label="Submit"
             style={{ margin: 12 }}
             onClick={info => this.submit(info)}
             backgroundColor="#600003"
             labelColor={red50}
-          />
+          /> */}
         </form>
       </div>
     );
