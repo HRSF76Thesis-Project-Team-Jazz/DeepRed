@@ -6,13 +6,14 @@ import axios from 'axios';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import { updateTimer, pauseTimer, cancelPauseDialogClose, updateAlertName,
+import {
+  updateTimer, pauseTimer, cancelPauseDialogClose, updateAlertName,
   cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW,
   updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece,
-  capturePiece, displayError, colorSquare, sendMsg } from '../store/actions';
+  capturePiece, displayError, colorSquare, sendMsg,
+} from '../store/actions';
 
 // Components
-import ChessMenu from '../components/ChessMenu';
 import SettingsDrawer from '../components/SettingsDrawer';
 import Board from './Board';
 import Message from '../components/Message';
@@ -52,17 +53,17 @@ class App extends Component {
   getUserInfo() {
     const { dispatch } = this.props;
     axios.get('/api/profiles/id')
-    .then((response) => {
-      console.log('successfully fetched current user infomation');
-      dispatch(setPlayerW(response));
-    })
-    .then(() => {
-      this.startSocket();
-    })
-    .catch((err) => {
-      dispatch(getRequestFailure(err));
-      console.error('failed to obtain current user infomation!', err);
-    });
+      .then((response) => {
+        console.log('successfully fetched current user infomation: ', response);
+        dispatch(setPlayerW(response));
+      })
+      .then(() => {
+        this.startSocket();
+      })
+      .catch((err) => {
+        dispatch(getRequestFailure(err));
+        console.error('failed to obtain current user infomation!', err);
+      });
   }
 
   startSocket() {
@@ -133,17 +134,17 @@ class App extends Component {
       this.socket.emit('handleRejectPauseRequest', room, this.socket.id);
     });
 
-    this.socket.on('cancelPauseNotification', playerName => {
+    this.socket.on('cancelPauseNotification', (playerName) => {
       dispatch(updateAlertName(playerName));
       dispatch(cancelPauseDialogOpen());
-      setTimeout(()=> {
+      setTimeout(() => {
         dispatch(cancelPauseDialogClose());
         dispatch(pauseDialogClose());
       }, 3000);
     });
 
     this.socket.on('executePauseRequest', () => {
-    dispatch(pauseTimer());
+      dispatch(pauseTimer());
     });
   }
   // CONTROL functions
@@ -209,17 +210,25 @@ class App extends Component {
   }
 
   render() {
-    const { alertName, cancelPauseOpen, pauseOpen, moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, error, messages  } = this.props;
+    const {
+      alertName, cancelPauseOpen, pauseOpen, moveHistory,
+      capturedPiecesBlack, capturedPiecesWhite, message,
+      playerB, playerW, error, messages,
+      thisEmail, playerBemail,
+    } = this.props;
+
+    const isBlack = thisEmail === playerBemail;
+
     const pauseActions = [
       <FlatButton
         label="No"
-        primary={true}
+        primary
         onTouchTap={this.onCancelPauseRequest}
       />,
       <FlatButton
         label="Yes"
-        primary={true}
-        keyboardFocused={true}
+        primary
+        keyboardFocused
         onTouchTap={this.onAgreePauseRequest}
       />,
     ];
@@ -227,8 +236,8 @@ class App extends Component {
     const cancelPauseActions = [
       <FlatButton
         label="Ok"
-        primary={true}
-        keyboardFocused={true}
+        primary
+        keyboardFocused
         onTouchTap={this.handleCancelPauseClose}
       />,
     ]
@@ -254,16 +263,16 @@ class App extends Component {
 
             <div className="flex-col">
               <CapturedPieces
-                color="Black"
-                capturedPieces={capturedPiecesBlack}
-                player={playerB}
+                color={(isBlack) ? 'White' : 'Black'}
+                capturedPieces={(isBlack) ? capturedPiecesWhite : capturedPiecesBlack}
+                player={(isBlack) ? playerW : playerB}
                 sendPauseRequest={this.sendPauseRequest}
               />
               <Board attemptMove={this.attemptMove} checkLegalMove={this.checkLegalMove} />
               <CapturedPieces
-                color="White"
-                capturedPieces={capturedPiecesWhite}
-                player={playerW}
+                color={(!isBlack) ? 'White' : 'Black'}
+                capturedPieces={(!isBlack) ? capturedPiecesWhite : capturedPiecesBlack}
+                player={(!isBlack) ? playerW : playerB}
                 sendPauseRequest={this.sendPauseRequest}
               />
               <Message message={message} />
@@ -314,6 +323,8 @@ function mapStateToProps(state) {
     playerW,
     playerB,
     room,
+    thisEmail,
+    playerBemail,
   } = userState;
   const { message, error } = moveState;
   const { pauseOpen, cancelPauseOpen, alertName } = controlState;
@@ -321,6 +332,7 @@ function mapStateToProps(state) {
     playerWemail,
     timeB,
     timeW,
+    paused,
     alertName,
     cancelPauseOpen,
     pauseOpen,
@@ -333,6 +345,8 @@ function mapStateToProps(state) {
     capturedPiecesWhite,
     error,
     messages,
+    thisEmail,
+    playerBemail,
   };
 }
 
