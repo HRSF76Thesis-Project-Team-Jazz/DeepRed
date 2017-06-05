@@ -69,10 +69,9 @@ class Board extends Component {
   }
 
   render() {
-    const { board, thisEmail, playerBemail } = this.props;
+    const { board, isWhite } = this.props;
+    const offset = (isWhite) ? 0 : 7;
 
-    // To render black board:
-    const offset = (thisEmail === playerBemail) ? 7 : 0;
     return (
       <div className="board">
         {board.map((row, rowIndex) => (
@@ -119,7 +118,7 @@ function mapStateToProps(state) {
   const { playerColor } = gameState;
   const { board } = boardState;
   const { fromPosition, selectedPiece } = moveState;
-  const { room, thisEmail, playerBemail } = userState;
+  const { room, isWhite } = userState;
   const { color, hover } = squareState;
   return {
     playerColor,
@@ -129,8 +128,7 @@ function mapStateToProps(state) {
     room,
     color,
     hover,
-    thisEmail,
-    playerBemail,
+    isWhite,
   };
 }
 

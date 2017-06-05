@@ -32,6 +32,7 @@ module.exports = (io, client) => {
         roomInfo.playerWid = client.client.id;
         roomInfo.playerWclicked = false;
         roomInfo.playerWtime = 600;
+        roomInfo.thisUserId = client.client.id;
         // create new game instance
         createAndSaveNewGame(room);
         // save to DB
@@ -53,6 +54,7 @@ module.exports = (io, client) => {
         roomInfo.playerBid = client.client.id;
         roomInfo.playerBclicked = false;
         roomInfo.playerBtime = 600;
+        roomInfo.thisUserId = client.client.id;
         allRooms[room] = roomInfo;
         io.in(room).emit('secondPlayerJoined', roomInfo);
         // save playerB to current game in DB
@@ -87,11 +89,11 @@ module.exports = (io, client) => {
   });
 
   // control socket communications
-  client.on('requestPause', clientRoom => {
+  client.on('requestPause', (clientRoom) => {
     io.in(clientRoom).emit('requestPauseDialogBox');
   });
 
-  client.on('rejectPauseRequest', clientRoom => {
+  client.on('rejectPauseRequest', (clientRoom) => {
     io.in(clientRoom).emit('rejectPauseRequestNotification');
   });
 
@@ -107,15 +109,15 @@ module.exports = (io, client) => {
     if (id === allRooms[room].playerBid) {
       allRooms[room].playerBclicked = true;
     }
-    if (id === allRooms[room]. playerWid) {
+    if (id === allRooms[room].playerWid) {
       allRooms[room].playerWclicked = true;
     }
     if (allRooms[room].playerBclicked === true && allRooms[room].playerWclicked === true) {
       io.in(room).emit('executePauseRequest');
-      allRooms[room].playerBclicked === false;
-      allRooms[room].playerWclicked === false;
+      allRooms[room].playerBclicked = false;
+      allRooms[room].playerWclicked = false;
     }
-  })
+  });
 
   client.on('message', (msg, room) => {
     let user = '';
@@ -128,6 +130,6 @@ module.exports = (io, client) => {
         }
       }
     }
-    io.in(room).emit('message', user + ': ' + msg);
+    io.in(room).emit('message', `${user}: ${msg}`);
   });
 };

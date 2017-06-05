@@ -195,6 +195,8 @@ const userState = (state = Immutable({
   playerWemail: '',
   thisEmail: '',
   thisUser: '',
+  thisUserId: '',
+  isWhite: true,
 }), action) => {
   switch (action.type) {
     case types.SET_PLAYER_W: {
@@ -228,6 +230,8 @@ const userState = (state = Immutable({
         playerWid: action.roomInfo.playerWid,
         playerBemail: action.roomInfo.playerBemail,
         playerWemail: action.roomInfo.playerWemail,
+        thisUserId: (state.thisUserId === '') ? action.roomInfo.thisUserId : state.thisUserId,
+        isWhite: state.thisUserId !== '',
       });
     }
     default:
