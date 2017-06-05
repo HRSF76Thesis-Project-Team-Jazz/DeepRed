@@ -32,6 +32,7 @@ module.exports = (io, client) => {
         roomInfo.playerWid = client.client.id;
         roomInfo.playerWclicked = false;
         roomInfo.playerWtime = 600;
+        roomInfo.thisUserId = client.client.id;
         // create new game instance
         createAndSaveNewGame(room);
         // save to DB
@@ -53,6 +54,7 @@ module.exports = (io, client) => {
         roomInfo.playerBid = client.client.id;
         roomInfo.playerBclicked = false;
         roomInfo.playerBtime = 600;
+        roomInfo.thisUserId = client.client.id;
         allRooms[room] = roomInfo;
         io.in(room).emit('secondPlayerJoined', roomInfo);
         // save playerB to current game in DB

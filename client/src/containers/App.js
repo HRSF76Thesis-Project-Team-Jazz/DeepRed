@@ -213,11 +213,8 @@ class App extends Component {
     const {
       alertName, cancelPauseOpen, pauseOpen, moveHistory,
       capturedPiecesBlack, capturedPiecesWhite, message,
-      playerB, playerW, error, messages,
-      thisEmail, playerBemail,
+      playerB, playerW, error, messages, isWhite,
     } = this.props;
-
-    const isBlack = thisEmail === playerBemail;
 
     const pauseActions = [
       <FlatButton
@@ -240,7 +237,7 @@ class App extends Component {
         keyboardFocused
         onTouchTap={this.handleCancelPauseClose}
       />,
-    ]
+    ];
 
     return (
       <div className="site-wrap">
@@ -263,16 +260,16 @@ class App extends Component {
 
             <div className="flex-col">
               <CapturedPieces
-                color={(isBlack) ? 'White' : 'Black'}
-                capturedPieces={(isBlack) ? capturedPiecesWhite : capturedPiecesBlack}
-                player={(isBlack) ? playerW : playerB}
+                color={(!isWhite) ? 'White' : 'Black'}
+                capturedPieces={(!isWhite) ? capturedPiecesWhite : capturedPiecesBlack}
+                player={(!isWhite) ? playerW : playerB}
                 sendPauseRequest={this.sendPauseRequest}
               />
               <Board attemptMove={this.attemptMove} checkLegalMove={this.checkLegalMove} />
               <CapturedPieces
-                color={(!isBlack) ? 'White' : 'Black'}
-                capturedPieces={(!isBlack) ? capturedPiecesWhite : capturedPiecesBlack}
-                player={(!isBlack) ? playerW : playerB}
+                color={(isWhite) ? 'White' : 'Black'}
+                capturedPieces={(isWhite) ? capturedPiecesWhite : capturedPiecesBlack}
+                player={(isWhite) ? playerW : playerB}
                 sendPauseRequest={this.sendPauseRequest}
               />
               <Message message={message} />
@@ -323,8 +320,7 @@ function mapStateToProps(state) {
     playerW,
     playerB,
     room,
-    thisEmail,
-    playerBemail,
+    isWhite,
   } = userState;
   const { message, error } = moveState;
   const { pauseOpen, cancelPauseOpen, alertName } = controlState;
@@ -345,8 +341,7 @@ function mapStateToProps(state) {
     capturedPiecesWhite,
     error,
     messages,
-    thisEmail,
-    playerBemail,
+    isWhite,
   };
 }
 
