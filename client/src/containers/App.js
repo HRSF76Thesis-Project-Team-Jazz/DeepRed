@@ -8,7 +8,7 @@ import {
   updateTimer, pauseTimer, cancelPauseDialogClose, updateAlertName,
   cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW,
   updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece,
-  capturePiece, displayError, colorSquare, sendMsg,
+  capturePiece, displayError, colorSquare, sendMsg, resumeTimerB, resumeTimerW,
 } from '../store/actions';
 
 // Components
@@ -53,7 +53,7 @@ class App extends Component {
     const { dispatch } = this.props;
     axios.get('/api/profiles/id')
       .then((response) => {
-        console.log('successfully fetched current user infomation: ', response);
+        console.log('successfully fetched current user infomation: ');
         dispatch(setPlayerW(response));
       })
       .then(() => {
@@ -103,8 +103,22 @@ class App extends Component {
       if (error === null) {
         if (selection) {
           dispatch(capturePiece(origin, dest, selection, gameTurn));
+          if (gameTurn === 'W') {
+            dispatch(pauseTimer());
+            dispatch(resumeTimerW());
+          } else {
+            dispatch(pauseTimer());
+            dispatch(resumeTimerB());
+          }
         } else {
           dispatch(movePiece(origin, dest, gameTurn));
+          if (gameTurn === 'B') {
+            dispatch(pauseTimer());
+            dispatch(resumeTimerW());
+          } else {
+            dispatch(pauseTimer());
+            dispatch(resumeTimerB());
+          }
         }
       } else {
         console.log('---------- ERROR: ', error);
@@ -257,17 +271,18 @@ class App extends Component {
         <div className="content">
           <div className="flex-row">
             <div className="flex-col left-col">
-            {renderif()(
               <div className="countdown-top-clock">
-                <Clock color={(!isWhite) ? 'White' : 'Black'} sendPauseRequest={this.sendPauseRequest} />
+                {(playerB !== undefined) ?
+                  <Clock color={(!isWhite) ? 'White' : 'Black'} sendPauseRequest={this.sendPauseRequest} /> : null
+                }
               </div>
-            )}
               <MoveHistory className="move-history" moveHistory={moveHistory} />
               <div className="countdown-bot-clock">
-                <Clock color={(isWhite) ? 'White' : 'Black'} sendPauseRequest={this.sendPauseRequest} />
+                {(playerB !== undefined) ?
+                  <Clock color={(isWhite) ? 'White' : 'Black'} sendPauseRequest={this.sendPauseRequest} /> : null
+                }
               </div>
             </div>
-
             <div className="flex-col">
               <CapturedPieces
                 color={(!isWhite) ? 'White' : 'Black'}

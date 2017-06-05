@@ -15,6 +15,14 @@ export const updateTimer = roomInfo => ({
   roomInfo,
 });
 
+export const resumeTimerB = () => ({
+  type: types.RESUME_TIMER_B,
+});
+
+export const resumeTimerW = () => ({
+  type: types.RESUME_TIMER_W,
+});
+
 export const displayError = error => ({
   type: types.DISPLAY_ERROR,
   error,
