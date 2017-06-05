@@ -233,7 +233,7 @@ const userState = (state = Immutable({
         playerBemail: action.roomInfo.playerBemail,
         playerWemail: action.roomInfo.playerWemail,
         thisUserId: (state.thisUserId === '') ? action.roomInfo.thisUserId : state.thisUserId,
-        isWhite: state.thisUserId !== '',
+        isWhite: (!action.roomInfo.playerB) ? true : state.thisUserId !== '',
       });
     }
     default:
