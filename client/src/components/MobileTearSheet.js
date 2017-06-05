@@ -8,7 +8,7 @@ const MobileTearSheet = React.createClass({
 
   getDefaultProps() {
     return {
-      height: 500,
+      height: '100%',
     };
   },
 

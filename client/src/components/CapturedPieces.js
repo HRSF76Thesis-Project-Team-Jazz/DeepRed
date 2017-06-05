@@ -7,7 +7,7 @@ const CapturedPieces = ({ color, capturedPieces, player, sendPauseRequest }) => 
     <h5>Player: <span className="display-color-text">{player}</span></h5>
     <h5>Captured Pieces: <span className="display-color-text">{color}</span></h5>
     <div className="pieces-container">
-      {capturedPieces.map((piece,index) => (
+      {capturedPieces.map((piece, index) => (
         <img
           key={index}
           className="captured-img"
@@ -16,9 +16,6 @@ const CapturedPieces = ({ color, capturedPieces, player, sendPauseRequest }) => 
         />
       ),
       )}
-    </div>
-    <div className="countdown-clock">
-      <Clock color={color} sendPauseRequest={sendPauseRequest} />
     </div>
   </div>
 );

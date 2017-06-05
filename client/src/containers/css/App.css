@@ -65,9 +65,24 @@ body {
   padding: 5px;
 }
 
+.left-col {
+  background-color: #808080;
+  margin: 15px auto;
+  border-radius: 2px;
+  color: white;
+}
+
 .right-col {
   background-color: #808080;
   margin: 15px auto;
   border-radius: 2px;
   color: white;
+}
+
+.countdown-clock {
+}
+
+.chat-box {
+  position: absolute;
+  bottom: 70px;
 }

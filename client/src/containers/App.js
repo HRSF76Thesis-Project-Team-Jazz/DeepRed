@@ -21,6 +21,7 @@ import CapturedPieces from '../components/CapturedPieces';
 import MoveHistory from '../components/MoveHistory';
 import Alert from './Alert';
 import ChatBox from '../components/ChatBox';
+import Clock from '../components/Clock';
 import './css/App.css';
 
 
@@ -258,6 +259,13 @@ class App extends Component {
         <div className="content">
           <div className="flex-row">
 
+            <div className="flex-col left-col">
+              <div className="countdown-clock">
+                <Clock color="Black" sendPauseRequest={this.sendPauseRequest} />
+                <Clock color="White" sendPauseRequest={this.sendPauseRequest} />
+              </div>
+            </div>
+
             <div className="flex-col">
               <CapturedPieces
                 color={(!isWhite) ? 'White' : 'Black'}
@@ -277,8 +285,8 @@ class App extends Component {
             </div>
 
             <div className="flex-col right-col">
-              <MoveHistory moveHistory={moveHistory} />
-              <ChatBox messages={messages} sendMessage={this.sendMessage} />
+              <MoveHistory className="move-history" moveHistory={moveHistory} />
+              <ChatBox className="chat-box" messages={messages} sendMessage={this.sendMessage} />
             </div>
 
             <div>

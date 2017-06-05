@@ -8,13 +8,13 @@
 }
 
 .board-row {
-  height: 9vh;
+  height: 7vh;
   display: flex;
   justify-content: center;
 }
 
 .board-col {
-  width: 10vh;
+  width: 7vh;
 }
 
 /*.board-col:hover {
