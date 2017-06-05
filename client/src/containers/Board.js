@@ -11,16 +11,11 @@ class Board extends Component {
     this.onMouseEnter = this.onMouseEnter.bind(this);
     this.onMouseLeave = this.onMouseLeave.bind(this);
     this.selectSquareClass = this.selectSquareClass.bind(this);
+  }
 
-    // TEMPORARY STATE FOR RENDERING BLACK
-    this.state = {
-      isBlack: true,
-    }
-  }
   componentDidMount() {
-    // const { dispatch } = this.props;
-    // dispatch(fetchGame());
   }
+
   onClick(coordinates) {
     const { dispatch, board, fromPosition, selectedPiece, attemptMove, room } = this.props;
 
@@ -37,24 +32,18 @@ class Board extends Component {
       } else {
         dispatch(invalidSelection(coordinates));
       }
-      // If a piece is already selected
-      /* NOTE: CHECK FOR VALID MOVE REQUIRED HERE    */
-      // if (selection === null)
     } else {
       attemptMove(fromPosition, coordinates, selection, room);
-    // } else if (selectedPiece[0] === board[x][y][0]) {
-    //   dispatch(invalidSelection(coordinates));
-    // } else {
-    //   const capturedPiece = selection;
-    //   dispatch(capturePiece(selectedPiece, fromPosition, coordinates, capturedPiece));
     }
   }
+
   onMouseEnter(coordinates) {
     const { selectedPiece, checkLegalMove, fromPosition, room } = this.props;
     if (selectedPiece) {
       checkLegalMove(fromPosition, coordinates, room);
     }
   }
+
   onMouseLeave(coordinates) {
     const { dispatch, fromPosition } = this.props;
     if (fromPosition) {
@@ -81,6 +70,8 @@ class Board extends Component {
 
   render() {
     const { board, thisEmail, playerBemail } = this.props;
+
+    // To render black board:
     const offset = (thisEmail === playerBemail) ? 7 : 0;
     return (
       <div className="board">

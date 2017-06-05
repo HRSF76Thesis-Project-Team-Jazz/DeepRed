@@ -209,7 +209,15 @@ class App extends Component {
   }
 
   render() {
-    const { alertName, cancelPauseOpen, pauseOpen, moveHistory, capturedPiecesBlack, capturedPiecesWhite, message, playerB, playerW, error, messages  } = this.props;
+    const {
+      alertName, cancelPauseOpen, pauseOpen, moveHistory,
+      capturedPiecesBlack, capturedPiecesWhite, message,
+      playerB, playerW, error, messages,
+      thisEmail, playerBemail,
+    } = this.props;
+
+    const isBlack = thisEmail === playerBemail;
+
     const pauseActions = [
       <FlatButton
         label="No"
@@ -254,16 +262,16 @@ class App extends Component {
 
             <div className="flex-col">
               <CapturedPieces
-                color="Black"
-                capturedPieces={capturedPiecesBlack}
-                player={playerB}
+                color={(isBlack) ? 'White' : 'Black'}
+                capturedPieces={(isBlack) ? capturedPiecesWhite : capturedPiecesBlack}
+                player={(isBlack) ? playerW : playerB}
                 sendPauseRequest={this.sendPauseRequest}
               />
               <Board attemptMove={this.attemptMove} checkLegalMove={this.checkLegalMove} />
               <CapturedPieces
-                color="White"
-                capturedPieces={capturedPiecesWhite}
-                player={playerW}
+                color={(!isBlack) ? 'White' : 'Black'}
+                capturedPieces={(!isBlack) ? capturedPiecesWhite : capturedPiecesBlack}
+                player={(!isBlack) ? playerW : playerB}
                 sendPauseRequest={this.sendPauseRequest}
               />
               <Message message={message} />
