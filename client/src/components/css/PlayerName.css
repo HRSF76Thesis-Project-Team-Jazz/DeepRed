@@ -1,0 +1,11 @@
+.player-top {
+  position: relative;
+  top: 1vw;
+  left: 1vw;
+  /*color: green;*/
+}
+.player-bot {
+  position: relative;
+  top: 6.5vw;
+  left: 1vw;
+}

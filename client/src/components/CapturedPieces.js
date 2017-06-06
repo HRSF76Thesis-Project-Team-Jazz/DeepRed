@@ -4,7 +4,7 @@ import './css/CapturedPieces.css';
 
 const CapturedPieces = ({ color, capturedPieces, player, sendPauseRequest }) => (
   <div className="captured-pieces" >
-    <h5><span className="display-color-text">{color}</span>: <span className="display-color-text">{player}</span></h5>
+    {/* <h5><span className="display-color-text">{color}</span>: <span className="display-color-text">{player}</span></h5> */}
     <div className="pieces-container">
       {capturedPieces.map((piece, index) => (
         <img

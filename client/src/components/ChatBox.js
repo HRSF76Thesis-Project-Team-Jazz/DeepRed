@@ -40,6 +40,7 @@ class ChatBox extends Component {
         <form>
           <TextField
             className="text-field"
+            style={{ width: '10vw' }}
             hintText="Message Opponent"
             underlineStyle={{ borderColor: red900 }}
             underlineFocusStyle={{ borderColor: red900 }}
