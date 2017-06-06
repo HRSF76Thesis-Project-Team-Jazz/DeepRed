@@ -125,6 +125,12 @@ class ChessGame {
       error = 'Not your turn.';
       console.log(this.board);
       console.log(error);
+<<<<<<< HEAD
+>>>>>>> working on DB schema func
+=======
+  movePiece(origin, dest, pawnPromotionPiece = null) {
+    let error = this.errorCheck(origin, dest);
+    if (error) {
 >>>>>>> working on DB schema func
       return { game: this, error };
     }
@@ -248,6 +254,7 @@ class ChessGame {
   }
 
 
+<<<<<<< HEAD
   errorCheck(origin, dest) {
 
   movePiece(origin, dest, clientRoom) {
@@ -266,6 +273,9 @@ class ChessGame {
 =======
 >>>>>>> working on DB schema func
 =======
+>>>>>>> working on DB schema func
+=======
+  movePiece(origin, dest, clientRoom) {
 >>>>>>> working on DB schema func
     let error = null;
     if (dest === undefined) {
@@ -324,7 +334,11 @@ class ChessGame {
       this.hasMovedWRK = true;
       this.hasMovedWK = true;
 
+<<<<<<< HEAD
     const legalMoveResult = isLegalMove(this, origin, dest, clientRoom);
+=======
+    const legalMoveResult = isLegalMove(this, origin, dest);
+>>>>>>> working on DB schema func
     if (legalMoveResult.bool) {
       if (legalMoveResult.castling) {
         if (legalMoveResult.castling === 'BRQ') {
@@ -368,6 +382,7 @@ class ChessGame {
         this.hasMovedBRK = true;
       }
       if (destPiece) {
+<<<<<<< HEAD
 
         this.capturePiece(destPiece, clientRoom);
       }
@@ -385,6 +400,8 @@ class ChessGame {
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> working on DB schema func
         // if (originPiece[0] === destPiece[0]) {
         //   error = 'Cannot capture your own piece.';
         //   console.log(this.board);
@@ -394,6 +411,7 @@ class ChessGame {
         // this.history += moveToPGNString(this.board, origin, dest, this.count);
         this.capturePiece(destPiece, clientRoom);
       }
+<<<<<<< HEAD
 >>>>>>> working on DB schema func
 =======
 >>>>>>> working on DB schema func
@@ -401,12 +419,15 @@ class ChessGame {
         // this.capturePiece(destPiece, clientRoom);
       
 >>>>>>> updated schema, working on chat
+=======
+>>>>>>> working on DB schema func
       // this.history[this.turn] = this.history[this.turn] || [];
       // this.history[this.turn].push(origin);
       // this.history[this.turn].push(dest);
       // if (originPiece[0] === 'B') {
       //   this.turn += 1;
       // }
+<<<<<<< HEAD
       var board = this.board.map((row) => {
       const pieceIndex = {
         null: 0,
@@ -430,6 +451,12 @@ class ChessGame {
       chessDB.saveMove({
         session_id: clientRoom,
         history: board
+=======
+
+      chessDB.saveMove({
+        session_id: clientRoom,
+        history: JSON.stringify([ origin , dest])
+>>>>>>> working on DB schema func
       })
 
       this.turn = (this.turn === 'W') ? 'B' : 'W';
@@ -440,7 +467,10 @@ class ChessGame {
       console.log('Move piece is successful');
       console.log(this.board);
       return { game: this, error };
+<<<<<<< HEAD
 
+=======
+>>>>>>> working on DB schema func
     }
   }
 
