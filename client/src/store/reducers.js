@@ -18,6 +18,12 @@ const gameState = (state = Immutable({
   playerColor: 'W',
   timeW: 600,
   timeB: 600,
+  minW: 10,
+  minB: 10,
+  secW: 0,
+  secB: 0,
+  milisecW: 0,
+  milisecB: 0,
   capturedPiecesBlack: [],
   capturedPiecesWhite: [],
   gameTurn: 'W',
@@ -74,12 +80,16 @@ const gameState = (state = Immutable({
       return Immutable({
         ...state,
         timeB: action.timeB,
+        minB: Math.floor(state.timeB / 60),
+        secB: state.timeB % 60,
       });
     }
     case types.UPDATE_TIMER_W: {
       return Immutable({
         ...state,
         timeW: action.timeW,
+        minW: Math.floor(state.timeW / 60),
+        secW: state.timeW % 60,
       });
     }
     case types.TIME_INSTANCE_B: {
