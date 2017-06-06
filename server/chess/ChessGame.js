@@ -59,7 +59,6 @@ class ChessGame {
     this.winner = null;
   }
 
-<<<<<<< HEAD
   movePiece(origin, dest, pawnPromotionPiece = null) {
     let error = this.errorCheck(origin, dest);
     if (error) {
@@ -95,9 +94,7 @@ class ChessGame {
     return { game: this, error };
   }
   errorCheck(origin, dest) {
-=======
   movePiece(origin, dest, clientRoom) {
->>>>>>> working on DB schema func
     let error = null;
     if (dest === undefined) {
       error = 'Attempted destination is invalid.';
@@ -130,7 +127,6 @@ class ChessGame {
         return error;
       }
     }
-<<<<<<< HEAD
     return error;
   }
   castlingMove(castlingStr) {
@@ -154,7 +150,6 @@ class ChessGame {
       this.board[7][7] = null;
       this.hasMovedWRK = true;
       this.hasMovedWK = true;
-=======
     const legalMoveResult = isLegalMove(this, origin, dest);
     if (legalMoveResult.bool) {
       if (legalMoveResult.castling) {
@@ -228,10 +223,10 @@ class ChessGame {
       console.log('Move piece is successful');
       console.log(this.board);
       return { game: this, error };
->>>>>>> working on DB schema func
+
     }
   }
-<<<<<<< HEAD
+
   toggleMovedRooksOrKings(origin, originPiece) {
     if (originPiece === 'WK' && JSON.stringify(origin) === JSON.stringify([7, 4])) {
       this.hasMovedWK = true;
@@ -253,10 +248,9 @@ class ChessGame {
     }
   }
   addToCaptureArray(piece) {
-=======
+
 
   capturePiece(piece, clientRoom) {
->>>>>>> working on DB schema func
     if (piece[0] === 'W') {
       this.blackCapPieces.push(piece);
       
