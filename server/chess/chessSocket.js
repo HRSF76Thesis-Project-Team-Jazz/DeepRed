@@ -150,6 +150,7 @@ module.exports = (io, client) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     const newState = allGames[clientRoom].movePiece(origin, dest, pieceType);
     const { error, game, castling, enPassantCoord, pawnPromotionPiece } = newState;
@@ -164,6 +165,12 @@ module.exports = (io, client) => {
 =======
 
     const newState = allGames[clientRoom].movePiece(origin, dest);
+    io.in(clientRoom).emit('attemptMoveResult', newState.error, origin, dest, selection, newState.game.turn, newState.castling);
+
+>>>>>>> working on DB schema func
+=======
+
+    const newState = allGames[clientRoom].movePiece(origin, dest, clientRoom);
     io.in(clientRoom).emit('attemptMoveResult', newState.error, origin, dest, selection, newState.game.turn, newState.castling);
 
 >>>>>>> working on DB schema func

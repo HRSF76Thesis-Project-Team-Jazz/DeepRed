@@ -14,6 +14,9 @@ const chessDB = require('../chessDB')
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> working on DB schema func
 
 const transcribeBoard = board => board.map((row) => {
   const pieceIndex = {
@@ -73,8 +76,13 @@ class ChessGame {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   movePiece(origin, dest, pawnPromotionValue = null) {
     const error = this.errorCheck(origin, dest);
+=======
+  movePiece(origin, dest, pawnPromotionPiece = null) {
+    let error = this.errorCheck(origin, dest);
+>>>>>>> working on DB schema func
     if (error) {
       return { game: this, error };
     }
@@ -172,6 +180,7 @@ class ChessGame {
 =======
   movePiece(origin, dest, clientRoom) {
 >>>>>>> working on DB schema func
+<<<<<<< HEAD
 =======
   movePiece(origin, dest, clientRoom) {
 >>>>>>> working on DB schema func
@@ -180,6 +189,8 @@ class ChessGame {
 >>>>>>> working on DB schema func
 =======
   movePiece(origin, dest, clientRoom) {
+>>>>>>> working on DB schema func
+=======
 >>>>>>> working on DB schema func
     let error = null;
     if (dest === undefined) {
@@ -292,6 +303,7 @@ class ChessGame {
         this.capturePiece(destPiece, clientRoom);
       }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         // if (originPiece[0] === destPiece[0]) {
         //   error = 'Cannot capture your own piece.';
@@ -302,6 +314,8 @@ class ChessGame {
         // this.history += moveToPGNString(this.board, origin, dest, this.count);
         this.capturePiece(destPiece, clientRoom);
       }
+>>>>>>> working on DB schema func
+=======
 >>>>>>> working on DB schema func
       // this.history[this.turn] = this.history[this.turn] || [];
       // this.history[this.turn].push(origin);
@@ -354,12 +368,15 @@ class ChessGame {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> working on DB schema func
 =======
 >>>>>>> working on DB schema func
 =======
 >>>>>>> working on DB schema func
 =======
+=======
+>>>>>>> working on DB schema func
 >>>>>>> working on DB schema func
     if (piece[0] === 'W') {
       this.blackCapPieces.push(piece);
@@ -371,6 +388,7 @@ class ChessGame {
 
     } else {
       this.whiteCapPieces.push(piece);
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -387,6 +405,8 @@ class ChessGame {
 
     }
   }
+>>>>>>> working on DB schema func
+=======
 >>>>>>> working on DB schema func
 
       chessDB.saveWhitePiece({
