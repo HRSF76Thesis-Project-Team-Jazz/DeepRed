@@ -12,6 +12,7 @@ const endGameChecks = require('./deepRed/endGameChecks');
 // const moveToPGNString = require('./convertToPGN');
 const chessDB = require('../chessDB')
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 const transcribeBoard = board => board.map((row) => {
   const pieceIndex = {
@@ -32,6 +33,8 @@ const transcribeBoard = board => board.map((row) => {
   const newRow = row.map(col => pieceIndex[col]);
   return newRow.join('');
 }).join('');
+=======
+>>>>>>> working on DB schema func
 =======
 >>>>>>> working on DB schema func
 
@@ -63,6 +66,7 @@ class ChessGame {
     this.winner = null;
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
   movePiece(origin, dest, pawnPromotionValue = null) {
@@ -161,6 +165,9 @@ class ChessGame {
     return { game: this, error: 'Move is not allowed.' };
   }
   errorCheck(origin, dest) {
+=======
+  movePiece(origin, dest, clientRoom) {
+>>>>>>> working on DB schema func
 =======
   movePiece(origin, dest, clientRoom) {
 >>>>>>> working on DB schema func
@@ -326,6 +333,9 @@ class ChessGame {
 
   capturePiece(piece, clientRoom) {
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> working on DB schema func
+=======
 >>>>>>> working on DB schema func
 =======
 >>>>>>> working on DB schema func
@@ -340,7 +350,10 @@ class ChessGame {
     } else {
       this.whiteCapPieces.push(piece);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> working on DB schema func
 
       chessDB.saveWhitePiece({
         session_id: clientRoom,
