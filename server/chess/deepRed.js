@@ -6,8 +6,6 @@ const chessEval = require('./chessEval');
 
 let whiteIsChecked;
 let blackIsChecked;
-let cleanBlackMoves;
-let cleanWhiteMoves;
 
 /**
  * Return new board after given move
@@ -23,17 +21,58 @@ const mutateBoard = (board, move) => {
 };
 
 // Check for white's possible moves
+// No King checks
 
 /**
  * @param {array} board
+ * @param {object} pieceState   {
+ *                                hasMovedWK: boolean,
+ *                                hasMovedWKR: boolean,
+ *                                hasMovedWQR: boolean,
+ *                                hasMovedBK: boolean,
+ *                                hasMovedBKR: boolean,
+ *                                hasMovedBQR: boolean,
+ *                                canEnPassantW: array,
+ *                                canEnPasswantB: array,
+ *                              }
  * @return {object} keys:   stringified coordinates of piece origin
  *                          '66'
  *                  values: array of possible destination coordinates:
  *                          [[6, 5], [6, 4]]
  */
 
-const getAvailableMovesWhite = (board) => {
+const getAllMovesWhite = (board, pieceState) => {
   const result = {};
+
+  const specialMoves = [];
+
+  // Castling
+  // King can not castle out of check
+  if (pieceState && !pieceState.hasMovedWK && !whiteIsChecked(board) &&
+    board[7][4] === 'WK' && board[7][7] === 'WR' && board[7][0] === 'WR'
+  ) {
+    // King side castle
+    if (!pieceState.hasMovedWKR &&
+      !board[7][5] && !board[7][6] &&
+      !whiteIsChecked(mutateBoard(board, ['74', '75'])) &&
+      !whiteIsChecked(mutateBoard(board, ['74', '76']))
+    ) {
+      specialMoves.push('O-O');
+    }
+    if (!pieceState.hasMovedWQR &&
+      !board[7][3] && !board[7][2] && !board[7][1] &&
+      !whiteIsChecked(mutateBoard(board, ['74', '73'])) &&
+      !whiteIsChecked(mutateBoard(board, ['74', '72'])) &&
+      !whiteIsChecked(mutateBoard(board, ['74', '71']))
+    ) {
+      specialMoves.push('O-O-O');
+    }
+  }
+
+  if (specialMoves.length > 0) {
+    result.specialMoves = specialMoves;
+  }
+
   for (let row = 0; row < 8; row += 1) {
     for (let col = 0; col < 8; col += 1) {
       if (board[row][col] && board[row][col][0] === 'W') {
@@ -404,7 +443,7 @@ const getAvailableMovesWhite = (board) => {
             if (!board[row][currentCol]) {
               result[key].push([row, currentCol]);
             } else if (board[row][currentCol][0] === 'B') {
-              result[key].push([row, currentCol]);
+    -           result[key].push([row, currentCol]);
             }
           } // end of K move right
         } // end of 'K'
@@ -424,8 +463,37 @@ const getAvailableMovesWhite = (board) => {
  *                          [[6, 5], [6, 4]]
  */
 
-const getAvailableMovesBlack = (board) => {
+const getAllMovesBlack = (board, pieceState) => {
   const result = {};
+
+  const specialMoves = [];
+
+  // Castling
+  // King can not castle out of check
+  if (pieceState && !pieceState.hasMovedBK && !blackIsChecked(board) &&
+    board[0][4] === 'BK' && board[0][7] === 'BR' && board[0][0] === 'BR'
+  ) {
+    // King side castle
+    if (!pieceState.hasMovedBKR &&
+      !board[0][5] && !board[0][6] &&
+      !blackIsChecked(mutateBoard(board, ['04', '05'])) &&
+      !blackIsChecked(mutateBoard(board, ['04', '06']))
+    ) {
+      specialMoves.push('O-O');
+    }
+    if (!pieceState.hasMovedBQR &&
+      !board[0][3] && !board[0][2] && !board[0][1] &&
+      !blackIsChecked(mutateBoard(board, ['04', '03'])) &&
+      !blackIsChecked(mutateBoard(board, ['04', '02']))
+    ) {
+      specialMoves.push('O-O-O');
+    }
+  }
+
+  if (specialMoves.length > 0) {
+    result.specialMoves = specialMoves;
+  }
+
   for (let row = 0; row < 8; row += 1) {
     for (let col = 0; col < 8; col += 1) {
       if (board[row][col] && board[row][col][0] === 'B') {
@@ -804,10 +872,12 @@ const getAvailableMovesBlack = (board) => {
 };
 
 
+const getSafeMovesBlack = (board, pieceState) => {
+  const moves = getAllMovesBlack(board, pieceState);
+  const result = (moves.specialMoves) ?
+    { specialMoves: moves.specialMoves } : {};
+  const pieces = Object.keys(moves).filter(x => x !== 'specialMoves');
 
-cleanBlackMoves = (board, moves) => {
-  const result = {};
-  const pieces = Object.keys(moves);
   for (let i = 0; i < pieces.length; i += 1) {
     result[pieces[i]] = [];
     moves[pieces[i]].forEach((move) => {
@@ -818,9 +888,11 @@ cleanBlackMoves = (board, moves) => {
   return result;
 };
 
-cleanWhiteMoves = (board, moves) => {
-  const result = {};
-  const pieces = Object.keys(moves);
+const getSafeMovesWhite = (board, pieceState) => {
+  const moves = getAllMovesWhite(board, pieceState);
+  const result = (moves.specialMoves) ?
+    { specialMoves: moves.specialMoves } : {};
+  const pieces = Object.keys(moves).filter(x => x !== 'specialMoves');
   for (let i = 0; i < pieces.length; i += 1) {
     result[pieces[i]] = [];
     moves[pieces[i]].forEach((move) => {
@@ -843,10 +915,12 @@ cleanWhiteMoves = (board, moves) => {
  */
 
 blackIsChecked = (board) => {
-  const whiteMoves = getAvailableMovesWhite(board);
+  const whiteMoves = getAllMovesWhite(board);
   const positionBK = JSON.stringify(chessEval.findPiecePosition('BK', board)[0]);
   for (const key in whiteMoves) {
-    if (whiteMoves[key].map(x => JSON.stringify(x)).indexOf(positionBK) >= 0) return true;
+    if (key !== 'specialMoves') {
+      if (whiteMoves[key].map(x => JSON.stringify(x)).indexOf(positionBK) >= 0) return true;
+    }
   }
   return false;
 };
@@ -858,10 +932,12 @@ blackIsChecked = (board) => {
  */
 
 whiteIsChecked = (board) => {
-  const blackMoves = getAvailableMovesBlack(board);
+  const blackMoves = getAllMovesBlack(board);
   const positionWK = JSON.stringify(chessEval.findPiecePosition('WK', board)[0]);
   for (const key in blackMoves) {
-    if (blackMoves[key].map(x => JSON.stringify(x)).indexOf(positionWK) >= 0) return true;
+    if (key !== 'specialMOves') {
+      if (blackMoves[key].map(x => JSON.stringify(x)).indexOf(positionWK) >= 0) return true;
+    }
   }
   return false;
 };
@@ -873,7 +949,7 @@ whiteIsChecked = (board) => {
  */
 
 const piecesAttackedByWhite = (board) => {
-  const whiteMoves = getAvailableMovesWhite(board);
+  const whiteMoves = getAllMovesWhite(board);
   const result = [
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -895,7 +971,7 @@ const piecesAttackedByWhite = (board) => {
 };
 
 const piecesAttackedByBlack = (board) => {
-  const blackMoves = getAvailableMovesBlack(board);
+  const blackMoves = getAllMovesBlack(board);
   const result = [
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -927,7 +1003,7 @@ const piecesAttackedByBlack = (board) => {
  */
 
 const whiteCanMove = (board) => {
-  const moves = getAvailableMovesWhite(board);
+  const moves = getSafeMovesWhite(board);
   const pieces = Object.keys(moves);
   for (let i = 0; i < pieces.length; i += 1) {
     if (moves[pieces[i]].length > 0) return true;
@@ -944,7 +1020,7 @@ const isStalemateWhite = board => !whiteIsChecked(board) && !whiteCanMove(board)
  */
 
 const blackCanMove = (board) => {
-  const moves = getAvailableMovesBlack(board);
+  const moves = getSafeMovesBlack(board);
   const pieces = Object.keys(moves);
   for (let i = 0; i < pieces.length; i += 1) {
     if (moves[pieces[i]].length > 0) return true;
@@ -961,7 +1037,7 @@ const isStalemateBlack = board => !blackIsChecked(board) && !blackCanMove(board)
  *  To be implemented in tests
  */
 
-const showMovesByPiece = (board, piece, description) => {
+const showMovesByPiece = (board, piece, pieceState, description) => {
   const color = piece[0];
   const label = {
     P: 'Pawns',
@@ -973,14 +1049,17 @@ const showMovesByPiece = (board, piece, description) => {
   };
   const pieces = chessEval.findPiecePosition(piece, board)
     .map(array => array[0].toString() + array[1].toString());
-  const moves = (color === 'W') ? getAvailableMovesWhite(board) : getAvailableMovesBlack(board);
+  const moves = (color === 'W') ? getSafeMovesWhite(board, pieceState) : getSafeMovesBlack(board, pieceState);
+  const specialMoves = (moves.specialMoves) ? moves.specialMoves.slice(0) : undefined;
+  delete moves.specialMoves;
+
   const movesBoard = board.map(row => row.map(col => (!col ? ' -- ' : ` ${col} `)));
   const piecesAttacked = (color === 'W') ? piecesAttackedByWhite(board) : piecesAttackedByBlack(board);
 
   console.log();
   console.log(`[ ${description} ]`);
   console.log(`=================== 【 ${color} ${(piece.length === 1) ? 'ALL MOVES' : label[piece[1]]} 】 ======================`.substr(-50));
-  movesBoard.forEach(row => console.log(row.join(' | ')));
+  // movesBoard.forEach(row => console.log(row.join(' | ')));
   pieces.forEach(key => moves[key].forEach((move) => {
     if (piecesAttacked[move[0]][move[1]]) {
       movesBoard[move[0]][move[1]] = `[${board[move[0]][move[1]]}]`;
@@ -988,6 +1067,17 @@ const showMovesByPiece = (board, piece, description) => {
       movesBoard[move[0]][move[1]] = ' <> ';
     }
   }));
+
+  const kRow = (color === 'W') ? 7 : 0;
+  if (specialMoves && specialMoves.indexOf('O-O') >= 0) {
+    movesBoard[kRow][5] = ' *O ';
+    movesBoard[kRow][6] = ' O* ';
+  }
+  if (specialMoves && specialMoves.indexOf('O-O-O') >= 0) {
+    movesBoard[kRow][2] = ' *O ';
+    movesBoard[kRow][3] = ' O* ';
+  }
+
   console.log('----------------------------------------------------');
   movesBoard.forEach(row => console.log(row.join(' | ')));
   console.log('----------------------------------------------------');
@@ -1029,8 +1119,8 @@ const showEvaluatedMoves = (board, moves, piece, description) => {
 };
 
 module.exports = {
-  getAvailableMovesBlack,
-  getAvailableMovesWhite,
+  getAllMovesBlack,
+  getAllMovesWhite,
   blackIsChecked,
   whiteIsChecked,
   whiteCanMove,
@@ -1040,7 +1130,7 @@ module.exports = {
   isCheckmateBlack,
   isStalemateBlack,
   showMovesByPiece,
-  cleanBlackMoves,
-  cleanWhiteMoves,
+  getSafeMovesBlack,
+  getSafeMovesWhite,
   showEvaluatedMoves,
 };
