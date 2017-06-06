@@ -180,6 +180,7 @@ class ChessGame {
     return { game: this, error: 'Move is not allowed.' };
   }
   errorCheck(origin, dest) {
+
   movePiece(origin, dest, clientRoom) {
 <<<<<<< HEAD
 >>>>>>> working on DB schema func
