@@ -94,6 +94,7 @@ class ChessGame {
     return { game: this, error };
   }
   errorCheck(origin, dest) {
+
   movePiece(origin, dest, clientRoom) {
     let error = null;
     if (dest === undefined) {
