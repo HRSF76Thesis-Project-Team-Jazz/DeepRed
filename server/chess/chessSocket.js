@@ -77,6 +77,7 @@ module.exports = (io, client) => {
     console.log('room number: ', clientRoom);
 
     const newState = allGames[clientRoom].movePiece(origin, dest, clientRoom);
+
     io.in(clientRoom).emit('attemptMoveResult', newState.error, origin, dest, selection, newState.game.turn, newState.castling);
 
   });
