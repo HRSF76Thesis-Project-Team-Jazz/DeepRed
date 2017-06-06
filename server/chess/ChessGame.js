@@ -111,6 +111,7 @@ class ChessGame {
         // this.history += moveToPGNString(this.board, origin, dest, this.count);
         this.capturePiece(destPiece, clientRoom);
       }
+
       // this.history[this.turn] = this.history[this.turn] || [];
       // this.history[this.turn].push(origin);
       // this.history[this.turn].push(dest);
@@ -150,6 +151,7 @@ class ChessGame {
     // console.log(error);
     return { game: this, error };
   }
+
 
   errorCheck(origin, dest) {
     let error = null;
