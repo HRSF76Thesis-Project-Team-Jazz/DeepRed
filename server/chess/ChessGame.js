@@ -9,6 +9,7 @@
 
 const isLegalMove = require('./isLegalMove');
 // const moveToPGNString = require('./convertToPGN');
+const chessDB = require('../chessDB')
 
 class ChessGame {
 
@@ -38,7 +39,7 @@ class ChessGame {
     this.canEnPassantB = [];
   }
 
-  movePiece(origin, dest) {
+  movePiece(origin, dest, clientRoom) {
     let error = null;
     if (dest === undefined) {
       error = 'Attempted destination is invalid.';
@@ -107,6 +108,27 @@ class ChessGame {
       if (destPiece) {
         this.capturePiece(destPiece);
       }
+        // if (originPiece[0] === destPiece[0]) {
+        //   error = 'Cannot capture your own piece.';
+        //   console.log(this.board);
+        //   console.log(error);
+        //   return { game: this, error };
+        // }
+        // this.history += moveToPGNString(this.board, origin, dest, this.count);
+        this.capturePiece(destPiece, clientRoom);
+      }
+      // this.history[this.turn] = this.history[this.turn] || [];
+      // this.history[this.turn].push(origin);
+      // this.history[this.turn].push(dest);
+      // if (originPiece[0] === 'B') {
+      //   this.turn += 1;
+      // }
+
+      chessDB.saveMove({
+        session_id: clientRoom,
+        history: JSON.stringify([ origin , dest])
+      })
+
       this.turn = (this.turn === 'W') ? 'B' : 'W';
       this.board[dest[0]][dest[1]] = originPiece;
       this.board[origin[0]][origin[1]] = null;
@@ -117,11 +139,23 @@ class ChessGame {
     return { game: this, error };
   }
 
-  capturePiece(piece) {
+  capturePiece(piece, clientRoom) {
     if (piece[0] === 'W') {
       this.blackCapPieces.push(piece);
+      
+      chessDB.saveBlackPiece({
+        session_id: clientRoom,
+        black_pieces: JSON.stringify(piece),
+      })
+
     } else {
       this.whiteCapPieces.push(piece);
+
+      chessDB.saveWhitePiece({
+        session_id: clientRoom,
+        white_pieces: JSON.stringify(piece),
+      })
+
     }
   }
 
