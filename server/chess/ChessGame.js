@@ -94,6 +94,7 @@ class ChessGame {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   movePiece(origin, dest, pawnPromotionValue = null) {
     const error = this.errorCheck(origin, dest);
 =======
@@ -128,6 +129,8 @@ class ChessGame {
 <<<<<<< HEAD
 >>>>>>> working on DB schema func
 =======
+=======
+>>>>>>> working on DB schema func
   movePiece(origin, dest, pawnPromotionPiece = null) {
     let error = this.errorCheck(origin, dest);
     if (error) {
@@ -253,6 +256,7 @@ class ChessGame {
     return { game: this, error: 'Move is not allowed.' };
   }
 
+<<<<<<< HEAD
 
 <<<<<<< HEAD
   errorCheck(origin, dest) {
@@ -265,6 +269,9 @@ class ChessGame {
   movePiece(origin, dest, clientRoom) {
 >>>>>>> working on DB schema func
 =======
+=======
+  errorCheck(origin, dest) {
+>>>>>>> working on DB schema func
   movePiece(origin, dest, clientRoom) {
 >>>>>>> working on DB schema func
 =======
@@ -309,7 +316,6 @@ class ChessGame {
         return error;
       }
     }
-
     return error;
   }
   castlingMove(castlingStr) {
@@ -468,8 +474,12 @@ class ChessGame {
       console.log(this.board);
       return { game: this, error };
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
+>>>>>>> working on DB schema func
+=======
+
 >>>>>>> working on DB schema func
     }
   }
@@ -516,6 +526,7 @@ class ChessGame {
 =======
 >>>>>>> working on DB schema func
 =======
+
 
   capturePiece(piece, clientRoom) {
 >>>>>>> working on DB schema func
