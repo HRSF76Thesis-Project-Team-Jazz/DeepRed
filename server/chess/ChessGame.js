@@ -16,6 +16,9 @@ const chessDB = require('../chessDB')
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> working on DB schema func
 =======
 >>>>>>> working on DB schema func
 =======
@@ -40,6 +43,9 @@ const transcribeBoard = board => board.map((row) => {
   const newRow = row.map(col => pieceIndex[col]);
   return newRow.join('');
 }).join('');
+=======
+>>>>>>> working on DB schema func
+<<<<<<< HEAD
 =======
 >>>>>>> working on DB schema func
 =======
@@ -231,6 +237,7 @@ class ChessGame {
     return { game: this, error: 'Move is not allowed.' };
   }
 
+<<<<<<< HEAD
   errorCheck(origin, dest) {
 
   movePiece(origin, dest, clientRoom) {
@@ -470,6 +477,8 @@ class ChessGame {
 >>>>>>> working on DB schema func
 =======
 
+=======
+>>>>>>> working on DB schema func
   capturePiece(piece, clientRoom) {
 >>>>>>> working on DB schema func
     if (piece[0] === 'W') {

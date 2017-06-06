@@ -13,7 +13,6 @@ const createAndSaveNewGame = (room) => {
 };
 
 module.exports = (io, client) => {
-<<<<<<< HEAD
   let room = '';
 
   client.on('getAllRooms', (id) => {
@@ -25,7 +24,6 @@ module.exports = (io, client) => {
       room = `room ${queue[0]}`;
     } else {
       room = `room ${count}`;
-=======
   let currentName = '';
   let currentEmail = '';
   // user socket communications
