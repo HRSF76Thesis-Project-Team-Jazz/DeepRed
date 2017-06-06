@@ -58,27 +58,6 @@ class ChessGame {
     this.winner = null;
   }
 
-  movePiece(origin, dest, clientRoom) {
-    let error = null;
-    if (dest === undefined) {
-      error = 'Attempted destination is invalid.';
-      console.log(this.board);
-      console.log(error);
-      return { game: this, error };
-    } else if (!origin || !this.board[origin[0]] || !this.board[origin[0]][origin[1]]) {
-      error = 'Origin is invalid.';
-      console.log(this.board);
-      console.log(error);
-      return { game: this, error };
-    } else if (origin[0] === dest[0] && origin[1] === dest[1]) {
-      error = 'Origin and destination cannot be the same.';
-      console.log(this.board);
-      console.log(error);
-      return { game: this, error };
-    } else if (this.turn !== this.board[origin[0]][origin[1]][0]) {
-      error = 'Not your turn.';
-      console.log(this.board);
-      console.log(error);
   movePiece(origin, dest, pawnPromotionPiece = null) {
     let error = this.errorCheck(origin, dest);
     if (error) {
@@ -155,7 +134,7 @@ class ChessGame {
     return { game: this, error };
   }
 
-
+  errorCheck(origin, dest) {
   movePiece(origin, dest, clientRoom) {
     let error = null;
     if (dest === undefined) {
@@ -189,7 +168,6 @@ class ChessGame {
         return error;
       }
     }
-
     return error;
   }
   castlingMove(castlingStr) {
@@ -287,6 +265,7 @@ class ChessGame {
       console.log('Move piece is successful');
       console.log(this.board);
       return { game: this, error };
+
     }
   }
 
@@ -310,6 +289,7 @@ class ChessGame {
       this.hasMovedBRK = true;
     }
   }
+
 
   capturePiece(piece, clientRoom) {
     if (piece[0] === 'W') {
