@@ -42,6 +42,11 @@ export const selectPiece = (selectedPiece, coordinates) => ({
   coordinates,
 });
 
+export const saveBoolBoard = boolBoard => ({
+  type: types.SAVE_BOOL_BOARD,
+  boolBoard,
+});
+
 export const unselectPiece = () => ({
   type: types.UNSELECT_PIECE,
 });

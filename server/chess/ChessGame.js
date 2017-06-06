@@ -153,6 +153,18 @@ class ChessGame {
     }
   }
 
+  checkAllMovesOfOrigin(origin) {
+    const resultBoard = [];
+    for (let i = 0; i < 8; i += 1) {
+      resultBoard[i] = new Array(8);
+    }
+    for (let i = 0; i < 8; i += 1) {
+      for (let j = 0; j < 8; j += 1) {
+        resultBoard[i][j] = isLegalMove(this, origin, [i, j]).bool;
+      }
+    }
+    return resultBoard;
+  }
 
   // pawnPromotion(piece, origin, dest) {
   //   let originPiece = this.board[origin[0]][origin[1]];

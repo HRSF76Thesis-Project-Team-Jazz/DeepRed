@@ -81,11 +81,15 @@ module.exports = (io, client) => {
     io.in(clientRoom).emit('attemptMoveResult', newState.error, origin, dest, selection, newState.game.turn);
   });
 
-  client.on('checkLegalMove', (origin, dest, clientRoom, id) => {
+  client.on('checkLegalMoves', (origin, clientRoom, id) => {
     // console.log('checkLegalMove: ', origin, dest);
     // console.log('room number: ', room);
-    const bool = isLegalMove(allGames[clientRoom], origin, dest).bool;
-    io.to(id).emit('isLegalMoveResult', dest, bool);
+    // const bool = isLegalMove(allGames[clientRoom], origin, dest).bool;
+    debugger;
+    if (origin) {
+      const boolBoard = allGames[clientRoom].checkAllMovesOfOrigin(origin);
+      io.to(id).emit('checkLegalMovesResults', boolBoard);
+    }
   });
 
   // control socket communications

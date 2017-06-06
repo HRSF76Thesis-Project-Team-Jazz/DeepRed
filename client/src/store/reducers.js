@@ -113,7 +113,7 @@ const boardState = (state = {
     case types.CAPTURE_PIECE: {
       const board = state.board.slice(0);
       board[action.coordinates[0]][action.coordinates[1]]
-         = board[action.fromPosition[0]][action.fromPosition[1]];
+        = board[action.fromPosition[0]][action.fromPosition[1]];
       board[action.fromPosition[0]][action.fromPosition[1]] = null;
       return { board };
     }
@@ -131,8 +131,23 @@ const moveState = (state = Immutable({
   selectedPiece: '',
   error: '',
   open: false,
+  boolBoard: [
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+  ],
 }), action) => {
   switch (action.type) {
+    case types.SAVE_BOOL_BOARD:
+      return Immutable({
+        ...state,
+        boolBoard: action.boolBoard,
+      });
     case types.DISPLAY_ERROR:
       return Immutable({
         ...state,
@@ -317,4 +332,3 @@ const rootReducer = combineReducers({
 });
 
 export default rootReducer;
-

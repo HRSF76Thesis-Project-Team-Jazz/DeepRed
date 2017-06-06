@@ -18,8 +18,8 @@ class Board extends Component {
 
   onClick(coordinates) {
     const {
-      dispatch, board, fromPosition, selectedPiece,
-      attemptMove, room, gameTurn, isWhite,
+      dispatch, board, fromPosition, selectedPiece, room, gameTurn,
+      isWhite, attemptMove, checkLegalMoves,
     } = this.props;
 
     if ((isWhite && gameTurn === 'B') || (!isWhite && gameTurn === 'W')) {
@@ -35,6 +35,7 @@ class Board extends Component {
           dispatch(selectPiece(selection, coordinates));
           dispatch(colorSquare('board-col green', coordinates));
           dispatch(displayError(''));
+          checkLegalMoves(coordinates, room);
         } else {
           dispatch(invalidSelection(coordinates));
         }
@@ -45,9 +46,14 @@ class Board extends Component {
   }
 
   onMouseEnter(coordinates) {
-    const { selectedPiece, checkLegalMove, fromPosition, room } = this.props;
+    const { dispatch, selectedPiece, boolBoard } = this.props;
     if (selectedPiece) {
-      checkLegalMove(fromPosition, coordinates, room);
+      const bool = boolBoard[coordinates[0]][coordinates[1]];
+      let color = 'board-col red';
+      if (bool) {
+        color = 'board-col green';
+      }
+      dispatch(colorSquare(color, coordinates));
     }
   }
 
@@ -124,7 +130,7 @@ function mapStateToProps(state) {
   const { gameState, boardState, moveState, userState, squareState } = state;
   const { playerColor, gameTurn } = gameState;
   const { board } = boardState;
-  const { fromPosition, selectedPiece } = moveState;
+  const { fromPosition, selectedPiece, boolBoard } = moveState;
   const { room, isWhite } = userState;
   const { color, hover } = squareState;
   return {
@@ -132,6 +138,7 @@ function mapStateToProps(state) {
     board,
     fromPosition,
     selectedPiece,
+    boolBoard,
     room,
     color,
     hover,
