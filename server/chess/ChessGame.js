@@ -15,6 +15,9 @@ const chessDB = require('../chessDB')
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> working on DB schema func
 =======
 >>>>>>> working on DB schema func
 
@@ -78,6 +81,7 @@ class ChessGame {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   movePiece(origin, dest, pawnPromotionValue = null) {
     const error = this.errorCheck(origin, dest);
 =======
@@ -87,6 +91,29 @@ class ChessGame {
     let error = this.errorCheck(origin, dest);
 >>>>>>> working on DB schema func
     if (error) {
+=======
+  movePiece(origin, dest, clientRoom) {
+    let error = null;
+    if (dest === undefined) {
+      error = 'Attempted destination is invalid.';
+      console.log(this.board);
+      console.log(error);
+      return { game: this, error };
+    } else if (!origin || !this.board[origin[0]] || !this.board[origin[0]][origin[1]]) {
+      error = 'Origin is invalid.';
+      console.log(this.board);
+      console.log(error);
+      return { game: this, error };
+    } else if (origin[0] === dest[0] && origin[1] === dest[1]) {
+      error = 'Origin and destination cannot be the same.';
+      console.log(this.board);
+      console.log(error);
+      return { game: this, error };
+    } else if (this.turn !== this.board[origin[0]][origin[1]][0]) {
+      error = 'Not your turn.';
+      console.log(this.board);
+      console.log(error);
+>>>>>>> working on DB schema func
       return { game: this, error };
     }
     const originPiece = this.board[origin[0]][origin[1]];
@@ -125,10 +152,34 @@ class ChessGame {
       this.canEnPassant = legalMoveResult.canEnPassant || [];
       // add to capture array
       if (destPiece) {
-        this.addToCaptureArray(destPiece);
+
+        // if (originPiece[0] === destPiece[0]) {
+        //   error = 'Cannot capture your own piece.';
+        //   console.log(this.board);
+        //   console.log(error);
+        //   return { game: this, error };
+        // }
+        // this.history += moveToPGNString(this.board, origin, dest, this.count);
+        this.capturePiece(destPiece, clientRoom);
       }
+<<<<<<< HEAD
 
       // swap location
+=======
+      // this.history[this.turn] = this.history[this.turn] || [];
+      // this.history[this.turn].push(origin);
+      // this.history[this.turn].push(dest);
+      // if (originPiece[0] === 'B') {
+      //   this.turn += 1;
+      // }
+
+      chessDB.saveMove({
+        session_id: clientRoom,
+        history: JSON.stringify([ origin , dest])
+      })
+
+      this.turn = (this.turn === 'W') ? 'B' : 'W';
+>>>>>>> working on DB schema func
       this.board[dest[0]][dest[1]] = originPiece;
       this.board[origin[0]][origin[1]] = null;
 
@@ -179,6 +230,7 @@ class ChessGame {
     // console.log(error);
     return { game: this, error: 'Move is not allowed.' };
   }
+
   errorCheck(origin, dest) {
 
   movePiece(origin, dest, clientRoom) {
@@ -395,6 +447,7 @@ class ChessGame {
       this.hasMovedBRK = true;
     }
   }
+<<<<<<< HEAD
   addToCaptureArray(piece) {
 
 
@@ -415,6 +468,10 @@ class ChessGame {
 >>>>>>> working on DB schema func
 =======
 >>>>>>> working on DB schema func
+=======
+
+  capturePiece(piece, clientRoom) {
+>>>>>>> working on DB schema func
     if (piece[0] === 'W') {
       this.blackCapPieces.push(piece);
       
@@ -425,6 +482,7 @@ class ChessGame {
 
     } else {
       this.whiteCapPieces.push(piece);
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -442,6 +500,8 @@ class ChessGame {
 
     }
   }
+>>>>>>> working on DB schema func
+=======
 >>>>>>> working on DB schema func
 =======
 >>>>>>> working on DB schema func
