@@ -1,26 +1,25 @@
 import React, { Component } from 'react';
-import ReactCountdownClock from 'react-countdown-clock';
 import { connect } from 'react-redux';
-import { pauseTimer } from '../store/actions';
 
 class Clock extends Component {
   constructor(props) {
     super(props);
   }
 
+  // componentDidMount() {
+  //   let { dispatch, timeB } = this.props;
+  //   setInterval(() => {
+  //     timeB -= 1;
+  //     dispatch(decreamentTimerB(timeB));
+  //   }, 1000);
+  // }
+
   render() {
-    const { sendPauseRequest, pausedB, pausedW, timeB, timeW, gameTurn } = this.props;
+    const { sendPauseRequest, timeB, timeW } = this.props;
 
     return (
-      <div>
-        <ReactCountdownClock
-          seconds={(this.props.color === 'Black') ? timeB : timeW}
-          color="#000"
-          alpha={0.8}
-          size={85}
-          paused={(this.props.color === 'Black') ? pausedW : pausedB}
-          onClick={sendPauseRequest}
-        />
+      <div className="clock-class" >
+        <span>time Left: {this.props.color === 'Black' ? timeB : timeW}</span>
       </div>
     );
   }
@@ -53,3 +52,11 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(Clock);
+// {/*<ReactCountdownClock
+//   seconds={(this.props.color === 'Black') ? timeB : timeW}
+//   color="#000"
+//   alpha={0.8}
+//   size={85}
+//   paused={(this.props.color === 'Black') ? pausedW : pausedB}
+//   onClick={sendPauseRequest}
+// />*/}

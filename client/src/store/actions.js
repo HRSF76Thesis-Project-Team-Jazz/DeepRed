@@ -6,21 +6,29 @@ import * as types from './actionTypes';
  * Actions = { type: TYPE, vars: VALS }
  */
 // gameState actions
-export const pauseTimer = () => ({
-  type: types.PAUSE_TIMER,
-});
-
 export const updateTimer = roomInfo => ({
   type: types.UPDATE_TIMER,
   roomInfo,
 });
 
-export const resumeTimerB = () => ({
-  type: types.RESUME_TIMER_B,
+export const updateTimerB = timeB => ({
+  type: types.UPDATE_TIMER_B,
+  timeB,
 });
 
-export const resumeTimerW = () => ({
-  type: types.RESUME_TIMER_W,
+export const updateTimerW = timeW => ({
+  type: types.UPDATE_TIMER_W,
+  timeW,
+});
+
+export const timeInstanceB = ref => ({
+  type: types.TIME_INSTANCE_B,
+  ref,
+});
+
+export const timeInstanceW = ref => ({
+  type: types.TIME_INSTANCE_W,
+  ref,
 });
 
 export const displayError = error => ({

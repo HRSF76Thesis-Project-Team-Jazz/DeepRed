@@ -1,11 +1,13 @@
 // gameState types
-export const PAUSE_TIMER = 'PAUSE_TIMER';
-
-export const RESUME_TIMER_B = 'RESUME_TIMER_B';
-
-export const RESUME_TIMER_W = 'RESUME_TIMER_W';
-
 export const UPDATE_TIMER = 'UPDATE_TIMER';
+
+export const UPDATE_TIMER_B = 'UPDATE_TIMER_B';
+
+export const UPDATE_TIMER_W = 'UPDATE_TIMER_W';
+
+export const TIME_INSTANCE_B = 'TIME_INSTANCE_B';
+
+export const TIME_INSTANCE_W = 'TIME_INSTANCE_W';
 
 export const INVALID_SELECTION = 'INVALID_SELECTION';
 

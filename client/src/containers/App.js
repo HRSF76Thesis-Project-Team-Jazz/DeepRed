@@ -9,7 +9,7 @@ import {
   cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW,
   updateRoomInfo, getRequestFailure, receiveGame, movePiece, resetBoolBoard,
   unselectPiece, capturePiece, displayError, colorSquare, sendMsg,
-  resumeTimerB, resumeTimerW, saveBoolBoard, castlingMove,
+  updateTimerB, timeInstanceB, updateTimerW, timeInstanceW, saveBoolBoard, castlingMove,
 } from '../store/actions';
 
 // Components
@@ -46,6 +46,10 @@ class App extends Component {
     this.handleCancelPauseClose = this.handleCancelPauseClose.bind(this);
     this.onAgreePauseRequest = this.onAgreePauseRequest.bind(this);
     this.onChangePlayerTurn = this.onChangePlayerTurn.bind(this);
+    this.decrementTimerB = this.decrementTimerB.bind(this);
+    this.decrementTimerW = this.decrementTimerW.bind(this);
+    this.stopTimerB = this.stopTimerB.bind(this);
+    this.stopTimerW = this.stopTimerW.bind(this);
   }
 
   componentDidMount() {
@@ -95,7 +99,7 @@ class App extends Component {
     this.socket.on('startGame', (roomInfo) => {
       dispatch(updateRoomInfo(roomInfo));
       dispatch(updateTimer(roomInfo));
-      dispatch(resumeTimerW());
+      this.decrementTimerW();
     });
 
     this.socket.on('message', (msg) => {
@@ -109,10 +113,10 @@ class App extends Component {
           dispatch(capturePiece(origin, dest, selection, gameTurn));
           if (gameTurn === 'B') {
             this.onChangePlayerTurn();
-            dispatch(resumeTimerB());
+            this.decrementTimerB();
           } else {
             this.onChangePlayerTurn();
-            dispatch(resumeTimerW());
+            this.decrementTimerW();
           }
         } else if (castling) {
           dispatch(castlingMove(origin, dest, castling, gameTurn));
@@ -120,10 +124,10 @@ class App extends Component {
           dispatch(movePiece(origin, dest, gameTurn));
           if (gameTurn === 'W') {
             this.onChangePlayerTurn();
-            dispatch(resumeTimerW());
+            this.decrementTimerW();
           } else {
             this.onChangePlayerTurn();
-            dispatch(resumeTimerB());
+            this.decrementTimerB();
           }
         }
       } else {
@@ -136,11 +140,6 @@ class App extends Component {
     });
 
     this.socket.on('checkLegalMovesResults', (boolBoard) => {
-      // dispatch(receiveGame(board));
-      // let color = 'board-col red';
-      // if (bool) {
-      //   color = 'board-col green';
-      // }
       dispatch(saveBoolBoard(boolBoard));
     });
 
@@ -164,16 +163,16 @@ class App extends Component {
     });
 
     this.socket.on('executePauseRequest', () => {
-      dispatch(pauseTimer());
+      // dispatch(pauseTimer());
     });
 
     this.socket.on('executeResumeRequest', () => {
       if (gameTurn === 'B') {
         this.onChangePlayerTurn();
-        dispatch(resumeTimerB());
+        // dispatch(resumeTimerB());
       } else {
         this.onChangePlayerTurn();
-        dispatch(resumeTimerW());
+        // dispatch(resumeTimerW());
       }
     });
 
@@ -183,9 +182,50 @@ class App extends Component {
   }
 
   // CONTROL function
+  decrementTimerB() {
+    let { dispatch, timeB, counterBinstance } = this.props;
+    counterBinstance = setInterval(() => {
+      if (timeB > 0) {
+        timeB -= 1;
+      } else {
+        timeB = 0;
+        this.stopTimerB();
+      }
+      dispatch(updateTimerB(timeB));
+      dispatch(timeInstanceB(counterBinstance));
+    }, 1000);
+  }
+
+  decrementTimerW() {
+    let { dispatch, timeW, counterWinstance } = this.props;
+    counterWinstance = setInterval(() => {
+      if (timeW > 0) {
+        timeW -= 1;
+      } else {
+        timeW = 0;
+        this.stopTimerW();
+      }
+      dispatch(updateTimerW(timeW));
+      dispatch(timeInstanceW(counterWinstance));
+    }, 1000);
+  }
+
+  stopTimerB() {
+    const { dispatch, timeB, counterBinstance } = this.props;
+    clearInterval(counterBinstance);
+    dispatch(updateTimerB(timeB));
+  }
+
+  stopTimerW() {
+    const { dispatch, timeW, counterWinstance } = this.props;
+    clearInterval(counterWinstance);
+    dispatch(updateTimerW(timeW));
+  }
+
   onChangePlayerTurn() {
-    const { dispatch, room, timeB, timeW } = this.props;
-    dispatch(pauseTimer());
+    const { room, timeB, timeW } = this.props;
+    this.stopTimerB();
+    this.stopTimerW();
     this.socket.emit('updateTime', room, timeB, timeW);
   }
 
@@ -292,7 +332,7 @@ class App extends Component {
             <div className="flex-col left-col">
                <div className="countdown-top-clock">
                 {(playerB !== undefined) ?
-                  <Clock color={(!isWhite) ? 'White' : 'Black'} sendPauseRequest={this.sendPauseRequest} /> : null
+                  <Clock color={(!isWhite) ? 'White' : 'Black'} sendPauseRequest={this.sendPauseRequest} stopTimeB={this.stopTimeB} /> : null
                 }
               </div> 
               <PlayerName
@@ -310,7 +350,7 @@ class App extends Component {
               />
                <div className="countdown-bot-clock">
                 {(playerB !== undefined) ?
-                  <Clock color={(isWhite) ? 'White' : 'Black'} sendPauseRequest={this.sendPauseRequest} /> : null
+                  <Clock color={(isWhite) ? 'White' : 'Black'} sendPauseRequest={this.sendPauseRequest} stopTimeB={this.stopTimeB} /> : null
                 }
               </div> 
             </div>
@@ -369,10 +409,12 @@ class App extends Component {
 function mapStateToProps(state) {
   const { gameState, moveState, userState, controlState } = state;
   const {
+    counterBinstance,
+    counterWinstance,
     timeB,
     timeW,
-    pausedB,
-    pausedW,
+    // pausedB,
+    // pausedW,
     moveHistory,
     capturedPiecesBlack,
     capturedPiecesWhite,
@@ -388,11 +430,13 @@ function mapStateToProps(state) {
   const { message, error } = moveState;
   const { pauseOpen, cancelPauseOpen, alertName } = controlState;
   return {
+    counterBinstance,
+    counterWinstance,
     playerWemail,
     timeB,
     timeW,
-    pausedB,
-    pausedW,
+    // pausedB,
+    // pausedW,
     alertName,
     cancelPauseOpen,
     pauseOpen,

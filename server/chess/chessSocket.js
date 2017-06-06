@@ -30,7 +30,7 @@ module.exports = (io, client) => {
         roomInfo.playerWemail = currentEmail;
         roomInfo.playerWid = client.client.id;
         roomInfo.playerWclicked = false;
-        roomInfo.playerWtime = 600;
+        roomInfo.playerWtime = 60;
         roomInfo.thisUserId = client.client.id;
         // create new game instance
         createAndSaveNewGame(room);
@@ -52,7 +52,7 @@ module.exports = (io, client) => {
         roomInfo.playerBemail = currentEmail;
         roomInfo.playerBid = client.client.id;
         roomInfo.playerBclicked = false;
-        roomInfo.playerBtime = 600;
+        roomInfo.playerBtime = 60;
         roomInfo.thisUserId = client.client.id;
         allRooms[room] = roomInfo;
         io.in(room).emit('secondPlayerJoined', roomInfo);
@@ -126,6 +126,8 @@ module.exports = (io, client) => {
   });
 
   client.on('updateTime', (clientRoom, timeB, timeW) => {
+    console.log('client: ', clientRoom);
+    console.log('all rooms: ', allRooms);
     allRooms[clientRoom].playerBtime = timeB;
     allRooms[clientRoom].playerWtime = timeW;
     io.in(clientRoom).emit('sendUpdatedTime', allRooms[clientRoom]);
