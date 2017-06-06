@@ -77,9 +77,12 @@ class ChessGame {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   movePiece(origin, dest, pawnPromotionValue = null) {
     const error = this.errorCheck(origin, dest);
 =======
+=======
+>>>>>>> working on DB schema func
   movePiece(origin, dest, pawnPromotionPiece = null) {
     let error = this.errorCheck(origin, dest);
 >>>>>>> working on DB schema func
@@ -177,8 +180,8 @@ class ChessGame {
     return { game: this, error: 'Move is not allowed.' };
   }
   errorCheck(origin, dest) {
-=======
   movePiece(origin, dest, clientRoom) {
+<<<<<<< HEAD
 >>>>>>> working on DB schema func
 <<<<<<< HEAD
 =======
@@ -189,6 +192,8 @@ class ChessGame {
 >>>>>>> working on DB schema func
 =======
   movePiece(origin, dest, clientRoom) {
+>>>>>>> working on DB schema func
+=======
 >>>>>>> working on DB schema func
 =======
 >>>>>>> working on DB schema func
@@ -224,7 +229,6 @@ class ChessGame {
         return error;
       }
     }
-<<<<<<< HEAD
     return error;
   }
   castlingMove(castlingStr) {
@@ -248,7 +252,6 @@ class ChessGame {
       this.board[7][7] = null;
       this.hasMovedWRK = true;
       this.hasMovedWK = true;
-=======
     const legalMoveResult = isLegalMove(this, origin, dest);
     if (legalMoveResult.bool) {
       if (legalMoveResult.castling) {
@@ -337,10 +340,10 @@ class ChessGame {
       console.log('Move piece is successful');
       console.log(this.board);
       return { game: this, error };
->>>>>>> working on DB schema func
+
     }
   }
-<<<<<<< HEAD
+
   toggleMovedRooksOrKings(origin, originPiece) {
     if (originPiece === 'WK' && JSON.stringify(origin) === JSON.stringify([7, 4])) {
       this.hasMovedWK = true;
@@ -362,13 +365,14 @@ class ChessGame {
     }
   }
   addToCaptureArray(piece) {
-=======
+
 
   capturePiece(piece, clientRoom) {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> working on DB schema func
 =======
 >>>>>>> working on DB schema func
@@ -377,6 +381,8 @@ class ChessGame {
 =======
 =======
 >>>>>>> working on DB schema func
+>>>>>>> working on DB schema func
+=======
 >>>>>>> working on DB schema func
     if (piece[0] === 'W') {
       this.blackCapPieces.push(piece);
