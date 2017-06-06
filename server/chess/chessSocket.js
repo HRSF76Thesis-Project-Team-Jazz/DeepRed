@@ -209,9 +209,13 @@ module.exports = (io, client) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     const newState = allGames[clientRoom].movePiece(origin, dest, pieceType);
 =======
+=======
+
+>>>>>>> working on DB schema func
     const newState = allGames[clientRoom].movePiece(origin, dest, pieceType, clientRoom);
 >>>>>>> working on DB schema func
     const { error, game, castling, enPassantCoord, pawnPromotionPiece } = newState;
