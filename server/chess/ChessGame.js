@@ -271,6 +271,10 @@ class ChessGame {
 =======
 =======
   errorCheck(origin, dest) {
+<<<<<<< HEAD
+>>>>>>> working on DB schema func
+=======
+
 >>>>>>> working on DB schema func
   movePiece(origin, dest, clientRoom) {
 >>>>>>> working on DB schema func
