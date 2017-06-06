@@ -153,6 +153,7 @@ module.exports = (io, client) => {
   client.on('attemptMove', (origin, dest, selection, pieceType, clientRoom) => {
     console.log('attempted Move: ', origin, dest);
     console.log('room number: ', clientRoom);
+
     const newState = allGames[clientRoom].movePiece(origin, dest, pieceType, clientRoom);
     const { error, game, castling, enPassantCoord, pawnPromotionPiece } = newState;
     io.in(clientRoom).emit('attemptMoveResult', error, origin, dest, selection, game.turn, castling, enPassantCoord, pawnPromotionPiece);
