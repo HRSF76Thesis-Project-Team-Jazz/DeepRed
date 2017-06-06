@@ -1,14 +1,13 @@
 .message-list {
-  border-radius: 5px;
-  margin: 5px;
+  /*border-radius: 5px;*/
+  margin: 1vw;
   padding: 0px;
 }
 .message {
-  border-radius: 5px;
-  margin: 5px;
-  padding: 0px;
+  /*border-radius: 5px;*/
+  /*margin: 1vw;*/
+  padding-top: 1vh;
 }
 .text-field {
-  width: '80%';
-  margin-left: 10px;
+  margin-left: 1vw;
 }

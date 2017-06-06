@@ -12,7 +12,7 @@ import {
 } from '../store/actions';
 
 // Components
-import SettingsDrawer from '../components/SettingsDrawer';
+import Header from '../components/Header';
 import Board from './Board';
 import Message from '../components/Message';
 import CapturedPieces from '../components/CapturedPieces';
@@ -269,20 +269,7 @@ class App extends Component {
 
     return (
       <div className="site-wrap">
-        <div className="header">
-          <table>
-            <tbody>
-              <tr>
-                <td><img className="banner-img" src={'/assets/deepRed-dark-bg.png'} alt={''} /></td>
-                <td className="button-cell">
-                  <SettingsDrawer />
-                  <a href="/profile" className="button">Home</a>
-                  <a href="/logout" className="button">Logout</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <Header />
         <div className="content">
           <div className="flex-row">
             <div className="flex-col left-col">
