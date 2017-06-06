@@ -7,8 +7,9 @@ import FlatButton from 'material-ui/FlatButton';
 import {
   updateTimer, pauseTimer, cancelPauseDialogClose, updateAlertName,
   cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW,
-  updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece,
-  capturePiece, displayError, colorSquare, sendMsg, resumeTimerB, resumeTimerW,
+  updateRoomInfo, getRequestFailure, receiveGame, movePiece, resetBoolBoard,
+  unselectPiece, capturePiece, displayError, colorSquare, sendMsg,
+  resumeTimerB, resumeTimerW, saveBoolBoard,
 } from '../store/actions';
 
 // Components
@@ -33,7 +34,7 @@ class App extends Component {
     super(props);
     this.getUserInfo = this.getUserInfo.bind(this);
     this.attemptMove = this.attemptMove.bind(this);
-    this.checkLegalMove = this.checkLegalMove.bind(this);
+    this.checkLegalMoves = this.checkLegalMoves.bind(this);
     this.newChessGame = this.newChessGame.bind(this);
     this.startSocket = this.startSocket.bind(this);
     this.sendPauseRequest = this.sendPauseRequest.bind(this);
@@ -113,6 +114,7 @@ class App extends Component {
           }
         } else {
           dispatch(movePiece(origin, dest, gameTurn));
+          dispatch(resetBoolBoard());
           if (gameTurn === 'W') {
             dispatch(pauseTimer());
             dispatch(resumeTimerW());
@@ -129,13 +131,13 @@ class App extends Component {
       dispatch(colorSquare(null, dest));
     });
 
-    this.socket.on('isLegalMoveResult', (dest, bool) => {
+    this.socket.on('checkLegalMovesResults', (boolBoard) => {
       // dispatch(receiveGame(board));
-      let color = 'board-col red';
-      if (bool) {
-        color = 'board-col green';
-      }
-      dispatch(colorSquare(color, dest));
+      // let color = 'board-col red';
+      // if (bool) {
+      //   color = 'board-col green';
+      // }
+      dispatch(saveBoolBoard(boolBoard));
     });
 
     // CONTROL sockets
@@ -169,7 +171,7 @@ class App extends Component {
         dispatch(pauseTimer());
         dispatch(resumeTimerW());
       }
-    })
+    });
   }
   // CONTROL functions
   onAgreePauseRequest() {
@@ -225,10 +227,10 @@ class App extends Component {
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
-  checkLegalMove(origin, dest, room) {
+  checkLegalMoves(origin, room) {
     // const { dispatch } = this.props;
-    console.log('checking legal move');
-    this.socket.emit('checkLegalMove', origin, dest, room, this.socket.id);
+    console.log('checking legal moves');
+    this.socket.emit('checkLegalMoves', origin, room, this.socket.id);
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
@@ -316,7 +318,7 @@ class App extends Component {
               </div>
             </div>
             <div className="flex-col">
-              <Board attemptMove={this.attemptMove} checkLegalMove={this.checkLegalMove} />
+              <Board attemptMove={this.attemptMove} checkLegalMoves={this.checkLegalMoves} />
               {/* <Message message={message} />
               <Message message={error} /> */}
             </div>

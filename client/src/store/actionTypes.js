@@ -29,6 +29,10 @@ export const DISPLAY_ERROR = 'DISPLAY_ERROR';
 
 export const CLEAR_ERROR = 'CLEAR_ERROR';
 
+export const SAVE_BOOL_BOARD = 'SAVE_BOOL_BOARD';
+
+export const RESET_BOOL_BOARD = 'RESET_BOOL_BOARD';
+
 // userState action types
 export const SET_PLAYER_W = 'SET_PLAYER_W';
 
@@ -48,4 +52,3 @@ export const CANCEL_PAUSE_DIALOG_CLOSE = 'CANCEL_PAUSE_DIALOG_CLOSE';
 export const UPDATE_ALERT_NAME = 'UPDATE_ALERT_NAME';
 
 export const SEND_MESSAGE = 'SEND_MESSAGE';
-
