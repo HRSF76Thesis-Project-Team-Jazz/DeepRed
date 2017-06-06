@@ -29,9 +29,9 @@ exports.up = function (knex, Promise) {
       table.string('black').nullable();
       table.string('result').nullable();
       table.integer('turns').nullable();
-      table.string('history').nullable();
-      table.string('black_pieces').nullable();
-      table.string('white_pieces').nullable();
+      table.text('history').nullable();
+      table.text('black_pieces').nullable();
+      table.text('white_pieces').nullable();
       table.timestamps(true, true);
     })
   ]);
