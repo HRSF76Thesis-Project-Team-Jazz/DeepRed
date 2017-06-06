@@ -175,9 +175,13 @@ class ChessGame {
         this.capturePiece(destPiece, clientRoom);
       }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
       // swap location
 =======
+=======
+
+>>>>>>> working on DB schema func
       // this.history[this.turn] = this.history[this.turn] || [];
       // this.history[this.turn].push(origin);
       // this.history[this.turn].push(dest);
@@ -242,6 +246,7 @@ class ChessGame {
     // console.log(error);
     return { game: this, error: 'Move is not allowed.' };
   }
+
 
   errorCheck(origin, dest) {
 
