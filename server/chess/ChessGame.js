@@ -11,6 +11,7 @@ const isLegalMove = require('./isLegalMove');
 const endGameChecks = require('./deepRed/endGameChecks');
 // const moveToPGNString = require('./convertToPGN');
 const chessDB = require('../chessDB')
+<<<<<<< HEAD
 
 const transcribeBoard = board => board.map((row) => {
   const pieceIndex = {
@@ -31,6 +32,8 @@ const transcribeBoard = board => board.map((row) => {
   const newRow = row.map(col => pieceIndex[col]);
   return newRow.join('');
 }).join('');
+=======
+>>>>>>> working on DB schema func
 
 class ChessGame {
 
@@ -60,6 +63,7 @@ class ChessGame {
     this.winner = null;
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   movePiece(origin, dest, pawnPromotionValue = null) {
     const error = this.errorCheck(origin, dest);
@@ -157,6 +161,9 @@ class ChessGame {
     return { game: this, error: 'Move is not allowed.' };
   }
   errorCheck(origin, dest) {
+=======
+  movePiece(origin, dest, clientRoom) {
+>>>>>>> working on DB schema func
 =======
   movePiece(origin, dest, clientRoom) {
 >>>>>>> working on DB schema func
@@ -318,6 +325,9 @@ class ChessGame {
 =======
 
   capturePiece(piece, clientRoom) {
+<<<<<<< HEAD
+>>>>>>> working on DB schema func
+=======
 >>>>>>> working on DB schema func
     if (piece[0] === 'W') {
       this.blackCapPieces.push(piece);
@@ -329,6 +339,17 @@ class ChessGame {
 
     } else {
       this.whiteCapPieces.push(piece);
+<<<<<<< HEAD
+=======
+
+      chessDB.saveWhitePiece({
+        session_id: clientRoom,
+        white_pieces: JSON.stringify(piece),
+      })
+
+    }
+  }
+>>>>>>> working on DB schema func
 
       chessDB.saveWhitePiece({
         session_id: clientRoom,
