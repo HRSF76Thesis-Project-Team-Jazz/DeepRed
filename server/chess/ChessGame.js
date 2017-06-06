@@ -13,6 +13,7 @@ const endGameChecks = require('./deepRed/endGameChecks');
 const chessDB = require('../chessDB')
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 const transcribeBoard = board => board.map((row) => {
   const pieceIndex = {
@@ -33,6 +34,8 @@ const transcribeBoard = board => board.map((row) => {
   const newRow = row.map(col => pieceIndex[col]);
   return newRow.join('');
 }).join('');
+=======
+>>>>>>> working on DB schema func
 =======
 >>>>>>> working on DB schema func
 =======
@@ -66,6 +69,7 @@ class ChessGame {
     this.winner = null;
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -165,6 +169,9 @@ class ChessGame {
     return { game: this, error: 'Move is not allowed.' };
   }
   errorCheck(origin, dest) {
+=======
+  movePiece(origin, dest, clientRoom) {
+>>>>>>> working on DB schema func
 =======
   movePiece(origin, dest, clientRoom) {
 >>>>>>> working on DB schema func
@@ -284,6 +291,18 @@ class ChessGame {
         // this.history += moveToPGNString(this.board, origin, dest, this.count);
         this.capturePiece(destPiece, clientRoom);
       }
+<<<<<<< HEAD
+=======
+        // if (originPiece[0] === destPiece[0]) {
+        //   error = 'Cannot capture your own piece.';
+        //   console.log(this.board);
+        //   console.log(error);
+        //   return { game: this, error };
+        // }
+        // this.history += moveToPGNString(this.board, origin, dest, this.count);
+        this.capturePiece(destPiece, clientRoom);
+      }
+>>>>>>> working on DB schema func
       // this.history[this.turn] = this.history[this.turn] || [];
       // this.history[this.turn].push(origin);
       // this.history[this.turn].push(dest);
@@ -334,6 +353,9 @@ class ChessGame {
   capturePiece(piece, clientRoom) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> working on DB schema func
+=======
 >>>>>>> working on DB schema func
 =======
 >>>>>>> working on DB schema func
@@ -351,7 +373,10 @@ class ChessGame {
       this.whiteCapPieces.push(piece);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> working on DB schema func
 =======
 >>>>>>> working on DB schema func
 
