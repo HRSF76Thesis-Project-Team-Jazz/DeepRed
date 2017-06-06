@@ -156,6 +156,7 @@ module.exports = (io, client) => {
     const newState = allGames[clientRoom].movePiece(origin, dest, pieceType, clientRoom);
     const { error, game, castling, enPassantCoord, pawnPromotionPiece } = newState;
     io.in(clientRoom).emit('attemptMoveResult', error, origin, dest, selection, game.turn, castling, enPassantCoord, pawnPromotionPiece);
+
   });
 
   client.on('checkLegalMoves', (origin, clientRoom, id) => {

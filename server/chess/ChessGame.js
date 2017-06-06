@@ -10,7 +10,6 @@
 const isLegalMove = require('./isLegalMove');
 // const moveToPGNString = require('./convertToPGN');
 const chessDB = require('../chessDB')
-<<<<<<< HEAD
 
 const transcribeBoard = board => board.map((row) => {
   const pieceIndex = {
@@ -31,8 +30,6 @@ const transcribeBoard = board => board.map((row) => {
   const newRow = row.map(col => pieceIndex[col]);
   return newRow.join('');
 }).join('');
-=======
->>>>>>> working on DB schema func
 
 class ChessGame {
 
@@ -154,7 +151,6 @@ class ChessGame {
     return { game: this, error };
   }
 
-<<<<<<< HEAD
   errorCheck(origin, dest) {
     let error = null;
     if (dest === undefined) {
@@ -234,8 +230,6 @@ class ChessGame {
     }
   }
 
-=======
->>>>>>> working on DB schema func
   capturePiece(piece, clientRoom) {
     if (piece[0] === 'W') {
       this.blackCapPieces.push(piece);
