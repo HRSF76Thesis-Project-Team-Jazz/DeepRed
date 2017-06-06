@@ -5,7 +5,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
 import FlatButton from 'material-ui/FlatButton';
 import {
-  updateTimer, pauseTimer, cancelPauseDialogClose, updateAlertName,
+  updateTimer, cancelPauseDialogClose, updateAlertName,
   cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW,
   updateRoomInfo, getRequestFailure, receiveGame, movePiece, resetBoolBoard,
   unselectPiece, capturePiece, displayError, colorSquare, sendMsg,
@@ -50,6 +50,7 @@ class App extends Component {
     this.decrementTimerW = this.decrementTimerW.bind(this);
     this.stopTimerB = this.stopTimerB.bind(this);
     this.stopTimerW = this.stopTimerW.bind(this);
+    this.toggleTimers = this.toggleTimers.bind(this);
   }
 
   componentDidMount() {
@@ -111,25 +112,12 @@ class App extends Component {
       if (error === null) {
         if (selection) {
           dispatch(capturePiece(origin, dest, selection, gameTurn));
-          if (gameTurn === 'B') {
-            this.onChangePlayerTurn();
-            this.decrementTimerB();
-          } else {
-            this.onChangePlayerTurn();
-            this.decrementTimerW();
-          }
         } else if (castling) {
           dispatch(castlingMove(origin, dest, castling, gameTurn));
         } else {
           dispatch(movePiece(origin, dest, gameTurn));
-          if (gameTurn === 'W') {
-            this.onChangePlayerTurn();
-            this.decrementTimerW();
-          } else {
-            this.onChangePlayerTurn();
-            this.decrementTimerB();
-          }
-        }
+        } 
+        this.toggleTimers();
       } else {
         console.log('---------- ERROR: ', error);
         dispatch(displayError(error));
@@ -182,6 +170,18 @@ class App extends Component {
   }
 
   // CONTROL function
+  toggleTimers() {
+    const { gameTurn } = this.props;
+    if (gameTurn === 'B') {
+      this.onChangePlayerTurn();
+      this.decrementTimerB();
+    }
+    if (gameTurn === 'W') {
+      this.onChangePlayerTurn();
+      this.decrementTimerW();
+    }
+  }
+
   decrementTimerB() {
     let { dispatch, timeB, counterBinstance } = this.props;
     counterBinstance = setInterval(() => {
@@ -409,12 +409,11 @@ class App extends Component {
 function mapStateToProps(state) {
   const { gameState, moveState, userState, controlState } = state;
   const {
+    gameTurn,
     counterBinstance,
     counterWinstance,
     timeB,
     timeW,
-    // pausedB,
-    // pausedW,
     moveHistory,
     capturedPiecesBlack,
     capturedPiecesWhite,
@@ -430,13 +429,12 @@ function mapStateToProps(state) {
   const { message, error } = moveState;
   const { pauseOpen, cancelPauseOpen, alertName } = controlState;
   return {
+    gameTurn,
     counterBinstance,
     counterWinstance,
     playerWemail,
     timeB,
     timeW,
-    // pausedB,
-    // pausedW,
     alertName,
     cancelPauseOpen,
     pauseOpen,
