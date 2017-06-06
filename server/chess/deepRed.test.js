@@ -22,6 +22,17 @@ const {
 
 let blackMoves;
 
+const pieceState = {
+  hasMovedWK: false,
+  hasMovedWKR: false,
+  hasMovedWQR: false,
+  hasMovedBK: false,
+  hasMovedBKR: false,
+  hasMovedBQR: false,
+  canEnPassantW: [],
+  canEnPasswantB: [],
+};
+
 let board = [
   ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
   ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
@@ -448,36 +459,203 @@ board = [
 // console.log('isStalemateWhite: ', isStalemateWhite(board));
 // console.log('isCheckmateWhite: ', isCheckmateWhite(board));
 
+// board = [
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, 'BB', null, null, null, null, null],
+//   [null, null, 'BQ', null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, 'WK', null, null, null, null],
+// ];
+
+// showMovesByPiece(board, 'W', pieceState, 'All white moves');
+// console.log('getAllMovesWhite: ', getAllMovesWhite(board, pieceState));
+// console.log('whiteCanMove: ', whiteCanMove(board));
+// console.log('isStalemateWhite: ', isStalemateWhite(board));
+// console.log('isCheckmateWhite: ', isCheckmateWhite(board));
+
+// board = [
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, 'WB', null, null, null, null, null],
+//   [null, null, 'WQ', null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, 'BK', null, null, null, null],
+// ];
+
+// showMovesByPiece(board, 'B', pieceState, 'All black moves');
+// // console.log('getAllMovesWhite: ', getAllMovesWhite(board));
+// console.log('blackCanMove: ', blackCanMove(board));
+// console.log('isStalemateBlack: ', isStalemateBlack(board));
+// console.log('isCheckmateBlack: ', isCheckmateBlack(board));
+
+// /**
+//  * CHECK WHITE CASTING
+//  */
+
+// board = [
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   ['WR', null, null, null, 'WK', null, null, 'WR'],
+// ];
+
+// showMovesByPiece(board, 'W', pieceState, 'Check castling');
+// showMovesByPiece(board, 'W', Object.assign({}, pieceState, { hasMovedWKR: true }), 'Disallow WKR castle if WKR has moved');
+
+// board = [
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   ['WR', null, null, null, 'WK', null, null, 'WR'],
+// ];
+
+// showMovesByPiece(board, 'W', Object.assign({}, pieceState, { hasMovedWQR: true }), 'Disallow WQR castle if WQR has moved');
+
+// board = [
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   ['WR', null, null, null, 'WK', null, null, 'WR'],
+// ];
+
+// showMovesByPiece(board, 'W', Object.assign({}, pieceState, { hasMovedWK: true }), 'Disallow castle if WK has moved');
+
+// board = [
+//   [null, null, null, null, 'BR', null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   ['WR', null, null, null, 'WK', null, null, 'WR'],
+// ];
+
+// // console.log(getAllMovesWhite(board, pieceState));
+// showMovesByPiece(board, 'W', pieceState, 'Can not castle out of check');
+
+// board = [
+//   [null, null, null, 'BR', null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   ['WR', null, null, null, 'WK', null, null, 'WR'],
+// ];
+
+// // console.log(getAllMovesWhite(board, pieceState));
+// showMovesByPiece(board, 'W', pieceState, 'Can not castle through attack');
+
+// board = [
+//   [null, null, null, null, null, 'BQ', null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null, null],
+//   ['WR', null, null, null, 'WK', null, null, 'WR'],
+// ];
+
+// // console.log(getAllMovesWhite(board, pieceState));
+// showMovesByPiece(board, 'W', pieceState, 'Can not castle through attack');
+
+/**
+ * CHECK BLACK CASTING
+ */
+
 board = [
+  ['BR', null, null, null, 'BK', null, null, 'BR'],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
-  [null, null, 'BB', null, null, null, null, null],
-  [null, null, 'BQ', null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
-  [null, null, null, 'WK', null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
 ];
 
-showMovesByPiece(board, 'W', 'All white moves');
-console.log('getAllMovesWhite: ', getAllMovesWhite(board));
-console.log('whiteCanMove: ', whiteCanMove(board));
-console.log('isStalemateWhite: ', isStalemateWhite(board));
-console.log('isCheckmateWhite: ', isCheckmateWhite(board));
-
+showMovesByPiece(board, 'B', pieceState, 'Check castling');
+showMovesByPiece(board, 'B', Object.assign({}, pieceState, { hasMovedBK: true }), 'Disallow castle if BK has moved');
 board = [
+  ['BR', null, null, null, 'BK', null, null, 'BR'],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
-  [null, null, 'WB', null, null, null, null, null],
-  [null, null, 'WQ', null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
-  [null, null, null, 'BK', null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
 ];
 
-showMovesByPiece(board, 'B', 'All white moves');
-// console.log('getAllMovesWhite: ', getAllMovesWhite(board));
-console.log('blackCanMove: ', blackCanMove(board));
-console.log('isStalemateBlack: ', isStalemateBlack(board));
-console.log('isCheckmateBlack: ', isCheckmateBlack(board));
+showMovesByPiece(board, 'B', Object.assign({}, pieceState, { hasMovedBKR: true }), 'Disallow BKR castle if BKR has moved');
+board = [
+  ['BR', null, null, null, 'BK', null, null, 'BR'],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+];
+
+showMovesByPiece(board, 'B', Object.assign({}, pieceState, { hasMovedBQR: true }), 'Disallow BQR castle if BQR has moved');
+
+board = [
+  ['BR', null, null, null, 'BK', null, null, 'BR'],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, 'WR', null, null, null],
+];
+
+showMovesByPiece(board, 'B', pieceState, 'Can not castle out of check');
+
+board = [
+  ['BR', null, null, null, 'BK', null, null, 'BR'],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, 'WR', null, null, null, null],
+];
+
+showMovesByPiece(board, 'B', pieceState, 'Can not castle through attack');
+
+board = [
+  ['BR', null, null, null, 'BK', null, null, 'BR'],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, 'WQ', null, null],
+];
+
+showMovesByPiece(board, 'B', pieceState, 'Can not castle through attack');

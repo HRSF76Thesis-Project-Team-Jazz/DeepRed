@@ -2,6 +2,17 @@ const expect = require('chai').expect;
 
 const deepRed = require('../chess/deepRed');
 
+let pieceState = {
+  hasMovedWK: false,
+  hasMovedWKR: false,
+  hasMovedWQR: false,
+  hasMovedBK: false,
+  hasMovedBKR: false,
+  hasMovedBQR: false,
+  canEnPassantW: [],
+  canEnPasswantB: [],
+};
+
 describe('【Deep Red】 evaluate available possible moves: ', () => {
   const getAllMovesWhite = deepRed.getAllMovesWhite;
 
