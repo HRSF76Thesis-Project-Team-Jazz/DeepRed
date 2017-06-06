@@ -31,6 +31,8 @@ export const CLEAR_ERROR = 'CLEAR_ERROR';
 
 export const SAVE_BOOL_BOARD = 'SAVE_BOOL_BOARD';
 
+export const RESET_BOOL_BOARD = 'RESET_BOOL_BOARD';
+
 // userState action types
 export const SET_PLAYER_W = 'SET_PLAYER_W';
 

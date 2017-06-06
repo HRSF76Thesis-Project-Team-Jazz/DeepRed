@@ -91,12 +91,17 @@ class Board extends Component {
           <div key={Math.random()} className="board-row">
             {row.map((col, colIndex) => (
               <div
-                className={this.selectSquareClass(Math.abs(offset - rowIndex), Math.abs(offset - colIndex))}
-                key={(Math.abs(offset - rowIndex)).toString() + (Math.abs(offset - colIndex)).toString()}
+                className={this.selectSquareClass(Math.abs(offset - rowIndex),
+                  Math.abs(offset - colIndex))}
+                key={(Math.abs(offset - rowIndex)).toString() +
+                   (Math.abs(offset - colIndex)).toString()}
                 role={'button'}
-                onClick={() => this.onClick([(Math.abs(offset - rowIndex)), (Math.abs(offset - colIndex))])}
-                onMouseEnter={() => this.onMouseEnter([(Math.abs(offset - rowIndex)), (Math.abs(offset - colIndex))])}
-                onMouseLeave={() => this.onMouseLeave([(Math.abs(offset - rowIndex)), (Math.abs(offset - colIndex))])}
+                onClick={() => this.onClick([(Math.abs(offset - rowIndex)),
+                   (Math.abs(offset - colIndex))])}
+                onMouseEnter={() => this.onMouseEnter([(Math.abs(offset - rowIndex)),
+                  (Math.abs(offset - colIndex))])}
+                onMouseLeave={() => this.onMouseLeave([(Math.abs(offset - rowIndex)),
+                  (Math.abs(offset - colIndex))])}
               >
                 <img className="piece-img" src={`/assets/${board[Math.abs(offset - rowIndex)][Math.abs(offset - colIndex)]}.png`} alt={''} />
               </div>),

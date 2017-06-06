@@ -47,6 +47,10 @@ export const saveBoolBoard = boolBoard => ({
   boolBoard,
 });
 
+export const resetBoolBoard = () => ({
+  type: types.RESET_BOOL_BOARD,
+});
+
 export const unselectPiece = () => ({
   type: types.UNSELECT_PIECE,
 });

@@ -82,7 +82,7 @@ const gameState = (state = Immutable({
     case types.SEND_MESSAGE: {
       return Immutable({
         ...state,
-        messages: state.messages.concat(action.msg)
+        messages: state.messages.concat(action.msg),
       });
     }
     default:
@@ -147,6 +147,20 @@ const moveState = (state = Immutable({
       return Immutable({
         ...state,
         boolBoard: action.boolBoard,
+      });
+    case types.RESET_BOOL_BOARD:
+      return Immutable({
+        ...state,
+        boolBoard: [
+          [null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null],
+        ],
       });
     case types.DISPLAY_ERROR:
       return Immutable({

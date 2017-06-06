@@ -7,8 +7,9 @@ import FlatButton from 'material-ui/FlatButton';
 import {
   updateTimer, pauseTimer, cancelPauseDialogClose, updateAlertName,
   cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW,
-  updateRoomInfo, getRequestFailure, receiveGame, movePiece, unselectPiece,
-  capturePiece, displayError, colorSquare, sendMsg, resumeTimerB, resumeTimerW, saveBoolBoard,
+  updateRoomInfo, getRequestFailure, receiveGame, movePiece, resetBoolBoard,
+  unselectPiece, capturePiece, displayError, colorSquare, sendMsg,
+  resumeTimerB, resumeTimerW, saveBoolBoard,
 } from '../store/actions';
 
 // Components
@@ -113,6 +114,7 @@ class App extends Component {
           }
         } else {
           dispatch(movePiece(origin, dest, gameTurn));
+          dispatch(resetBoolBoard());
           if (gameTurn === 'W') {
             dispatch(pauseTimer());
             dispatch(resumeTimerW());
@@ -169,7 +171,7 @@ class App extends Component {
         dispatch(pauseTimer());
         dispatch(resumeTimerW());
       }
-    })
+    });
   }
   // CONTROL functions
   onAgreePauseRequest() {

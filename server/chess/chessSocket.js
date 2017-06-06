@@ -85,7 +85,6 @@ module.exports = (io, client) => {
     // console.log('checkLegalMove: ', origin, dest);
     // console.log('room number: ', room);
     // const bool = isLegalMove(allGames[clientRoom], origin, dest).bool;
-    debugger;
     if (origin) {
       const boolBoard = allGames[clientRoom].checkAllMovesOfOrigin(origin);
       io.to(id).emit('checkLegalMovesResults', boolBoard);
