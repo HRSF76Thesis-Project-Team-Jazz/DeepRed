@@ -25,14 +25,47 @@ const mutateBoard = (board, move) => {
 
 /**
  * @param {array} board
+ * @param {object} pieceState   {
+ *                                hasMovedWK: boolean,
+ *                                hasMovedWKR: boolean,
+ *                                hasMovedWQR: boolean,
+ *                                hasMovedBK: boolean,
+ *                                hasMovedBKR: boolean,
+ *                                hasMovedBQR: boolean,
+ *                                canEnPassantW: array,
+ *                                canEnPasswantB: array,
+ *                              }
  * @return {object} keys:   stringified coordinates of piece origin
  *                          '66'
  *                  values: array of possible destination coordinates:
  *                          [[6, 5], [6, 4]]
  */
 
-const getAllMovesWhite = (board) => {
+const getAllMovesWhite = (board, pieceState) => {
   const result = {};
+
+  const specialMoves = [];
+
+  // Castling
+  // King can not castle out of check
+  if (!pieceState.hasMovedWK && !whiteIsChecked(board)) {
+    // King side castle
+    if (!pieceState.hasMovedWKR &&
+      !board[7][5] && !board[7][6] &&
+      !whiteIsChecked(mutateBoard(board, ['74', '75'])) &&
+      !whiteIsChecked(mutateBoard(board, ['74', '76']))
+    ) {
+      specialMoves.push('O-O');
+    } else if (!pieceState.hasMovedWKR &&
+      !board[7][3] && !board[7][2] && !board[7][1] &&
+      !whiteIsChecked(mutateBoard(board, ['74', '73'])) &&
+      !whiteIsChecked(mutateBoard(board, ['74', '72'])) &&
+      !whiteIsChecked(mutateBoard(board, ['74', '71']))
+    ) {
+      specialMoves.push('O-O-O');
+    }
+  }
+
   for (let row = 0; row < 8; row += 1) {
     for (let col = 0; col < 8; col += 1) {
       if (board[row][col] && board[row][col][0] === 'W') {
