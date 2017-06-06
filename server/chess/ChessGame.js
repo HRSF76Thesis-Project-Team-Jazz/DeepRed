@@ -273,6 +273,7 @@ class ChessGame {
   promotePawn(originPiece, dest, pawnPromotionPiece) {
     if ((originPiece === 'WP' && dest[0] === 0) || (originPiece === 'BP' && dest[0] === 7)) {
       this.board[dest[0]][dest[1]] = pawnPromotionPiece;
+
     }
   }
   checkAllMovesOfOrigin(origin) {
