@@ -9,6 +9,7 @@
 
 const isLegalMove = require('./isLegalMove');
 // const moveToPGNString = require('./convertToPGN');
+const chessDB = require('../chessDB')
 
 const transcribeBoard = board => board.map((row) => {
   const pieceIndex = {
@@ -58,6 +59,7 @@ class ChessGame {
     this.winner = null;
   }
 
+<<<<<<< HEAD
   movePiece(origin, dest, pawnPromotionPiece = null) {
     let error = this.errorCheck(origin, dest);
     if (error) {
@@ -93,6 +95,9 @@ class ChessGame {
     return { game: this, error };
   }
   errorCheck(origin, dest) {
+=======
+  movePiece(origin, dest, clientRoom) {
+>>>>>>> working on DB schema func
     let error = null;
     if (dest === undefined) {
       error = 'Attempted destination is invalid.';
@@ -125,6 +130,7 @@ class ChessGame {
         return error;
       }
     }
+<<<<<<< HEAD
     return error;
   }
   castlingMove(castlingStr) {
@@ -148,8 +154,84 @@ class ChessGame {
       this.board[7][7] = null;
       this.hasMovedWRK = true;
       this.hasMovedWK = true;
+=======
+    const legalMoveResult = isLegalMove(this, origin, dest);
+    if (legalMoveResult.bool) {
+      if (legalMoveResult.castling) {
+        if (legalMoveResult.castling === 'BRQ') {
+          this.board[0][3] = 'BR';
+          this.board[0][0] = null;
+          this.hasMovedBRQ = true;
+          this.hasMovedBK = true;
+        } else if (legalMoveResult.castling === 'BRK') {
+          this.board[0][5] = 'BR';
+          this.board[0][7] = null;
+          this.hasMovedBRK = true;
+          this.hasMovedBK = true;
+        } else if (legalMoveResult.castling === 'WRQ') {
+          this.board[7][3] = 'WR';
+          this.board[7][0] = null;
+          this.hasMovedWRQ = true;
+          this.hasMovedWK = true;
+        } else if (legalMoveResult.castling === 'BRQ') {
+          this.board[7][5] = 'WR';
+          this.board[7][7] = null;
+          this.hasMovedWRK = true;
+          this.hasMovedWK = true;
+        }
+      }
+      if (originPiece === 'WK' && JSON.stringify(origin) === JSON.stringify([7, 4])) {
+        this.hasMovedWK = true;
+      }
+      if (originPiece === 'BK' && JSON.stringify(origin) === JSON.stringify([0, 4])) {
+        this.hasMovedBK = true;
+      }
+      if (originPiece === 'WR' && JSON.stringify(origin) === JSON.stringify([7, 0])) {
+        this.hasMovedWRQ = true;
+      }
+      if (originPiece === 'WR' && JSON.stringify(origin) === JSON.stringify([7, 7])) {
+        this.hasMovedWRK = true;
+      }
+      if (originPiece === 'BR' && JSON.stringify(origin) === JSON.stringify([0, 0])) {
+        this.hasMovedBRQ = true;
+      }
+      if (originPiece === 'BR' && JSON.stringify(origin) === JSON.stringify([0, 7])) {
+        this.hasMovedBRK = true;
+      }
+      if (destPiece) {
+        // if (originPiece[0] === destPiece[0]) {
+        //   error = 'Cannot capture your own piece.';
+        //   console.log(this.board);
+        //   console.log(error);
+        //   return { game: this, error };
+        // }
+        // this.history += moveToPGNString(this.board, origin, dest, this.count);
+        this.capturePiece(destPiece, clientRoom);
+      }
+      // this.history[this.turn] = this.history[this.turn] || [];
+      // this.history[this.turn].push(origin);
+      // this.history[this.turn].push(dest);
+      // if (originPiece[0] === 'B') {
+      //   this.turn += 1;
+      // }
+
+      chessDB.saveMove({
+        session_id: clientRoom,
+        history: JSON.stringify([ origin , dest])
+      })
+
+      this.turn = (this.turn === 'W') ? 'B' : 'W';
+      this.board[dest[0]][dest[1]] = originPiece;
+      this.board[origin[0]][origin[1]] = null;
+      // check for check/checkmate/stalemate
+      // console.log('--------------', this.history);
+      console.log('Move piece is successful');
+      console.log(this.board);
+      return { game: this, error };
+>>>>>>> working on DB schema func
     }
   }
+<<<<<<< HEAD
   toggleMovedRooksOrKings(origin, originPiece) {
     if (originPiece === 'WK' && JSON.stringify(origin) === JSON.stringify([7, 4])) {
       this.hasMovedWK = true;
@@ -171,10 +253,26 @@ class ChessGame {
     }
   }
   addToCaptureArray(piece) {
+=======
+
+  capturePiece(piece, clientRoom) {
+>>>>>>> working on DB schema func
     if (piece[0] === 'W') {
       this.blackCapPieces.push(piece);
+      
+      chessDB.saveBlackPiece({
+        session_id: clientRoom,
+        black_pieces: JSON.stringify(piece),
+      })
+
     } else {
       this.whiteCapPieces.push(piece);
+
+      chessDB.saveWhitePiece({
+        session_id: clientRoom,
+        white_pieces: JSON.stringify(piece),
+      })
+
     }
   }
   promotePawn(originPiece, dest, pawnPromotionPiece) {

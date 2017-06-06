@@ -35,13 +35,12 @@ module.exports = (io, client) => {
         // create new game instance
         createAndSaveNewGame(room);
         // save to DB
-        // chessDB.newGame({
-        //   session_id: room,
-        //   color: 'white',
-        //   display: currentUser,
-        // });
-        //
-        // currentUser = '';
+        chessDB.newGame({
+          session_id: room,
+          color: 'white',
+          display: currentName,
+        });
+        
         io.in(room).emit('firstPlayerJoined', roomInfo);
       });
       // if current room already has one player
@@ -57,11 +56,11 @@ module.exports = (io, client) => {
         allRooms[room] = roomInfo;
         io.in(room).emit('secondPlayerJoined', roomInfo);
         // save playerB to current game in DB
-        // chessDB.joinGame({
-        //   session_id: room,
-        //   color: 'black',
-        //   display: currentUser,
-        // });
+        chessDB.joinGame({
+          session_id: room,
+          color: 'black',
+          display: currentName,
+        });
         // create new game instance
         createAndSaveNewGame(room);
         io.in(room).emit('startGame', roomInfo);
@@ -76,8 +75,10 @@ module.exports = (io, client) => {
   client.on('attemptMove', (origin, dest, selection, clientRoom) => {
     console.log('attempted Move: ', origin, dest);
     console.log('room number: ', clientRoom);
-    const newState = allGames[clientRoom].movePiece(origin, dest);
+
+    const newState = allGames[clientRoom].movePiece(origin, dest, clientRoom);
     io.in(clientRoom).emit('attemptMoveResult', newState.error, origin, dest, selection, newState.game.turn, newState.castling);
+
   });
 
   client.on('checkLegalMoves', (origin, clientRoom, id) => {
