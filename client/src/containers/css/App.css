@@ -5,16 +5,26 @@
 * {
   font-family: 'Roboto', sans-serif;
 }
+html {
+  height: 100%;
+}
 body {
   background-color: rgb(90,90,90);
+  min-height: 100vh;
+  /*overflow:hidden !important;*/
+  /*overflow-x: hidden !important;*/
+  /*position:absolute;*/
+
 }
 
 .site-wrap {
   background-color: rgb(40,40,40);
   display: flex;
   min-height: 100vh;
+  max-height: 100vh;
   flex-direction: column;
   align-items: center;
+  /*justify-content: center;*/
   /*max-width: 960px;*/
 }
 
@@ -22,7 +32,9 @@ body {
   background-color: #121212;
   color: white;
   display: flex;
-  width: 100%
+  top: 0vw;
+  width: 100%;
+  /*height: 15vw;*/
 }
 
 .logo-img {
@@ -30,7 +42,7 @@ body {
   margin: left;
 }
 
-.header h1 {
+/*.header h1 {
   font-size: 1.1rem;
   padding-left: 15px;
 }
@@ -47,47 +59,84 @@ body {
 .header .button {
   margin: 5px;
   padding: 5px;
-}
+}*/
 
 .content {
   display: flex;
+  justify-content: center;
+  /*height: 100vw;*/
+  /*width: 80vw;*/
 }
 
 .flex-row {
   display: flex;
   flex-direction: row;
+  /*align-items: center;*/
+  /*justify-content: center;*/
 }
 
 .flex-col {
   display: flex;
   flex-direction: column;
-  margin: 5px;
-  padding: 5px;
+  /*margin: 15px auto;
+  padding: 5px;*/
+  width: 44vw;
+  height: 44vw;
 }
 
 .left-col {
   background-color: #808080;
-  margin: 15px auto;
-  border-radius: 2px;
+  margin: 1vw 0px;
+  /*border-radius: 2px;*/
   color: white;
-  width: 15vh;
+  width: 10vw;
+  min-width: 0vw;
 }
 
+.capt-col {
+  background-color: #808080;
+  margin: 1vw 1vw 0 1vw;
+  /*border-radius: 2px;*/
+  /*color: white;*/
+  flex-direction: row;
+  width: 5vw;
+  min-width: 0vw;
+}
+.capt-black-col {
+  width: 5vw;
+}
 .right-col {
   background-color: #808080;
-  margin: 10px auto;
-  border-radius: 2px;
+  margin: 1vw 0 0 1vw;
+  /*border-radius: 2px;*/
   color: white;
-  width: 30vh;
+  width: 20vw;
+  /*height: 44vw;*/
+  min-width: 10vw;
 }
 
 .countdown-top-clock {
   position: relative;
-  top: 2vh;
-  left: 3vh;
+  top: 2vw;
+  left: 3vw;
 }
 .countdown-bot-clock {
   position: relative;
-  bottom: 12vh;
-  left: 3vh;
+  bottom: 30vh;
+  left: 3vw;
 }
+/*.player-top {
+  top: 10vw;
+  left: 3vw;
+}*/
+/*.player-bot {
+  bottom: 50vw;
+  left: 10vw;
+}*/
+
+/*@media all and (max-width: 640px) {
+  .flex-row {
+    display: flex;
+    flex-direction: column;
+  }
+}*/

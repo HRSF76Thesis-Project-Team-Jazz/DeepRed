@@ -12,14 +12,14 @@ import {
 } from '../store/actions';
 
 // Components
-import SettingsDrawer from '../components/SettingsDrawer';
+import Header from '../components/Header';
 import Board from './Board';
 import Message from '../components/Message';
 import CapturedPieces from '../components/CapturedPieces';
 import MoveHistory from '../components/MoveHistory';
 import Alert from './Alert';
 import ChatBox from '../components/ChatBox';
-import Clock from '../components/Clock';
+import PlayerName from '../components/PlayerName';
 import './css/App.css';
 
 
@@ -269,49 +269,54 @@ class App extends Component {
 
     return (
       <div className="site-wrap">
-        <div className="header">
-          <table>
-            <tbody>
-              <tr>
-                <td><img className="banner-img" src={'/assets/deepRed-dark-bg.png'} alt={''} /></td>
-                <td className="button-cell">
-                  <SettingsDrawer />
-                  <a href="/profile" className="button">Home</a>
-                  <a href="/logout" className="button">Logout</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <Header />
         <div className="content">
           <div className="flex-row">
             <div className="flex-col left-col">
-              <div className="countdown-top-clock">
+              {/* <div className="countdown-top-clock">
                 {(playerB !== undefined) ?
                   <Clock color={(!isWhite) ? 'White' : 'Black'} sendPauseRequest={this.sendPauseRequest} /> : null
                 }
-              </div>
-              <MoveHistory className="move-history" moveHistory={moveHistory} />
-              <div className="countdown-bot-clock">
+              </div> */}
+              <PlayerName
+                color={(!isWhite) ? 'White' : 'Black'}
+                player={(!isWhite) ? playerW : playerB}
+                position="top"
+              />
+              <MoveHistory
+                moveHistory={moveHistory}
+              />
+              <PlayerName
+                color={(isWhite) ? 'White' : 'Black'}
+                player={(isWhite) ? playerW : playerB}
+                position="bot"
+              />
+              {/* <div className="countdown-bot-clock">
                 {(playerB !== undefined) ?
                   <Clock color={(isWhite) ? 'White' : 'Black'} sendPauseRequest={this.sendPauseRequest} /> : null
                 }
+              </div> */}
+            </div>
+            <div className="flex-col capt-col">
+              <div className="flex-col capt-black-col">
+                <CapturedPieces
+                  color={(!isWhite) ? 'White' : 'Black'}
+                  capturedPieces={(!isWhite) ? capturedPiecesWhite : capturedPiecesBlack}
+                  player={(!isWhite) ? playerW : playerB}
+                  sendPauseRequest={this.sendPauseRequest}
+                />
+              </div>
+              <div className="flex-col capt-black-col">
+                <CapturedPieces
+                  color={(isWhite) ? 'White' : 'Black'}
+                  capturedPieces={(isWhite) ? capturedPiecesWhite : capturedPiecesBlack}
+                  player={(isWhite) ? playerW : playerB}
+                  sendPauseRequest={this.sendPauseRequest}
+                />
               </div>
             </div>
             <div className="flex-col">
-              <CapturedPieces
-                color={(!isWhite) ? 'White' : 'Black'}
-                capturedPieces={(!isWhite) ? capturedPiecesWhite : capturedPiecesBlack}
-                player={(!isWhite) ? playerW : playerB}
-                sendPauseRequest={this.sendPauseRequest}
-              />
               <Board attemptMove={this.attemptMove} checkLegalMove={this.checkLegalMove} />
-              <CapturedPieces
-                color={(isWhite) ? 'White' : 'Black'}
-                capturedPieces={(isWhite) ? capturedPiecesWhite : capturedPiecesBlack}
-                player={(isWhite) ? playerW : playerB}
-                sendPauseRequest={this.sendPauseRequest}
-              />
               {/* <Message message={message} />
               <Message message={error} /> */}
             </div>

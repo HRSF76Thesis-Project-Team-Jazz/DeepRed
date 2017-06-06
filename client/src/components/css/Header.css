@@ -1,0 +1,18 @@
+.header h1 {
+  font-size: 1.1rem;
+  padding-left: 15px;
+}
+
+.header table {
+  width: 100%;
+}
+
+.header .button-cell {
+  padding-top: 15px;
+  float: right;
+}
+
+.header .button {
+  margin: 5px;
+  padding: 5px;
+}
