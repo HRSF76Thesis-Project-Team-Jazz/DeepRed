@@ -600,8 +600,137 @@ describe('[White] Pawn promotion', () => {
   });
 });
 
-describe('End of game checks', () => {
+describe('[Black] Pawn promotion', () => {
+  const board = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+    [null, null, null, null, null, null, null, null],
+    ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+  ];
 
+  const pawn0Blocked = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['BP', null, null, null, null, null, null, null],
+    ['WR', null, null, null, null, null, null, null],
+  ];
+ 
+  const pawn0 = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['BP', null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+  ];
+
+  const pawn1 = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, 'BP', null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+  ];
+
+  const pawn2 = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, 'BP', null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+  ];
+
+  const pawn07 = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['BP', null, null, null, null, null, null, 'BP'],
+    [null, null, null, null, null, null, null, null],
+  ];
+
+  const pawn0capture1 = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['BP', null, null, null, null, null, null, null],
+    ['WR', 'WN', null, null, null, null, null, null],
+  ];
+
+  const pawn1capture0 = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, 'BP', null, null, null, null, null, null],
+    ['WN', 'WN', null, null, null, null, null, null],
+  ];
+ 
+  const pawn7capture6 = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, 'BP'],
+    [null, null, null, null, null, null, 'WN', 'WR'],
+  ];
+
+  it('should know that pawn promotion is not available', () => {
+    expect(deepRed.getAllMovesBlack(board, pieceState)).to.not.have.property('specialMoves');
+    expect(deepRed.getAllMovesBlack(pawn0Blocked, pieceState)).to.not.have.property('specialMoves');
+  });
+
+  it('should know that pawn promotion is available', () => {
+    expect(deepRed.getAllMovesBlack(pawn0, pieceState)).to.have.property('specialMoves');
+    expect(deepRed.getAllMovesBlack(pawn1, pieceState)).to.have.property('specialMoves');
+    expect(deepRed.getAllMovesBlack(pawn2, pieceState)).to.have.property('specialMoves');
+    expect(deepRed.getAllMovesBlack(pawn07, pieceState)).to.have.property('specialMoves');
+  });
+
+  it('should know what pawn promotion moves are available', () => {
+    expect(deepRed.getAllMovesBlack(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '60', to: '70', newPiece: 'BQ' });
+    expect(deepRed.getAllMovesBlack(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '60', to: '70', newPiece: 'BR' });
+    expect(deepRed.getAllMovesBlack(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '60', to: '70', newPiece: 'BB' });
+    expect(deepRed.getAllMovesBlack(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '60', to: '70', newPiece: 'BN' });
+
+    expect(deepRed.getAllMovesBlack(pawn1, pieceState).specialMoves).to.deep.include.members([{ move: 'pawnPromotion', from: '61', to: '71', newPiece: 'BQ' }, { move: 'pawnPromotion', from: '61', to: '71', newPiece: 'BR' }]);
+    expect(deepRed.getAllMovesBlack(pawn2, pieceState).specialMoves).to.deep.include.members([{ move: 'pawnPromotion', from: '62', to: '72', newPiece: 'BQ' }, { move: 'pawnPromotion', from: '62', to: '72', newPiece: 'BR' }]);
+    expect(deepRed.getAllMovesBlack(pawn07, pieceState).specialMoves).to.deep.include.members([{ move: 'pawnPromotion', from: '60', to: '70', newPiece: 'BQ' }, { move: 'pawnPromotion', from: '67', to: '77', newPiece: 'BQ' }]);
+  });
+
+  it('should know what pawn promotions via capture are available', () => {
+    expect(deepRed.getAllMovesBlack(pawn0capture1, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '60', to: '71', newPiece: 'BQ' });
+    expect(deepRed.getAllMovesBlack(pawn1capture0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '61', to: '70', newPiece: 'BB' });
+    expect(deepRed.getAllMovesBlack(pawn7capture6, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '67', to: '76', newPiece: 'BN' });
+  });
+});
+
+describe('End of game checks', () => {
   describe('[White] End of game checks', () => {
     const board = [
       ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
