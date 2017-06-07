@@ -125,6 +125,15 @@ module.exports = (io, client) => {
     io.in(room).emit('executeResumeRequest');
   });
 
+  client.on('updateTime', (clientRoom, timeB, timeW) => {
+    console.log('client: ', clientRoom);
+    console.log('all rooms: ', allRooms);
+    allRooms[clientRoom].playerBtime = timeB;
+    allRooms[clientRoom].playerWtime = timeW;
+    io.in(clientRoom).emit('sendUpdatedTime', allRooms[clientRoom]);
+  });
+
+  // messaging communications
   client.on('message', (msg, room) => {
     let user = '';
     for (let key in allRooms[room]) {

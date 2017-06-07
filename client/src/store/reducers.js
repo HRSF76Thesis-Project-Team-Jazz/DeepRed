@@ -16,16 +16,21 @@ import * as types from './actionTypes';
 
 const gameState = (state = Immutable({
   playerColor: 'W',
-  gameId: '',
   timeW: 600,
   timeB: 600,
-  pausedB: true,
-  pausedW: true,
+  minW: 10,
+  minB: 10,
+  secW: 0,
+  secB: 0,
+  milisecW: 0,
+  milisecB: 0,
   capturedPiecesBlack: [],
   capturedPiecesWhite: [],
   gameTurn: 'W',
   moveHistory: [],
   messages: [],
+  counterBinstance: '',
+  counterWinstance: '',
 }), action) => {
   switch (action.type) {
     case types.MOVE_PIECE: {
@@ -64,30 +69,39 @@ const gameState = (state = Immutable({
       newState[capturedPiecesArray] = state[capturedPiecesArray].concat(capturedPiece);
       return Immutable(newState);
     }
-    case types.PAUSE_TIMER: {
-      return Immutable({
-        ...state,
-        pausedB: true,
-        pausedW: true,
-      });
-    }
-    case types.RESUME_TIMER_B: {
-      return Immutable({
-        ...state,
-        pausedW: false,
-      });
-    }
-    case types.RESUME_TIMER_W: {
-      return Immutable({
-        ...state,
-        pausedB: false,
-      });
-    }
     case types.UPDATE_TIMER: {
       return Immutable({
         ...state,
         timeW: action.roomInfo.playerWtime,
         timeB: action.roomInfo.playerBtime,
+      });
+    }
+    case types.UPDATE_TIMER_B: {
+      return Immutable({
+        ...state,
+        timeB: action.timeB,
+        minB: Math.floor(state.timeB / 60),
+        secB: state.timeB % 60,
+      });
+    }
+    case types.UPDATE_TIMER_W: {
+      return Immutable({
+        ...state,
+        timeW: action.timeW,
+        minW: Math.floor(state.timeW / 60),
+        secW: state.timeW % 60,
+      });
+    }
+    case types.TIME_INSTANCE_B: {
+      return Immutable({
+        ...state,
+        counterBinstance: action.ref,
+      });
+    }
+    case types.TIME_INSTANCE_W: {
+      return Immutable({
+        ...state,
+        counterWinstance: action.ref,
       });
     }
     case types.SEND_MESSAGE: {
