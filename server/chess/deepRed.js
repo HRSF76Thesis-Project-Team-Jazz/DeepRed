@@ -93,6 +93,21 @@ const getAllMovesWhite = (board, pieceState) => {
     }
   }
 
+  // ******* Pawn Promotion
+  board[1].forEach((col, index) => {
+    if (col === 'WP' && !board[0][index]) {
+      const newPieces = ['WQ', 'WR', 'WB', 'WR'];
+      const move = {
+        move: 'pawnPromotion',
+        from: `1${index}`,
+        to: `0${index}`,
+      };
+      newPieces.forEach(newPiece =>
+        specialMoves.push(Object.assign({}, move, { newPiece })));
+      console.log(specialMoves);
+    }
+  });
+
   if (specialMoves.length > 0) {
     result.specialMoves = specialMoves;
   }
@@ -537,6 +552,21 @@ const getAllMovesBlack = (board, pieceState) => {
     }
   }
 
+  // ******* Pawn Promotion
+  board[1].forEach((col, index) => {
+    if (col === 'WP') {
+      const newPieces = ['WQ', 'WR', 'WB', 'WR'];
+      const move = {
+        move: 'pawnPromotion',
+        from: `1${index}`,
+        to: `0${index}`,
+      };
+      newPieces.forEach(newPiece =>
+        specialMoves.push(Object.assign({}, move, { newPiece })));
+      console.log(specialMoves);
+    }
+  });
+  
   if (specialMoves.length > 0) {
     result.specialMoves = specialMoves;
   }
