@@ -164,17 +164,18 @@ const isLegalMoveQueen = (board, origin, dest) => {
 
 const isLegalMoveKing = (game, origin, dest) => {
   const originPiece = game.board[origin[0]][origin[1]];
+  const destPiece = game.board[dest[0]][dest[1]];
   const xDist = Math.abs(origin[0] - dest[0]);
   const yDist = Math.abs(origin[1] - dest[1]);
   if (xDist + yDist === 1) {
     return { bool: true };
-  } else if (!game.hasMovedBK && !game.hasMovedBRQ && originPiece === 'BK' && JSON.stringify(dest) === JSON.stringify([0, 2]) && isHorizPathClear(game.board, origin, dest)) {
+  } else if (!destPiece && !game.hasMovedBK && !game.hasMovedBRQ && originPiece === 'BK' && JSON.stringify(dest) === JSON.stringify([0, 2]) && isHorizPathClear(game.board, origin, dest)) {
     return { bool: true, castling: 'BRQ' };
-  } else if (!game.hasMovedBK && !game.hasMovedBRK && originPiece === 'BK' && JSON.stringify(dest) === JSON.stringify([0, 6]) && isHorizPathClear(game.board, origin, dest)) {
+  } else if (!destPiece && !game.hasMovedBK && !game.hasMovedBRK && originPiece === 'BK' && JSON.stringify(dest) === JSON.stringify([0, 6]) && isHorizPathClear(game.board, origin, dest)) {
     return { bool: true, castling: 'BRK' };
-  } else if (!game.hasMovedWK && !game.hasMovedWRQ && originPiece === 'WK' && JSON.stringify(dest) === JSON.stringify([7, 2]) && isHorizPathClear(game.board, origin, dest)) {
+  } else if (!destPiece && !game.hasMovedWK && !game.hasMovedWRQ && originPiece === 'WK' && JSON.stringify(dest) === JSON.stringify([7, 2]) && isHorizPathClear(game.board, origin, dest)) {
     return { bool: true, castling: 'WRQ' };
-  } else if (!game.hasMovedWK && !game.hasMovedWRK && originPiece === 'WK' && JSON.stringify(dest) === JSON.stringify([7, 6]) && isHorizPathClear(game.board, origin, dest)) {
+  } else if (!destPiece && !game.hasMovedWK && !game.hasMovedWRK && originPiece === 'WK' && JSON.stringify(dest) === JSON.stringify([7, 6]) && isHorizPathClear(game.board, origin, dest)) {
     return { bool: true, castling: 'WRK' };
   } else if (xDist + yDist === 2) {
     return { bool: Boolean(xDist && yDist) };
