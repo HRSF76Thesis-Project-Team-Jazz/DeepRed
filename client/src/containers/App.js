@@ -693,10 +693,23 @@ class App extends Component {
 
             <div className="flex-col right-col">
               <Message message={error} />
+<<<<<<< HEAD
               <ScrollArea>
               <Messages messages={messages} />
               </ScrollArea>
               <ChatBox sendMessage={this.sendMessage} />
+=======
+                    <ScrollArea>
+                      <div>
+                        <ul className="message-list">
+                          {this.props.messages.map((msg, i) =>
+                            <div className="message" key={i + msg}>{msg}</div>,
+                          )}
+                        </ul>
+                        </div>
+                      </ScrollArea>
+              <ChatBox messages={messages} sendMessage={this.sendMessage} />
+>>>>>>> working on Chatbox css
             </div>
 
             <div className="control-general">
