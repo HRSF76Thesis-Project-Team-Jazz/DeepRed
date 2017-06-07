@@ -572,20 +572,39 @@ const getAllMovesBlack = (board, pieceState) => {
   }
 
   // ******* Pawn Promotion
-  // board[1].forEach((col, index) => {
-  //   if (col === 'WP') {
-  //     const newPieces = ['WQ', 'WR', 'WB', 'WR'];
-  //     const move = {
-  //       move: 'pawnPromotion',
-  //       from: `1${index}`,
-  //       to: `0${index}`,
-  //     };
-  //     newPieces.forEach(newPiece =>
-  //       specialMoves.push(Object.assign({}, move, { newPiece })));
-  //     console.log(specialMoves);
-  //   }
-  // });
-  
+  board[6].forEach((col, index) => {
+    if (col === 'BP') {
+      const newPieces = ['BQ', 'BR', 'BB', 'BN'];
+      const move = {
+        move: 'pawnPromotion',
+        from: `6${index}`,
+      };
+
+      // advance 1
+      if (!board[7][index]) {
+        newPieces.forEach(newPiece =>
+          specialMoves.push(Object.assign({}, move,
+            { to: `7${index}`, newPiece })));
+      }
+
+      // capture left
+      if (index > 0 && board[7][index - 1] &&
+        board[7][index - 1][0] === 'W') {
+        newPieces.forEach(newPiece =>
+          specialMoves.push(Object.assign({}, move,
+            { to: `7${index - 1}`, newPiece })));
+      }
+
+      // capture right
+      if (index < 7 && board[7][index + 1] &&
+        board[7][index + 1][0] === 'W') {
+        newPieces.forEach(newPiece =>
+          specialMoves.push(Object.assign({}, move,
+            { to: `7${index + 1}`, newPiece })));
+      }
+    }
+  });
+
   if (specialMoves.length > 0) {
     result.specialMoves = specialMoves;
   }
@@ -599,9 +618,10 @@ const getAllMovesBlack = (board, pieceState) => {
 
         if (piece[1] === 'P') {
           // advance 1
-          if (!board[row + 1][col]) result[key].push([row + 1, col]);
+          if (row < 6 && !board[row + 1][col]) result[key].push([row + 1, col]);
           // advance 2
-          if (row === 1 && !board[row + 1][col] && !board[row + 2][col]) result[key].push([row + 2, col]);
+          if (row === 1 && !board[row + 1][col] &&
+            !board[row + 2][col]) result[key].push([row + 2, col]);
           // capture SW
           if (col > 0 && board[row + 1][col - 1] && board[row + 1][col - 1][0] === 'W') result[key].push([row + 1, col - 1]);
           // capture SE
