@@ -32,8 +32,8 @@ const mutateBoard = (board, move) => {
  *                                hasMovedBK: boolean,
  *                                hasMovedBKR: boolean,
  *                                hasMovedBQR: boolean,
- *                                canEnPassantW: array,
- *                                canEnPasswantB: array,
+ *                                canEnPassantW: string, // 'rc' : row and column
+ *                                canEnPasswantB: string,
  *                              }
  * @return {object} keys:   stringified coordinates of piece origin
  *                          '66'
@@ -46,7 +46,7 @@ const getAllMovesWhite = (board, pieceState) => {
 
   const specialMoves = [];
 
-  // Castling
+  // ******* Castling
   // King can not castle out of check
   if (pieceState && !pieceState.hasMovedWK && !whiteIsChecked(board) &&
     board[7][4] === 'WK' && board[7][7] === 'WR' && board[7][0] === 'WR'
@@ -59,6 +59,7 @@ const getAllMovesWhite = (board, pieceState) => {
     ) {
       specialMoves.push('O-O');
     }
+    // Queen side castle
     if (!pieceState.hasMovedWQR &&
       !board[7][3] && !board[7][2] && !board[7][1] &&
       !whiteIsChecked(mutateBoard(board, ['74', '73'])) &&
@@ -66,6 +67,29 @@ const getAllMovesWhite = (board, pieceState) => {
       !whiteIsChecked(mutateBoard(board, ['74', '71']))
     ) {
       specialMoves.push('O-O-O');
+    }
+  }
+
+  // ******* En-passant
+  if (pieceState && pieceState.canEnPassantW !== '') {
+    const bp = pieceState.canEnPassantW;
+    // from left
+    if (bp[1] > 0 && board[3][+bp[1] - 1] === 'WP') {
+      specialMoves.push({
+        move: 'enpassant',
+        from: `3${bp[1] - 1}`,
+        to: `2${bp[1]}`,
+        captured: `3${bp[1]}`,
+      });
+    }
+    // from right
+    if (bp[1] < 7 && board[3][+bp[1] + 1] === 'WP') {
+      specialMoves.push({
+        move: 'enpassant',
+        from: `3${+bp[1] + 1}`,
+        to: `2${+bp[1]}`,
+        captured: `3${+bp[1]}`,
+      });
     }
   }
 
@@ -487,6 +511,29 @@ const getAllMovesBlack = (board, pieceState) => {
       !blackIsChecked(mutateBoard(board, ['04', '02']))
     ) {
       specialMoves.push('O-O-O');
+    }
+  }
+
+  // ******* En-passant
+  if (pieceState && pieceState.canEnPassantB !== '') {
+    const wp = pieceState.canEnPassantB;
+    // from left
+    if (wp[1] > 0 && board[4][+wp[1] - 1] === 'BP') {
+      specialMoves.push({
+        move: 'enpassant',
+        from: `4${wp[1] - 1}`,
+        to: `5${wp[1]}`,
+        captured: `4${wp[1]}`,
+      });
+    }
+    // from right
+    if (wp[1] < 7 && board[4][+wp[1] + 1] === 'BP') {
+      specialMoves.push({
+        move: 'enpassant',
+        from: `4${+wp[1] + 1}`,
+        to: `5${+wp[1]}`,
+        captured: `4${+wp[1]}`,
+      });
     }
   }
 

@@ -9,8 +9,8 @@ const pieceState = {
   hasMovedBK: false,
   hasMovedBKR: false,
   hasMovedBQR: false,
-  canEnPassantW: [],
-  canEnPasswantB: [],
+  canEnPassantW: '',
+  canEnPassantB: '',
 };
 
 describe('[Deep Red] evaluate available possible moves: ', () => {
@@ -300,6 +300,176 @@ describe('[Black] Check Castling', () => {
   });
 
 });
+
+
+describe('[White] En-Passant', () => {
+  const board = [
+    ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+    ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+    ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+  ];
+
+  const enPassant0 = [
+    ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+    [null, 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+    [null, null, null, null, null, null, null, null],
+    ['BP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', null, null, null, null, null, null, null],
+    ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+  ];
+
+  const enPassant1 = [
+    ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+    ['BP', null, 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'BP', 'WP', null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, 'WP', null, 'WP', 'WP', 'WP', 'WP', 'WP'],
+    ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+  ];
+
+  const enPassant3 = [
+    ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+    ['BP', 'BP', 'BP', null, 'BP', 'BP', 'BP', 'BP'],
+    [null, null, null, null, null, null, null, null],
+    [null, null, 'WP', 'BP', 'WP', null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'WP', null, 'WP', null, 'WP', 'WP', 'WP'],
+    ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+  ];
+
+  const enPassant7 = [
+    ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+    ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, 'WP', 'BP'],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+    ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+  ];
+
+  const ep0State = Object.assign({}, pieceState, { canEnPassantW: '30' });
+  const ep1State = Object.assign({}, pieceState, { canEnPassantW: '31' });
+  const ep3State = Object.assign({}, pieceState, { canEnPassantW: '33' });
+  const ep7State = Object.assign({}, pieceState, { canEnPassantW: '37' });
+
+  it('should know that en-passant is not available', () => {
+    expect(deepRed.getAllMovesWhite(board, pieceState)).to.not.have.property('specialMoves');
+    expect(deepRed.getAllMovesWhite(enPassant0, pieceState)).to.not.have.property('specialMoves');
+    expect(deepRed.getAllMovesWhite(enPassant1, pieceState)).to.not.have.property('specialMoves');
+    expect(deepRed.getAllMovesWhite(enPassant3, pieceState)).to.not.have.property('specialMoves');
+    expect(deepRed.getAllMovesWhite(enPassant7, pieceState)).to.not.have.property('specialMoves');
+  });
+
+  it('should know that en-passant is available', () => {
+    expect(deepRed.getAllMovesWhite(enPassant0, ep0State)).to.have.property('specialMoves');
+    expect(deepRed.getAllMovesWhite(enPassant1, ep1State)).to.have.property('specialMoves');
+    expect(deepRed.getAllMovesWhite(enPassant3, ep3State)).to.have.property('specialMoves');
+    expect(deepRed.getAllMovesWhite(enPassant7, ep7State)).to.have.property('specialMoves');
+  });
+
+  it('should know what en-passant moves are available', () => {
+    expect(deepRed.getAllMovesWhite(enPassant0, ep0State).specialMoves).to.deep.include({ move: 'enpassant', from: '31', to: '20', captured: '30' });
+    expect(deepRed.getAllMovesWhite(enPassant1, ep1State).specialMoves).to.deep.include.members([{ move: 'enpassant', from: '30', to: '21', captured: '31' }, { move: 'enpassant', from: '32', to: '21', captured: '31' }]);
+    expect(deepRed.getAllMovesWhite(enPassant3, ep3State).specialMoves).to.deep.include.members([{ move: 'enpassant', from: '32', to: '23', captured: '33' }, { move: 'enpassant', from: '34', to: '23', captured: '33' }]);
+    expect(deepRed.getAllMovesWhite(enPassant7, ep7State).specialMoves).to.deep.include({ move: 'enpassant', from: '36', to: '27', captured: '37' });
+  });
+});
+
+describe('[Black] En-Passant', () => {
+  const board = [
+    ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+    ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+    ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+  ];
+
+  const enPassant0 = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'BP', null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+  ];
+
+  const enPassant1 = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['BP', 'WP', 'BP', null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+  ];
+
+  const enPassant3 = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, 'BP', 'WP', 'BP', null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+  ];
+
+  const enPassant7 = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, 'BP', 'WP'],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+  ];
+
+  const ep0State = Object.assign({}, pieceState, { canEnPassantB: '40' });
+  const ep1State = Object.assign({}, pieceState, { canEnPassantB: '41' });
+  const ep3State = Object.assign({}, pieceState, { canEnPassantB: '43' });
+  const ep7State = Object.assign({}, pieceState, { canEnPassantB: '47' });
+
+  it('should know that en-passant is not available', () => {
+    expect(deepRed.getAllMovesBlack(board, pieceState)).to.not.have.property('specialMoves');
+    expect(deepRed.getAllMovesBlack(enPassant0, pieceState)).to.not.have.property('specialMoves');
+    expect(deepRed.getAllMovesBlack(enPassant1, pieceState)).to.not.have.property('specialMoves');
+    expect(deepRed.getAllMovesBlack(enPassant3, pieceState)).to.not.have.property('specialMoves');
+    expect(deepRed.getAllMovesBlack(enPassant7, pieceState)).to.not.have.property('specialMoves');
+  });
+
+  it('should know that en-passant is available', () => {
+    expect(deepRed.getAllMovesBlack(enPassant0, ep0State)).to.have.property('specialMoves');
+    expect(deepRed.getAllMovesBlack(enPassant1, ep1State)).to.have.property('specialMoves');
+    expect(deepRed.getAllMovesBlack(enPassant3, ep3State)).to.have.property('specialMoves');
+    expect(deepRed.getAllMovesBlack(enPassant7, ep7State)).to.have.property('specialMoves');
+  });
+
+  it('should know what en-passant moves are available', () => {
+    expect(deepRed.getAllMovesBlack(enPassant0, ep0State).specialMoves).to.deep.include({ move: 'enpassant', from: '41', to: '50', captured: '40' });
+    expect(deepRed.getAllMovesBlack(enPassant1, ep1State).specialMoves).to.deep.include.members([{ move: 'enpassant', from: '40', to: '51', captured: '41' }, { move: 'enpassant', from: '42', to: '51', captured: '41' }]);
+    expect(deepRed.getAllMovesBlack(enPassant3, ep3State).specialMoves).to.deep.include.members([{ move: 'enpassant', from: '42', to: '53', captured: '43' }, { move: 'enpassant', from: '44', to: '53', captured: '43' }]);
+    expect(deepRed.getAllMovesBlack(enPassant7, ep7State).specialMoves).to.deep.include({ move: 'enpassant', from: '46', to: '57', captured: '47' });
+  });
+});
+
 describe('End of game checks', () => {
 
   describe('[White] End of game checks', () => {
