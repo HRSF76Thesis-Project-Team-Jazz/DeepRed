@@ -469,6 +469,7 @@ describe('[Black] En-Passant', () => {
     expect(deepRed.getAllMovesBlack(enPassant7, ep7State).specialMoves).to.deep.include({ move: 'enpassant', from: '46', to: '57', captured: '47' });
   });
 });
+
 describe('[White] Pawn promotion', () => {
   const board = [
     [null, null, null, null, null, null, null, null],
@@ -536,26 +537,66 @@ describe('[White] Pawn promotion', () => {
     [null, null, null, null, null, null, null, null],
   ];
 
-  it('should know that en-passant is not available', () => {
+  const pawn0capture1 = [
+    ['BR', 'BN', null, null, null, null, null, null],
+    ['WP', null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+  ];
+
+  const pawn1capture0 = [
+    ['BN', 'BN', null, null, null, null, null, null],
+    [null, 'WP', null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+  ];
+ 
+  const pawn7capture6 = [
+    [null, null, null, null, null, null, 'BN', 'BR'],
+    [null, null, null, null, null, null, null, 'WP'],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+  ];
+
+  it('should know that pawn promotion is not available', () => {
     expect(deepRed.getAllMovesWhite(board, pieceState)).to.not.have.property('specialMoves');
     expect(deepRed.getAllMovesWhite(pawn0Blocked, pieceState)).to.not.have.property('specialMoves');
-    expect(deepRed.getAllMovesWhite(enPassant1, pieceState)).to.not.have.property('specialMoves');
-    expect(deepRed.getAllMovesWhite(enPassant3, pieceState)).to.not.have.property('specialMoves');
-    expect(deepRed.getAllMovesWhite(enPassant7, pieceState)).to.not.have.property('specialMoves');
   });
 
-  it('should know that en-passant is available', () => {
-    expect(deepRed.getAllMovesBlack(enPassant0, ep0State)).to.have.property('specialMoves');
-    expect(deepRed.getAllMovesBlack(enPassant1, ep1State)).to.have.property('specialMoves');
-    expect(deepRed.getAllMovesBlack(enPassant3, ep3State)).to.have.property('specialMoves');
-    expect(deepRed.getAllMovesBlack(enPassant7, ep7State)).to.have.property('specialMoves');
+  it('should know that pawn promotion is available', () => {
+    expect(deepRed.getAllMovesWhite(pawn0, pieceState)).to.have.property('specialMoves');
+    expect(deepRed.getAllMovesWhite(pawn1, pieceState)).to.have.property('specialMoves');
+    expect(deepRed.getAllMovesWhite(pawn2, pieceState)).to.have.property('specialMoves');
+    expect(deepRed.getAllMovesWhite(pawn07, pieceState)).to.have.property('specialMoves');
   });
 
-  it('should know what en-passant moves are available', () => {
-    expect(deepRed.getAllMovesBlack(enPassant0, ep0State).specialMoves).to.deep.include({ move: 'enpassant', from: '41', to: '50', captured: '40' });
-    expect(deepRed.getAllMovesBlack(enPassant1, ep1State).specialMoves).to.deep.include.members([{ move: 'enpassant', from: '40', to: '51', captured: '41' }, { move: 'enpassant', from: '42', to: '51', captured: '41' }]);
-    expect(deepRed.getAllMovesBlack(enPassant3, ep3State).specialMoves).to.deep.include.members([{ move: 'enpassant', from: '42', to: '53', captured: '43' }, { move: 'enpassant', from: '44', to: '53', captured: '43' }]);
-    expect(deepRed.getAllMovesBlack(enPassant7, ep7State).specialMoves).to.deep.include({ move: 'enpassant', from: '46', to: '57', captured: '47' });
+  it('should know what pawn promotion moves are available', () => {
+    expect(deepRed.getAllMovesWhite(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '10', to: '00', newPiece: 'WQ' });
+    expect(deepRed.getAllMovesWhite(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '10', to: '00', newPiece: 'WR' });
+    expect(deepRed.getAllMovesWhite(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '10', to: '00', newPiece: 'WB' });
+    expect(deepRed.getAllMovesWhite(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '10', to: '00', newPiece: 'WN' });
+
+    expect(deepRed.getAllMovesWhite(pawn1, pieceState).specialMoves).to.deep.include.members([{ move: 'pawnPromotion', from: '11', to: '01', newPiece: 'WQ' }, { move: 'pawnPromotion', from: '11', to: '01', newPiece: 'WR' }]);
+    expect(deepRed.getAllMovesWhite(pawn2, pieceState).specialMoves).to.deep.include.members([{ move: 'pawnPromotion', from: '12', to: '02', newPiece: 'WQ' }, { move: 'pawnPromotion', from: '12', to: '02', newPiece: 'WR' }]);
+    expect(deepRed.getAllMovesWhite(pawn07, pieceState).specialMoves).to.deep.include.members([{ move: 'pawnPromotion', from: '10', to: '00', newPiece: 'WQ' }, { move: 'pawnPromotion', from: '17', to: '07', newPiece: 'WQ' }]);
+  });
+
+  it('should know what pawn promotions via capture are available', () => {
+    expect(deepRed.getAllMovesWhite(pawn0capture1, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '10', to: '01', newPiece: 'WQ' });
+    expect(deepRed.getAllMovesWhite(pawn1capture0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '11', to: '00', newPiece: 'WB' });
+    expect(deepRed.getAllMovesWhite(pawn7capture6, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '17', to: '06', newPiece: 'WN' });
   });
 });
 
