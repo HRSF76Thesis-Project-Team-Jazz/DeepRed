@@ -47,6 +47,9 @@ const config = {
     },
     inline: true,
     hot: true,
+    proxy: {
+      '/api': 'http://localhost:3000',
+    },
   },
 };
 
