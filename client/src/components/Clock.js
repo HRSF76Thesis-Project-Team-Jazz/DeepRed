@@ -10,9 +10,8 @@ class Clock extends Component {
 
     return (
       <div className="clock-class" >
-        <span>{this.props.color === 'Black' ? (`0${minB}`).slice(-2) : (`0${minW}`).slice(-2)}
-          : {this.props.color === 'Black' ? (`0${secB}`).slice(-2) : (`0${secW}`).slice(-2)}
-        </span>
+        <h3>{this.props.color === 'Black' ? (`0${minB}`).slice(-2) : (`0${minW}`).slice(-2)} : {this.props.color === 'Black' ? (`0${secB}`).slice(-2) : (`0${secW}`).slice(-2)}
+        </h3>
       </div>
     );
   }
