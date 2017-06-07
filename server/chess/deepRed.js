@@ -79,7 +79,7 @@ const getAllMovesWhite = (board, pieceState) => {
         move: 'enpassant',
         from: `3${bp[1] - 1}`,
         to: `2${bp[1]}`,
-        bp: `3${bp[1]}`,
+        captured: `3${bp[1]}`,
       });
     }
     // from right
@@ -88,7 +88,7 @@ const getAllMovesWhite = (board, pieceState) => {
         move: 'enpassant',
         from: `3${+bp[1] + 1}`,
         to: `2${+bp[1]}`,
-        bp: `3${+bp[1]}`,
+        captured: `3${+bp[1]}`,
       });
     }
   }
@@ -511,6 +511,29 @@ const getAllMovesBlack = (board, pieceState) => {
       !blackIsChecked(mutateBoard(board, ['04', '02']))
     ) {
       specialMoves.push('O-O-O');
+    }
+  }
+
+  // ******* En-passant
+  if (pieceState && pieceState.canEnPassantB !== '') {
+    const wp = pieceState.canEnPassantB;
+    // from left
+    if (wp[1] > 0 && board[4][+wp[1] - 1] === 'BP') {
+      specialMoves.push({
+        move: 'enpassant',
+        from: `4${wp[1] - 1}`,
+        to: `5${wp[1]}`,
+        captured: `4${wp[1]}`,
+      });
+    }
+    // from right
+    if (wp[1] < 7 && board[4][+wp[1] + 1] === 'BP') {
+      specialMoves.push({
+        move: 'enpassant',
+        from: `4${+wp[1] + 1}`,
+        to: `5${+wp[1]}`,
+        captured: `4${+wp[1]}`,
+      });
     }
   }
 
