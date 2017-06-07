@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { red50, red900 } from 'material-ui/styles/colors';
+import ScrollArea from 'react-scrollbar';
 
 import './css/ChatBox.css';
 
@@ -36,7 +37,7 @@ class ChatBox extends Component {
 
   render() {
     return (
-      <div>
+        <div style = {{ position: 'relative'}}>
         <form>
           <TextField
             className="text-field"
@@ -56,12 +57,8 @@ class ChatBox extends Component {
             labelColor={red50}
           /> */}
         </form>
-        <ul className="message-list">
-          {this.props.messages.map((msg, i) =>
-            <div className="message" key={i + msg}>{msg}</div>,
-          )}
-        </ul>
       </div>
+
     );
   }
 }
