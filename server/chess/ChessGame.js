@@ -89,7 +89,7 @@ class ChessGame {
           this.board[7][0] = null;
           this.hasMovedWRQ = true;
           this.hasMovedWK = true;
-        } else if (legalMoveResult.castling === 'BRQ') {
+        } else if (legalMoveResult.castling === 'WRK') {
           this.board[7][5] = 'WR';
           this.board[7][7] = null;
           this.hasMovedWRK = true;
@@ -137,7 +137,7 @@ class ChessGame {
       // console.log('--------------', this.history);
       console.log('Move piece is successful');
       console.log(this.board);
-      return { game: this, error };
+      return { game: this, error, castling: legalMoveResult.castling };
     }
     error = 'Move is not allowed.';
     console.log(this.board);

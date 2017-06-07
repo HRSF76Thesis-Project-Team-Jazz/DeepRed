@@ -38,6 +38,17 @@ const gameState = (state = Immutable({
         gameTurn: action.gameTurn,
       });
     }
+    case types.CASTLING_MOVE: {
+      // fromPosition,
+      // coordinates,
+      // castling,
+      // gameTurn,
+      return Immutable({
+        ...state,
+        // moveHistory: state.moveHistory.concat({ from, to }),
+        gameTurn: action.gameTurn,
+      });
+    }
     case types.CAPTURE_PIECE: {
       const cols = 'abcdefgh';
       const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
@@ -115,6 +126,26 @@ const boardState = (state = {
       board[action.coordinates[0]][action.coordinates[1]]
         = board[action.fromPosition[0]][action.fromPosition[1]];
       board[action.fromPosition[0]][action.fromPosition[1]] = null;
+      return { board };
+    }
+    case types.CASTLING_MOVE: {
+      const board = state.board.slice(0);
+      board[action.coordinates[0]][action.coordinates[1]]
+        = board[action.fromPosition[0]][action.fromPosition[1]];
+      board[action.fromPosition[0]][action.fromPosition[1]] = null;
+      if (action.castling === 'BRQ') {
+        board[0][3] = 'BR';
+        board[0][0] = null;
+      } else if (action.castling === 'BRK') {
+        board[0][5] = 'BR';
+        board[0][7] = null;
+      } else if (action.castling === 'WRQ') {
+        board[7][3] = 'WR';
+        board[7][0] = null;
+      } else if (action.castling === 'WRK') {
+        board[7][5] = 'WR';
+        board[7][7] = null;
+      }
       return { board };
     }
     case types.RECEIVE_GAME: {

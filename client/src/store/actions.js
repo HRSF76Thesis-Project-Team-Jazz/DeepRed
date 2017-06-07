@@ -76,6 +76,14 @@ export const capturePiece = (fromPosition, coordinates, capturedPiece, gameTurn)
   gameTurn,
 });
 
+export const castlingMove = (fromPosition, coordinates, castling, gameTurn) => ({
+  type: types.CASTLING_MOVE,
+  fromPosition,
+  coordinates,
+  castling,
+  gameTurn,
+});
+
 export const receiveMove = (query, move) => ({
   type: types.RECEIVE_MOVE,
   query,

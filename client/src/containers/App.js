@@ -9,7 +9,7 @@ import {
   cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW,
   updateRoomInfo, getRequestFailure, receiveGame, movePiece, resetBoolBoard,
   unselectPiece, capturePiece, displayError, colorSquare, sendMsg,
-  resumeTimerB, resumeTimerW, saveBoolBoard,
+  resumeTimerB, resumeTimerW, saveBoolBoard, castlingMove,
 } from '../store/actions';
 
 // Components
@@ -100,21 +100,22 @@ class App extends Component {
       dispatch(sendMsg(msg));
     });
 
-    this.socket.on('attemptMoveResult', (error, origin, dest, selection, gameTurn) => {
+    this.socket.on('attemptMoveResult', (error, origin, dest, selection, gameTurn, castling) => {
       // dispatch(receiveGame(board));
       if (error === null) {
         if (selection) {
           dispatch(capturePiece(origin, dest, selection, gameTurn));
           if (gameTurn === 'B') {
             dispatch(pauseTimer());
-            dispatch(resumeTimerB());
+            dispatch(resumeTimerB())
           } else {
             dispatch(pauseTimer());
             dispatch(resumeTimerW());
           }
+        } else if (castling) {
+          dispatch(castlingMove(origin, dest, castling, gameTurn));
         } else {
           dispatch(movePiece(origin, dest, gameTurn));
-          dispatch(resetBoolBoard());
           if (gameTurn === 'W') {
             dispatch(pauseTimer());
             dispatch(resumeTimerW());
@@ -128,6 +129,7 @@ class App extends Component {
         dispatch(displayError(error));
       }
       dispatch(unselectPiece());
+      dispatch(resetBoolBoard());
       dispatch(colorSquare(null, dest));
     });
 

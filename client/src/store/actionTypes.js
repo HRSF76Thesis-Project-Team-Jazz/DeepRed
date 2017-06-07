@@ -17,6 +17,8 @@ export const CAPTURE_PIECE = 'CAPTURE_PIECE';
 
 export const MOVE_PIECE = 'MOVE_PIECE';
 
+export const CASTLING_MOVE = 'CASTLING_MOVE';
+
 export const COLOR_SQUARE = 'COLOR_SQUARE';
 
 export const REQUEST_GAME = 'REQUEST_GAME';
