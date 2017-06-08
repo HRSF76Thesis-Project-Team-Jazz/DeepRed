@@ -31,6 +31,7 @@ const transcribeBoard = board => board.map((row) => {
   return newRow.join('');
 }).join('');
 
+
 class ChessGame {
 
   constructor() {
@@ -208,14 +209,14 @@ class ChessGame {
         //   return { game: this, error };
         // }
         // this.history += moveToPGNString(this.board, origin, dest, this.count);
-        // this.capturePiece(destPiece, clientRoom);
-      
+
       // this.history[this.turn] = this.history[this.turn] || [];
       // this.history[this.turn].push(origin);
       // this.history[this.turn].push(dest);
       // if (originPiece[0] === 'B') {
       //   this.turn += 1;
       // }
+
       var board = this.board.map((row) => {
       const pieceIndex = {
         null: 0,
@@ -239,7 +240,7 @@ class ChessGame {
       chessDB.saveMove({
         session_id: clientRoom,
         history: board
-      })
+      )};
 
       this.turn = (this.turn === 'W') ? 'B' : 'W';
       this.board[dest[0]][dest[1]] = originPiece;
@@ -273,10 +274,8 @@ class ChessGame {
       this.hasMovedBRK = true;
     }
   }
-  addToCaptureArray(piece) {
 
-
-  capturePiece(piece, clientRoom) {
+  addToCaptureArray(piece, clientRoom) {
     if (piece[0] === 'W') {
       this.blackCapPieces.push(piece);
       
