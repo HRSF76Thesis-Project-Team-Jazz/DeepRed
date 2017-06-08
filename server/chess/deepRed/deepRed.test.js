@@ -1,11 +1,14 @@
-
-const deepRed = require('../chess/deepRed');
+const deepRed = require('./index');
 
 const {
   showMovesByPiece,
+} = deepRed.display;
+
+const { whiteIsChecked } = deepRed.attacksBlack;
+const { blackIsChecked } = deepRed.attacksWhite;
+
+const {
   showEvaluatedMoves,
-  blackIsChecked,
-  whiteIsChecked,
   getAllMovesWhite,
   getAllMovesBlack,
   getSafeMovesWhite,
@@ -29,8 +32,8 @@ const pieceState = {
   hasMovedBK: false,
   hasMovedBKR: false,
   hasMovedBQR: false,
-  canEnPassantW: [],
-  canEnPasswantB: [],
+  canEnPassantW: '',
+  canEnPassantB: '',
 };
 
 let board = [

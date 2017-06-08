@@ -1,5 +1,4 @@
 
-
 const pieceScore = isEndGame => ({
   P: (!isEndGame) ? 2 : 3.75,
   N: 9.25,
@@ -31,60 +30,27 @@ const capturedPiecesScore = (capturedWhite, capturedBlack) => {
   return whiteScore - blackScore;
 };
 
-/**
- * Return the positions for the input piece or input color
- * @param {string} piece   1) piece
- *                         2) 'W' or 'B': get all pieces of that color
- * @param {array} board
- * @return {array} : coordinates of piece [row, col]
- */
+const transcribeBoard = board => board.map((row) => {
+  const pieceIndex = {
+    null: 0,
+    WP: 1,
+    WN: 2,
+    WB: 3,
+    WR: 4,
+    WQ: 5,
+    WK: 6,
+    BP: 'a',
+    BN: 'b',
+    BB: 'c',
+    BR: 'd',
+    BQ: 'e',
+    BK: 'f',
+  };
+  const newRow = row.map(col => pieceIndex[col]);
+  return newRow.join('');
+}).join('');
 
-const findPiecePosition = (piece, board) => {
-  const result = [];
-
-  if (piece.length === 1) {
-    const color = piece;
-    for (let row = 0; row < 8; row += 1) {
-      for (let col = 0; col < 8; col += 1) {
-        if (board[row][col] && board[row][col][0] === color) result.push([row, col]);
-      }
-    }
-  } else if (piece[0] === 'B') {
-    for (let row = 0; row < 8; row += 1) {
-      for (let col = 0; col < 8; col += 1) {
-        if (board[row][col] === piece) result.push([row, col]);
-      }
-    }
-  } else {
-    for (let row = 7; row >= 0; row -= 1) {
-      for (let col = 0; col < 8; col += 1) {
-        if (board[row][col] === piece) result.push([row, col]);
-      }
-    }
-  }
-  return result;
+module.exports = {
+  capturedPiecesScore,
+  transcribeBoard,
 };
-
-const boardPositionScore = (board) => {
-  let whiteScore = 0;
-  let blackScore = 0;
-
-  const whiteKing = findPiecePosition('WK', board);
-  const blackKing = findPiecePosition('BK', board);
-
-  const positionWeight = [
-    [1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 1.1, 1.2, 1.2, 1.2, 1.2, 1.1, 1],
-    [1, 1.1, 1.3, 1.3, 1.3, 1.3, 1.1, 1],
-    [1, 1.1, 1.3, 1.3, 1.3, 1.3, 1.1, 1],
-    [1, 1.1, 1.2, 1.2, 1.2, 1.2, 1.1, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1],
-  ];
-
-};
-
-module.exports.capturedPiecesScore = capturedPiecesScore;
-module.exports.findPiecePosition = findPiecePosition;
-module.exports.boardPositionScore = boardPositionScore;
