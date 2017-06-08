@@ -1,5 +1,5 @@
 const ChessGame = require('./ChessGame');
-// const chessDB = require('../chessDB');
+const chessDB = require('../chessDB');
 
 const allGames = {};
 const allRooms = {};

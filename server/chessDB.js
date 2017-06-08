@@ -57,7 +57,7 @@ const saveMove = (game) => {
   knex('games').where('session_id', game.session_id).then((res) => { 
       
   var history = JSON.parse(res[0].history);
-  history.push(JSON.parse(game.history));
+  history.push(game.history);
 
     knex('games').where({ session_id: game.session_id }).update({
       history: JSON.stringify(history)
