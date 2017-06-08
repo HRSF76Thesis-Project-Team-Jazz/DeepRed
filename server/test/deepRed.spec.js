@@ -932,10 +932,10 @@ describe('End of game checks', () => {
     });
 
     it('should check if white is in checkmate', () => {
-      expect(isCheckmateWhite(board)).to.eql(false);
-      expect(isCheckmateWhite(safeBoard)).to.eql(false);
-      expect(isCheckmateWhite(checkmateBoard)).to.eql(true);
-      expect(isCheckmateWhite(stalemateBoard)).to.eql(false);
+      expect(isCheckmateBlack(board)).to.eql(false);
+      expect(isCheckmateBlack(safeBoard)).to.eql(false);
+      expect(isCheckmateBlack(checkmateBoard)).to.eql(true);
+      expect(isCheckmateBlack(stalemateBoard)).to.eql(false);
     });
 
     it('should check if white is in checkmate', () => {
@@ -1005,10 +1005,10 @@ describe('End of game checks', () => {
     });
 
     it('should check if black is in checkmate', () => {
-      expect(isCheckmateBlack(board)).to.eql(false);
-      expect(isCheckmateBlack(safeBoard)).to.eql(false);
-      expect(isCheckmateBlack(checkmateBoard)).to.eql(true);
-      expect(isCheckmateBlack(stalemateBoard)).to.eql(false);
+      expect(isCheckmateWhite(board)).to.eql(false);
+      expect(isCheckmateWhite(safeBoard)).to.eql(false);
+      expect(isCheckmateWhite(checkmateBoard)).to.eql(true);
+      expect(isCheckmateWhite(stalemateBoard)).to.eql(false);
     });
 
     it('should check if black is in checkmate', () => {
