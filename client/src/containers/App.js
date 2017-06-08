@@ -116,7 +116,7 @@ class App extends Component {
           dispatch(castlingMove(origin, dest, castling, gameTurn));
         } else {
           dispatch(movePiece(origin, dest, gameTurn));
-        } 
+        }
         this.toggleTimers();
       } else {
         console.log('---------- ERROR: ', error);
@@ -182,7 +182,8 @@ class App extends Component {
   }
 
   decrementTimerB() {
-    let { dispatch, timeB, counterBinstance } = this.props;
+    const { dispatch } = this.props;
+    let { timeB, counterBinstance } = this.props;
     counterBinstance = setInterval(() => {
       if (timeB > 0) {
         timeB -= 1;
@@ -197,7 +198,8 @@ class App extends Component {
   }
 
   decrementTimerW() {
-    let { dispatch, timeW, counterWinstance } = this.props;
+    const { dispatch } = this.props;
+    let { timeW, counterWinstance } = this.props;
     counterWinstance = setInterval(() => {
       if (timeW > 0) {
         timeW -= 1;
@@ -249,7 +251,7 @@ class App extends Component {
   }
 
   sendPauseRequest() {
-    const { dispatch, room, pausedB, pausedW } = this.props;
+    const { room, pausedB, pausedW } = this.props;
     if (pausedB === true && pausedW === true) {
       this.socket.emit('requestResume', room);
     } else {
@@ -331,9 +333,6 @@ class App extends Component {
         <div className="content">
           <div className="flex-row">
             <div className="flex-col left-col">
-
-
-              
               <div className="player-top">
                 <PlayerName
                   color={(!isWhite) ? 'White' : 'Black'}
@@ -341,30 +340,21 @@ class App extends Component {
                   position="top"
                 />
               </div>
-
-
-               <div className="countdown-top-clock">
+              <div className="countdown-top-clock">
                 {(playerB !== undefined) ?
                   <Clock color={(!isWhite) ? 'White' : 'Black'} /> : null
                 }
-              </div> 
-
-
+              </div>
               <div className="move-history">
                 <MoveHistory
                   moveHistory={moveHistory}
                 />
               </div>
-
-
-               <div className="countdown-bot-clock">
+              <div className="countdown-bot-clock">
                 {(playerB !== undefined) ?
                   <Clock color={(isWhite) ? 'White' : 'Black'} /> : null
                 }
-              </div> 
-
-
-
+              </div>
               <div className="player-bot">
                 <PlayerName
                   color={(isWhite) ? 'White' : 'Black'}
@@ -372,8 +362,6 @@ class App extends Component {
                   position="bot"
                 />
               </div>
-
-
             </div>
             <div className="flex-col capt-col">
               <div className="flex-col capt-black-col">
