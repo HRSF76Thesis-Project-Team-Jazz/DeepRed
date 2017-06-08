@@ -692,9 +692,24 @@ describe('isLegalMoveKing', () => {
   it('white king can castle expected', () => {
     expect(actualKingCastleResultBoard).to.eql(expectedWKingCastleResultBoard);
   });
+  const kingCastleGame2 = new ChessGame();
+  kingCastleGame2.board = [
+    ['BR', null, null, null, 'BK', null, null, 'BR'],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WR', null, null, null, 'WK', null, null, 'WR'],
+  ];
+  const actualKingCastleResultBoard2 = [];
+  for (let i = 0; i < 8; i += 1) {
+    actualKingCastleResultBoard2[i] = new Array(8);
+  }
   for (let i = 0; i < 8; i += 1) {
     for (let j = 0; j < 8; j += 1) {
-      actualKingCastleResultBoard[i][j] = isLegalMove(kingCastleGame, [0, 4], [i, j]).bool;
+      actualKingCastleResultBoard2[i][j] = isLegalMove(kingCastleGame2, [0, 4], [i, j]).bool;
     }
   }
   const expectedBKingCastleResultBoard = [
@@ -708,9 +723,6 @@ describe('isLegalMoveKing', () => {
     [false, false, false, false, false, false, false, false],
   ];
   it('black king can castle expected', () => {
-    expect(actualKingCastleResultBoard).to.eql(expectedBKingCastleResultBoard);
+    expect(actualKingCastleResultBoard2).to.eql(expectedBKingCastleResultBoard);
   });
-  it ('king can castle', () => {
-
-  })
 });
