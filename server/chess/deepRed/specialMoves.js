@@ -135,7 +135,6 @@ const getAllMovesWithSpecialBlack = (board, pieceState) => {
   if (pieceState && pieceState.canEnPassantB !== '') {
     const wp = pieceState.canEnPassantB;
     // from left
-    console.log(wp, pieceState);
     if (wp[1] > 0 && board[4][+wp[1] - 1] === 'BP') {
       specialMoves.push({
         move: 'enpassant',

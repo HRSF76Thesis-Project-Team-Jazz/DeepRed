@@ -30,7 +30,6 @@ const mutateBoard = (board, move) => {
     newBoard[move.from[0]][move.from[1]] = null;
     newBoard[move.to[0]][move.to[1]] = move.newPiece;
   }
-
   return newBoard;
 };
 

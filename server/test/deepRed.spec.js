@@ -11,8 +11,10 @@ const {
   isStalemateBlack, isStalemateWhite,
   whiteCanMove, blackCanMove,
 } = deepRed.endGameChecks;
-const { getAllMovesBlack, getSafeMovesBlack } = deepRed.movesBlack;
-const { getAllMovesWhite, getSafeMovesWhite } = deepRed.movesWhite;
+const { getAllMovesBlack } = deepRed.movesBlack;
+const { getAllMovesWhite } = deepRed.movesWhite;
+const { getSafeMovesWhite, getSafeMovesBlack } = deepRed.safeMoves;
+const { getAllMovesWithSpecialWhite, getAllMovesWithSpecialBlack } = deepRed.specialMoves;
 
 const pieceState = {
   hasMovedWK: false,
@@ -148,6 +150,88 @@ describe('[Deep Red] evaluate available possible moves: ', () => {
   });
 });
 
+describe('Mutate Board', () => {
+  const board = [
+    [null, null, null, null, null, null, 'BN', null],
+    [null, null, null, null, null, null, null, 'WP'],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'BP', null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WR', null, null, null, 'WK', null, null, 'WR'],
+  ];
+
+  const wkCastleBoard = [
+    [null, null, null, null, null, null, 'BN', null],
+    [null, null, null, null, null, null, null, 'WP'],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'BP', null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WR', null, null, null, null, 'WR', 'WK', null],
+  ];
+
+  const wqCastleBoard = [
+    [null, null, null, null, null, null, 'BN', null],
+    [null, null, null, null, null, null, null, 'WP'],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'BP', null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, 'WK', 'WR', null, null, null, 'WR'],
+  ];
+
+  const enPassantBoard = [
+    [null, null, null, null, null, null, 'BN', null],
+    [null, null, null, null, null, null, null, 'WP'],
+    [null, 'WP', null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WR', null, null, null, 'WK', null, null, 'WR'],
+  ];
+
+  const pawnPromotionAdvanceBoard = [
+    [null, null, null, null, null, null, 'BN', 'WQ'],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'BP', null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WR', null, null, null, 'WK', null, null, 'WR'],
+  ];
+
+  const pawnPromotionCaptureBoard = [
+    [null, null, null, null, null, null, 'WQ', null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'BP', null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WR', null, null, null, 'WK', null, null, 'WR'],
+  ];
+
+  it('should handle castling', () => {
+    expect(mutateBoard(board, { move: 'castle', color: 'W', side: 'O-O' })).to.deep.equal(wkCastleBoard);
+    expect(mutateBoard(board, { move: 'castle', color: 'W', side: 'O-O-O' })).to.deep.equal(wqCastleBoard);
+  });
+
+  it('should handle enpassant', () => {
+    expect(mutateBoard(board, { move: 'enpassant', from: '30', to: '21', captured: '31', color: 'W' })).to.deep.equal(enPassantBoard);
+  });
+
+  it('should handle pawn promotion', () => {
+    expect(mutateBoard(board, { move: 'pawnPromotion', from: '17', to: '07', newPiece: 'WQ' })).to.deep.equal(pawnPromotionAdvanceBoard);
+    expect(mutateBoard(board, { move: 'pawnPromotion', from: '17', to: '06', newPiece: 'WQ' })).to.deep.equal(pawnPromotionCaptureBoard);
+  });
+});
+
 describe('[White] Check Castling', () => {
   const board = [
     [null, null, null, null, null, null, null, null],
@@ -231,25 +315,26 @@ describe('[White] Check Castling', () => {
   const whiteQRMovedState = Object.assign({}, pieceState, { hasMovedWQR: true });
 
   it('should know that castling is available', () => {
-    expect(getAllMovesWhite(board, pieceState).specialMoves).to.include.members(['O-O', 'O-O-O']);
+    expect(getAllMovesWithSpecialWhite(board, pieceState).specialMoves).to.deep.include.members([{ move: 'castle', color: 'W', side: 'O-O' },
+     { move: 'castle', color: 'W', side: 'O-O-O' }]);
   });
 
   it('should know that castling is disallowed if K or R have moved', () => {
-    expect(getAllMovesWhite(board, kingMovedState)).to.not.have.property('specialMoves');
-    expect(getAllMovesWhite(board, whiteKRMovedState).specialMoves).to.not.include('O-O');
-    expect(getAllMovesWhite(board, whiteQRMovedState).specialMoves).to.not.include('O-O-O');
+    expect(getAllMovesWithSpecialWhite(board, kingMovedState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialWhite(board, whiteKRMovedState).specialMoves).to.not.include('O-O');
+    expect(getAllMovesWithSpecialWhite(board, whiteQRMovedState).specialMoves).to.not.include('O-O-O');
   });
 
   it('should know that castling is not allowed if the path is blocked', () => {
-    expect(getAllMovesWhite(blockedKRBoard, pieceState).specialMoves).to.not.include('O-O');
-    expect(getAllMovesWhite(blockedQRBoard, pieceState).specialMoves).to.not.include('O-O-O');
+    expect(getAllMovesWithSpecialWhite(blockedKRBoard, pieceState).specialMoves).to.not.include('O-O');
+    expect(getAllMovesWithSpecialWhite(blockedQRBoard, pieceState).specialMoves).to.not.include('O-O-O');
   });
 
   it('should know that castling is not allowed if K or the path is attacked', () => {
-    expect(getAllMovesWhite(checkBoard, pieceState)).to.not.have.property('specialMoves');
-    expect(getAllMovesWhite(attackedCastleBoard, pieceState)).to.not.have.property('specialMoves');
-    expect(getAllMovesWhite(attackedKRBoard, pieceState).specialMoves).to.not.include('O-O');
-    expect(getAllMovesWhite(attackedQRBoard, pieceState).specialMoves).to.not.include('O-O-O');
+    expect(getAllMovesWithSpecialWhite(checkBoard, pieceState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialWhite(attackedCastleBoard, pieceState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialWhite(attackedKRBoard, pieceState).specialMoves).to.not.include('O-O');
+    expect(getAllMovesWithSpecialWhite(attackedQRBoard, pieceState).specialMoves).to.not.include('O-O-O');
   });
 });
 
@@ -336,25 +421,26 @@ describe('[Black] Check Castling', () => {
   const blackQRMovedState = Object.assign({}, pieceState, { hasMovedBQR: true });
 
   it('should know that castling is available', () => {
-    expect(getAllMovesBlack(board, pieceState).specialMoves).to.include.members(['O-O', 'O-O-O']);
+    expect(getAllMovesWithSpecialBlack(board, pieceState).specialMoves).to.deep.include.members([{ move: 'castle', color: 'B', side: 'O-O' },
+     { move: 'castle', color: 'B', side: 'O-O-O' }]);
   });
 
   it('should know that castling is disallowed if K or R have moved', () => {
-    expect(getAllMovesBlack(board, kingMovedState)).to.not.have.property('specialMoves');
-    expect(getAllMovesBlack(board, blackKRMovedState).specialMoves).to.not.include('O-O');
-    expect(getAllMovesBlack(board, blackQRMovedState).specialMoves).to.not.include('O-O-O');
+    expect(getAllMovesWithSpecialBlack(board, kingMovedState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialBlack(board, blackKRMovedState).specialMoves).to.deep.not.include({ move: 'castle', color: 'B', side: 'O-O' });
+    expect(getAllMovesWithSpecialBlack(board, blackQRMovedState).specialMoves).to.deep.not.include({ move: 'castle', color: 'B', side: 'O-O-O' });
   });
 
   it('should know that castling is not allowed if the path is blocked', () => {
-    expect(getAllMovesBlack(blockedKRBoard, pieceState).specialMoves).to.not.include('O-O');
-    expect(getAllMovesBlack(blockedQRBoard, pieceState).specialMoves).to.not.include('O-O-O');
+    expect(getAllMovesWithSpecialBlack(blockedKRBoard, pieceState).specialMoves).to.not.include('O-O');
+    expect(getAllMovesWithSpecialBlack(blockedQRBoard, pieceState).specialMoves).to.not.include('O-O-O');
   });
 
   it('should know that castling is not allowed if K or the path is attacked', () => {
-    expect(getAllMovesBlack(checkBoard, pieceState)).to.not.have.property('specialMoves');
-    expect(getAllMovesBlack(attackedCastleBoard, pieceState)).to.not.have.property('specialMoves');
-    expect(getAllMovesBlack(attackedKRBoard, pieceState).specialMoves).to.not.include('O-O');
-    expect(getAllMovesBlack(attackedQRBoard, pieceState).specialMoves).to.not.include('O-O-O');
+    expect(getAllMovesWithSpecialBlack(checkBoard, pieceState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialBlack(attackedCastleBoard, pieceState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialBlack(attackedKRBoard, pieceState).specialMoves).to.not.include('O-O');
+    expect(getAllMovesWithSpecialBlack(attackedQRBoard, pieceState).specialMoves).to.not.include('O-O-O');
   });
 });
 
@@ -420,25 +506,25 @@ describe('[White] En-Passant', () => {
   const ep7State = Object.assign({}, pieceState, { canEnPassantW: '37' });
 
   it('should know that en-passant is not available', () => {
-    expect(getAllMovesWhite(board, pieceState)).to.not.have.property('specialMoves');
-    expect(getAllMovesWhite(enPassant0, pieceState)).to.not.have.property('specialMoves');
-    expect(getAllMovesWhite(enPassant1, pieceState)).to.not.have.property('specialMoves');
-    expect(getAllMovesWhite(enPassant3, pieceState)).to.not.have.property('specialMoves');
-    expect(getAllMovesWhite(enPassant7, pieceState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialWhite(board, pieceState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialWhite(enPassant0, pieceState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialWhite(enPassant1, pieceState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialWhite(enPassant3, pieceState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialWhite(enPassant7, pieceState)).to.not.have.property('specialMoves');
   });
 
   it('should know that en-passant is available', () => {
-    expect(getAllMovesWhite(enPassant0, ep0State)).to.have.property('specialMoves');
-    expect(getAllMovesWhite(enPassant1, ep1State)).to.have.property('specialMoves');
-    expect(getAllMovesWhite(enPassant3, ep3State)).to.have.property('specialMoves');
-    expect(getAllMovesWhite(enPassant7, ep7State)).to.have.property('specialMoves');
+    expect(getAllMovesWithSpecialWhite(enPassant0, ep0State)).to.have.property('specialMoves');
+    expect(getAllMovesWithSpecialWhite(enPassant1, ep1State)).to.have.property('specialMoves');
+    expect(getAllMovesWithSpecialWhite(enPassant3, ep3State)).to.have.property('specialMoves');
+    expect(getAllMovesWithSpecialWhite(enPassant7, ep7State)).to.have.property('specialMoves');
   });
 
   it('should know what en-passant moves are available', () => {
-    expect(getAllMovesWhite(enPassant0, ep0State).specialMoves).to.deep.include({ move: 'enpassant', from: '31', to: '20', captured: '30' });
-    expect(getAllMovesWhite(enPassant1, ep1State).specialMoves).to.deep.include.members([{ move: 'enpassant', from: '30', to: '21', captured: '31' }, { move: 'enpassant', from: '32', to: '21', captured: '31' }]);
-    expect(getAllMovesWhite(enPassant3, ep3State).specialMoves).to.deep.include.members([{ move: 'enpassant', from: '32', to: '23', captured: '33' }, { move: 'enpassant', from: '34', to: '23', captured: '33' }]);
-    expect(getAllMovesWhite(enPassant7, ep7State).specialMoves).to.deep.include({ move: 'enpassant', from: '36', to: '27', captured: '37' });
+    expect(getAllMovesWithSpecialWhite(enPassant0, ep0State).specialMoves).to.deep.include({ move: 'enpassant', from: '31', to: '20', captured: '30', color: 'W' });
+    expect(getAllMovesWithSpecialWhite(enPassant1, ep1State).specialMoves).to.deep.include.members([{ move: 'enpassant', from: '30', to: '21', captured: '31', color: 'W' }, { move: 'enpassant', from: '32', to: '21', captured: '31', color: 'W' }]);
+    expect(getAllMovesWithSpecialWhite(enPassant3, ep3State).specialMoves).to.deep.include.members([{ move: 'enpassant', from: '32', to: '23', captured: '33', color: 'W' }, { move: 'enpassant', from: '34', to: '23', captured: '33', color: 'W' }]);
+    expect(getAllMovesWithSpecialWhite(enPassant7, ep7State).specialMoves).to.deep.include({ move: 'enpassant', from: '36', to: '27', captured: '37', color: 'W' });
   });
 });
 
@@ -504,25 +590,25 @@ describe('[Black] En-Passant', () => {
   const ep7State = Object.assign({}, pieceState, { canEnPassantB: '47' });
 
   it('should know that en-passant is not available', () => {
-    expect(getAllMovesBlack(board, pieceState)).to.not.have.property('specialMoves');
-    expect(getAllMovesBlack(enPassant0, pieceState)).to.not.have.property('specialMoves');
-    expect(getAllMovesBlack(enPassant1, pieceState)).to.not.have.property('specialMoves');
-    expect(getAllMovesBlack(enPassant3, pieceState)).to.not.have.property('specialMoves');
-    expect(getAllMovesBlack(enPassant7, pieceState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialBlack(board, pieceState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialBlack(enPassant0, pieceState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialBlack(enPassant1, pieceState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialBlack(enPassant3, pieceState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialBlack(enPassant7, pieceState)).to.not.have.property('specialMoves');
   });
 
   it('should know that en-passant is available', () => {
-    expect(getAllMovesBlack(enPassant0, ep0State)).to.have.property('specialMoves');
-    expect(getAllMovesBlack(enPassant1, ep1State)).to.have.property('specialMoves');
-    expect(getAllMovesBlack(enPassant3, ep3State)).to.have.property('specialMoves');
-    expect(getAllMovesBlack(enPassant7, ep7State)).to.have.property('specialMoves');
+    expect(getAllMovesWithSpecialBlack(enPassant0, ep0State)).to.have.property('specialMoves');
+    expect(getAllMovesWithSpecialBlack(enPassant1, ep1State)).to.have.property('specialMoves');
+    expect(getAllMovesWithSpecialBlack(enPassant3, ep3State)).to.have.property('specialMoves');
+    expect(getAllMovesWithSpecialBlack(enPassant7, ep7State)).to.have.property('specialMoves');
   });
 
   it('should know what en-passant moves are available', () => {
-    expect(getAllMovesBlack(enPassant0, ep0State).specialMoves).to.deep.include({ move: 'enpassant', from: '41', to: '50', captured: '40' });
-    expect(getAllMovesBlack(enPassant1, ep1State).specialMoves).to.deep.include.members([{ move: 'enpassant', from: '40', to: '51', captured: '41' }, { move: 'enpassant', from: '42', to: '51', captured: '41' }]);
-    expect(getAllMovesBlack(enPassant3, ep3State).specialMoves).to.deep.include.members([{ move: 'enpassant', from: '42', to: '53', captured: '43' }, { move: 'enpassant', from: '44', to: '53', captured: '43' }]);
-    expect(getAllMovesBlack(enPassant7, ep7State).specialMoves).to.deep.include({ move: 'enpassant', from: '46', to: '57', captured: '47' });
+    expect(getAllMovesWithSpecialBlack(enPassant0, ep0State).specialMoves).to.deep.include({ move: 'enpassant', from: '41', to: '50', captured: '40', color: 'B' });
+    expect(getAllMovesWithSpecialBlack(enPassant1, ep1State).specialMoves).to.deep.include.members([{ move: 'enpassant', from: '40', to: '51', captured: '41', color: 'B' }, { move: 'enpassant', from: '42', to: '51', captured: '41', color: 'B' }]);
+    expect(getAllMovesWithSpecialBlack(enPassant3, ep3State).specialMoves).to.deep.include.members([{ move: 'enpassant', from: '42', to: '53', captured: '43', color: 'B' }, { move: 'enpassant', from: '44', to: '53', captured: '43', color: 'B' }]);
+    expect(getAllMovesWithSpecialBlack(enPassant7, ep7State).specialMoves).to.deep.include({ move: 'enpassant', from: '46', to: '57', captured: '47', color: 'B' });
   });
 });
 
@@ -627,32 +713,32 @@ describe('[White] Pawn promotion', () => {
   ];
 
   it('should know that pawn promotion is not available', () => {
-    expect(getAllMovesWhite(board, pieceState)).to.not.have.property('specialMoves');
-    expect(getAllMovesWhite(pawn0Blocked, pieceState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialWhite(board, pieceState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialWhite(pawn0Blocked, pieceState)).to.not.have.property('specialMoves');
   });
 
   it('should know that pawn promotion is available', () => {
-    expect(getAllMovesWhite(pawn0, pieceState)).to.have.property('specialMoves');
-    expect(getAllMovesWhite(pawn1, pieceState)).to.have.property('specialMoves');
-    expect(getAllMovesWhite(pawn2, pieceState)).to.have.property('specialMoves');
-    expect(getAllMovesWhite(pawn07, pieceState)).to.have.property('specialMoves');
+    expect(getAllMovesWithSpecialWhite(pawn0, pieceState)).to.have.property('specialMoves');
+    expect(getAllMovesWithSpecialWhite(pawn1, pieceState)).to.have.property('specialMoves');
+    expect(getAllMovesWithSpecialWhite(pawn2, pieceState)).to.have.property('specialMoves');
+    expect(getAllMovesWithSpecialWhite(pawn07, pieceState)).to.have.property('specialMoves');
   });
 
   it('should know what pawn promotion moves are available', () => {
-    expect(getAllMovesWhite(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '10', to: '00', newPiece: 'WQ' });
-    expect(getAllMovesWhite(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '10', to: '00', newPiece: 'WR' });
-    expect(getAllMovesWhite(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '10', to: '00', newPiece: 'WB' });
-    expect(getAllMovesWhite(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '10', to: '00', newPiece: 'WN' });
+    expect(getAllMovesWithSpecialWhite(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '10', to: '00', newPiece: 'WQ' });
+    expect(getAllMovesWithSpecialWhite(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '10', to: '00', newPiece: 'WR' });
+    expect(getAllMovesWithSpecialWhite(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '10', to: '00', newPiece: 'WB' });
+    expect(getAllMovesWithSpecialWhite(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '10', to: '00', newPiece: 'WN' });
 
-    expect(getAllMovesWhite(pawn1, pieceState).specialMoves).to.deep.include.members([{ move: 'pawnPromotion', from: '11', to: '01', newPiece: 'WQ' }, { move: 'pawnPromotion', from: '11', to: '01', newPiece: 'WR' }]);
-    expect(getAllMovesWhite(pawn2, pieceState).specialMoves).to.deep.include.members([{ move: 'pawnPromotion', from: '12', to: '02', newPiece: 'WQ' }, { move: 'pawnPromotion', from: '12', to: '02', newPiece: 'WR' }]);
-    expect(getAllMovesWhite(pawn07, pieceState).specialMoves).to.deep.include.members([{ move: 'pawnPromotion', from: '10', to: '00', newPiece: 'WQ' }, { move: 'pawnPromotion', from: '17', to: '07', newPiece: 'WQ' }]);
+    expect(getAllMovesWithSpecialWhite(pawn1, pieceState).specialMoves).to.deep.include.members([{ move: 'pawnPromotion', from: '11', to: '01', newPiece: 'WQ' }, { move: 'pawnPromotion', from: '11', to: '01', newPiece: 'WR' }]);
+    expect(getAllMovesWithSpecialWhite(pawn2, pieceState).specialMoves).to.deep.include.members([{ move: 'pawnPromotion', from: '12', to: '02', newPiece: 'WQ' }, { move: 'pawnPromotion', from: '12', to: '02', newPiece: 'WR' }]);
+    expect(getAllMovesWithSpecialWhite(pawn07, pieceState).specialMoves).to.deep.include.members([{ move: 'pawnPromotion', from: '10', to: '00', newPiece: 'WQ' }, { move: 'pawnPromotion', from: '17', to: '07', newPiece: 'WQ' }]);
   });
 
   it('should know what pawn promotions via capture are available', () => {
-    expect(getAllMovesWhite(pawn0capture1, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '10', to: '01', newPiece: 'WQ' });
-    expect(getAllMovesWhite(pawn1capture0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '11', to: '00', newPiece: 'WB' });
-    expect(getAllMovesWhite(pawn7capture6, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '17', to: '06', newPiece: 'WN' });
+    expect(getAllMovesWithSpecialWhite(pawn0capture1, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '10', to: '01', newPiece: 'WQ' });
+    expect(getAllMovesWithSpecialWhite(pawn1capture0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '11', to: '00', newPiece: 'WB' });
+    expect(getAllMovesWithSpecialWhite(pawn7capture6, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '17', to: '06', newPiece: 'WN' });
   });
 });
 
@@ -757,32 +843,32 @@ describe('[Black] Pawn promotion', () => {
   ];
 
   it('should know that pawn promotion is not available', () => {
-    expect(getAllMovesBlack(board, pieceState)).to.not.have.property('specialMoves');
-    expect(getAllMovesBlack(pawn0Blocked, pieceState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialBlack(board, pieceState)).to.not.have.property('specialMoves');
+    expect(getAllMovesWithSpecialBlack(pawn0Blocked, pieceState)).to.not.have.property('specialMoves');
   });
 
   it('should know that pawn promotion is available', () => {
-    expect(getAllMovesBlack(pawn0, pieceState)).to.have.property('specialMoves');
-    expect(getAllMovesBlack(pawn1, pieceState)).to.have.property('specialMoves');
-    expect(getAllMovesBlack(pawn2, pieceState)).to.have.property('specialMoves');
-    expect(getAllMovesBlack(pawn07, pieceState)).to.have.property('specialMoves');
+    expect(getAllMovesWithSpecialBlack(pawn0, pieceState)).to.have.property('specialMoves');
+    expect(getAllMovesWithSpecialBlack(pawn1, pieceState)).to.have.property('specialMoves');
+    expect(getAllMovesWithSpecialBlack(pawn2, pieceState)).to.have.property('specialMoves');
+    expect(getAllMovesWithSpecialBlack(pawn07, pieceState)).to.have.property('specialMoves');
   });
 
   it('should know what pawn promotion moves are available', () => {
-    expect(getAllMovesBlack(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '60', to: '70', newPiece: 'BQ' });
-    expect(getAllMovesBlack(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '60', to: '70', newPiece: 'BR' });
-    expect(getAllMovesBlack(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '60', to: '70', newPiece: 'BB' });
-    expect(getAllMovesBlack(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '60', to: '70', newPiece: 'BN' });
+    expect(getAllMovesWithSpecialBlack(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '60', to: '70', newPiece: 'BQ' });
+    expect(getAllMovesWithSpecialBlack(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '60', to: '70', newPiece: 'BR' });
+    expect(getAllMovesWithSpecialBlack(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '60', to: '70', newPiece: 'BB' });
+    expect(getAllMovesWithSpecialBlack(pawn0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '60', to: '70', newPiece: 'BN' });
 
-    expect(getAllMovesBlack(pawn1, pieceState).specialMoves).to.deep.include.members([{ move: 'pawnPromotion', from: '61', to: '71', newPiece: 'BQ' }, { move: 'pawnPromotion', from: '61', to: '71', newPiece: 'BR' }]);
-    expect(getAllMovesBlack(pawn2, pieceState).specialMoves).to.deep.include.members([{ move: 'pawnPromotion', from: '62', to: '72', newPiece: 'BQ' }, { move: 'pawnPromotion', from: '62', to: '72', newPiece: 'BR' }]);
-    expect(getAllMovesBlack(pawn07, pieceState).specialMoves).to.deep.include.members([{ move: 'pawnPromotion', from: '60', to: '70', newPiece: 'BQ' }, { move: 'pawnPromotion', from: '67', to: '77', newPiece: 'BQ' }]);
+    expect(getAllMovesWithSpecialBlack(pawn1, pieceState).specialMoves).to.deep.include.members([{ move: 'pawnPromotion', from: '61', to: '71', newPiece: 'BQ' }, { move: 'pawnPromotion', from: '61', to: '71', newPiece: 'BR' }]);
+    expect(getAllMovesWithSpecialBlack(pawn2, pieceState).specialMoves).to.deep.include.members([{ move: 'pawnPromotion', from: '62', to: '72', newPiece: 'BQ' }, { move: 'pawnPromotion', from: '62', to: '72', newPiece: 'BR' }]);
+    expect(getAllMovesWithSpecialBlack(pawn07, pieceState).specialMoves).to.deep.include.members([{ move: 'pawnPromotion', from: '60', to: '70', newPiece: 'BQ' }, { move: 'pawnPromotion', from: '67', to: '77', newPiece: 'BQ' }]);
   });
 
   it('should know what pawn promotions via capture are available', () => {
-    expect(getAllMovesBlack(pawn0capture1, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '60', to: '71', newPiece: 'BQ' });
-    expect(getAllMovesBlack(pawn1capture0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '61', to: '70', newPiece: 'BB' });
-    expect(getAllMovesBlack(pawn7capture6, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '67', to: '76', newPiece: 'BN' });
+    expect(getAllMovesWithSpecialBlack(pawn0capture1, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '60', to: '71', newPiece: 'BQ' });
+    expect(getAllMovesWithSpecialBlack(pawn1capture0, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '61', to: '70', newPiece: 'BB' });
+    expect(getAllMovesWithSpecialBlack(pawn7capture6, pieceState).specialMoves).to.deep.include({ move: 'pawnPromotion', from: '67', to: '76', newPiece: 'BN' });
   });
 });
 
