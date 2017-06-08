@@ -27,6 +27,7 @@ import Alert from './Alert';
 import ChatBox from '../components/ChatBox';
 import PlayerName from '../components/PlayerName';
 import Clock from '../components/Clock';
+import Messages from '../components/Messages';
 import './css/App.css';
 
 // Needed for onTouchTap
@@ -559,16 +560,10 @@ class App extends Component {
 
             <div className="flex-col right-col">
               <Message message={error} />
-                    <ScrollArea>
-                      <div>
-                        <ul className="message-list">
-                          {this.props.messages.map((msg, i) =>
-                            <div className="message" key={i + msg}>{msg}</div>,
-                          )}
-                        </ul>
-                        </div>
-                      </ScrollArea>
-              <ChatBox messages={messages} sendMessage={this.sendMessage} />
+              <ScrollArea>
+              <Messages messages={messages} />
+              </ScrollArea>
+              <ChatBox sendMessage={this.sendMessage} />
             </div>
 
             <div className="control-pause">

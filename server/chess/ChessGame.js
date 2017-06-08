@@ -169,6 +169,7 @@ class ChessGame {
         return error;
       }
     }
+
     return error;
   }
   castlingMove(castlingStr) {
@@ -193,7 +194,7 @@ class ChessGame {
       this.hasMovedWRK = true;
       this.hasMovedWK = true;
 
-    const legalMoveResult = isLegalMove(this, origin, dest);
+    const legalMoveResult = isLegalMove(this, origin, dest, clientRoom);
     if (legalMoveResult.bool) {
       if (legalMoveResult.castling) {
         if (legalMoveResult.castling === 'BRQ') {
@@ -237,6 +238,10 @@ class ChessGame {
         this.hasMovedBRK = true;
       }
       if (destPiece) {
+
+        this.capturePiece(destPiece, clientRoom);
+      }
+
         // if (originPiece[0] === destPiece[0]) {
         //   error = 'Cannot capture your own piece.';
         //   console.log(this.board);
@@ -244,18 +249,37 @@ class ChessGame {
         //   return { game: this, error };
         // }
         // this.history += moveToPGNString(this.board, origin, dest, this.count);
-        this.capturePiece(destPiece, clientRoom);
-      }
+        // this.capturePiece(destPiece, clientRoom);
+      
       // this.history[this.turn] = this.history[this.turn] || [];
       // this.history[this.turn].push(origin);
       // this.history[this.turn].push(dest);
       // if (originPiece[0] === 'B') {
       //   this.turn += 1;
       // }
+      var board = this.board.map((row) => {
+      const pieceIndex = {
+        null: 0,
+        WP: 1,
+        WN: 2,
+        WB: 3,
+        WR: 4,
+        WQ: 5,
+        WK: 6,
+        BP: 'a',
+        BN: 'b',
+        BB: 'c',
+        BR: 'd',
+        BQ: 'e',
+        BK: 'f',
+      };
+        const newRow = row.map(col => pieceIndex[col]);
+        return newRow.join('');
+      }).join('');
 
       chessDB.saveMove({
         session_id: clientRoom,
-        history: JSON.stringify([ origin , dest])
+        history: board
       })
 
       this.turn = (this.turn === 'W') ? 'B' : 'W';
