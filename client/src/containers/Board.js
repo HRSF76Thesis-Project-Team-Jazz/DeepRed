@@ -13,9 +13,6 @@ class Board extends Component {
     this.selectSquareClass = this.selectSquareClass.bind(this);
   }
 
-  componentDidMount() {
-  }
-
   onClick(coordinates) {
     const {
       dispatch, board, fromPosition, selectedPiece, room, gameTurn,
@@ -109,23 +106,6 @@ class Board extends Component {
           </div>
         ),
         )}
-        {/*{board.map((row, rowIndex) => (
-          <div key={Math.random()} className="board-row">
-            {row.map((col, colIndex) => (
-              <div
-                className={this.selectSquareClass(rowIndex, colIndex)}
-                key={rowIndex.toString() + colIndex.toString()}
-                role={'button'}
-                onClick={() => this.onClick([rowIndex, colIndex])}
-                onMouseEnter={() => this.onMouseEnter([rowIndex, colIndex])}
-                onMouseLeave={() => this.onMouseLeave([rowIndex, colIndex])}
-              >
-                <img className="piece-img" src={`/assets/${col}.png`} alt={''} />
-              </div>),
-            )}
-          </div>
-        ),
-        )}*/}
       </div>
     );
   }
