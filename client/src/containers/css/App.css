@@ -85,7 +85,7 @@ body {
 }
 
 .left-col {
-  /*display: flex;*/
+  display: flex;
   background-color: #808080;
   margin: 1vw 0px;
   /*border-radius: 2px;*/
@@ -115,6 +115,11 @@ body {
 }
 
 
+.left-col-row {
+  margin-bottom: auto;
+  /*background-color: red;*/
+}
+
 .player-top {
   margin-left: 5px;
   font-size: 1.5vw; 
@@ -134,8 +139,8 @@ body {
 .countdown-bot-clock {
   margin-left: 5px;
   font-size: 1.5vw;
-  flex-grow: 1;
-  height: 19px;
+  /*flex-grow: 1;*/
+  /*height: 19px;*/
 }
 
 .player-bot {

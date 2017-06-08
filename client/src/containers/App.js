@@ -4,13 +4,15 @@ import io from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import {
   updateTimer, cancelPauseDialogClose, updateAlertName,
   cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW,
   updateRoomInfo, getRequestFailure, receiveGame, movePiece, resetBoolBoard,
   unselectPiece, capturePiece, displayError, colorSquare, sendMsg,
   updateTimerB, timeInstanceB, updateTimerW, timeInstanceW, saveBoolBoard,
-  castlingMove, enPassantMove, pawnPromotionMove,
+  chooseGameModeClose, chooseGameModeOpen, selectRoomOpen, selectRoomClose,
+  selectSideOpen, selectSideClose, castlingMove, enPassantMove, pawnPromotionMove,
 } from '../store/actions';
 
 // Components
@@ -52,10 +54,17 @@ class App extends Component {
     this.stopTimerB = this.stopTimerB.bind(this);
     this.stopTimerW = this.stopTimerW.bind(this);
     this.toggleTimers = this.toggleTimers.bind(this);
+    this.onPVPmodeSelected = this.onPVPmodeSelected.bind(this);
+    this.onPVCmodeSelected = this.onPVCmodeSelected.bind(this);
+    this.onCVCmodeSelected = this.onCVCmodeSelected.bind(this);
+    this.handleSelectRoomCloseOnFailure = this.handleSelectRoomCloseOnFailure.bind(this);
+    this.handleSelectSideCloseOnFailure = this.handleSelectSideCloseOnFailure.bind(this);
+    this.handleChooseGameModeOpen = this.handleChooseGameModeOpen.bind(this);
   }
 
   componentDidMount() {
     this.getUserInfo();
+
   }
 
   getUserInfo() {
@@ -66,6 +75,7 @@ class App extends Component {
         dispatch(setPlayerW(response));
       })
       .then(() => {
+        this.handleChooseGameModeOpen();
         this.startSocket();
       })
       .catch((err) => {
@@ -175,7 +185,7 @@ class App extends Component {
     });
   }
 
-  // CONTROL function
+  // GAME control
   toggleTimers() {
     const { gameTurn } = this.props;
     this.onChangePlayerTurn();
@@ -236,6 +246,41 @@ class App extends Component {
     this.stopTimerB();
     this.stopTimerW();
     this.socket.emit('updateTime', room, timeB, timeW);
+  }
+
+  // CONTROL function
+  handleChooseGameModeOpen() {
+    const { dispatch } = this.props;
+    dispatch(chooseGameModeOpen());
+  }
+
+  handleSelectSideCloseOnFailure() {
+    const { dispatch } = this.props;
+    dispatch(selectSideClose());
+    dispatch(chooseGameModeOpen());
+  }
+
+  handleSelectRoomCloseOnFailure() {
+    const { dispatch } = this.props;
+    dispatch(selectRoomClose());
+    this.handleChooseGameModeOpen();
+  }
+
+  onPVCmodeSelected() {
+    const { dispatch } = this.props;
+    dispatch(chooseGameModeClose());
+    dispatch(selectSideOpen());
+  }
+
+  onCVCmodeSelected() {
+    const { dispatch } = this.props;
+    dispatch(chooseGameModeClose());
+  }
+
+  onPVPmodeSelected() {
+    const { dispatch } = this.props;
+    dispatch(chooseGameModeClose());
+    dispatch(selectRoomOpen());
   }
 
   onAgreePauseRequest() {
@@ -307,7 +352,8 @@ class App extends Component {
     const {
       alertName, cancelPauseOpen, pauseOpen, moveHistory,
       capturedPiecesBlack, capturedPiecesWhite,
-      playerB, playerW, error, messages, isWhite,
+      playerB, playerW, error, messages, isWhite, thisUser,
+      chooseGameModeOpen, chooseRoomOpen, chooseSideOpen,
     } = this.props;
 
     const pauseActions = [
@@ -333,24 +379,76 @@ class App extends Component {
       />,
     ];
 
+    const chooseGameModeActionsStyle = {
+      backgroundColor : 'blue',
+      width: '32%',
+      margin: '0.7vh',
+    }
+    const chooseGameModeActions = [
+      <RaisedButton
+        style={chooseGameModeActionsStyle}
+        label="Player vs Player"
+        secondary
+        onTouchTap={this.onPVPmodeSelected}
+      />,
+      <RaisedButton
+        style={chooseGameModeActionsStyle}
+        label="Player vs AI"
+        secondary
+        onTouchTap={this.onPVCmodeSelected}
+      />,
+      <RaisedButton
+        style={chooseGameModeActionsStyle}
+        label="AI vs AI"
+        secondary
+        onTouchTap={this.onCVCmodeSelected}
+      />,
+    ];
+
+    const selectRoomActions = [
+      <RaisedButton
+        label="Go back"
+        secondary
+        keyboardFocused
+        onTouchTap={this.handleSelectRoomCloseOnFailure}
+      />,
+    ];
+
+    const selectSideActions = [
+      <RaisedButton
+        label="Black"
+        secondary
+      />,
+      <RaisedButton
+        label="White"
+        secondary
+      />,
+      <RaisedButton
+        label="Go back"
+        secondary
+        onTouchTap={this.handleSelectSideCloseOnFailure}
+      />
+    ];
+
     return (
       <div className="site-wrap">
         <Header />
         <div className="content">
           <div className="flex-row">
             <div className="flex-col left-col">
-              <div className="player-top">
-                <PlayerName
-                  color={(!isWhite) ? 'White' : 'Black'}
-                  player={(!isWhite) ? playerW : playerB}
-                  position="top"
+              <div className="left-col-row">
+                <div className="player-top">
+                  <PlayerName
+                    color={(!isWhite) ? 'White' : 'Black'}
+                    player={(!isWhite) ? playerW : playerB}
+                    position="top"
                 />
-              </div>
-              <div className="countdown-top-clock">
-                {(playerB !== undefined) ?
-                  <Clock color={(!isWhite) ? 'White' : 'Black'} /> : null
-                }
-              </div>
+                </div>
+                <div className="countdown-top-clock">
+                  {(playerB !== undefined) ?
+                    <Clock color={(!isWhite) ? 'White' : 'Black'} /> : null
+                  }
+                </div>
               <div className="move-history">
                 <MoveHistory
                   moveHistory={moveHistory}
@@ -368,6 +466,7 @@ class App extends Component {
                   position="bot"
                 />
               </div>
+             </div>
             </div>
             <div className="flex-col capt-col">
               <div className="flex-col capt-black-col">
@@ -398,20 +497,42 @@ class App extends Component {
               <ChatBox messages={messages} sendMessage={this.sendMessage} />
             </div>
 
-            <div>
+            <div className="control-pause">
               <Alert
-                className="pauseRequest"
+                className="pause-request"
                 title="Would you like to pause this game?"
                 actions={pauseActions}
                 open={pauseOpen}
                 handleClose={this.handlePauseClose}
               />
               <Alert
-                className="cancelPauseRequest"
+                className="cancel-pause-request"
                 title={`Pause request has been canceled by ${alertName}`}
                 actions={cancelPauseActions}
                 open={cancelPauseOpen}
                 handleClose={this.handleCancelPauseClose}
+              />
+            </div>
+            <div className="control-login">
+              <Alert
+                className="choose-mode"
+                title={`Hi ${thisUser}, Welcome to DeepRed!`}
+                actions={chooseGameModeActions}
+                open={chooseGameModeOpen}
+              />
+            </div>
+            <div className="control-room">
+              <Alert
+                className="choose-room"
+                title={'Choose or create a room to join!'}
+                actions={selectRoomActions}
+                open={chooseRoomOpen}
+              />
+              <Alert
+                className="choose-side"
+                title={'which side would you like be on?'}
+                actions={selectSideActions}
+                open={chooseSideOpen}
               />
             </div>
           </div>
@@ -435,6 +556,7 @@ function mapStateToProps(state) {
     messages,
   } = gameState;
   const {
+    thisUser,
     playerWemail,
     playerW,
     playerB,
@@ -442,8 +564,19 @@ function mapStateToProps(state) {
     isWhite,
   } = userState;
   const { message, error } = moveState;
-  const { pauseOpen, cancelPauseOpen, alertName } = controlState;
+  const {
+    pauseOpen,
+    cancelPauseOpen,
+    alertName,
+    chooseGameModeOpen,
+    chooseRoomOpen,
+    chooseSideOpen,
+  } = controlState;
   return {
+    chooseSideOpen,
+    chooseRoomOpen,
+    thisUser,
+    chooseGameModeOpen,
     gameTurn,
     counterBinstance,
     counterWinstance,

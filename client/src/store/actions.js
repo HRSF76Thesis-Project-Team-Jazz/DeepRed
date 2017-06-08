@@ -172,6 +172,30 @@ export const updateAlertName = alertName => ({
   alertName,
 });
 
+export const chooseGameModeOpen = () => ({
+  type: types.CHOOSE_GAME_MODE_OPEN,
+});
+
+export const chooseGameModeClose = () => ({
+  type: types.CHOOSE_GAME_MODE_CLOSE,
+});
+
+export const selectRoomOpen = () => ({
+  type: types.SELECT_ROOM_OPEN,
+});
+
+export const selectRoomClose = () => ({
+  type: types.SELECT_ROOM_CLOSE,
+});
+
+export const selectSideOpen = () => ({
+  type: types.SELECT_SIDE_OPEN,
+});
+
+export const selectSideClose = () => ({
+  type: types.SELECT_SIDE_CLOSE,
+});
+
 // other requests
 export const fetchGame = () => (dispatch) => {
   dispatch(requestGame());

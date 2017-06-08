@@ -418,6 +418,9 @@ const controlState = (state = Immutable({
   alertName: '',
   cancelPauseOpen: false,
   pauseOpen: false,
+  chooseGameModeOpen: false,
+  chooseRoomOpen: false,
+  chooseSideOpen: false,
 }), action) => {
   switch (action.type) {
     case types.PAUSE_DIALOG_OPEN: {
@@ -449,6 +452,42 @@ const controlState = (state = Immutable({
         ...state,
         alertName: action.alertName,
       });
+    }
+    case types.CHOOSE_GAME_MODE_OPEN: {
+      return Immutable({
+        ...state,
+        chooseGameModeOpen: true,
+      });
+    }
+    case types.CHOOSE_GAME_MODE_CLOSE: {
+      return Immutable({
+        ...state,
+        chooseGameModeOpen: false,
+      });
+    }
+    case types.SELECT_ROOM_OPEN: {
+      return Immutable({
+        ...state,
+        chooseRoomOpen: true,
+      });
+    }
+    case types.SELECT_ROOM_CLOSE: {
+      return Immutable({
+        ...state,
+        chooseRoomOpen: false,
+      });
+    }
+    case types.SELECT_SIDE_OPEN: {
+      return Immutable({
+        ...state,
+        chooseSideOpen: true,
+      });
+    }
+    case types.SELECT_SIDE_CLOSE: {
+      return Immutable({
+        ...state,
+        chooseSideOpen: false,
+      })
     }
     default:
       return state;
