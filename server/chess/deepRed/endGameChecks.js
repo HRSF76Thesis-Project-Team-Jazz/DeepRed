@@ -21,7 +21,7 @@ const whiteCanMove = (board) => {
   return false;
 };
 
-const isCheckmateWhite = board => whiteIsChecked(board) && !whiteCanMove(board);
+const isCheckmateBlack = board => whiteIsChecked(board) && !whiteCanMove(board);
 const isStalemateWhite = board => !whiteIsChecked(board) && !whiteCanMove(board);
 
 /**
@@ -38,7 +38,7 @@ const blackCanMove = (board) => {
   return false;
 };
 
-const isCheckmateBlack = board => blackIsChecked(board) && !blackCanMove(board);
+const isCheckmateWhite = board => blackIsChecked(board) && !blackCanMove(board);
 const isStalemateBlack = board => !blackIsChecked(board) && !blackCanMove(board);
 
 module.exports = {

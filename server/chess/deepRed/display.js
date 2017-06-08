@@ -15,6 +15,16 @@ const { piecesAttackedByWhite } = attacksWhite;
  *  To be implemented in tests
  */
 
+const displayBoard = (board) => {
+  const movesBoard = board.map(row => row.map(col => (!col ? ' -- ' : ` ${col} `)));
+  console.log('----------------------------------------------------');
+  movesBoard.forEach((row) => {
+    console.log();
+    console.log(row.join(' | '));
+  });
+  console.log('----------------------------------------------------');
+};
+
 const showMovesByPiece = (board, piece, pieceState, description) => {
   const color = piece[0];
   const label = {
@@ -99,4 +109,5 @@ const showEvaluatedMoves = (board, moves, piece, description) => {
 module.exports = {
   showMovesByPiece,
   showEvaluatedMoves,
+  displayBoard,
 };
