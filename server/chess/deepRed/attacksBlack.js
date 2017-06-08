@@ -12,12 +12,24 @@ const { getAllMovesBlack } = movesBlack;
 
 const whiteIsChecked = (board) => {
   const blackMoves = getAllMovesBlack(board);
-  const positionWK = JSON.stringify(findPiecePosition('WK', board)[0]);
+  const positionWK = findPiecePosition('WK', board)[0];
+
+  if (positionWK) {
+    const row = positionWK[0];
+    const col = positionWK[1];
+    if (row === 7) {
+      if (col > 0 && board[6][col - 1] === 'BP') return true;
+      if (col < 7 && board[6][col + 1] === 'BP') return true;
+    }
+  }
+
+  const positionWKstring = JSON.stringify(positionWK);
   const keys = Object.keys(blackMoves);
   for (let i = 0; i < keys.length; i += 1) {
     if (keys[i] !== 'specialMoves' &&
-      blackMoves[keys[i]].map(x => JSON.stringify(x)).indexOf(positionWK) >= 0) return true;
+      blackMoves[keys[i]].map(x => JSON.stringify(x)).indexOf(positionWKstring) >= 0) return true;
   }
+
   return false;
 };
 
