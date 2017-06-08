@@ -44,13 +44,13 @@ const gameState = (state = Immutable({
       });
     }
     case types.CASTLING_MOVE: {
-      // fromPosition,
-      // coordinates,
-      // castling,
-      // gameTurn,
+      let castleNotation = 'O-O';
+      if (action.castling[2] === 'Q') {
+        castleNotation = 'O-O-O';
+      }
       return Immutable({
         ...state,
-        // moveHistory: state.moveHistory.concat({ from, to }),
+        moveHistory: state.moveHistory.concat({ castleNotation }),
         gameTurn: action.gameTurn,
       });
     }
@@ -249,6 +249,18 @@ const moveState = (state = Immutable({
         fromPosition: '',
         selectedPiece: '',
         message: `Move: ${from}-${to}`,
+        error: '',
+      });
+    }
+    case types.CASTLING_MOVE: {
+      const cols = 'abcdefgh';
+      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
+      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      return Immutable({
+        ...state,
+        fromPosition: '',
+        selectedPiece: '',
+        message: `Castling: ${from}-${to} - ${action.castling}`,
         error: '',
       });
     }

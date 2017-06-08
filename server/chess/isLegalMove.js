@@ -121,14 +121,6 @@ const isLegalMovePawn = (board, origin, dest) => {
 };
 
 const isLegalMoveRook = (board, origin, dest) => {
-  // const originPiece = board[origin[0]][origin[1]];
-  // let moved = '';
-  // if (originPiece === 'WR' && JSON.stringify(origin) === JSON.stringify([7, 0])) {
-  //   moved = 'WRQ';
-  // }
-  // if (originPiece === 'WR' && JSON.stringify(origin) === JSON.stringify([7, 7])) {
-  //   moved = 'WRK';
-  // }
   if (origin[1] === dest[1]) {
     return { bool: isVertPathClear(board, origin, dest) };
   } else if (origin[0] === dest[0]) {
@@ -207,7 +199,7 @@ const isLegalMove = (game, origin, dest) => {
       return isLegalMoveKing(game, origin, dest);
     }
   }
-  return false;
+  return { bool: false };
 };
 
 module.exports = isLegalMove;

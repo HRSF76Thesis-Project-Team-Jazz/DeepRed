@@ -33,7 +33,7 @@ describe('ChessGame', () => {
     expect(testChessGame.movePiece).to.be.a('function');
   });
   it('should return object with capturePiece method', () => {
-    expect(testChessGame.capturePiece).to.be.a('function');
+    expect(testChessGame.addToCaptureArray).to.be.a('function');
   });
 });
 
