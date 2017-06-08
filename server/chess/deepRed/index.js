@@ -5,3 +5,5 @@ module.exports.display = require('./display');
 module.exports.endGameChecks = require('./endGameChecks');
 module.exports.movesBlack = require('./movesBlack');
 module.exports.movesWhite = require('./movesWhite');
+module.exports.safeMoves = require('./safeMoves');
+module.exports.specialMoves = require('./specialMoves');
