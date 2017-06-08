@@ -172,12 +172,11 @@ class App extends Component {
   // CONTROL function
   toggleTimers() {
     const { gameTurn } = this.props;
+    this.onChangePlayerTurn();
     if (gameTurn === 'B') {
-      this.onChangePlayerTurn();
       this.decrementTimerB();
     }
     if (gameTurn === 'W') {
-      this.onChangePlayerTurn();
       this.decrementTimerW();
     }
   }
@@ -190,6 +189,7 @@ class App extends Component {
       } else {
         timeB = 0;
         this.stopTimerB();
+        // player B lose, fire signal to server
       }
       dispatch(updateTimerB(timeB));
       dispatch(timeInstanceB(counterBinstance));
@@ -204,6 +204,7 @@ class App extends Component {
       } else {
         timeW = 0;
         this.stopTimerW();
+        // player W lose, fire signal to server
       }
       dispatch(updateTimerW(timeW));
       dispatch(timeInstanceW(counterWinstance));
@@ -330,29 +331,49 @@ class App extends Component {
         <div className="content">
           <div className="flex-row">
             <div className="flex-col left-col">
+
+
+              
+              <div className="player-top">
+                <PlayerName
+                  color={(!isWhite) ? 'White' : 'Black'}
+                  player={(!isWhite) ? playerW : playerB}
+                  position="top"
+                />
+              </div>
+
+
                <div className="countdown-top-clock">
                 {(playerB !== undefined) ?
-                  <Clock color={(!isWhite) ? 'White' : 'Black'} sendPauseRequest={this.sendPauseRequest} stopTimeB={this.stopTimeB} /> : null
+                  <Clock color={(!isWhite) ? 'White' : 'Black'} /> : null
                 }
               </div> 
-              <PlayerName
-                color={(!isWhite) ? 'White' : 'Black'}
-                player={(!isWhite) ? playerW : playerB}
-                position="top"
-              />
-              <MoveHistory
-                moveHistory={moveHistory}
-              />
-              <PlayerName
-                color={(isWhite) ? 'White' : 'Black'}
-                player={(isWhite) ? playerW : playerB}
-                position="bot"
-              />
+
+
+              <div className="move-history">
+                <MoveHistory
+                  moveHistory={moveHistory}
+                />
+              </div>
+
+
                <div className="countdown-bot-clock">
                 {(playerB !== undefined) ?
-                  <Clock color={(isWhite) ? 'White' : 'Black'} sendPauseRequest={this.sendPauseRequest} stopTimeB={this.stopTimeB} /> : null
+                  <Clock color={(isWhite) ? 'White' : 'Black'} /> : null
                 }
               </div> 
+
+
+
+              <div className="player-bot">
+                <PlayerName
+                  color={(isWhite) ? 'White' : 'Black'}
+                  player={(isWhite) ? playerW : playerB}
+                  position="bot"
+                />
+              </div>
+
+
             </div>
             <div className="flex-col capt-col">
               <div className="flex-col capt-black-col">

@@ -6,12 +6,13 @@ class Clock extends Component {
     super(props);
   }
   render() {
-    const { milisecB, milisecW, minB, minW, secB, secW } = this.props;
+    const { minB, minW, secB, secW } = this.props;
 
     return (
       <div className="clock-class" >
-        <h3>{this.props.color === 'Black' ? (`0${minB}`).slice(-2) : (`0${minW}`).slice(-2)} : {this.props.color === 'Black' ? (`0${secB}`).slice(-2) : (`0${secW}`).slice(-2)}
-        </h3>
+        <p>
+          {this.props.color === 'Black' ? (`0${minB}`).slice(-2) : (`0${minW}`).slice(-2)} : {this.props.color === 'Black' ? (`0${secB}`).slice(-2) : (`0${secW}`).slice(-2)}
+        </p>
       </div>
     );
   }
