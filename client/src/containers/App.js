@@ -9,7 +9,8 @@ import {
   cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW,
   updateRoomInfo, getRequestFailure, receiveGame, movePiece, resetBoolBoard,
   unselectPiece, capturePiece, displayError, colorSquare, sendMsg,
-  updateTimerB, timeInstanceB, updateTimerW, timeInstanceW, saveBoolBoard, castlingMove,
+  updateTimerB, timeInstanceB, updateTimerW, timeInstanceW, saveBoolBoard,
+  castlingMove, enPassantMove,
 } from '../store/actions';
 
 // Components
@@ -107,13 +108,15 @@ class App extends Component {
       dispatch(sendMsg(msg));
     });
 
-    this.socket.on('attemptMoveResult', (error, origin, dest, selection, gameTurn, castling) => {
+    this.socket.on('attemptMoveResult', (error, origin, dest, selection, gameTurn, castling, enPassantCoord) => {
       // dispatch(receiveGame(board));
       if (error === null) {
         if (selection) {
           dispatch(capturePiece(origin, dest, selection, gameTurn));
         } else if (castling) {
           dispatch(castlingMove(origin, dest, castling, gameTurn));
+        } else if (enPassantCoord) {
+          dispatch(enPassantMove(origin, dest, enPassantCoord, gameTurn));
         } else {
           dispatch(movePiece(origin, dest, gameTurn));
         }

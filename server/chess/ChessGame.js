@@ -53,8 +53,7 @@ class ChessGame {
     this.hasMovedBRK = false;
     this.hasMovedBRQ = false;
     this.hasMovedBK = false;
-    this.canEnPassantW = [];
-    this.canEnPassantB = [];
+    this.canEnPassant = [];
     this.winner = null;
   }
 
@@ -67,10 +66,21 @@ class ChessGame {
     const destPiece = this.board[dest[0]][dest[1]];
     const legalMoveResult = isLegalMove(this, origin, dest);
     if (legalMoveResult.bool) {
+      // handle castling
       if (legalMoveResult.castling) {
         this.castlingMove(legalMoveResult.castling);
       }
       this.toggleMovedRooksOrKings(origin, originPiece);
+      // handle toggling en Passant
+      let enPassantCoord = null;
+      if (legalMoveResult.enPassant) {
+        enPassantCoord = this.canEnPassant;
+        const pawn = this.board[this.canEnPassant[0]][this.canEnPassant[1]];
+        this.addToCaptureArray(pawn);
+        this.board[this.canEnPassant[0]][this.canEnPassant[1]] = null;
+      }
+      this.canEnPassant = legalMoveResult.canEnPassant || [];
+      // add to capture array
       if (destPiece) {
         this.addToCaptureArray(destPiece);
       }
@@ -83,36 +93,42 @@ class ChessGame {
       // check for check/checkmate/stalemate
       this.history.push(transcribeBoard(this.board));
       this.turn = (this.turn === 'W') ? 'B' : 'W';
-      console.log(this.history);
+      // console.log(this.history);
+      console.log(this.board);
       console.log('Move piece is successful.');
-      return { game: this, error: null, castling: legalMoveResult.castling };
+      return {
+        game: this,
+        error: null,
+        castling: legalMoveResult.castling,
+        enPassantCoord,
+      };
     }
     error = 'Move is not allowed.';
-    console.log(this.board);
-    console.log(error);
+    // console.log(this.board);
+    // console.log(error);
     return { game: this, error };
   }
   errorCheck(origin, dest) {
     let error = null;
     if (dest === undefined) {
       error = 'Attempted destination is invalid.';
-      console.log(this.board);
-      console.log(error);
+      // console.log(this.board);
+      // console.log(error);
       return error;
     } else if (!origin || !this.board[origin[0]] || !this.board[origin[0]][origin[1]]) {
       error = 'Origin is invalid.';
-      console.log(this.board);
-      console.log(error);
+      // console.log(this.board);
+      // console.log(error);
       return error;
     } else if (origin[0] === dest[0] && origin[1] === dest[1]) {
       error = 'Origin and destination cannot be the same.';
-      console.log(this.board);
-      console.log(error);
+      // console.log(this.board);
+      // console.log(error);
       return error;
     } else if (this.turn !== this.board[origin[0]][origin[1]][0]) {
       error = 'Not your turn.';
-      console.log(this.board);
-      console.log(error);
+      // console.log(this.board);
+      // console.log(error);
       return error;
     }
     const originPiece = this.board[origin[0]][origin[1]];
@@ -120,8 +136,8 @@ class ChessGame {
     if (destPiece) {
       if (originPiece[0] === destPiece[0]) {
         error = 'Cannot capture your own piece.';
-        console.log(this.board);
-        console.log(error);
+        // console.log(this.board);
+        // console.log(error);
         return error;
       }
     }

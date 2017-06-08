@@ -92,6 +92,14 @@ export const castlingMove = (fromPosition, coordinates, castling, gameTurn) => (
   gameTurn,
 });
 
+export const enPassantMove = (fromPosition, coordinates, enPassantCoord, gameTurn) => ({
+  type: types.EN_PASSANT_MOVE,
+  fromPosition,
+  coordinates,
+  enPassantCoord,
+  gameTurn,
+});
+
 export const receiveMove = (query, move) => ({
   type: types.RECEIVE_MOVE,
   query,

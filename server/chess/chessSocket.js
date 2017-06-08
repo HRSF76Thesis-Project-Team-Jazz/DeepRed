@@ -77,7 +77,7 @@ module.exports = (io, client) => {
     console.log('attempted Move: ', origin, dest);
     console.log('room number: ', clientRoom);
     const newState = allGames[clientRoom].movePiece(origin, dest);
-    io.in(clientRoom).emit('attemptMoveResult', newState.error, origin, dest, selection, newState.game.turn, newState.castling);
+    io.in(clientRoom).emit('attemptMoveResult', newState.error, origin, dest, selection, newState.game.turn, newState.castling, newState.enPassantCoord);
   });
 
   client.on('checkLegalMoves', (origin, clientRoom, id) => {
