@@ -58,10 +58,14 @@ const saveMove = (game) => {
       
   var history = JSON.parse(res[0].history);
 <<<<<<< HEAD
+<<<<<<< HEAD
   history.push(game.history);
 =======
   history.push(JSON.parse(game.history));
 >>>>>>> working on DB schema func
+=======
+  history.push(game.history);
+>>>>>>> updated schema, working on chat
 
     knex('games').where({ session_id: game.session_id }).update({
       history: JSON.stringify(history)

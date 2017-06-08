@@ -694,10 +694,14 @@ class App extends Component {
             <div className="flex-col right-col">
               <Message message={error} />
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> updated schema, working on chat
               <ScrollArea>
               <Messages messages={messages} />
               </ScrollArea>
               <ChatBox sendMessage={this.sendMessage} />
+<<<<<<< HEAD
 =======
                     <ScrollArea>
                       <div>
@@ -710,6 +714,8 @@ class App extends Component {
                       </ScrollArea>
               <ChatBox messages={messages} sendMessage={this.sendMessage} />
 >>>>>>> working on Chatbox css
+=======
+>>>>>>> updated schema, working on chat
             </div>
 
             <div className="control-general">

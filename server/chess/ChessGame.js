@@ -320,6 +320,7 @@ class ChessGame {
         return error;
       }
     }
+
     return error;
   }
   castlingMove(castlingStr) {
@@ -345,10 +346,14 @@ class ChessGame {
       this.hasMovedWK = true;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     const legalMoveResult = isLegalMove(this, origin, dest, clientRoom);
 =======
     const legalMoveResult = isLegalMove(this, origin, dest);
 >>>>>>> working on DB schema func
+=======
+    const legalMoveResult = isLegalMove(this, origin, dest, clientRoom);
+>>>>>>> updated schema, working on chat
     if (legalMoveResult.bool) {
       if (legalMoveResult.castling) {
         if (legalMoveResult.castling === 'BRQ') {
@@ -393,6 +398,9 @@ class ChessGame {
       }
       if (destPiece) {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> updated schema, working on chat
 
         this.capturePiece(destPiece, clientRoom);
       }
@@ -404,6 +412,7 @@ class ChessGame {
         //   return { game: this, error };
         // }
         // this.history += moveToPGNString(this.board, origin, dest, this.count);
+<<<<<<< HEAD
 <<<<<<< HEAD
         this.capturePiece(destPiece, clientRoom);
       }
@@ -431,6 +440,10 @@ class ChessGame {
 >>>>>>> updated schema, working on chat
 =======
 >>>>>>> working on DB schema func
+=======
+        // this.capturePiece(destPiece, clientRoom);
+      
+>>>>>>> updated schema, working on chat
       // this.history[this.turn] = this.history[this.turn] || [];
       // this.history[this.turn].push(origin);
       // this.history[this.turn].push(dest);
@@ -438,6 +451,9 @@ class ChessGame {
       //   this.turn += 1;
       // }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> updated schema, working on chat
       var board = this.board.map((row) => {
       const pieceIndex = {
         null: 0,
@@ -457,6 +473,7 @@ class ChessGame {
         const newRow = row.map(col => pieceIndex[col]);
         return newRow.join('');
       }).join('');
+<<<<<<< HEAD
 
       chessDB.saveMove({
         session_id: clientRoom,
@@ -467,6 +484,12 @@ class ChessGame {
         session_id: clientRoom,
         history: JSON.stringify([ origin , dest])
 >>>>>>> working on DB schema func
+=======
+
+      chessDB.saveMove({
+        session_id: clientRoom,
+        history: board
+>>>>>>> updated schema, working on chat
       })
 
       this.turn = (this.turn === 'W') ? 'B' : 'W';
