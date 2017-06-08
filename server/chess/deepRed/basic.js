@@ -5,10 +5,33 @@
  */
 
 const mutateBoard = (board, move) => {
-  const result = board.map(row => row.map(x => x));
-  result[move[1][0]][move[1][1]] = result[move[0][0]][move[0][1]];
-  result[move[0][0]][move[0][1]] = null;
-  return result;
+  const newBoard = board.map(row => row.map(x => x));
+  if (Array.isArray(move)) {
+    newBoard[move[1][0]][move[1][1]] = newBoard[move[0][0]][move[0][1]];
+    newBoard[move[0][0]][move[0][1]] = null;
+  } else if (move.move === 'castle') {
+    const color = move.color;
+    const row = (color === 'W') ? 7 : 0;
+    newBoard[row][4] = null;
+    if (move.side === 'O-O') {
+      newBoard[row][7] = null;
+      newBoard[row][6] = `${color}K`;
+      newBoard[row][5] = `${color}R`;
+    } else {
+      newBoard[row][0] = null;
+      newBoard[row][2] = `${color}K`;
+      newBoard[row][3] = `${color}R`;
+    }
+  } else if (move.move === 'enpassant') {
+    newBoard[move.from[0]][move.from[1]] = null;
+    newBoard[move.captured[0]][move.captured[1]] = null;
+    newBoard[move.to[0]][move.to[1]] = `${move.color}P`;
+  } else {
+    newBoard[move.from[0]][move.from[1]] = null;
+    newBoard[move.to[0]][move.to[1]] = move.newPiece;
+  }
+
+  return newBoard;
 };
 
 /**

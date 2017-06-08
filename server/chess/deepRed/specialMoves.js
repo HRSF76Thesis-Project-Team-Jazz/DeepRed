@@ -25,7 +25,7 @@ const getAllMovesWithSpecialWhite = (board, pieceState) => {
       !whiteIsChecked(mutateBoard(board, ['74', '75'])) &&
       !whiteIsChecked(mutateBoard(board, ['74', '76']))
     ) {
-      specialMoves.push('O-O');
+      specialMoves.push({ move: 'castle', color: 'W', side: 'O-O' });
     }
     // Queen side castle
     if (!pieceState.hasMovedWQR &&
@@ -34,7 +34,7 @@ const getAllMovesWithSpecialWhite = (board, pieceState) => {
       !whiteIsChecked(mutateBoard(board, ['74', '72'])) &&
       !whiteIsChecked(mutateBoard(board, ['74', '71']))
     ) {
-      specialMoves.push('O-O-O');
+      specialMoves.push({ move: 'castle', color: 'W', side: 'O-O-O' });
     }
   }
 
@@ -48,6 +48,7 @@ const getAllMovesWithSpecialWhite = (board, pieceState) => {
         from: `3${bp[1] - 1}`,
         to: `2${bp[1]}`,
         captured: `3${bp[1]}`,
+        color: 'W',
       });
     }
     // from right
@@ -57,6 +58,7 @@ const getAllMovesWithSpecialWhite = (board, pieceState) => {
         from: `3${+bp[1] + 1}`,
         to: `2${+bp[1]}`,
         captured: `3${+bp[1]}`,
+        color: 'W',
       });
     }
   }
@@ -118,14 +120,14 @@ const getAllMovesWithSpecialBlack = (board, pieceState) => {
       !blackIsChecked(mutateBoard(board, ['04', '05'])) &&
       !blackIsChecked(mutateBoard(board, ['04', '06']))
     ) {
-      specialMoves.push('O-O');
+      specialMoves.push({ move: 'castle', color: 'B', side: 'O-O' });
     }
     if (!pieceState.hasMovedBQR &&
       !board[0][3] && !board[0][2] && !board[0][1] &&
       !blackIsChecked(mutateBoard(board, ['04', '03'])) &&
       !blackIsChecked(mutateBoard(board, ['04', '02']))
     ) {
-      specialMoves.push('O-O-O');
+      specialMoves.push({ move: 'castle', color: 'B', side: 'O-O-O' });
     }
   }
 
@@ -140,6 +142,7 @@ const getAllMovesWithSpecialBlack = (board, pieceState) => {
         from: `4${wp[1] - 1}`,
         to: `5${wp[1]}`,
         captured: `4${wp[1]}`,
+        color: 'B',
       });
     }
     // from right
@@ -149,6 +152,7 @@ const getAllMovesWithSpecialBlack = (board, pieceState) => {
         from: `4${+wp[1] + 1}`,
         to: `5${+wp[1]}`,
         captured: `4${+wp[1]}`,
+        color: 'B',
       });
     }
   }
