@@ -355,6 +355,9 @@ const userState = (state = Immutable({
   thisUser: '',
   thisUserId: '',
   isWhite: true,
+  allRooms: [],
+  roomQueue: [],
+  count: 1,
 }), action) => {
   switch (action.type) {
     case types.SET_PLAYER_W: {
@@ -381,6 +384,7 @@ const userState = (state = Immutable({
     case types.UPDATE_ROOM_INFO: {
       return Immutable({
         ...state,
+        count: action.roomInfo.count,
         room: action.roomInfo.room,
         playerB: action.roomInfo.playerB,
         playerW: action.roomInfo.playerW,
@@ -390,6 +394,18 @@ const userState = (state = Immutable({
         playerWemail: action.roomInfo.playerWemail,
         thisUserId: (state.thisUserId === '') ? action.roomInfo.thisUserId : state.thisUserId,
         isWhite: (!action.roomInfo.playerB) ? true : state.thisUserId !== '',
+      });
+    }
+    case types.UPDATE_ALL_ROOMS: {
+      return Immutable({
+        ...state,
+        allRooms: action.allRooms,
+      });
+    }
+    case types.UPDATE_ROOM_QUEUE: {
+      return Immutable({
+        ...state,
+        roomQueue: action.queue,
       });
     }
     default:
@@ -453,13 +469,13 @@ const controlState = (state = Immutable({
         alertName: action.alertName,
       });
     }
-    case types.CHOOSE_GAME_MODE_OPEN: {
+    case types.SELECT_GAME_MODE_OPEN: {
       return Immutable({
         ...state,
         chooseGameModeOpen: true,
       });
     }
-    case types.CHOOSE_GAME_MODE_CLOSE: {
+    case types.SELECT_GAME_MODE_CLOSE: {
       return Immutable({
         ...state,
         chooseGameModeOpen: false,

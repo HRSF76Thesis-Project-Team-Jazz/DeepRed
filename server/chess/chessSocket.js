@@ -2,9 +2,9 @@ const ChessGame = require('./ChessGame');
 // const chessDB = require('../chessDB');
 
 const allGames = {};
-const allRooms = {};
+const allRooms = [];
 let roomInfo = {};
-let count = 1;
+let count = 0;
 
 const createAndSaveNewGame = (room) => {
   const newGame = new ChessGame();
@@ -14,6 +14,11 @@ const createAndSaveNewGame = (room) => {
 module.exports = (io, client) => {
   let currentName = '';
   let currentEmail = '';
+
+  client.on('getAllRooms', id => {
+    io.to(id).emit('returnAllRooms', allRooms);
+  });
+
   // user socket communications
   client.on('sendCurrentUserNameAndEmail', (currentUserName, currentUserEmail) => {
     currentName = currentUserName;
@@ -32,6 +37,7 @@ module.exports = (io, client) => {
         roomInfo.playerWclicked = false;
         roomInfo.playerWtime = 600;
         roomInfo.thisUserId = client.client.id;
+        roomInfo.count = count;
         // create new game instance
         createAndSaveNewGame(room);
         // save to DB
@@ -54,7 +60,7 @@ module.exports = (io, client) => {
         roomInfo.playerBclicked = false;
         roomInfo.playerBtime = 600;
         roomInfo.thisUserId = client.client.id;
-        allRooms[room] = roomInfo;
+        allRooms[count] = roomInfo;
         io.in(room).emit('secondPlayerJoined', roomInfo);
         // save playerB to current game in DB
         // chessDB.joinGame({
@@ -126,10 +132,10 @@ module.exports = (io, client) => {
     io.in(room).emit('executeResumeRequest');
   });
 
-  client.on('updateTime', (clientRoom, timeB, timeW) => {
-    allRooms[clientRoom].playerBtime = timeB;
-    allRooms[clientRoom].playerWtime = timeW;
-    io.in(clientRoom).emit('sendUpdatedTime', allRooms[clientRoom]);
+  client.on('updateTime', (clientRoom, clientCount, timeB, timeW) => {
+    allRooms[clientCount].playerBtime = timeB;
+    allRooms[clientCount].playerWtime = timeW;
+    io.in(clientRoom).emit('sendUpdatedTime', allRooms[clientCount]);
   });
 
   // messaging communications

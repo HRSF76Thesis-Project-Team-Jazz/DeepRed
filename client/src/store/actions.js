@@ -150,6 +150,16 @@ export const updateRoomInfo = roomInfo => ({
   roomInfo,
 });
 
+export const updateAllRooms = allRooms => ({
+  type: types.UPDATE_ALL_ROOMS,
+  allRooms,
+});
+
+export const updateRoomQueue = queue => ({
+  type: types.UPDATE_ROOM_QUEUE,
+  queue,
+});
+
 // controlState actions
 export const pauseDialogOpen = () => ({
   type: types.PAUSE_DIALOG_OPEN,
@@ -172,12 +182,12 @@ export const updateAlertName = alertName => ({
   alertName,
 });
 
-export const chooseGameModeOpen = () => ({
-  type: types.CHOOSE_GAME_MODE_OPEN,
+export const selectGameModeOpen = () => ({
+  type: types.SELECT_GAME_MODE_OPEN,
 });
 
-export const chooseGameModeClose = () => ({
-  type: types.CHOOSE_GAME_MODE_CLOSE,
+export const selectGameModeClose = () => ({
+  type: types.SELECT_GAME_MODE_CLOSE,
 });
 
 export const selectRoomOpen = () => ({

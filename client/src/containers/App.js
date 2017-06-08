@@ -10,9 +10,11 @@ import {
   cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW,
   updateRoomInfo, getRequestFailure, receiveGame, movePiece, resetBoolBoard,
   unselectPiece, capturePiece, displayError, colorSquare, sendMsg,
-  updateTimerB, timeInstanceB, updateTimerW, timeInstanceW, saveBoolBoard,
-  chooseGameModeClose, chooseGameModeOpen, selectRoomOpen, selectRoomClose,
-  selectSideOpen, selectSideClose, castlingMove, enPassantMove, pawnPromotionMove,
+  updateTimerB, timeInstanceB, updateTimerW, timeInstanceW, saveBoolBoard, castlingMove,
+  selectGameModeClose, selectGameModeOpen, selectRoomOpen, selectRoomClose,
+  selectSideOpen, selectSideClose, updateAllRooms, updateRoomQueue,
+  enPassantMove, pawnPromotionMove,
+
 } from '../store/actions';
 
 // Components
@@ -60,6 +62,7 @@ class App extends Component {
     this.handleSelectRoomCloseOnFailure = this.handleSelectRoomCloseOnFailure.bind(this);
     this.handleSelectSideCloseOnFailure = this.handleSelectSideCloseOnFailure.bind(this);
     this.handleChooseGameModeOpen = this.handleChooseGameModeOpen.bind(this);
+    this.createNewPVPRoom = this.createNewPVPRoom.bind(this);
   }
 
   componentDidMount() {
@@ -94,7 +97,12 @@ class App extends Component {
 
     this.socket.on('connect', () => {
       console.log('client side socket connected!');
+      this.socket.emit('getAllRooms', this.socket.id);
       this.socket.emit('sendCurrentUserNameAndEmail', name, email);
+    });
+
+    this.socket.on('returnAllRooms', (allRooms) => {
+      dispatch(updateAllRooms(allRooms));
     });
 
     this.socket.on('firstPlayerJoined', (roomInfo) => {
@@ -242,22 +250,27 @@ class App extends Component {
   }
 
   onChangePlayerTurn() {
-    const { room, timeB, timeW } = this.props;
+    const { room, count, timeB, timeW } = this.props;
     this.stopTimerB();
     this.stopTimerW();
-    this.socket.emit('updateTime', room, timeB, timeW);
+    this.socket.emit('updateTime', room, count, timeB, timeW);
   }
 
   // CONTROL function
+  createNewPVPRoom() {
+    const { dispatch, allRooms, roomQueue } = this.props;
+    console.log('creating new room!!!!!');
+  }
+
   handleChooseGameModeOpen() {
     const { dispatch } = this.props;
-    dispatch(chooseGameModeOpen());
+    dispatch(selectGameModeOpen());
   }
 
   handleSelectSideCloseOnFailure() {
     const { dispatch } = this.props;
     dispatch(selectSideClose());
-    dispatch(chooseGameModeOpen());
+    dispatch(selectGameModeOpen());
   }
 
   handleSelectRoomCloseOnFailure() {
@@ -268,18 +281,18 @@ class App extends Component {
 
   onPVCmodeSelected() {
     const { dispatch } = this.props;
-    dispatch(chooseGameModeClose());
+    dispatch(selectGameModeClose());
     dispatch(selectSideOpen());
   }
 
   onCVCmodeSelected() {
     const { dispatch } = this.props;
-    dispatch(chooseGameModeClose());
+    dispatch(selectGameModeClose());
   }
 
   onPVPmodeSelected() {
     const { dispatch } = this.props;
-    dispatch(chooseGameModeClose());
+    dispatch(selectGameModeClose());
     dispatch(selectRoomOpen());
   }
 
@@ -353,7 +366,8 @@ class App extends Component {
       alertName, cancelPauseOpen, pauseOpen, moveHistory,
       capturedPiecesBlack, capturedPiecesWhite,
       playerB, playerW, error, messages, isWhite, thisUser,
-      chooseGameModeOpen, chooseRoomOpen, chooseSideOpen,
+      chooseGameModeOpen, chooseRoomOpen, chooseSideOpen, allRooms,
+      count,
     } = this.props;
 
     const pauseActions = [
@@ -380,10 +394,11 @@ class App extends Component {
     ];
 
     const chooseGameModeActionsStyle = {
-      backgroundColor : 'blue',
+      backgroundColor: 'blue',
       width: '32%',
-      margin: '0.7vh',
-    }
+      margin: '0.5vh',
+    };
+
     const chooseGameModeActions = [
       <RaisedButton
         style={chooseGameModeActionsStyle}
@@ -523,6 +538,9 @@ class App extends Component {
             </div>
             <div className="control-room">
               <Alert
+                createNewPVPRoom={this.createNewPVPRoom}
+                allRooms={allRooms}
+                showRooms
                 className="choose-room"
                 title={'Choose or create a room to join!'}
                 actions={selectRoomActions}
@@ -556,12 +574,15 @@ function mapStateToProps(state) {
     messages,
   } = gameState;
   const {
+    roomQueue,
+    allRooms,
     thisUser,
     playerWemail,
     playerW,
     playerB,
     room,
     isWhite,
+    count,
   } = userState;
   const { message, error } = moveState;
   const {
@@ -573,6 +594,9 @@ function mapStateToProps(state) {
     chooseSideOpen,
   } = controlState;
   return {
+    count,
+    roomQueue,
+    allRooms,
     chooseSideOpen,
     chooseRoomOpen,
     thisUser,
