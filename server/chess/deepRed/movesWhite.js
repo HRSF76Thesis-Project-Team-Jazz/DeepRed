@@ -25,95 +25,8 @@ const { whiteIsChecked } = attacksBlack;
  *                          [[6, 5], [6, 4]]
  */
 
-const getAllMovesWhite = (board, pieceState) => {
+const getAllMovesWhite = (board) => {
   const result = {};
-
-  const specialMoves = [];
-
-  // ******* Castling
-  // King can not castle out of check
-  if (pieceState && !pieceState.hasMovedWK && !whiteIsChecked(board) &&
-    board[7][4] === 'WK' && board[7][7] === 'WR' && board[7][0] === 'WR'
-  ) {
-    // King side castle
-    if (!pieceState.hasMovedWKR &&
-      !board[7][5] && !board[7][6] &&
-      !whiteIsChecked(mutateBoard(board, ['74', '75'])) &&
-      !whiteIsChecked(mutateBoard(board, ['74', '76']))
-    ) {
-      specialMoves.push('O-O');
-    }
-    // Queen side castle
-    if (!pieceState.hasMovedWQR &&
-      !board[7][3] && !board[7][2] && !board[7][1] &&
-      !whiteIsChecked(mutateBoard(board, ['74', '73'])) &&
-      !whiteIsChecked(mutateBoard(board, ['74', '72'])) &&
-      !whiteIsChecked(mutateBoard(board, ['74', '71']))
-    ) {
-      specialMoves.push('O-O-O');
-    }
-  }
-
-  // ******* En-passant
-  if (pieceState && pieceState.canEnPassantW !== '') {
-    const bp = pieceState.canEnPassantW;
-    // from left
-    if (bp[1] > 0 && board[3][+bp[1] - 1] === 'WP') {
-      specialMoves.push({
-        move: 'enpassant',
-        from: `3${bp[1] - 1}`,
-        to: `2${bp[1]}`,
-        captured: `3${bp[1]}`,
-      });
-    }
-    // from right
-    if (bp[1] < 7 && board[3][+bp[1] + 1] === 'WP') {
-      specialMoves.push({
-        move: 'enpassant',
-        from: `3${+bp[1] + 1}`,
-        to: `2${+bp[1]}`,
-        captured: `3${+bp[1]}`,
-      });
-    }
-  }
-
-  // ******* Pawn Promotion
-  board[1].forEach((col, index) => {
-    if (col === 'WP') {
-      const newPieces = ['WQ', 'WR', 'WB', 'WN'];
-      const move = {
-        move: 'pawnPromotion',
-        from: `1${index}`,
-      };
-
-      // advance 1
-      if (!board[0][index]) {
-        newPieces.forEach(newPiece =>
-          specialMoves.push(Object.assign({}, move,
-            { to: `0${index}`, newPiece })));
-      }
-
-      // capture left
-      if (index > 0 && board[0][index - 1] &&
-        board[0][index - 1][0] === 'B') {
-        newPieces.forEach(newPiece =>
-          specialMoves.push(Object.assign({}, move,
-            { to: `0${index - 1}`, newPiece })));
-      }
-
-      // capture right
-      if (index < 7 && board[0][index + 1] &&
-        board[0][index + 1][0] === 'B') {
-        newPieces.forEach(newPiece =>
-          specialMoves.push(Object.assign({}, move,
-            { to: `0${index + 1}`, newPiece })));
-      }
-    }
-  });
-
-  if (specialMoves.length > 0) {
-    result.specialMoves = specialMoves;
-  }
 
   for (let row = 0; row < 8; row += 1) {
     for (let col = 0; col < 8; col += 1) {
@@ -495,22 +408,99 @@ const getAllMovesWhite = (board, pieceState) => {
   return result;
 };
 
-const getSafeMovesWhite = (board, pieceState) => {
+const getAllMovesWithSpecialWhite = (board, pieceState) => {
   const moves = getAllMovesWhite(board, pieceState);
-  const result = (moves.specialMoves) ?
-    { specialMoves: moves.specialMoves } : {};
-  const pieces = Object.keys(moves).filter(x => x !== 'specialMoves');
-  for (let i = 0; i < pieces.length; i += 1) {
-    result[pieces[i]] = [];
-    moves[pieces[i]].forEach((move) => {
-      !whiteIsChecked(mutateBoard(board, [pieces[i], [move[0], move[1]]])) &&
-        result[pieces[i]].push(move);
-    });
+  const specialMoves = [];
+
+  // ******* Castling
+  // King can not castle out of check
+  if (pieceState && !pieceState.hasMovedWK && !whiteIsChecked(board) &&
+    board[7][4] === 'WK' && board[7][7] === 'WR' && board[7][0] === 'WR'
+  ) {
+    // King side castle
+    if (!pieceState.hasMovedWKR &&
+      !board[7][5] && !board[7][6] &&
+      !whiteIsChecked(mutateBoard(board, ['74', '75'])) &&
+      !whiteIsChecked(mutateBoard(board, ['74', '76']))
+    ) {
+      specialMoves.push('O-O');
+    }
+    // Queen side castle
+    if (!pieceState.hasMovedWQR &&
+      !board[7][3] && !board[7][2] && !board[7][1] &&
+      !whiteIsChecked(mutateBoard(board, ['74', '73'])) &&
+      !whiteIsChecked(mutateBoard(board, ['74', '72'])) &&
+      !whiteIsChecked(mutateBoard(board, ['74', '71']))
+    ) {
+      specialMoves.push('O-O-O');
+    }
   }
-  return result;
+
+  // ******* En-passant
+  if (pieceState && pieceState.canEnPassantW !== '') {
+    const bp = pieceState.canEnPassantW;
+    // from left
+    if (bp[1] > 0 && board[3][+bp[1] - 1] === 'WP') {
+      specialMoves.push({
+        move: 'enpassant',
+        from: `3${bp[1] - 1}`,
+        to: `2${bp[1]}`,
+        captured: `3${bp[1]}`,
+      });
+    }
+    // from right
+    if (bp[1] < 7 && board[3][+bp[1] + 1] === 'WP') {
+      specialMoves.push({
+        move: 'enpassant',
+        from: `3${+bp[1] + 1}`,
+        to: `2${+bp[1]}`,
+        captured: `3${+bp[1]}`,
+      });
+    }
+  }
+
+  // ******* Pawn Promotion
+  board[1].forEach((col, index) => {
+    if (col === 'WP') {
+      const newPieces = ['WQ', 'WR', 'WB', 'WN'];
+      const move = {
+        move: 'pawnPromotion',
+        from: `1${index}`,
+      };
+
+      // advance 1
+      if (!board[0][index]) {
+        newPieces.forEach(newPiece =>
+          specialMoves.push(Object.assign({}, move,
+            { to: `0${index}`, newPiece })));
+      }
+
+      // capture left
+      if (index > 0 && board[0][index - 1] &&
+        board[0][index - 1][0] === 'B') {
+        newPieces.forEach(newPiece =>
+          specialMoves.push(Object.assign({}, move,
+            { to: `0${index - 1}`, newPiece })));
+      }
+
+      // capture right
+      if (index < 7 && board[0][index + 1] &&
+        board[0][index + 1][0] === 'B') {
+        newPieces.forEach(newPiece =>
+          specialMoves.push(Object.assign({}, move,
+            { to: `0${index + 1}`, newPiece })));
+      }
+    }
+  });
+
+  if (specialMoves.length > 0) {
+    moves.specialMoves = specialMoves;
+  }
+
+  return moves;
 };
 
 module.exports = {
   getAllMovesWhite,
-  getSafeMovesWhite,
+  getAllMovesWithSpecialWhite,
 };

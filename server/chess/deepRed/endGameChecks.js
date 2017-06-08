@@ -1,10 +1,8 @@
-const movesWhite = require('./movesWhite');
-const movesBlack = require('./movesBlack');
 const attacksBlack = require('./attacksBlack');
 const attacksWhite = require('./attacksWhite');
+const safeMoves = require('./safeMoves');
 
-const { getSafeMovesWhite } = movesWhite;
-const { getSafeMovesBlack } = movesBlack;
+const { getSafeMovesWhite, getSafeMovesBlack } = safeMoves;
 const { whiteIsChecked } = attacksBlack;
 const { blackIsChecked } = attacksWhite;
 
@@ -48,4 +46,6 @@ module.exports = {
   isCheckmateBlack,
   isStalemateWhite,
   isStalemateBlack,
+  blackCanMove,
+  whiteCanMove,
 };

@@ -50,6 +50,7 @@ const transcribeBoard = board => board.map((row) => {
   return newRow.join('');
 }).join('');
 
-transcribeBoard(['WP']);
-
-module.exports.capturedPiecesScore = capturedPiecesScore;
+module.exports = {
+  capturedPiecesScore,
+  transcribeBoard,
+};

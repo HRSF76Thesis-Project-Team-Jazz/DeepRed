@@ -481,23 +481,6 @@ const getAllMovesBlack = (board, pieceState) => {
   return result;
 };
 
-const getSafeMovesBlack = (board, pieceState) => {
-  const moves = getAllMovesBlack(board, pieceState);
-  const result = (moves.specialMoves) ?
-    { specialMoves: moves.specialMoves } : {};
-  const pieces = Object.keys(moves).filter(x => x !== 'specialMoves');
-
-  for (let i = 0; i < pieces.length; i += 1) {
-    result[pieces[i]] = [];
-    moves[pieces[i]].forEach((move) => {
-      !blackIsChecked(mutateBoard(board, [pieces[i], [move[0], move[1]]])) &&
-        result[pieces[i]].push(move);
-    });
-  }
-  return result;
-};
-
 module.exports = {
   getAllMovesBlack,
-  getSafeMovesBlack,
 };
