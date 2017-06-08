@@ -1019,5 +1019,76 @@ describe('End of game checks', () => {
     });
   });
 
+  describe('Get all safe moves', () => {
+    const board = [
+      ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+      ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+      ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+    ];
+
+    const wbCanNotMove = [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, 'WB', null, null, null, null],
+      [null, null, null, 'WK', null, null, null, null],
+    ];
+
+    const canNotEnPassant = [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, 'WP', 'BP', null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, 'WK', null, null, null, null],
+    ];
+
+    const epState = Object.assign({}, pieceState, { canEnPassantW: '04' });
+
+    const canNotPawnPromoteByCapture = [
+      [null, null, null, 'BB', 'BN', null, null, null],
+      [null, null, null, 'WP', null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, 'WK', null, null, null, null],
+    ];
+
+    it('Get all safe moves should exist and should be functions', () => {
+      expect(getSafeMovesWhite).to.be.a('function');
+      expect(getSafeMovesBlack).to.be.a('function');
+    });
+
+    it('should not allow for moves that endanger the King', () => {
+      expect(getSafeMovesWhite(wbCanNotMove, pieceState)).to.have.property('63');
+      wbCanNotMove[0][3] = 'BR';
+      expect(getSafeMovesWhite(wbCanNotMove, pieceState)['63'].length).to.eql(0);
+    });
+
+
+    it('should not allow for En Passant that endangers the King', () => {
+      expect(getSafeMovesWhite(canNotEnPassant, epState)).to.have.property('specialMoves');
+      canNotEnPassant[0][3] = 'BR';
+      expect(getSafeMovesWhite(canNotEnPassant, epState)).to.not.have.property('specialMoves');
+    });
+
+    it('should not allow for Pawn Promotion that endangers the King', () => {
+      expect(getSafeMovesWhite(canNotPawnPromoteByCapture, pieceState)).to.have.property('specialMoves');
+      canNotPawnPromoteByCapture[0][3] = 'BR';
+      expect(getSafeMovesWhite(canNotPawnPromoteByCapture, pieceState)).to.not.have.property('specialMoves');
+    });
+  });
 
 });

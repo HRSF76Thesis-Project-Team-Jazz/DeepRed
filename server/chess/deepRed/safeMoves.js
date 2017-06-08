@@ -1,19 +1,25 @@
 const basic = require('./basic');
-const movesWhite = require('./movesWhite');
-const movesBlack = require('./movesBlack');
 const attacksBlack = require('./attacksBlack');
 const attacksWhite = require('./attacksWhite');
+const specialMoves = require('./specialMoves');
+
 
 const { mutateBoard } = basic;
-const { getAllMovesWhite } = movesWhite;
-const { getAllMovesBlack } = movesBlack;
 const { whiteIsChecked } = attacksBlack;
 const { blackIsChecked } = attacksWhite;
+const { getAllMovesWithSpecialWhite, getAllMovesWithSpecialBlack } = specialMoves;
 
 const getSafeMovesWhite = (board, pieceState) => {
-  const moves = getAllMovesWhite(board, pieceState);
-  const result = (moves.specialMoves) ?
-    { specialMoves: moves.specialMoves } : {};
+  const moves = getAllMovesWithSpecialWhite(board, pieceState);
+  const result = {};
+
+  if (moves.specialMoves) {
+    const newSpecialMoves = [];
+    moves.specialMoves.forEach(move =>
+      !whiteIsChecked(mutateBoard(board, move)) && newSpecialMoves.push(move));
+    (newSpecialMoves.length > 0) && (result.specialMoves = newSpecialMoves);
+  }
+
   const pieces = Object.keys(moves).filter(x => x !== 'specialMoves');
   for (let i = 0; i < pieces.length; i += 1) {
     result[pieces[i]] = [];
@@ -26,9 +32,16 @@ const getSafeMovesWhite = (board, pieceState) => {
 };
 
 const getSafeMovesBlack = (board, pieceState) => {
-  const moves = getAllMovesBlack(board, pieceState);
-  const result = (moves.specialMoves) ?
-    { specialMoves: moves.specialMoves } : {};
+  const moves = getAllMovesWithSpecialBlack(board, pieceState);
+  const result = {};
+
+  if (moves.specialMoves) {
+    const newSpecialMoves = [];
+    moves.specialMoves.forEach(move =>
+      !blackIsChecked(mutateBoard(board, move)) && newSpecialMoves.push(move));
+    (newSpecialMoves.length > 0) && (result.specialMoves = newSpecialMoves);
+  }
+
   const pieces = Object.keys(moves).filter(x => x !== 'specialMoves');
 
   for (let i = 0; i < pieces.length; i += 1) {
