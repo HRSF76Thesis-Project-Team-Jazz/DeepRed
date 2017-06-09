@@ -28,7 +28,6 @@ import PlayerName from '../components/PlayerName';
 import Clock from '../components/Clock';
 import './css/App.css';
 
-
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
@@ -66,6 +65,9 @@ class App extends Component {
     this.handleCreateRoomAsWhite = this.handleCreateRoomAsWhite.bind(this);
     this.handleJoinRoomAsBlack = this.handleJoinRoomAsBlack.bind(this);
     this.handleJoinRoomAsWhite = this.handleJoinRoomAsWhite.bind(this);
+    this.onPlayerWdefeat = this.onPlayerWdefeat.bind(this);
+    this.onPlayerBdefeat = this.onPlayerWdefeat.bind(this);
+    this.onSurrander = this.onSurrander.bind(this);
   }
 
   componentDidMount() {
@@ -77,7 +79,6 @@ class App extends Component {
     axios.get('/api/profiles/id')
       .then((response) => {
         console.log('successfully fetched current user infomation: ');
-        console.log('hi: ', response);
         dispatch(setPlayer(response));
       })
       .then(() => {
@@ -91,7 +92,7 @@ class App extends Component {
   }
 
   startSocket() {
-    const { dispatch, playerW, playerWemail, gameTurn } = this.props;
+    const { dispatch, playerW, playerWemail, gameTurn, timeB, timeW } = this.props;
 
     const name = playerW;
     const email = playerWemail;
@@ -125,28 +126,9 @@ class App extends Component {
       dispatch(updateRoomInfo(roomInfo));
       dispatch(updateTimer(roomInfo));
       this.decrementTimerW();
-      console.log('joined as white succuessfully!');
     });
 
     this.socket.on('joinRoomAsBlackComplete', (roomInfo) => {
-      dispatch(updateRoomInfo(roomInfo));
-      dispatch(updateTimer(roomInfo));
-      this.decrementTimerW();
-      console.log('joined as black succuessfully!');
-    });
-
-    this.socket.on('firstPlayerJoined', (roomInfo) => {
-      dispatch(updateRoomInfo(roomInfo));
-      console.log(`first player (White) has joined ${roomInfo.room} as ${roomInfo.playerW} with socket id ${roomInfo.playerWid}`);
-      // console.log(`first player local socket id is: ${this.socket.id}`);
-    });
-
-    this.socket.on('secondPlayerJoined', (roomInfo) => {
-      console.log(`second player (White) has joined ${roomInfo.room} as ${roomInfo.playerB} with socket id ${roomInfo.playerBid}`);
-      // console.log(`second player local socket id is: ${this.socket.id}`);
-    });
-
-    this.socket.on('startGame', (roomInfo) => {
       dispatch(updateRoomInfo(roomInfo));
       dispatch(updateTimer(roomInfo));
       this.decrementTimerW();
@@ -185,14 +167,13 @@ class App extends Component {
       dispatch(saveBoolBoard(boolBoard));
     });
 
-    // CONTROL sockets
     this.socket.on('requestPauseDialogBox', () => {
       this.handlePauseOpen();
     });
 
     this.socket.on('rejectPauseRequestNotification', () => {
-      const { room } = this.props;
-      this.socket.emit('handleRejectPauseRequest', room, this.socket.id);
+      const { count } = this.props;
+      this.socket.emit('handleRejectPauseRequest', count, this.socket.id);
     });
 
     this.socket.on('cancelPauseNotification', (playerName) => {
@@ -205,7 +186,7 @@ class App extends Component {
     });
 
     this.socket.on('executePauseRequest', () => {
-      // dispatch(pauseTimer());
+      this.onChangePlayerTurn();
     });
 
     this.socket.on('executeResumeRequest', () => {
@@ -269,14 +250,14 @@ class App extends Component {
 
   stopTimerB() {
     const { dispatch, timeB, counterBinstance } = this.props;
-    clearInterval(counterBinstance);
     dispatch(updateTimerB(timeB));
+    clearInterval(counterBinstance);
   }
 
   stopTimerW() {
     const { dispatch, timeW, counterWinstance } = this.props;
-    clearInterval(counterWinstance);
     dispatch(updateTimerW(timeW));
+    clearInterval(counterWinstance);
   }
 
   onChangePlayerTurn() {
@@ -287,8 +268,21 @@ class App extends Component {
   }
 
   // CONTROL function
+  onPlayerWdefeat() {
+
+  }
+
+  onPlayerBdefeat() {
+
+  }
+////////////////
+  onSurrander() {
+    const { thisUser } = this.props;
+    this.socket.emit('surrander', thisUser);
+  }
+
   createNewPVPRoom() {
-    const { dispatch, allRooms, roomQueue } = this.props;
+    const { dispatch } = this.props;
     dispatch(selectRoomClose());
     dispatch(selectSideOpen());
   }
@@ -305,18 +299,14 @@ class App extends Component {
 
   handleJoinRoomAsWhite(count) {
     const { dispatch, thisUser, thisEmail, room } = this.props;
-    console.log('room1: ', room);
     this.socket.emit('joinRoomAsWhite', thisUser, thisEmail, count, room);
     dispatch(selectRoomClose());
-    console.log('join white ', count);
   }
 
   handleJoinRoomAsBlack(count) {
     const { dispatch, thisUser, thisEmail, room } = this.props;
-    console.log('room2: ', room);
     this.socket.emit('joinRoomAsBlack', thisUser, thisEmail, count, room);
     dispatch(selectRoomClose());
-    console.log('join black ', count);
   }
 
   handleChooseGameModeOpen() {
@@ -355,9 +345,9 @@ class App extends Component {
   }
 
   onAgreePauseRequest() {
-    const { dispatch, room } = this.props;
+    const { dispatch, count } = this.props;
     dispatch(pauseDialogClose());
-    this.socket.emit('agreePauseRequest', room, this.socket.id);
+    this.socket.emit('agreePauseRequest', count, this.socket.id);
   }
 
   onCancelPauseRequest() {
@@ -391,7 +381,6 @@ class App extends Component {
     dispatch(pauseDialogClose());
   }
 
-
   // LOGIC
   newChessGame() {
     const { dispatch } = this.props;
@@ -415,8 +404,8 @@ class App extends Component {
   }
 
   sendMessage(msg) {
-    const { room } = this.props;
-    this.socket.emit('message', msg, room);
+    const { count } = this.props;
+    this.socket.emit('message', msg, count);
   }
 
   render() {
@@ -425,7 +414,6 @@ class App extends Component {
       capturedPiecesBlack, capturedPiecesWhite,
       playerB, playerW, error, messages, isWhite, thisUser,
       chooseGameModeOpen, chooseRoomOpen, chooseSideOpen, allRooms,
-      count,
     } = this.props;
 
     const pauseActions = [
@@ -507,7 +495,10 @@ class App extends Component {
 
     return (
       <div className="site-wrap">
-        <Header />
+        <Header 
+          sendPauseRequest={this.sendPauseRequest}
+          onSurrander={this.onSurrander}
+        />
         <div className="content">
           <div className="flex-row">
             <div className="flex-col left-col">
@@ -517,31 +508,31 @@ class App extends Component {
                     color={(!isWhite) ? 'White' : 'Black'}
                     player={(!isWhite) ? playerW : playerB}
                     position="top"
-                />
+                  />
                 </div>
                 <div className="countdown-top-clock">
                   {(playerB !== undefined) ?
                     <Clock color={(!isWhite) ? 'White' : 'Black'} /> : null
                   }
                 </div>
-              <div className="move-history">
-                <MoveHistory
-                  moveHistory={moveHistory}
-                />
+                <div className="move-history">
+                  <MoveHistory
+                    moveHistory={moveHistory}
+                  />
+                </div>
+                <div className="countdown-bot-clock">
+                  {(playerB !== undefined) ?
+                    <Clock color={(isWhite) ? 'White' : 'Black'} /> : null
+                  }
+                </div>
+                <div className="player-bot">
+                  <PlayerName
+                    color={(isWhite) ? 'White' : 'Black'}
+                    player={(isWhite) ? playerW : playerB}
+                    position="bot"
+                  />
+                </div>
               </div>
-              <div className="countdown-bot-clock">
-                {(playerB !== undefined) ?
-                  <Clock color={(isWhite) ? 'White' : 'Black'} /> : null
-                }
-              </div>
-              <div className="player-bot">
-                <PlayerName
-                  color={(isWhite) ? 'White' : 'Black'}
-                  player={(isWhite) ? playerW : playerB}
-                  position="bot"
-                />
-              </div>
-             </div>
             </div>
             <div className="flex-col capt-col">
               <div className="flex-col capt-black-col">
@@ -549,7 +540,6 @@ class App extends Component {
                   color={(!isWhite) ? 'White' : 'Black'}
                   capturedPieces={(!isWhite) ? capturedPiecesWhite : capturedPiecesBlack}
                   player={(!isWhite) ? playerW : playerB}
-                  sendPauseRequest={this.sendPauseRequest}
                 />
               </div>
               <div className="flex-col capt-black-col">
@@ -557,7 +547,6 @@ class App extends Component {
                   color={(isWhite) ? 'White' : 'Black'}
                   capturedPieces={(isWhite) ? capturedPiecesWhite : capturedPiecesBlack}
                   player={(isWhite) ? playerW : playerB}
-                  sendPauseRequest={this.sendPauseRequest}
                 />
               </div>
             </div>

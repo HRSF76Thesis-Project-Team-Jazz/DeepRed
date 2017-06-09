@@ -92,69 +92,6 @@ module.exports = (io, client) => {
     });
   });
 
-
-
-
-
-  // // user socket communications
-  // client.on('sendCurrentUserNameAndEmail', (currentUserName, currentUserEmail) => {
-  //   currentName = currentUserName;
-  //   currentEmail = currentUserEmail;
-
-  //   // dynamically create room number
-  //   const room = `room ${count}`;
-  //   // if current room has no player
-  //   if (roomInfo.playerW === undefined || roomInfo.playerW === '') {
-  //     client.join(room, () => {
-  //       // add room number and first player into current room
-  //       roomInfo.room = room;
-  //       roomInfo.playerW = currentName;
-  //       roomInfo.playerWemail = currentEmail;
-  //       roomInfo.playerWid = client.client.id;
-  //       roomInfo.playerWclicked = false;
-  //       roomInfo.playerWtime = 600;
-  //       roomInfo.thisUserId = client.client.id;
-  //       roomInfo.count = count;
-  //       // create new game instance
-  //       createAndSaveNewGame(room);
-  //       // save to DB
-  //       // chessDB.newGame({
-  //       //   session_id: room,
-  //       //   color: 'white',
-  //       //   display: currentUser,
-  //       // });
-  //       //
-  //       // currentUser = '';
-  //       io.in(room).emit('firstPlayerJoined', roomInfo);
-  //     });
-  //     // if current room already has one player
-  //   } else if (roomInfo.playerB === undefined || roomInfo.playerB === '') {
-  //     client.join(room, () => {
-  //       // add second player into current room
-  //       roomInfo.playerB = currentName;
-  //       roomInfo.playerBemail = currentEmail;
-  //       roomInfo.playerBid = client.client.id;
-  //       roomInfo.playerBclicked = false;
-  //       roomInfo.playerBtime = 600;
-  //       roomInfo.thisUserId = client.client.id;
-  //       allRooms[count] = roomInfo;
-  //       io.in(room).emit('secondPlayerJoined', roomInfo);
-  //       // save playerB to current game in DB
-  //       // chessDB.joinGame({
-  //       //   session_id: room,
-  //       //   color: 'black',
-  //       //   display: currentUser,
-  //       // });
-  //       // create new game instance
-  //       createAndSaveNewGame(room);
-  //       io.in(room).emit('startGame', roomInfo);
-  //       // empty room info array, increament count, and ready for creating new room)
-  //       roomInfo = {};
-  //       count += 1;
-  //     });
-  //   }
-  // });
-
   // logic socket communications
   client.on('attemptMove', (origin, dest, selection, pieceType, clientRoom) => {
     console.log('attempted Move: ', origin, dest);
@@ -183,25 +120,25 @@ module.exports = (io, client) => {
     io.in(clientRoom).emit('rejectPauseRequestNotification');
   });
 
-  client.on('handleRejectPauseRequest', (room, id) => {
-    if (id === allRooms[room].playerBid) {
-      io.in(room).emit('cancelPauseNotification', allRooms[room].playerB);
+  client.on('handleRejectPauseRequest', (count, id) => {
+    if (id === allRooms[count].playerBid) {
+      io.in(allRooms[count].room).emit('cancelPauseNotification', allRooms[count].playerB);
     } else {
-      io.in(room).emit('cancelPauseNotification', allRooms[room].playerW);
+      io.in(allRooms[count].room).emit('cancelPauseNotification', allRooms[count].playerW);
     }
   });
 
-  client.on('agreePauseRequest', (room, id) => {
-    if (id === allRooms[room].playerBid) {
-      allRooms[room].playerBclicked = true;
+  client.on('agreePauseRequest', (count, id) => {
+    if (id === allRooms[count].playerBid) {
+      allRooms[count].playerBclicked = true;
     }
-    if (id === allRooms[room].playerWid) {
-      allRooms[room].playerWclicked = true;
+    if (id === allRooms[count].playerWid) {
+      allRooms[count].playerWclicked = true;
     }
-    if (allRooms[room].playerBclicked === true && allRooms[room].playerWclicked === true) {
-      io.in(room).emit('executePauseRequest');
-      allRooms[room].playerBclicked = false;
-      allRooms[room].playerWclicked = false;
+    if (allRooms[count].playerBclicked === true && allRooms[count].playerWclicked === true) {
+      io.in(allRooms[count].room).emit('executePauseRequest');
+      allRooms[count].playerBclicked = false;
+      allRooms[count].playerWclicked = false;
     }
   });
 
@@ -216,17 +153,17 @@ module.exports = (io, client) => {
   });
 
   // messaging communications
-  client.on('message', (msg, room) => {
+  client.on('message', (msg, count) => {
     let user = '';
-    for (let key in allRooms[room]) {
-      if (allRooms[room][key] === client.id) {
+    for (let key in allRooms[count]) {
+      if (allRooms[count][key] === client.id) {
         if (key === 'playerWid') {
-          user = allRooms[room].playerW;
+          user = allRooms[count].playerW;
         } else {
-          user = allRooms[room].playerB;
+          user = allRooms[count].playerB;
         }
       }
     }
-    io.in(room).emit('message', `${user}: ${msg}`);
+    io.in(allRooms[count].room).emit('message', `${user}: ${msg}`);
   });
 };

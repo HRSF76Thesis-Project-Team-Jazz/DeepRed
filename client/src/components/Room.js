@@ -25,6 +25,7 @@ const Room = ({ allRooms, createNewPVPRoom, handleJoinRoomAsBlack, handleJoinRoo
               <th>
                 <RaisedButton
                   label="White"
+                  disabled={room.playerW !== undefined}
                   secondary
                   onTouchTap={() => handleJoinRoomAsWhite(room.count)}
                 />
@@ -35,6 +36,7 @@ const Room = ({ allRooms, createNewPVPRoom, handleJoinRoomAsBlack, handleJoinRoo
               <th>
                 <RaisedButton
                   label="Black"
+                  disabled={room.playerB !== undefined}
                   primary
                   onTouchTap={() => handleJoinRoomAsBlack(room.count)}
                 />
