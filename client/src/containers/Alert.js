@@ -1,5 +1,6 @@
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
+import Room from '../components/Room';
 /**
  * Dialog with action buttons. The actions are passed in as an array of React objects,
  * in this example [FlatButtons](/#/components/flat-button).
@@ -11,10 +12,18 @@ import Dialog from 'material-ui/Dialog';
 //   maxWidth: 'none',
 // };
 
-const Alert = ({ title, open, actions, handleClose }) => (
+const Alert = ({ title, open, actions, handleClose, showRooms,
+allRooms, createNewPVPRoom, handleJoinRoomAsBlack, handleJoinRoomAsWhite }) => (
   <div>
     <Dialog
-      title={title}
+      title={showRooms === true ?
+        <Room
+          allRooms={allRooms}
+          createNewPVPRoom={createNewPVPRoom}
+          handleJoinRoomAsBlack={handleJoinRoomAsBlack}
+          handleJoinRoomAsWhite={handleJoinRoomAsWhite}
+        />
+        : title}
       actions={actions}
       modal={false}
       open={open}

@@ -4,13 +4,16 @@ import io from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import {
   updateTimer, cancelPauseDialogClose, updateAlertName,
-  cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW,
+  cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayer,
   updateRoomInfo, getRequestFailure, receiveGame, movePiece, resetBoolBoard,
   unselectPiece, capturePiece, displayError, colorSquare, sendMsg,
-  updateTimerB, timeInstanceB, updateTimerW, timeInstanceW, saveBoolBoard,
-  castlingMove, enPassantMove, pawnPromotionMove,
+  updateTimerB, timeInstanceB, updateTimerW, timeInstanceW, saveBoolBoard, castlingMove,
+  selectGameModeClose, selectGameModeOpen, selectRoomOpen, selectRoomClose,
+  selectSideOpen, selectSideClose, updateAllRooms, updateRoomQueue, setPlayerId,
+  enPassantMove, pawnPromotionMove,
 } from '../store/actions';
 
 // Components
@@ -52,6 +55,17 @@ class App extends Component {
     this.stopTimerB = this.stopTimerB.bind(this);
     this.stopTimerW = this.stopTimerW.bind(this);
     this.toggleTimers = this.toggleTimers.bind(this);
+    this.onPVPmodeSelected = this.onPVPmodeSelected.bind(this);
+    this.onPVCmodeSelected = this.onPVCmodeSelected.bind(this);
+    this.onCVCmodeSelected = this.onCVCmodeSelected.bind(this);
+    this.handleSelectRoomCloseOnFailure = this.handleSelectRoomCloseOnFailure.bind(this);
+    this.handleSelectSideCloseOnFailure = this.handleSelectSideCloseOnFailure.bind(this);
+    this.handleChooseGameModeOpen = this.handleChooseGameModeOpen.bind(this);
+    this.createNewPVPRoom = this.createNewPVPRoom.bind(this);
+    this.handleCreateRoomAsBlack = this.handleCreateRoomAsBlack.bind(this);
+    this.handleCreateRoomAsWhite = this.handleCreateRoomAsWhite.bind(this);
+    this.handleJoinRoomAsBlack = this.handleJoinRoomAsBlack.bind(this);
+    this.handleJoinRoomAsWhite = this.handleJoinRoomAsWhite.bind(this);
   }
 
   componentDidMount() {
@@ -63,9 +77,11 @@ class App extends Component {
     axios.get('/api/profiles/id')
       .then((response) => {
         console.log('successfully fetched current user infomation: ');
-        dispatch(setPlayerW(response));
+        console.log('hi: ', response);
+        dispatch(setPlayer(response));
       })
       .then(() => {
+        this.handleChooseGameModeOpen();
         this.startSocket();
       })
       .catch((err) => {
@@ -84,7 +100,39 @@ class App extends Component {
 
     this.socket.on('connect', () => {
       console.log('client side socket connected!');
+      dispatch(setPlayerId(this.socket.id));
+      this.socket.emit('getAllRooms', this.socket.id);
       this.socket.emit('sendCurrentUserNameAndEmail', name, email);
+    });
+
+    this.socket.on('returnAllRooms', (allRooms) => {
+      dispatch(updateAllRooms(allRooms));
+    });
+
+    this.socket.on('createRoomAsWhiteComplete', (roomInfo) => {
+      dispatch(updateRoomInfo(roomInfo));
+      this.socket.emit('getAllRooms', this.socket.id);
+      dispatch(selectSideClose());
+    });
+
+    this.socket.on('createRoomAsBlackComplete', (roomInfo) => {
+      dispatch(updateRoomInfo(roomInfo));
+      this.socket.emit('getAllRooms', this.socket.id);
+      dispatch(selectSideClose());
+    });
+
+    this.socket.on('joinRoomAsWhiteComplete', (roomInfo) => {
+      dispatch(updateRoomInfo(roomInfo));
+      dispatch(updateTimer(roomInfo));
+      this.decrementTimerW();
+      console.log('joined as white succuessfully!');
+    });
+
+    this.socket.on('joinRoomAsBlackComplete', (roomInfo) => {
+      dispatch(updateRoomInfo(roomInfo));
+      dispatch(updateTimer(roomInfo));
+      this.decrementTimerW();
+      console.log('joined as black succuessfully!');
     });
 
     this.socket.on('firstPlayerJoined', (roomInfo) => {
@@ -175,7 +223,7 @@ class App extends Component {
     });
   }
 
-  // CONTROL function
+  // GAME control
   toggleTimers() {
     const { gameTurn } = this.props;
     this.onChangePlayerTurn();
@@ -232,10 +280,78 @@ class App extends Component {
   }
 
   onChangePlayerTurn() {
-    const { room, timeB, timeW } = this.props;
+    const { room, count, timeB, timeW } = this.props;
     this.stopTimerB();
     this.stopTimerW();
-    this.socket.emit('updateTime', room, timeB, timeW);
+    this.socket.emit('updateTime', room, count, timeB, timeW);
+  }
+
+  // CONTROL function
+  createNewPVPRoom() {
+    const { dispatch, allRooms, roomQueue } = this.props;
+    dispatch(selectRoomClose());
+    dispatch(selectSideOpen());
+  }
+
+  handleCreateRoomAsBlack() {
+    const { thisUser, thisEmail } = this.props;
+    this.socket.emit('createRoomAsBlack', thisUser, thisEmail, this.socket.id);
+  }
+
+  handleCreateRoomAsWhite() {
+    const { thisUser, thisEmail } = this.props;
+    this.socket.emit('createRoomAsWhite', thisUser, thisEmail, this.socket.id);
+  }
+
+  handleJoinRoomAsWhite(count) {
+    const { dispatch, thisUser, thisEmail, room } = this.props;
+    console.log('room1: ', room);
+    this.socket.emit('joinRoomAsWhite', thisUser, thisEmail, count, room);
+    dispatch(selectRoomClose());
+    console.log('join white ', count);
+  }
+
+  handleJoinRoomAsBlack(count) {
+    const { dispatch, thisUser, thisEmail, room } = this.props;
+    console.log('room2: ', room);
+    this.socket.emit('joinRoomAsBlack', thisUser, thisEmail, count, room);
+    dispatch(selectRoomClose());
+    console.log('join black ', count);
+  }
+
+  handleChooseGameModeOpen() {
+    const { dispatch } = this.props;
+    dispatch(selectGameModeOpen());
+  }
+
+  handleSelectSideCloseOnFailure() {
+    const { dispatch } = this.props;
+    dispatch(selectSideClose());
+    dispatch(selectGameModeOpen());
+  }
+
+  handleSelectRoomCloseOnFailure() {
+    const { dispatch } = this.props;
+    dispatch(selectRoomClose());
+    this.handleChooseGameModeOpen();
+  }
+
+  onPVCmodeSelected() {
+    const { dispatch } = this.props;
+    dispatch(selectGameModeClose());
+    dispatch(selectSideOpen());
+  }
+
+  onCVCmodeSelected() {
+    const { dispatch } = this.props;
+    dispatch(selectGameModeClose());
+  }
+
+  onPVPmodeSelected() {
+    const { dispatch } = this.props;
+    dispatch(selectGameModeClose());
+    this.socket.emit('getAllRooms', this.socket.id);
+    dispatch(selectRoomOpen());
   }
 
   onAgreePauseRequest() {
@@ -307,7 +423,9 @@ class App extends Component {
     const {
       alertName, cancelPauseOpen, pauseOpen, moveHistory,
       capturedPiecesBlack, capturedPiecesWhite,
-      playerB, playerW, error, messages, isWhite,
+      playerB, playerW, error, messages, isWhite, thisUser,
+      chooseGameModeOpen, chooseRoomOpen, chooseSideOpen, allRooms,
+      count,
     } = this.props;
 
     const pauseActions = [
@@ -333,24 +451,79 @@ class App extends Component {
       />,
     ];
 
+    const chooseGameModeActionsStyle = {
+      backgroundColor: 'blue',
+      width: '32%',
+      margin: '0.5vh',
+    };
+
+    const chooseGameModeActions = [
+      <RaisedButton
+        style={chooseGameModeActionsStyle}
+        label="Player vs Player"
+        secondary
+        onTouchTap={this.onPVPmodeSelected}
+      />,
+      <RaisedButton
+        style={chooseGameModeActionsStyle}
+        label="Player vs AI"
+        secondary
+        onTouchTap={this.onPVCmodeSelected}
+      />,
+      <RaisedButton
+        style={chooseGameModeActionsStyle}
+        label="AI vs AI"
+        secondary
+        onTouchTap={this.onCVCmodeSelected}
+      />,
+    ];
+
+    const selectRoomActions = [
+      <RaisedButton
+        label="Go back"
+        secondary
+        keyboardFocused
+        onTouchTap={this.handleSelectRoomCloseOnFailure}
+      />,
+    ];
+
+    const selectSideActions = [
+      <RaisedButton
+        label="Black"
+        secondary
+        onTouchTap={this.handleCreateRoomAsBlack}
+      />,
+      <RaisedButton
+        label="White"
+        secondary
+        onTouchTap={this.handleCreateRoomAsWhite}
+      />,
+      <RaisedButton
+        label="Go back"
+        secondary
+        onTouchTap={this.handleSelectSideCloseOnFailure}
+      />,
+    ];
+
     return (
       <div className="site-wrap">
         <Header />
         <div className="content">
           <div className="flex-row">
             <div className="flex-col left-col">
-              <div className="player-top">
-                <PlayerName
-                  color={(!isWhite) ? 'White' : 'Black'}
-                  player={(!isWhite) ? playerW : playerB}
-                  position="top"
+              <div className="left-col-row">
+                <div className="player-top">
+                  <PlayerName
+                    color={(!isWhite) ? 'White' : 'Black'}
+                    player={(!isWhite) ? playerW : playerB}
+                    position="top"
                 />
-              </div>
-              <div className="countdown-top-clock">
-                {(playerB !== undefined) ?
-                  <Clock color={(!isWhite) ? 'White' : 'Black'} /> : null
-                }
-              </div>
+                </div>
+                <div className="countdown-top-clock">
+                  {(playerB !== undefined) ?
+                    <Clock color={(!isWhite) ? 'White' : 'Black'} /> : null
+                  }
+                </div>
               <div className="move-history">
                 <MoveHistory
                   moveHistory={moveHistory}
@@ -368,6 +541,7 @@ class App extends Component {
                   position="bot"
                 />
               </div>
+             </div>
             </div>
             <div className="flex-col capt-col">
               <div className="flex-col capt-black-col">
@@ -398,20 +572,47 @@ class App extends Component {
               <ChatBox messages={messages} sendMessage={this.sendMessage} />
             </div>
 
-            <div>
+            <div className="control-pause">
               <Alert
-                className="pauseRequest"
+                className="pause-request"
                 title="Would you like to pause this game?"
                 actions={pauseActions}
                 open={pauseOpen}
                 handleClose={this.handlePauseClose}
               />
               <Alert
-                className="cancelPauseRequest"
+                className="cancel-pause-request"
                 title={`Pause request has been canceled by ${alertName}`}
                 actions={cancelPauseActions}
                 open={cancelPauseOpen}
                 handleClose={this.handleCancelPauseClose}
+              />
+            </div>
+            <div className="control-login">
+              <Alert
+                className="choose-mode"
+                title={`Hi ${thisUser}, Welcome to DeepRed!`}
+                actions={chooseGameModeActions}
+                open={chooseGameModeOpen}
+              />
+            </div>
+            <div className="control-room">
+              <Alert
+                createNewPVPRoom={this.createNewPVPRoom}
+                allRooms={allRooms}
+                handleJoinRoomAsBlack={this.handleJoinRoomAsBlack}
+                handleJoinRoomAsWhite={this.handleJoinRoomAsWhite}
+                showRooms
+                className="choose-room"
+                title={'Choose or create a room to join!'}
+                actions={selectRoomActions}
+                open={chooseRoomOpen}
+              />
+              <Alert
+                className="choose-side"
+                title={'which side would you like be on?'}
+                actions={selectSideActions}
+                open={chooseSideOpen}
               />
             </div>
           </div>
@@ -435,15 +636,35 @@ function mapStateToProps(state) {
     messages,
   } = gameState;
   const {
+    thisEmail,
+    roomQueue,
+    allRooms,
+    thisUser,
     playerWemail,
     playerW,
     playerB,
     room,
     isWhite,
+    count,
   } = userState;
   const { message, error } = moveState;
-  const { pauseOpen, cancelPauseOpen, alertName } = controlState;
+  const {
+    pauseOpen,
+    cancelPauseOpen,
+    alertName,
+    chooseGameModeOpen,
+    chooseRoomOpen,
+    chooseSideOpen,
+  } = controlState;
   return {
+    thisEmail,
+    count,
+    roomQueue,
+    allRooms,
+    chooseSideOpen,
+    chooseRoomOpen,
+    thisUser,
+    chooseGameModeOpen,
     gameTurn,
     counterBinstance,
     counterWinstance,

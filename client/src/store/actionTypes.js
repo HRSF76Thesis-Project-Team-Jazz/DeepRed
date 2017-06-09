@@ -46,11 +46,15 @@ export const SAVE_BOOL_BOARD = 'SAVE_BOOL_BOARD';
 export const RESET_BOOL_BOARD = 'RESET_BOOL_BOARD';
 
 // userState action types
-export const SET_PLAYER_W = 'SET_PLAYER_W';
+export const SET_PLAYER = 'SET_PLAYER';
 
-export const SET_PLAYER_B = 'SET_PLAYER_B';
+export const SET_PLAYER_ID = 'SET_PLAYER_ID';
 
 export const GET_REQUEST_FAILURE = 'GET_REQUEST_FAILURE';
+
+export const UPDATE_ALL_ROOMS = 'UPDATE_ALL_ROOMS';
+
+export const UPDATE_ROOM_QUEUE = 'UPDATE_ROOM_QUEUE';
 
 // controlState action types
 export const PAUSE_DIALOG_OPEN = 'PAUSE_DIALOG_OPEN';
@@ -64,3 +68,16 @@ export const CANCEL_PAUSE_DIALOG_CLOSE = 'CANCEL_PAUSE_DIALOG_CLOSE';
 export const UPDATE_ALERT_NAME = 'UPDATE_ALERT_NAME';
 
 export const SEND_MESSAGE = 'SEND_MESSAGE';
+
+export const SELECT_GAME_MODE_OPEN = 'SELECT_GAME_MODE_OPEN';
+
+export const SELECT_GAME_MODE_CLOSE = 'SELECT_GAME_MODE_CLOSE';
+
+export const SELECT_ROOM_OPEN = 'SELECT_ROOM_OPEN';
+
+export const SELECT_ROOM_CLOSE = 'SELECT_ROOM_CLOSE';
+
+export const SELECT_SIDE_OPEN = 'SELECT_SIDE_OPEN';
+
+export const SELECT_SIDE_CLOSE = 'SELECT_SIDE_CLOSE';
+
