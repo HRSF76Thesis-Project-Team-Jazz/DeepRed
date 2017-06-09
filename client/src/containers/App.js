@@ -65,6 +65,9 @@ class App extends Component {
     this.handleCreateRoomAsWhite = this.handleCreateRoomAsWhite.bind(this);
     this.handleJoinRoomAsBlack = this.handleJoinRoomAsBlack.bind(this);
     this.handleJoinRoomAsWhite = this.handleJoinRoomAsWhite.bind(this);
+    this.onPlayerWdefeat = this.onPlayerWdefeat.bind(this);
+    this.onPlayerBdefeat = this.onPlayerWdefeat.bind(this);
+    this.onSurrander = this.onSurrander.bind(this);
   }
 
   componentDidMount() {
@@ -164,7 +167,6 @@ class App extends Component {
       dispatch(saveBoolBoard(boolBoard));
     });
 
-    // CONTROL sockets
     this.socket.on('requestPauseDialogBox', () => {
       this.handlePauseOpen();
     });
@@ -266,6 +268,19 @@ class App extends Component {
   }
 
   // CONTROL function
+  onPlayerWdefeat() {
+
+  }
+
+  onPlayerBdefeat() {
+
+  }
+////////////////
+  onSurrander() {
+    const { thisUser } = this.props;
+    this.socket.emit('surrander', thisUser);
+  }
+
   createNewPVPRoom() {
     const { dispatch } = this.props;
     dispatch(selectRoomClose());
@@ -480,7 +495,10 @@ class App extends Component {
 
     return (
       <div className="site-wrap">
-        <Header sendPauseRequest={this.sendPauseRequest} />
+        <Header 
+          sendPauseRequest={this.sendPauseRequest}
+          onSurrander={this.onSurrander}
+        />
         <div className="content">
           <div className="flex-row">
             <div className="flex-col left-col">
