@@ -9,7 +9,7 @@
 
 const isLegalMove = require('./isLegalMove');
 // const moveToPGNString = require('./convertToPGN');
-const chessDB = require('../chessDB')
+const chessDB = require('../chessDB');
 
 const transcribeBoard = board => board.map((row) => {
   const pieceIndex = {
@@ -58,7 +58,7 @@ class ChessGame {
     this.winner = null;
   }
 
-  movePiece(origin, dest, pawnPromotionPiece = null) {
+  movePiece(origin, dest, clientRoom, pawnPromotionPiece = null) {
     let error = this.errorCheck(origin, dest);
     if (error) {
       return { game: this, error };
@@ -91,7 +91,7 @@ class ChessGame {
         //   return { game: this, error };
         // }
         // this.history += moveToPGNString(this.board, origin, dest, this.count);
-        this.capturePiece(destPiece, clientRoom);
+        this.addToCaptureArray(destPiece, clientRoom);
       }
 
       // this.history[this.turn] = this.history[this.turn] || [];
@@ -115,6 +115,11 @@ class ChessGame {
         this.promotePawn(originPiece, dest, pawnPromotionPiece);
       }
       // check for check/checkmate/stalemate
+      chessDB.saveMove({
+        session_id: clientRoom,
+        history: transcribeBoard(this.board)
+      })
+
       this.history.push(transcribeBoard(this.board));
       this.turn = (this.turn === 'W') ? 'B' : 'W';
       // console.log(this.history);
@@ -134,9 +139,7 @@ class ChessGame {
     return { game: this, error };
   }
 
-  errorCheck(origin, dest) {
-
-  movePiece(origin, dest, clientRoom) {
+  errorCheck(origin, dest, clientRoom) {
     let error = null;
     if (dest === undefined) {
       error = 'Attempted destination is invalid.';
@@ -169,7 +172,6 @@ class ChessGame {
         return error;
       }
     }
-
     return error;
   }
   castlingMove(castlingStr) {
@@ -293,7 +295,6 @@ class ChessGame {
 
     }
   }
-
   toggleMovedRooksOrKings(origin, originPiece) {
     if (originPiece === 'WK' && JSON.stringify(origin) === JSON.stringify([7, 4])) {
       this.hasMovedWK = true;
@@ -315,11 +316,10 @@ class ChessGame {
     }
   }
 
-
-  capturePiece(piece, clientRoom) {
+  addToCaptureArray(piece, clientRoom) {
     if (piece[0] === 'W') {
       this.blackCapPieces.push(piece);
-      
+
       chessDB.saveBlackPiece({
         session_id: clientRoom,
         black_pieces: JSON.stringify(piece),
@@ -332,13 +332,12 @@ class ChessGame {
         session_id: clientRoom,
         white_pieces: JSON.stringify(piece),
       })
-
+      
     }
   }
   promotePawn(originPiece, dest, pawnPromotionPiece) {
     if ((originPiece === 'WP' && dest[0] === 0) || (originPiece === 'BP' && dest[0] === 7)) {
       this.board[dest[0]][dest[1]] = pawnPromotionPiece;
-
     }
   }
   checkAllMovesOfOrigin(origin) {

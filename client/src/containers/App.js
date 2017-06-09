@@ -562,7 +562,7 @@ class App extends Component {
               <Message message={error} />
               <ScrollArea>
               <Messages messages={messages} />
-              </ScrollArea>
+              </ScrollArea>           
               <ChatBox sendMessage={this.sendMessage} />
             </div>
 
