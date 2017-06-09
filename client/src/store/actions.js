@@ -100,6 +100,24 @@ export const enPassantMove = (fromPosition, coordinates, enPassantCoord, gameTur
   gameTurn,
 });
 
+export const pawnPromotionMove = (fromPosition, coordinates, pawnPromotionPiece, gameTurn) => ({
+  type: types.PAWN_PROMOTION_MOVE,
+  fromPosition,
+  coordinates,
+  pawnPromotionPiece,
+  gameTurn,
+});
+
+export const openPromotionDialog = coordinates => ({
+  type: types.OPEN_PROMOTION_DIALOG,
+  coordinates,
+});
+
+export const closePromotionDialog = coordinates => ({
+  type: types.CLOSE_PROMOTION_DIALOG,
+  coordinates,
+});
+
 export const receiveMove = (query, move) => ({
   type: types.RECEIVE_MOVE,
   query,

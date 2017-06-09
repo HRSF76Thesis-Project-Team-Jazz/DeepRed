@@ -64,6 +64,16 @@ const gameState = (state = Immutable({
         gameTurn: action.gameTurn,
       });
     }
+    case types.PAWN_PROMOTION_MOVE: {
+      const cols = 'abcdefgh';
+      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
+      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      return Immutable({
+        ...state,
+        moveHistory: state.moveHistory.concat({ from, to }),
+        gameTurn: action.gameTurn,
+      });
+    }
     case types.CAPTURE_PIECE: {
       const cols = 'abcdefgh';
       const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
@@ -128,12 +138,12 @@ const gameState = (state = Immutable({
 const boardState = (state = {
   board: [
     ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
-    ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+    ['WP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
-    ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+    [null, 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
     ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
   ],
 }, action) => {
@@ -180,6 +190,13 @@ const boardState = (state = {
       board[action.enPassantCoord[0]][action.enPassantCoord[1]] = null;
       return { board };
     }
+    case types.PAWN_PROMOTION_MOVE: {
+      const board = state.board.slice(0);
+      board[action.coordinates[0]][action.coordinates[1]]
+        = action.pawnPromotionPiece;
+      board[action.fromPosition[0]][action.fromPosition[1]] = null;
+      return { board };
+    }
     case types.RECEIVE_GAME: {
       return { board: action.game.board };
     }
@@ -204,8 +221,23 @@ const moveState = (state = Immutable({
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
   ],
+  pawnPromotion: null,
+  pawnPromotionCoord: [],
+  showPromotionDialog: false,
 }), action) => {
   switch (action.type) {
+    case types.OPEN_PROMOTION_DIALOG:
+      return Immutable({
+        ...state,
+        pawnPromotionCoord: action.coordinates,
+        showPromotionDialog: true,
+      });
+    case types.CLOSE_PROMOTION_DIALOG:
+      return Immutable({
+        ...state,
+        pawnPromotionCoord: [],
+        showPromotionDialog: false,
+      });
     case types.SAVE_BOOL_BOARD:
       return Immutable({
         ...state,

@@ -35,12 +35,12 @@ class ChessGame {
   constructor() {
     this.board = [
       ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
-      ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+      ['WP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+      [null, 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
       ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
     ];
     this.blackCapPieces = [];
@@ -57,7 +57,7 @@ class ChessGame {
     this.winner = null;
   }
 
-  movePiece(origin, dest, pawnPromotionPiece = null) {
+  movePiece(origin, dest, pawnPromotionValue = null) {
     let error = this.errorCheck(origin, dest);
     if (error) {
       return { game: this, error };
@@ -84,10 +84,11 @@ class ChessGame {
       if (destPiece) {
         this.addToCaptureArray(destPiece);
       }
-
       this.board[dest[0]][dest[1]] = originPiece;
       this.board[origin[0]][origin[1]] = null;
-      if (pawnPromotionPiece) {
+      let pawnPromotionPiece = null;
+      if (pawnPromotionValue) {
+        pawnPromotionPiece = originPiece[0] + pawnPromotionValue;
         this.promotePawn(originPiece, dest, pawnPromotionPiece);
       }
       // check for check/checkmate/stalemate
@@ -101,6 +102,7 @@ class ChessGame {
         error: null,
         castling: legalMoveResult.castling,
         enPassantCoord,
+        pawnPromotionPiece,
       };
     }
     error = 'Move is not allowed.';
