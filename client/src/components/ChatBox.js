@@ -2,11 +2,8 @@ import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { red50, red900 } from 'material-ui/styles/colors';
-<<<<<<< HEAD
 // import Messages from './Messages'
-=======
 
->>>>>>> progress on chatbox
 import './css/ChatBox.css';
 
 class ChatBox extends Component {

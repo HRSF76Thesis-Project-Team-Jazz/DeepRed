@@ -24,63 +24,6 @@ module.exports = (io, client) => {
       room = `room ${queue[0]}`;
     } else {
       room = `room ${count}`;
-  let currentName = '';
-  let currentEmail = '';
-  // user socket communications
-  client.on('sendCurrentUserNameAndEmail', (currentUserName, currentUserEmail) => {
-    currentName = currentUserName;
-    currentEmail = currentUserEmail;
-
-    // dynamically create room number
-    const room = `room ${count}`;
-    // if current room has no player
-    if (roomInfo.playerW === undefined || roomInfo.playerW === '') {
-      client.join(room, () => {
-        // add room number and first player into current room
-        roomInfo.room = room;
-        roomInfo.playerW = currentName;
-        roomInfo.playerWemail = currentEmail;
-        roomInfo.playerWid = client.client.id;
-        roomInfo.playerWclicked = false;
-        roomInfo.playerWtime = 600;
-        roomInfo.thisUserId = client.client.id;
-        // create new game instance
-        createAndSaveNewGame(room);
-        // save to DB
-        chessDB.newGame({
-          session_id: room,
-          color: 'white',
-          display: currentName,
-        });
-        
-        io.in(room).emit('firstPlayerJoined', roomInfo);
-      });
-      // if current room already has one player
-    } else if (roomInfo.playerB === undefined || roomInfo.playerB === '') {
-      client.join(room, () => {
-        // add second player into current room
-        roomInfo.playerB = currentName;
-        roomInfo.playerBemail = currentEmail;
-        roomInfo.playerBid = client.client.id;
-        roomInfo.playerBclicked = false;
-        roomInfo.playerBtime = 600;
-        roomInfo.thisUserId = client.client.id;
-        allRooms[room] = roomInfo;
-        io.in(room).emit('secondPlayerJoined', roomInfo);
-        // save playerB to current game in DB
-        chessDB.joinGame({
-          session_id: room,
-          color: 'black',
-          display: currentName,
-        });
-        // create new game instance
-        createAndSaveNewGame(room);
-        io.in(room).emit('startGame', roomInfo);
-        // empty room info array, increament count, and ready for creating new room)
-        roomInfo = {};
-        count += 1;
-      });
-
     }
     client.join(room, () => {
       roomInfo.room = room;
@@ -153,11 +96,9 @@ module.exports = (io, client) => {
   client.on('attemptMove', (origin, dest, selection, pieceType, clientRoom) => {
     console.log('attempted Move: ', origin, dest);
     console.log('room number: ', clientRoom);
-
-    const newState = allGames[clientRoom].movePiece(origin, dest, pieceType, clientRoom);
+    const newState = allGames[clientRoom].movePiece(origin, dest, pieceType);
     const { error, game, castling, enPassantCoord, pawnPromotionPiece } = newState;
     io.in(clientRoom).emit('attemptMoveResult', error, origin, dest, selection, game.turn, castling, enPassantCoord, pawnPromotionPiece);
-
   });
 
   client.on('checkLegalMoves', (origin, clientRoom, id) => {

@@ -5,7 +5,7 @@ import ScrollArea from 'react-scrollbar';
 class Messages extends Component {
     constructor(props) {
         super(props);
-        this.componentWillUpdate = this.componentWillUpdate.bind(this)
+        // this.componentWillUpdate = this.componentWillUpdate.bind(this)
 }
 
 // componentWillUpdate(){
