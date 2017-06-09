@@ -5,6 +5,7 @@ import { red50, red900 } from 'material-ui/styles/colors';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 // import Messages from './Messages'
 =======
 import ScrollArea from 'react-scrollbar';
@@ -14,11 +15,15 @@ import ScrollArea from 'react-scrollbar';
 // import Messages from './Messages'
 >>>>>>> updated schema, working on chat
 =======
-// import Messages from './Messages'
 =======
+>>>>>>> rebase
+// import Messages from './Messages'
 
+<<<<<<< HEAD
 >>>>>>> progress on chatbox
 >>>>>>> progress on chatbox
+=======
+>>>>>>> rebase
 import './css/ChatBox.css';
 
 class ChatBox extends Component {

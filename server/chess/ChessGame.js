@@ -100,6 +100,7 @@ class ChessGame {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   movePiece(origin, dest, pawnPromotionValue = null) {
     const error = this.errorCheck(origin, dest);
 =======
@@ -109,6 +110,9 @@ class ChessGame {
 =======
   movePiece(origin, dest, clientRoom, pawnPromotionPiece = null) {
 >>>>>>> progress on chatbox
+=======
+  movePiece(origin, dest, clientRoom, pawnPromotionValue = null) {
+>>>>>>> rebase
     let error = this.errorCheck(origin, dest);
 >>>>>>> working on DB schema func
     if (error) {
@@ -181,16 +185,9 @@ class ChessGame {
       this.canEnPassant = legalMoveResult.canEnPassant || [];
       // add to capture array
       if (destPiece) {
-
-        // if (originPiece[0] === destPiece[0]) {
-        //   error = 'Cannot capture your own piece.';
-        //   console.log(this.board);
-        //   console.log(error);
-        //   return { game: this, error };
-        // }
-        // this.history += moveToPGNString(this.board, origin, dest, this.count);
         this.addToCaptureArray(destPiece, clientRoom);
       }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 
@@ -213,6 +210,8 @@ class ChessGame {
 
       this.turn = (this.turn === 'W') ? 'B' : 'W';
 >>>>>>> working on DB schema func
+=======
+>>>>>>> rebase
       this.board[dest[0]][dest[1]] = originPiece;
       this.board[origin[0]][origin[1]] = null;
 
@@ -223,6 +222,7 @@ class ChessGame {
         this.promotePawn(originPiece, dest, pawnPromotionPiece);
       }
       // check for check/checkmate/stalemate
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
       chessDB.saveMove({
@@ -254,6 +254,15 @@ class ChessGame {
           this.playerInCheck = null;
         }
       }
+=======
+      this.history.push(transcribeBoard(this.board));
+      // save to DB
+      // chessDB.saveMove({
+      //   session_id: clientRoom,
+      //   history: transcribeBoard(this.board),
+      // })
+
+>>>>>>> rebase
       this.turn = (this.turn === 'W') ? 'B' : 'W';
       // console.log(this.history);
       console.log(this.board);
@@ -270,6 +279,7 @@ class ChessGame {
     // console.log(error);
     return { game: this, error: 'Move is not allowed.' };
   }
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -307,6 +317,9 @@ class ChessGame {
 =======
   errorCheck(origin, dest, clientRoom) {
 >>>>>>> progress on chatbox
+=======
+  errorCheck(origin, dest) {
+>>>>>>> rebase
     let error = null;
     if (dest === undefined) {
       error = 'Attempted destination is invalid.';
@@ -362,6 +375,7 @@ class ChessGame {
       this.board[7][7] = null;
       this.hasMovedWRK = true;
       this.hasMovedWK = true;
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -526,6 +540,8 @@ class ChessGame {
 =======
 
 >>>>>>> working on DB schema func
+=======
+>>>>>>> rebase
     }
   }
   toggleMovedRooksOrKings(origin, originPiece) {
@@ -548,6 +564,7 @@ class ChessGame {
       this.hasMovedBRK = true;
     }
   }
+<<<<<<< HEAD
 <<<<<<< HEAD
   addToCaptureArray(piece) {
 
@@ -576,15 +593,17 @@ class ChessGame {
   capturePiece(piece, clientRoom) {
 >>>>>>> working on DB schema func
 =======
+=======
+>>>>>>> rebase
   addToCaptureArray(piece, clientRoom) {
 >>>>>>> progress on chatbox
     if (piece[0] === 'W') {
       this.blackCapPieces.push(piece);
 
-      chessDB.saveBlackPiece({
-        session_id: clientRoom,
-        black_pieces: JSON.stringify(piece),
-      })
+      // chessDB.saveBlackPiece({
+      //   session_id: clientRoom,
+      //   black_pieces: JSON.stringify(piece),
+      // });
 
     } else {
       this.whiteCapPieces.push(piece);
@@ -612,11 +631,11 @@ class ChessGame {
 =======
 >>>>>>> working on DB schema func
 
-      chessDB.saveWhitePiece({
-        session_id: clientRoom,
-        white_pieces: JSON.stringify(piece),
-      })
-      
+      // chessDB.saveWhitePiece({
+      //   session_id: clientRoom,
+      //   white_pieces: JSON.stringify(piece),
+      // });
+
     }
   }
   promotePawn(originPiece, dest, pawnPromotionPiece) {
