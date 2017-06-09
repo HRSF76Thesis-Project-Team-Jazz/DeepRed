@@ -54,6 +54,16 @@ const gameState = (state = Immutable({
         gameTurn: action.gameTurn,
       });
     }
+    case types.EN_PASSANT_MOVE: {
+      const cols = 'abcdefgh';
+      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
+      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      return Immutable({
+        ...state,
+        moveHistory: state.moveHistory.concat({ from, to }),
+        gameTurn: action.gameTurn,
+      });
+    }
     case types.CAPTURE_PIECE: {
       const cols = 'abcdefgh';
       const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
@@ -162,6 +172,14 @@ const boardState = (state = {
       }
       return { board };
     }
+    case types.EN_PASSANT_MOVE: {
+      const board = state.board.slice(0);
+      board[action.coordinates[0]][action.coordinates[1]]
+        = board[action.fromPosition[0]][action.fromPosition[1]];
+      board[action.fromPosition[0]][action.fromPosition[1]] = null;
+      board[action.enPassantCoord[0]][action.enPassantCoord[1]] = null;
+      return { board };
+    }
     case types.RECEIVE_GAME: {
       return { board: action.game.board };
     }
@@ -261,6 +279,18 @@ const moveState = (state = Immutable({
         fromPosition: '',
         selectedPiece: '',
         message: `Castling: ${from}-${to} - ${action.castling}`,
+        error: '',
+      });
+    }
+    case types.EN_PASSANT_MOVE: {
+      const cols = 'abcdefgh';
+      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
+      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      return Immutable({
+        ...state,
+        fromPosition: '',
+        selectedPiece: '',
+        message: `En Passant: ${from}-${to} - ${action.castling}`,
         error: '',
       });
     }
