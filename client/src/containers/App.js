@@ -77,7 +77,6 @@ class App extends Component {
     axios.get('/api/profiles/id')
       .then((response) => {
         console.log('successfully fetched current user infomation: ');
-        console.log('hi: ', response);
         dispatch(setPlayer(response));
       })
       .then(() => {
@@ -125,25 +124,21 @@ class App extends Component {
       dispatch(updateRoomInfo(roomInfo));
       dispatch(updateTimer(roomInfo));
       this.decrementTimerW();
-      console.log('joined as white succuessfully!');
     });
 
     this.socket.on('joinRoomAsBlackComplete', (roomInfo) => {
       dispatch(updateRoomInfo(roomInfo));
       dispatch(updateTimer(roomInfo));
       this.decrementTimerW();
-      console.log('joined as black succuessfully!');
     });
 
     this.socket.on('firstPlayerJoined', (roomInfo) => {
       dispatch(updateRoomInfo(roomInfo));
       console.log(`first player (White) has joined ${roomInfo.room} as ${roomInfo.playerW} with socket id ${roomInfo.playerWid}`);
-      // console.log(`first player local socket id is: ${this.socket.id}`);
     });
 
     this.socket.on('secondPlayerJoined', (roomInfo) => {
       console.log(`second player (White) has joined ${roomInfo.room} as ${roomInfo.playerB} with socket id ${roomInfo.playerBid}`);
-      // console.log(`second player local socket id is: ${this.socket.id}`);
     });
 
     this.socket.on('startGame', (roomInfo) => {
@@ -288,7 +283,7 @@ class App extends Component {
 
   // CONTROL function
   createNewPVPRoom() {
-    const { dispatch, allRooms, roomQueue } = this.props;
+    const { dispatch } = this.props;
     dispatch(selectRoomClose());
     dispatch(selectSideOpen());
   }
@@ -305,18 +300,14 @@ class App extends Component {
 
   handleJoinRoomAsWhite(count) {
     const { dispatch, thisUser, thisEmail, room } = this.props;
-    console.log('room1: ', room);
     this.socket.emit('joinRoomAsWhite', thisUser, thisEmail, count, room);
     dispatch(selectRoomClose());
-    console.log('join white ', count);
   }
 
   handleJoinRoomAsBlack(count) {
     const { dispatch, thisUser, thisEmail, room } = this.props;
-    console.log('room2: ', room);
     this.socket.emit('joinRoomAsBlack', thisUser, thisEmail, count, room);
     dispatch(selectRoomClose());
-    console.log('join black ', count);
   }
 
   handleChooseGameModeOpen() {
@@ -415,8 +406,8 @@ class App extends Component {
   }
 
   sendMessage(msg) {
-    const { room } = this.props;
-    this.socket.emit('message', msg, room);
+    const { count } = this.props;
+    this.socket.emit('message', msg, count);
   }
 
   render() {
@@ -425,7 +416,6 @@ class App extends Component {
       capturedPiecesBlack, capturedPiecesWhite,
       playerB, playerW, error, messages, isWhite, thisUser,
       chooseGameModeOpen, chooseRoomOpen, chooseSideOpen, allRooms,
-      count,
     } = this.props;
 
     const pauseActions = [
@@ -517,31 +507,31 @@ class App extends Component {
                     color={(!isWhite) ? 'White' : 'Black'}
                     player={(!isWhite) ? playerW : playerB}
                     position="top"
-                />
+                  />
                 </div>
                 <div className="countdown-top-clock">
                   {(playerB !== undefined) ?
                     <Clock color={(!isWhite) ? 'White' : 'Black'} /> : null
                   }
                 </div>
-              <div className="move-history">
-                <MoveHistory
-                  moveHistory={moveHistory}
-                />
+                <div className="move-history">
+                  <MoveHistory
+                    moveHistory={moveHistory}
+                  />
+                </div>
+                <div className="countdown-bot-clock">
+                  {(playerB !== undefined) ?
+                    <Clock color={(isWhite) ? 'White' : 'Black'} /> : null
+                  }
+                </div>
+                <div className="player-bot">
+                  <PlayerName
+                    color={(isWhite) ? 'White' : 'Black'}
+                    player={(isWhite) ? playerW : playerB}
+                    position="bot"
+                  />
+                </div>
               </div>
-              <div className="countdown-bot-clock">
-                {(playerB !== undefined) ?
-                  <Clock color={(isWhite) ? 'White' : 'Black'} /> : null
-                }
-              </div>
-              <div className="player-bot">
-                <PlayerName
-                  color={(isWhite) ? 'White' : 'Black'}
-                  player={(isWhite) ? playerW : playerB}
-                  position="bot"
-                />
-              </div>
-             </div>
             </div>
             <div className="flex-col capt-col">
               <div className="flex-col capt-black-col">
