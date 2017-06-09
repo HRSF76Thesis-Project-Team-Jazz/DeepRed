@@ -357,22 +357,22 @@ const userState = (state = Immutable({
   isWhite: true,
   allRooms: [],
   roomQueue: [],
-  count: 1,
+  count: 0,
 }), action) => {
   switch (action.type) {
-    case types.SET_PLAYER_W: {
+    case types.SET_PLAYER: {
       return Immutable({
         ...state,
-        playerW: action.player.data.display,
-        playerWemail: action.player.data.email,
+        // playerW: action.player.data.display,
+        // playerWemail: action.player.data.email,
         thisUser: action.player.data.display,
         thisEmail: action.player.data.email,
       });
     }
-    case types.SET_PLAYER_B: {
+    case types.SET_PLAYER_ID: {
       return Immutable({
         ...state,
-        playerB: action.player.data.display,
+        thisUserId: action.id,
       });
     }
     case types.GET_REQUEST_FAILURE: {
@@ -393,9 +393,10 @@ const userState = (state = Immutable({
         playerBemail: action.roomInfo.playerBemail,
         playerWemail: action.roomInfo.playerWemail,
         thisUserId: (state.thisUserId === '') ? action.roomInfo.thisUserId : state.thisUserId,
-        isWhite: (!action.roomInfo.playerB) ? true : state.thisUserId !== '',
+        isWhite: (state.thisUser !== action.roomInfo.playerB),
       });
     }
+    // isWhite: (!action.roomInfo.playerB) ? true : state.thisUserId !== '',
     case types.UPDATE_ALL_ROOMS: {
       return Immutable({
         ...state,

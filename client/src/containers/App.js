@@ -7,14 +7,13 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import {
   updateTimer, cancelPauseDialogClose, updateAlertName,
-  cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayerW,
+  cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayer,
   updateRoomInfo, getRequestFailure, receiveGame, movePiece, resetBoolBoard,
   unselectPiece, capturePiece, displayError, colorSquare, sendMsg,
   updateTimerB, timeInstanceB, updateTimerW, timeInstanceW, saveBoolBoard, castlingMove,
   selectGameModeClose, selectGameModeOpen, selectRoomOpen, selectRoomClose,
-  selectSideOpen, selectSideClose, updateAllRooms, updateRoomQueue,
+  selectSideOpen, selectSideClose, updateAllRooms, updateRoomQueue, setPlayerId,
   enPassantMove, pawnPromotionMove,
-
 } from '../store/actions';
 
 // Components
@@ -63,11 +62,14 @@ class App extends Component {
     this.handleSelectSideCloseOnFailure = this.handleSelectSideCloseOnFailure.bind(this);
     this.handleChooseGameModeOpen = this.handleChooseGameModeOpen.bind(this);
     this.createNewPVPRoom = this.createNewPVPRoom.bind(this);
+    this.handleCreateRoomAsBlack = this.handleCreateRoomAsBlack.bind(this);
+    this.handleCreateRoomAsWhite = this.handleCreateRoomAsWhite.bind(this);
+    this.handleJoinRoomAsBlack = this.handleJoinRoomAsBlack.bind(this);
+    this.handleJoinRoomAsWhite = this.handleJoinRoomAsWhite.bind(this);
   }
 
   componentDidMount() {
     this.getUserInfo();
-
   }
 
   getUserInfo() {
@@ -75,7 +77,8 @@ class App extends Component {
     axios.get('/api/profiles/id')
       .then((response) => {
         console.log('successfully fetched current user infomation: ');
-        dispatch(setPlayerW(response));
+        console.log('hi: ', response);
+        dispatch(setPlayer(response));
       })
       .then(() => {
         this.handleChooseGameModeOpen();
@@ -97,12 +100,39 @@ class App extends Component {
 
     this.socket.on('connect', () => {
       console.log('client side socket connected!');
+      dispatch(setPlayerId(this.socket.id));
       this.socket.emit('getAllRooms', this.socket.id);
       this.socket.emit('sendCurrentUserNameAndEmail', name, email);
     });
 
     this.socket.on('returnAllRooms', (allRooms) => {
       dispatch(updateAllRooms(allRooms));
+    });
+
+    this.socket.on('createRoomAsWhiteComplete', (roomInfo) => {
+      dispatch(updateRoomInfo(roomInfo));
+      this.socket.emit('getAllRooms', this.socket.id);
+      dispatch(selectSideClose());
+    });
+
+    this.socket.on('createRoomAsBlackComplete', (roomInfo) => {
+      dispatch(updateRoomInfo(roomInfo));
+      this.socket.emit('getAllRooms', this.socket.id);
+      dispatch(selectSideClose());
+    });
+
+    this.socket.on('joinRoomAsWhiteComplete', (roomInfo) => {
+      dispatch(updateRoomInfo(roomInfo));
+      dispatch(updateTimer(roomInfo));
+      this.decrementTimerW();
+      console.log('joined as white succuessfully!');
+    });
+
+    this.socket.on('joinRoomAsBlackComplete', (roomInfo) => {
+      dispatch(updateRoomInfo(roomInfo));
+      dispatch(updateTimer(roomInfo));
+      this.decrementTimerW();
+      console.log('joined as black succuessfully!');
     });
 
     this.socket.on('firstPlayerJoined', (roomInfo) => {
@@ -259,7 +289,34 @@ class App extends Component {
   // CONTROL function
   createNewPVPRoom() {
     const { dispatch, allRooms, roomQueue } = this.props;
-    console.log('creating new room!!!!!');
+    dispatch(selectRoomClose());
+    dispatch(selectSideOpen());
+  }
+
+  handleCreateRoomAsBlack() {
+    const { thisUser, thisEmail } = this.props;
+    this.socket.emit('createRoomAsBlack', thisUser, thisEmail, this.socket.id);
+  }
+
+  handleCreateRoomAsWhite() {
+    const { thisUser, thisEmail } = this.props;
+    this.socket.emit('createRoomAsWhite', thisUser, thisEmail, this.socket.id);
+  }
+
+  handleJoinRoomAsWhite(count) {
+    const { dispatch, thisUser, thisEmail, room } = this.props;
+    console.log('room1: ', room);
+    this.socket.emit('joinRoomAsWhite', thisUser, thisEmail, count, room);
+    dispatch(selectRoomClose());
+    console.log('join white ', count);
+  }
+
+  handleJoinRoomAsBlack(count) {
+    const { dispatch, thisUser, thisEmail, room } = this.props;
+    console.log('room2: ', room);
+    this.socket.emit('joinRoomAsBlack', thisUser, thisEmail, count, room);
+    dispatch(selectRoomClose());
+    console.log('join black ', count);
   }
 
   handleChooseGameModeOpen() {
@@ -293,6 +350,7 @@ class App extends Component {
   onPVPmodeSelected() {
     const { dispatch } = this.props;
     dispatch(selectGameModeClose());
+    this.socket.emit('getAllRooms', this.socket.id);
     dispatch(selectRoomOpen());
   }
 
@@ -433,16 +491,18 @@ class App extends Component {
       <RaisedButton
         label="Black"
         secondary
+        onTouchTap={this.handleCreateRoomAsBlack}
       />,
       <RaisedButton
         label="White"
         secondary
+        onTouchTap={this.handleCreateRoomAsWhite}
       />,
       <RaisedButton
         label="Go back"
         secondary
         onTouchTap={this.handleSelectSideCloseOnFailure}
-      />
+      />,
     ];
 
     return (
@@ -540,6 +600,8 @@ class App extends Component {
               <Alert
                 createNewPVPRoom={this.createNewPVPRoom}
                 allRooms={allRooms}
+                handleJoinRoomAsBlack={this.handleJoinRoomAsBlack}
+                handleJoinRoomAsWhite={this.handleJoinRoomAsWhite}
                 showRooms
                 className="choose-room"
                 title={'Choose or create a room to join!'}
@@ -574,6 +636,7 @@ function mapStateToProps(state) {
     messages,
   } = gameState;
   const {
+    thisEmail,
     roomQueue,
     allRooms,
     thisUser,
@@ -594,6 +657,7 @@ function mapStateToProps(state) {
     chooseSideOpen,
   } = controlState;
   return {
+    thisEmail,
     count,
     roomQueue,
     allRooms,

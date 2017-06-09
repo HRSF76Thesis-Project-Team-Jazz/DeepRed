@@ -12,11 +12,17 @@ import Room from '../components/Room';
 //   maxWidth: 'none',
 // };
 
-const Alert = ({ title, open, actions, handleClose, showRooms, allRooms, createNewPVPRoom }) => (
+const Alert = ({ title, open, actions, handleClose, showRooms,
+allRooms, createNewPVPRoom, handleJoinRoomAsBlack, handleJoinRoomAsWhite }) => (
   <div>
     <Dialog
       title={showRooms === true ?
-        <Room allRooms={allRooms} createNewPVPRoom={createNewPVPRoom} />
+        <Room
+          allRooms={allRooms}
+          createNewPVPRoom={createNewPVPRoom}
+          handleJoinRoomAsBlack={handleJoinRoomAsBlack}
+          handleJoinRoomAsWhite={handleJoinRoomAsWhite}
+        />
         : title}
       actions={actions}
       modal={false}

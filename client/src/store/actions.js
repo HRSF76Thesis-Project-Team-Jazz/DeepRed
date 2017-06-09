@@ -135,9 +135,14 @@ export const receiveGame = game => ({
 });
 
 // userState actions
-export const setPlayerW = player => ({
-  type: types.SET_PLAYER_W,
+export const setPlayer = player => ({
+  type: types.SET_PLAYER,
   player,
+});
+
+export const setPlayerId = id => ({
+  type: types.SET_PLAYER_ID,
+  id,
 });
 
 export const getRequestFailure = message => ({
