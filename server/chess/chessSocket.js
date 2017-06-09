@@ -120,25 +120,25 @@ module.exports = (io, client) => {
     io.in(clientRoom).emit('rejectPauseRequestNotification');
   });
 
-  client.on('handleRejectPauseRequest', (room, id) => {
-    if (id === allRooms[room].playerBid) {
-      io.in(room).emit('cancelPauseNotification', allRooms[room].playerB);
+  client.on('handleRejectPauseRequest', (count, id) => {
+    if (id === allRooms[count].playerBid) {
+      io.in(allRooms[count].room).emit('cancelPauseNotification', allRooms[count].playerB);
     } else {
-      io.in(room).emit('cancelPauseNotification', allRooms[room].playerW);
+      io.in(allRooms[count].room).emit('cancelPauseNotification', allRooms[count].playerW);
     }
   });
 
-  client.on('agreePauseRequest', (room, id) => {
-    if (id === allRooms[room].playerBid) {
-      allRooms[room].playerBclicked = true;
+  client.on('agreePauseRequest', (count, id) => {
+    if (id === allRooms[count].playerBid) {
+      allRooms[count].playerBclicked = true;
     }
-    if (id === allRooms[room].playerWid) {
-      allRooms[room].playerWclicked = true;
+    if (id === allRooms[count].playerWid) {
+      allRooms[count].playerWclicked = true;
     }
-    if (allRooms[room].playerBclicked === true && allRooms[room].playerWclicked === true) {
-      io.in(room).emit('executePauseRequest');
-      allRooms[room].playerBclicked = false;
-      allRooms[room].playerWclicked = false;
+    if (allRooms[count].playerBclicked === true && allRooms[count].playerWclicked === true) {
+      io.in(allRooms[count].room).emit('executePauseRequest');
+      allRooms[count].playerBclicked = false;
+      allRooms[count].playerWclicked = false;
     }
   });
 

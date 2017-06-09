@@ -28,7 +28,6 @@ import PlayerName from '../components/PlayerName';
 import Clock from '../components/Clock';
 import './css/App.css';
 
-
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
@@ -90,7 +89,7 @@ class App extends Component {
   }
 
   startSocket() {
-    const { dispatch, playerW, playerWemail, gameTurn } = this.props;
+    const { dispatch, playerW, playerWemail, gameTurn, timeB, timeW } = this.props;
 
     const name = playerW;
     const email = playerWemail;
@@ -127,21 +126,6 @@ class App extends Component {
     });
 
     this.socket.on('joinRoomAsBlackComplete', (roomInfo) => {
-      dispatch(updateRoomInfo(roomInfo));
-      dispatch(updateTimer(roomInfo));
-      this.decrementTimerW();
-    });
-
-    this.socket.on('firstPlayerJoined', (roomInfo) => {
-      dispatch(updateRoomInfo(roomInfo));
-      console.log(`first player (White) has joined ${roomInfo.room} as ${roomInfo.playerW} with socket id ${roomInfo.playerWid}`);
-    });
-
-    this.socket.on('secondPlayerJoined', (roomInfo) => {
-      console.log(`second player (White) has joined ${roomInfo.room} as ${roomInfo.playerB} with socket id ${roomInfo.playerBid}`);
-    });
-
-    this.socket.on('startGame', (roomInfo) => {
       dispatch(updateRoomInfo(roomInfo));
       dispatch(updateTimer(roomInfo));
       this.decrementTimerW();
@@ -186,8 +170,8 @@ class App extends Component {
     });
 
     this.socket.on('rejectPauseRequestNotification', () => {
-      const { room } = this.props;
-      this.socket.emit('handleRejectPauseRequest', room, this.socket.id);
+      const { count } = this.props;
+      this.socket.emit('handleRejectPauseRequest', count, this.socket.id);
     });
 
     this.socket.on('cancelPauseNotification', (playerName) => {
@@ -200,7 +184,7 @@ class App extends Component {
     });
 
     this.socket.on('executePauseRequest', () => {
-      // dispatch(pauseTimer());
+      this.onChangePlayerTurn();
     });
 
     this.socket.on('executeResumeRequest', () => {
@@ -264,14 +248,14 @@ class App extends Component {
 
   stopTimerB() {
     const { dispatch, timeB, counterBinstance } = this.props;
-    clearInterval(counterBinstance);
     dispatch(updateTimerB(timeB));
+    clearInterval(counterBinstance);
   }
 
   stopTimerW() {
     const { dispatch, timeW, counterWinstance } = this.props;
-    clearInterval(counterWinstance);
     dispatch(updateTimerW(timeW));
+    clearInterval(counterWinstance);
   }
 
   onChangePlayerTurn() {
@@ -346,9 +330,9 @@ class App extends Component {
   }
 
   onAgreePauseRequest() {
-    const { dispatch, room } = this.props;
+    const { dispatch, count } = this.props;
     dispatch(pauseDialogClose());
-    this.socket.emit('agreePauseRequest', room, this.socket.id);
+    this.socket.emit('agreePauseRequest', count, this.socket.id);
   }
 
   onCancelPauseRequest() {
@@ -381,7 +365,6 @@ class App extends Component {
     const { dispatch } = this.props;
     dispatch(pauseDialogClose());
   }
-
 
   // LOGIC
   newChessGame() {
@@ -497,7 +480,7 @@ class App extends Component {
 
     return (
       <div className="site-wrap">
-        <Header />
+        <Header sendPauseRequest={this.sendPauseRequest} />
         <div className="content">
           <div className="flex-row">
             <div className="flex-col left-col">
@@ -539,7 +522,6 @@ class App extends Component {
                   color={(!isWhite) ? 'White' : 'Black'}
                   capturedPieces={(!isWhite) ? capturedPiecesWhite : capturedPiecesBlack}
                   player={(!isWhite) ? playerW : playerB}
-                  sendPauseRequest={this.sendPauseRequest}
                 />
               </div>
               <div className="flex-col capt-black-col">
@@ -547,7 +529,6 @@ class App extends Component {
                   color={(isWhite) ? 'White' : 'Black'}
                   capturedPieces={(isWhite) ? capturedPiecesWhite : capturedPiecesBlack}
                   player={(isWhite) ? playerW : playerB}
-                  sendPauseRequest={this.sendPauseRequest}
                 />
               </div>
             </div>
