@@ -1,22 +1,23 @@
 import React , { Component } from 'react';
+import Infinite from 'react-infinite';
+import ScrollArea from 'react-scrollbar';
 
 class Messages extends Component {
     constructor(props) {
-        super(props)
-        this.scrollBottom = this.scrollBottom.bind(this);
-    }
+        super(props);
+        this.componentWillUpdate = this.componentWillUpdate.bind(this)
+}
 
-    scrollBottom(){
-        this.context.scrollArea.scrollBottom();
-        console.log('THIS---------', this)
-    }
+// componentWillUpdate(){
+//     this.context.scrollArea.scrollBottom();
+// }
 
     render() {
         return (
-            <div onClick={() => this.scrollBottom()}>
-              <ul className="message-list">
+            <div onClick={() => this.refresh()}>
+              <ul className="message-list" >
                 {this.props.messages.map((msg, i) =>
-                <div className="message" key={i + msg}>{msg}</div>,
+                <div className="message" key={i + msg} >{msg}</div>,
                 )}
               </ul>
             </div>

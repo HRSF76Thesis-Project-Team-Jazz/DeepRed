@@ -248,4 +248,3 @@ module.exports.saveBlackPiece = saveBlackPiece;
 // module.exports.requestHistory = requestHistory;
 // module.exports = requestWhitePieces;
 // module.exports = requestBlackPieces;
-

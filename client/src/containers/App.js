@@ -699,7 +699,7 @@ class App extends Component {
 >>>>>>> updated schema, working on chat
               <ScrollArea>
               <Messages messages={messages} />
-              </ScrollArea>
+              </ScrollArea>           
               <ChatBox sendMessage={this.sendMessage} />
 <<<<<<< HEAD
 =======

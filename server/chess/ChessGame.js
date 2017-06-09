@@ -10,6 +10,7 @@
 const isLegalMove = require('./isLegalMove');
 const endGameChecks = require('./deepRed/endGameChecks');
 // const moveToPGNString = require('./convertToPGN');
+<<<<<<< HEAD
 const chessDB = require('../chessDB')
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -26,6 +27,9 @@ const chessDB = require('../chessDB')
 >>>>>>> working on DB schema func
 =======
 >>>>>>> working on DB schema func
+=======
+const chessDB = require('../chessDB');
+>>>>>>> progress on chatbox
 
 const transcribeBoard = board => board.map((row) => {
   const pieceIndex = {
@@ -95,12 +99,16 @@ class ChessGame {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   movePiece(origin, dest, pawnPromotionValue = null) {
     const error = this.errorCheck(origin, dest);
 =======
 =======
 >>>>>>> working on DB schema func
   movePiece(origin, dest, pawnPromotionPiece = null) {
+=======
+  movePiece(origin, dest, clientRoom, pawnPromotionPiece = null) {
+>>>>>>> progress on chatbox
     let error = this.errorCheck(origin, dest);
 >>>>>>> working on DB schema func
     if (error) {
@@ -181,7 +189,7 @@ class ChessGame {
         //   return { game: this, error };
         // }
         // this.history += moveToPGNString(this.board, origin, dest, this.count);
-        this.capturePiece(destPiece, clientRoom);
+        this.addToCaptureArray(destPiece, clientRoom);
       }
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -215,6 +223,13 @@ class ChessGame {
         this.promotePawn(originPiece, dest, pawnPromotionPiece);
       }
       // check for check/checkmate/stalemate
+<<<<<<< HEAD
+=======
+      chessDB.saveMove({
+        session_id: clientRoom,
+        history: transcribeBoard(this.board)
+      })
+>>>>>>> progress on chatbox
 
       this.history.push(transcribeBoard(this.board));
 
@@ -257,6 +272,7 @@ class ChessGame {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 <<<<<<< HEAD
   errorCheck(origin, dest) {
@@ -288,6 +304,9 @@ class ChessGame {
 =======
   movePiece(origin, dest, clientRoom) {
 >>>>>>> working on DB schema func
+=======
+  errorCheck(origin, dest, clientRoom) {
+>>>>>>> progress on chatbox
     let error = null;
     if (dest === undefined) {
       error = 'Attempted destination is invalid.';
@@ -320,7 +339,6 @@ class ChessGame {
         return error;
       }
     }
-
     return error;
   }
   castlingMove(castlingStr) {
@@ -510,7 +528,6 @@ class ChessGame {
 >>>>>>> working on DB schema func
     }
   }
-
   toggleMovedRooksOrKings(origin, originPiece) {
     if (originPiece === 'WK' && JSON.stringify(origin) === JSON.stringify([7, 4])) {
       this.hasMovedWK = true;
@@ -554,12 +571,16 @@ class ChessGame {
 >>>>>>> working on DB schema func
 =======
 
+<<<<<<< HEAD
 
   capturePiece(piece, clientRoom) {
 >>>>>>> working on DB schema func
+=======
+  addToCaptureArray(piece, clientRoom) {
+>>>>>>> progress on chatbox
     if (piece[0] === 'W') {
       this.blackCapPieces.push(piece);
-      
+
       chessDB.saveBlackPiece({
         session_id: clientRoom,
         black_pieces: JSON.stringify(piece),
@@ -595,13 +616,12 @@ class ChessGame {
         session_id: clientRoom,
         white_pieces: JSON.stringify(piece),
       })
-
+      
     }
   }
   promotePawn(originPiece, dest, pawnPromotionPiece) {
     if ((originPiece === 'WP' && dest[0] === 0) || (originPiece === 'BP' && dest[0] === 7)) {
       this.board[dest[0]][dest[1]] = pawnPromotionPiece;
-
     }
   }
   checkAllMovesOfOrigin(origin) {
