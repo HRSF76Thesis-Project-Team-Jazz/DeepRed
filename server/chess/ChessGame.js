@@ -8,6 +8,7 @@
 // K = King
 
 const isLegalMove = require('./isLegalMove');
+const endGameChecks = require('./deepRed/endGameChecks');
 // const moveToPGNString = require('./convertToPGN');
 
 const transcribeBoard = board => board.map((row) => {
@@ -54,11 +55,12 @@ class ChessGame {
     this.hasMovedBRQ = false;
     this.hasMovedBK = false;
     this.canEnPassant = [];
+    this.playerInCheck = null;
     this.winner = null;
   }
 
   movePiece(origin, dest, pawnPromotionValue = null) {
-    let error = this.errorCheck(origin, dest);
+    const error = this.errorCheck(origin, dest);
     if (error) {
       return { game: this, error };
     }
@@ -66,6 +68,22 @@ class ChessGame {
     const destPiece = this.board[dest[0]][dest[1]];
     const legalMoveResult = isLegalMove(this, origin, dest);
     if (legalMoveResult.bool) {
+      // prevent putting yourself in check
+      const testBoard = this.board.slice(0);
+      testBoard[dest[0]][dest[1]] = originPiece;
+      testBoard[origin[0]][origin[1]] = null;
+      if (this.turn === 'W' && endGameChecks.whiteIsChecked(testBoard)) {
+        return {
+          game: this,
+          error: 'Cannot leave yourself in check.',
+        };
+      } else if (this.turn === 'B' && endGameChecks.blackIsChecked(testBoard)) {
+        return {
+          game: this,
+          error: 'Cannot leave yourself in check.',
+        };
+      }
+
       // handle castling
       if (legalMoveResult.castling) {
         this.castlingMove(legalMoveResult.castling);
@@ -84,19 +102,42 @@ class ChessGame {
       if (destPiece) {
         this.addToCaptureArray(destPiece);
       }
+
+      // swap location
       this.board[dest[0]][dest[1]] = originPiece;
       this.board[origin[0]][origin[1]] = null;
+
+      // handle pawn promotion
       let pawnPromotionPiece = null;
       if (pawnPromotionValue) {
         pawnPromotionPiece = originPiece[0] + pawnPromotionValue;
         this.promotePawn(originPiece, dest, pawnPromotionPiece);
       }
       // check for check/checkmate/stalemate
+
       this.history.push(transcribeBoard(this.board));
+
+      if (this.turn === 'W') {
+        if (endGameChecks.isCheckmateWhite(this.board)) {
+          this.winner = 'W';
+        } else if (endGameChecks.isStalemateBlack(this.board)) {
+          this.winner = 'D';
+        } else if (endGameChecks.blackIsChecked(this.board)) {
+          this.playerInCheck = 'B';
+        }
+      } else if (this.turn === 'B') {
+        if (endGameChecks.isCheckmateBlack(this.board)) {
+          this.winner = 'B';
+        } else if (endGameChecks.isStalemateWhite(this.board)) {
+          this.winner = 'D';
+        } else if (endGameChecks.whiteIsChecked(this.board)) {
+          this.playerInCheck = 'W';
+        }
+      }
       this.turn = (this.turn === 'W') ? 'B' : 'W';
       // console.log(this.history);
-      console.log(this.board);
-      console.log('Move piece is successful.');
+      // console.log(this.board);
+      // console.log('Move piece is successful.');
       return {
         game: this,
         error: null,
@@ -105,10 +146,9 @@ class ChessGame {
         pawnPromotionPiece,
       };
     }
-    error = 'Move is not allowed.';
     // console.log(this.board);
     // console.log(error);
-    return { game: this, error };
+    return { game: this, error: 'Move is not allowed.' };
   }
   errorCheck(origin, dest) {
     let error = null;
@@ -214,32 +254,5 @@ class ChessGame {
   }
 
 }
-  // pawnPromotion(piece, origin, dest) {
-  //   let originPiece = this.board[origin[0]][origin[1]];
-  //   let destPiece = this.board[dest[0]][dest[1]];
-  //
-  //   if (isLegalMove(this.board, origin, dest)) {
-  //     if (piece[0] === 'W' && origin[0] === 1) {
-  //       if (dest[0] === 0) {
-  //         destPiece = 'WQ';
-  //         originPiece = null;
-  //       }
-  //     }
-  //     if (piece[0] === 'B' && origin[0] === 6) {
-  //       if (dest[0] === 7) {
-  //         destPiece = 'BQ';
-  //         originPiece = null;
-  //       }
-  //     }
-  //     this.history[this.turn] = this.history[this.turn] || [];
-  //     this.history[this.turn].push(origin);
-  //     this.history[this.turn].push(dest);
-  //     if (originPiece[0] === 'B') {
-  //       this.turn += 1;
-  //     }
-  //     this.count += 1;
-  //   }
-  // }
-  //
 
 module.exports = ChessGame;

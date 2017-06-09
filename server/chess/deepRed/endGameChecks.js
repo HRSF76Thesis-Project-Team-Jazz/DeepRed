@@ -48,4 +48,6 @@ module.exports = {
   isStalemateBlack,
   blackCanMove,
   whiteCanMove,
+  whiteIsChecked,
+  blackIsChecked,
 };

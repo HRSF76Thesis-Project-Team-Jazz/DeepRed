@@ -811,3 +811,117 @@ describe('isLegalMoveKing', () => {
     expect(actualKingCastleResultBoard2).to.eql(expectedBKingCastleResultBoard);
   });
 });
+
+describe('Check', () => {
+  const noCheckChessGame = new ChessGame();
+  it('nobody should be in check', () => {
+    expect(noCheckChessGame.playerInCheck).to.eql(null);
+  });
+  const checkWChessGame = new ChessGame();
+  checkWChessGame.board = [
+    ['BR', null, 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+    ['BP', 'BP', 'BP', 'BP', null, null, 'BP', 'BP'],
+    [null, null, 'BN', null, null, null, null, null],
+    [null, null, null, null, 'BP', null, null, null],
+    [null, null, null, null, 'WP', null, null, null],
+    [null, null, null, null, null, 'WQ', null, null],
+    ['WP', 'WP', 'WP', 'WP', null, 'WP', 'WP', 'WP'],
+    ['WR', 'WN', 'WB', null, 'WK', 'WB', 'WN', 'WR'],
+  ];
+  it('should put black in check', () => {
+    expect(checkWChessGame.movePiece([5, 5], [1, 5]).game.playerInCheck).to.eql('B');
+  });
+  it('should error if still in check after moving', () => {
+    expect(checkWChessGame.movePiece([1, 0], [2, 0]).error).to.eql('Cannot leave yourself in check.');
+  });
+  it('should not allow move if still in check', () => {
+    expect(checkWChessGame.movePiece([1, 0], [2, 0]).game.board).to.eql(checkWChessGame.board);
+  });
+  it('should allow move if getting out of check', () => {
+    expect(checkWChessGame.movePiece([0, 4], [1, 5]).error).to.eql(null);
+  });
+});
+
+describe('White Checkmate', () => {
+  const checkmateWChessGame = new ChessGame();
+  checkmateWChessGame.board = [
+    ['BR', null, 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+    ['BP', 'BP', 'BP', null, null, null, 'BP', 'BP'],
+    [null, null, 'BN', 'BP', null, null, null, null],
+    [null, null, null, null, 'BP', null, null, null],
+    [null, null, 'WB', null, 'WP', null, null, null],
+    [null, null, null, null, null, 'WQ', null, null],
+    ['WP', 'WP', 'WP', 'WP', null, 'WP', 'WP', 'WP'],
+    ['WR', 'WN', 'WB', null, 'WK', null, 'WN', 'WR'],
+  ];
+  it('should allow move to checkmate', () => {
+    expect(checkmateWChessGame.movePiece([5, 5], [1, 5]).error).to.eql(null);
+  });
+  it('should declare winner if checkmate', () => {
+    expect(checkmateWChessGame.winner).to.eql('W');
+  });
+});
+
+describe('Black Checkmate', () => {
+  const checkmateBChessGame = new ChessGame();
+  checkmateBChessGame.board = [
+    ['BR', null, 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+    ['BP', 'BP', 'BP', null, null, null, 'BP', 'BP'],
+    [null, null, 'BN', 'BP', null, null, null, null],
+    [null, null, null, null, 'BR', null, null, null],
+    [null, null, null, null, null, 'BQ', null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'WP', 'WP', 'WP', null, null, null, null],
+    ['WR', 'WN', 'WB', 'WK', null, null, null, null],
+  ];
+  checkmateBChessGame.turn = 'B';
+  it('should allow move to checkmate', () => {
+    expect(checkmateBChessGame.movePiece([4, 5], [5, 5]).error).to.eql(null);
+  });
+  it('should declare winner if checkmate', () => {
+    expect(checkmateBChessGame.winner).to.eql('B');
+  });
+});
+
+describe('White Stalemate', () => {
+  const stalemateChessGame = new ChessGame();
+  stalemateChessGame.board = [
+    [null, 'BK', null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, 'WK', null, null, null, null, null, null],
+    ['WQ', null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+  ];
+  it('should allow move to stalemate', () => {
+    expect(stalemateChessGame.movePiece([3, 0], [2, 0]).error).to.eql(null);
+  });
+  it('should declare Draw if stalemate', () => {
+    console.log(stalemateChessGame.board);
+    expect(stalemateChessGame.winner).to.eql('D');
+  });
+});
+
+describe('Black Stalemate', () => {
+  const stalemateChessGame = new ChessGame();
+  stalemateChessGame.board = [
+    [null, 'WK', null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, 'BK', null, null, null, null, null, null],
+    ['BQ', null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+  ];
+  stalemateChessGame.turn = 'B';
+  it('should allow move to stalemate', () => {
+    expect(stalemateChessGame.movePiece([3, 0], [2, 0]).error).to.eql(null);
+  });
+  it('should declare Draw if stalemate', () => {
+    console.log(stalemateChessGame.board);
+    expect(stalemateChessGame.winner).to.eql('D');
+  });
+});
