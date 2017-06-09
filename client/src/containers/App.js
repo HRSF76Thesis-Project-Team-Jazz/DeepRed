@@ -10,7 +10,7 @@ import {
   updateRoomInfo, getRequestFailure, receiveGame, movePiece, resetBoolBoard,
   unselectPiece, capturePiece, displayError, colorSquare, sendMsg,
   updateTimerB, timeInstanceB, updateTimerW, timeInstanceW, saveBoolBoard,
-  castlingMove, enPassantMove,
+  castlingMove, enPassantMove, pawnPromotionMove,
 } from '../store/actions';
 
 // Components
@@ -108,15 +108,18 @@ class App extends Component {
       dispatch(sendMsg(msg));
     });
 
-    this.socket.on('attemptMoveResult', (error, origin, dest, selection, gameTurn, castling, enPassantCoord) => {
-      // dispatch(receiveGame(board));
+    this.socket.on('attemptMoveResult', (error, origin, dest, selection, gameTurn, castling, enPassantCoord, pawnPromotionPiece) => {
+
       if (error === null) {
-        if (selection) {
-          dispatch(capturePiece(origin, dest, selection, gameTurn));
+        if (pawnPromotionPiece) {
+          dispatch(pawnPromotionMove(origin, dest, pawnPromotionPiece, gameTurn));
         } else if (castling) {
           dispatch(castlingMove(origin, dest, castling, gameTurn));
         } else if (enPassantCoord) {
           dispatch(enPassantMove(origin, dest, enPassantCoord, gameTurn));
+        } else if (selection) {
+          dispatch(capturePiece(origin, dest, selection, gameTurn));
+
         } else {
           dispatch(movePiece(origin, dest, gameTurn));
         }
@@ -281,10 +284,10 @@ class App extends Component {
     this.socket.on('createdChessGame', game => dispatch(receiveGame(game)));
   }
 
-  attemptMove(origin, dest, selection, room) {
+  attemptMove(origin, dest, selection, room, pieceType = null) {
     // const { dispatch, room} = this.props;
     console.log('sending origin and dest coordinates to server');
-    this.socket.emit('attemptMove', origin, dest, selection, room, this.socket.id);
+    this.socket.emit('attemptMove', origin, dest, selection, pieceType, room, this.socket.id);
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
