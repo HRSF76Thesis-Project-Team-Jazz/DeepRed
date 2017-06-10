@@ -111,7 +111,7 @@ class App extends Component {
   }
 
   startSocket() {
-    const { dispatch, playerW, playerB, thisUser, thisEmail,
+    const { dispatch, playerW, playerB, thisUser, thisEmail, room, count,
        gameTurn, timeB, timeW } = this.props;
 
     const name = thisUser;
@@ -257,6 +257,14 @@ class App extends Component {
     this.socket.on('sendUpdateTime', (roomInfo) => {
       dispatch(updateTimer(roomInfo));
     });
+
+    this.socket.on('roomInfoUpdateOnDisconnect', (roomInfo) => {
+      dispatch(updateRoomInfo(roomInfo));
+    });
+
+    this.socket.on('beforeDisconnect', (playerName) => {
+      console.log(`player ${playerName} has disconnected from the server`);
+    });
   }
 
   // GAME control
@@ -335,6 +343,7 @@ class App extends Component {
   // CONTROL function
   handleSurrender() {
     const { thisUser, room } = this.props;
+    // this.socket.disconnect();
     this.socket.emit('onSurrender', thisUser, room);
   }
 
