@@ -465,7 +465,10 @@ const squareState = (state = Immutable({
 const controlState = (state = Immutable({
   alertName: '',
   cancelPauseOpen: false,
+  cancelResumeOpen: false,
   pauseOpen: false,
+  resumeOpen: false,
+  surrenderOpen: false,
   chooseGameModeOpen: false,
   chooseRoomOpen: false,
   chooseSideOpen: false,
@@ -483,6 +486,18 @@ const controlState = (state = Immutable({
         pauseOpen: false,
       });
     }
+    case types.RESUME_DIALOG_OPEN: {
+      return Immutable({
+        ...state,
+        resumeOpen: true,
+      });
+    }
+    case types.RESUME_DIALOG_CLOSE: {
+      return Immutable({
+        ...state,
+        resumeOpen: false,
+      });
+    }
     case types.CANCEL_PAUSE_DIALOG_OPEN: {
       return Immutable({
         ...state,
@@ -495,10 +510,34 @@ const controlState = (state = Immutable({
         cancelPauseOpen: false,
       });
     }
+    case types.CANCEL_RESUME_DIALOG_OPEN: {
+      return Immutable({
+        ...state,
+        cancelResumeOpen: true,
+      });
+    }
+    case types.CANCEL_RESUME_DIALOG_CLOSE: {
+      return Immutable({
+        ...state,
+        cancelResumeOpen: false,
+      });
+    }
     case types.UPDATE_ALERT_NAME: {
       return Immutable({
         ...state,
         alertName: action.alertName,
+      });
+    }
+    case types.ANNOUNCE_SURRENDER_DIALOG_OPEN: {
+      return Immutable({
+        ...state,
+        surrenderOpen: true,
+      });
+    }
+    case types.ANNOUNCE_SURRENDER_DIALOG_CLOSE: {
+      return Immutable({
+        ...state,
+        surrenderOpen: false,
       });
     }
     case types.SELECT_GAME_MODE_OPEN: {

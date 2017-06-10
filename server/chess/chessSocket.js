@@ -15,7 +15,7 @@ const createAndSaveNewGame = (room) => {
 module.exports = (io, client) => {
   let room = '';
 
-  client.on('getAllRooms', id => {
+  client.on('getAllRooms', (id) => {
     io.to(id).emit('returnAllRooms', allRooms);
   });
 
@@ -34,7 +34,6 @@ module.exports = (io, client) => {
       roomInfo.playerWclicked = false;
       roomInfo.count = count;
       allRooms[count] = roomInfo;
-      console.log('123W: ', allRooms);
       io.to(room).emit('createRoomAsWhiteComplete', roomInfo);
       count += 1;
       roomInfo = {};
@@ -42,7 +41,6 @@ module.exports = (io, client) => {
   });
 
   client.on('createRoomAsBlack', (currentUserName, currentUserEmail, id) => {
-    console.log('hello: ', currentUserEmail);
     if (queue.length !== 0) {
       room = `room ${queue[0]}`;
     } else {
@@ -57,38 +55,33 @@ module.exports = (io, client) => {
       roomInfo.playerBclicked = false;
       roomInfo.count = count;
       allRooms[count] = roomInfo;
-      console.log('123B: ', allRooms);
       io.to(room).emit('createRoomAsBlackComplete', roomInfo);
       count += 1;
       roomInfo = {};
     });
   });
 
-  client.on('joinRoomAsWhite', (currentUserName, currentUserEmail, clientCount, clientRoom) => {
+  client.on('joinRoomAsWhite', (currentUserName, currentUserEmail, clientCount) => {
     client.join(allRooms[clientCount].room, () => {
-      // if(allRooms[clientCount].playerW === undefined && allRooms[clientCount].playerB !== undefined) {
-          allRooms[clientCount].playerW = currentUserName;
-          allRooms[clientCount].playerWemail = currentUserEmail;
-          allRooms[clientCount].playerWid = client.client.id;
-          allRooms[clientCount].playerWtime = 600;
-          allRooms[clientCount].playerWclicked = false;
-          createAndSaveNewGame(allRooms[clientCount].room);
-          io.in(allRooms[clientCount].room).emit('joinRoomAsWhiteComplete', allRooms[clientCount]);
-        // }
-      });
+      allRooms[clientCount].playerW = currentUserName;
+      allRooms[clientCount].playerWemail = currentUserEmail;
+      allRooms[clientCount].playerWid = client.client.id;
+      allRooms[clientCount].playerWtime = 600;
+      allRooms[clientCount].playerWclicked = false;
+      createAndSaveNewGame(allRooms[clientCount].room);
+      io.in(allRooms[clientCount].room).emit('joinRoomAsWhiteComplete', allRooms[clientCount]);
+    });
   });
 
-  client.on('joinRoomAsBlack', (currentUserName, currentUserEmail, clientCount, clientRoom) => {
+  client.on('joinRoomAsBlack', (currentUserName, currentUserEmail, clientCount) => {
     client.join(allRooms[clientCount].room, () => {
-      // if(allRooms[clientCount].playerB === undefined && allRooms[clientCount].playerW !== undefined) {
-          allRooms[clientCount].playerB = currentUserName;
-          allRooms[clientCount].playerBemail = currentUserEmail;
-          allRooms[clientCount].playerBid = client.client.id;
-          allRooms[clientCount].playerBtime = 600;
-          allRooms[clientCount].playerBclicked = false;
-          createAndSaveNewGame(allRooms[clientCount].room);
-          io.in(allRooms[clientCount].room).emit('joinRoomAsBlackComplete', allRooms[clientCount]);
-      // }
+      allRooms[clientCount].playerB = currentUserName;
+      allRooms[clientCount].playerBemail = currentUserEmail;
+      allRooms[clientCount].playerBid = client.client.id;
+      allRooms[clientCount].playerBtime = 600;
+      allRooms[clientCount].playerBclicked = false;
+      createAndSaveNewGame(allRooms[clientCount].room);
+      io.in(allRooms[clientCount].room).emit('joinRoomAsBlackComplete', allRooms[clientCount]);
     });
   });
 
@@ -117,30 +110,61 @@ module.exports = (io, client) => {
     io.in(clientRoom).emit('rejectPauseRequestNotification');
   });
 
-  client.on('handleRejectPauseRequest', (count, id) => {
-    if (id === allRooms[count].playerBid) {
-      io.in(allRooms[count].room).emit('cancelPauseNotification', allRooms[count].playerB);
+  client.on('handleRejectPauseRequest', (clientCount, id) => {
+    if (id === allRooms[clientCount].playerBid) {
+      io.in(allRooms[clientCount].room).emit('cancelPauseNotification', allRooms[clientCount].playerB);
     } else {
-      io.in(allRooms[count].room).emit('cancelPauseNotification', allRooms[count].playerW);
+      io.in(allRooms[clientCount].room).emit('cancelPauseNotification', allRooms[clientCount].playerW);
     }
   });
 
-  client.on('agreePauseRequest', (count, id) => {
-    if (id === allRooms[count].playerBid) {
-      allRooms[count].playerBclicked = true;
+  client.on('agreePauseRequest', (clientCount, id) => {
+    if (id === allRooms[clientCount].playerBid) {
+      allRooms[clientCount].playerBclicked = true;
     }
-    if (id === allRooms[count].playerWid) {
-      allRooms[count].playerWclicked = true;
+    if (id === allRooms[clientCount].playerWid) {
+      allRooms[clientCount].playerWclicked = true;
     }
-    if (allRooms[count].playerBclicked === true && allRooms[count].playerWclicked === true) {
-      io.in(allRooms[count].room).emit('executePauseRequest');
-      allRooms[count].playerBclicked = false;
-      allRooms[count].playerWclicked = false;
+    if (allRooms[clientCount].playerBclicked === true && allRooms[clientCount].playerWclicked === true) {
+      io.in(allRooms[clientCount].room).emit('executePauseRequest');
+      allRooms[clientCount].playerBclicked = false;
+      allRooms[clientCount].playerWclicked = false;
     }
   });
 
-  client.on('requestResume', (room) => {
-    io.in(room).emit('executeResumeRequest');
+  client.on('requestResume', (clientRoom) => {
+    io.in(clientRoom).emit('requestResumeDialogBox');
+  });
+
+  client.on('rejectResumeRequest', (clientRoom) => {
+    io.in(clientRoom).emit('rejectResumeRequestNotification');
+  });
+
+  client.on('handleRejectResumeRequest', (clientCount, id) => {
+    if (id === allRooms[clientCount].playerBid) {
+      io.in(allRooms[clientCount].room).emit('cancelResumeNotification', allRooms[clientCount].playerB);
+    } else {
+      io.in(allRooms[clientCount].room).emit('cancelResumeNotification', allRooms[clientCount].playerW);
+    }
+  });
+
+  client.on('agreeResumeRequest', (clientCount, id) => {
+    if (id === allRooms[clientCount].playerBid) {
+      allRooms[clientCount].playerBclicked = true;
+    }
+    if (id === allRooms[clientCount].playerWid) {
+      allRooms[clientCount].playerWclicked = true;
+    }
+    if (allRooms[clientCount].playerBclicked === true
+      && allRooms[clientCount].playerWclicked === true) {
+      io.in(allRooms[clientCount].room).emit('executeResumeRequest');
+      allRooms[clientCount].playerBclicked = false;
+      allRooms[clientCount].playerWclicked = false;
+    }
+  });
+
+  client.on('onSurrender', (currentUser, clientRoom) => {
+    io.in(clientRoom).emit('announceSurrender', currentUser);
   });
 
   client.on('updateTime', (clientRoom, clientCount, timeB, timeW) => {
@@ -148,6 +172,7 @@ module.exports = (io, client) => {
     allRooms[clientCount].playerWtime = timeW;
     io.in(clientRoom).emit('sendUpdatedTime', allRooms[clientCount]);
   });
+
 
   // messaging communications
   client.on('message', (msg, count) => {

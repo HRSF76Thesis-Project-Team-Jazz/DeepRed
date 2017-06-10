@@ -13,7 +13,9 @@ import {
   updateTimerB, timeInstanceB, updateTimerW, timeInstanceW, saveBoolBoard, castlingMove,
   selectGameModeClose, selectGameModeOpen, selectRoomOpen, selectRoomClose,
   selectSideOpen, selectSideClose, updateAllRooms, updateRoomQueue, setPlayerId,
-  enPassantMove, pawnPromotionMove, openWinnerDialog, openCheckDialog,
+  enPassantMove, pawnPromotionMove, resumeDialogOpen, resumeDialogClose, cancelResumeDialogOpen,
+  cancelResumeDialogClose, announceSurrenderDialogOpen, announceSurrenderDialogClose,
+  openWinnerDialog, openCheckDialog,
 } from '../store/actions';
 
 // Components
@@ -42,6 +44,7 @@ class App extends Component {
     this.newChessGame = this.newChessGame.bind(this);
     this.startSocket = this.startSocket.bind(this);
     this.sendPauseRequest = this.sendPauseRequest.bind(this);
+    this.sendResumeRequest = this.sendResumeRequest.bind(this);
     this.handlePauseOpen = this.handlePauseOpen.bind(this);
     this.handlePauseClose = this.handlePauseClose.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
@@ -67,7 +70,14 @@ class App extends Component {
     this.handleJoinRoomAsWhite = this.handleJoinRoomAsWhite.bind(this);
     this.onPlayerWdefeat = this.onPlayerWdefeat.bind(this);
     this.onPlayerBdefeat = this.onPlayerWdefeat.bind(this);
-    this.onSurrander = this.onSurrander.bind(this);
+    this.handleSurrender = this.handleSurrender.bind(this);
+    this.handleResumeOpen = this.handleResumeOpen.bind(this);
+    this.onCancelResumeRequest = this.onCancelResumeRequest.bind(this);
+    this.onAgreeResumeRequest = this.onAgreeResumeRequest.bind(this);
+    this.handleCancelResumeClose = this.handleCancelResumeClose.bind(this);
+    this.handleAnnounceSurrenderOpen = this.handleAnnounceSurrenderOpen.bind(this);
+    this.handleAnnounceSurrenderClose = this.handleAnnounceSurrenderClose.bind(this);
+    this.updateUserGameStat = this.updateUserGameStat.bind(this);
   }
 
   componentDidMount() {
@@ -88,6 +98,16 @@ class App extends Component {
       .catch((err) => {
         dispatch(getRequestFailure(err));
         console.error('failed to obtain current user infomation!', err);
+      });
+  }
+
+  updateUserGameStat() {
+    axios.post('/api/game/updateUserGameStat')
+      .then((response) => {
+        console.log('successfully sent user win lose information to server: ', response);
+      })
+      .catch((err) => {
+        console.error('failed to send user win lose information to the server! ', err);
       });
   }
 
@@ -192,14 +212,39 @@ class App extends Component {
       this.onChangePlayerTurn();
     });
 
+    this.socket.on('requestResumeDialogBox', () => {
+      this.handleResumeOpen();
+    });
+
+    this.socket.on('rejectResumeRequestNotification', () => {
+      const { count } = this.props;
+      this.socket.emit('handleRejectResumeRequest', count, this.socket.id);
+    });
+
+    this.socket.on('cancelResumeNotification', (playerName) => {
+      dispatch(updateAlertName(playerName));
+      dispatch(cancelResumeDialogOpen());
+      setTimeout(() => {
+        dispatch(cancelResumeDialogClose());
+        dispatch(resumeDialogClose());
+      }, 3000);
+    });
+
     this.socket.on('executeResumeRequest', () => {
-      if (gameTurn === 'B') {
-        this.onChangePlayerTurn();
-        // dispatch(resumeTimerB());
-      } else {
-        this.onChangePlayerTurn();
-        // dispatch(resumeTimerW());
+      const { gameTurn } = this.props;
+      if (gameTurn === 'W') {
+        this.decrementTimerW();
       }
+      if (gameTurn === 'B') {
+        this.decrementTimerB();
+      }
+    });
+
+    this.socket.on('announceSurrender', (playerName) => {
+      dispatch(updateAlertName(playerName));
+      this.onChangePlayerTurn();
+      this.updateUserGameStat();
+      this.handleAnnounceSurrenderOpen();
     });
 
     this.socket.on('sendUpdateTime', (roomInfo) => {
@@ -228,6 +273,7 @@ class App extends Component {
       } else {
         timeB = 0;
         this.stopTimerB();
+        this.updateUserGameStat();
         // player B lose, fire signal to server
       }
       dispatch(updateTimerB(timeB));
@@ -244,6 +290,7 @@ class App extends Component {
       } else {
         timeW = 0;
         this.stopTimerW();
+        this.updateUserGameStat();
         // player W lose, fire signal to server
       }
       dispatch(updateTimerW(timeW));
@@ -278,10 +325,10 @@ class App extends Component {
   onPlayerBdefeat() {
 
   }
-////////////////
-  onSurrander() {
-    const { thisUser } = this.props;
-    this.socket.emit('surrander', thisUser);
+
+  handleSurrender() {
+    const { thisUser, room } = this.props;
+    this.socket.emit('onSurrender', thisUser, room);
   }
 
   createNewPVPRoom() {
@@ -301,14 +348,14 @@ class App extends Component {
   }
 
   handleJoinRoomAsWhite(count) {
-    const { dispatch, thisUser, thisEmail, room } = this.props;
-    this.socket.emit('joinRoomAsWhite', thisUser, thisEmail, count, room);
+    const { dispatch, thisUser, thisEmail } = this.props;
+    this.socket.emit('joinRoomAsWhite', thisUser, thisEmail, count);
     dispatch(selectRoomClose());
   }
 
   handleJoinRoomAsBlack(count) {
-    const { dispatch, thisUser, thisEmail, room } = this.props;
-    this.socket.emit('joinRoomAsBlack', thisUser, thisEmail, count, room);
+    const { dispatch, thisUser, thisEmail } = this.props;
+    this.socket.emit('joinRoomAsBlack', thisUser, thisEmail, count);
     dispatch(selectRoomClose());
   }
 
@@ -316,6 +363,7 @@ class App extends Component {
     const { dispatch } = this.props;
     dispatch(selectGameModeOpen());
   }
+
 
   handleSelectSideCloseOnFailure() {
     const { dispatch } = this.props;
@@ -366,12 +414,41 @@ class App extends Component {
   }
 
   sendPauseRequest() {
-    const { room, pausedB, pausedW } = this.props;
-    if (pausedB === true && pausedW === true) {
-      this.socket.emit('requestResume', room);
-    } else {
-      this.socket.emit('requestPause', room);
-    }
+    const { room } = this.props;
+    this.socket.emit('requestPause', room);
+  }
+
+  sendResumeRequest() {
+    const { room } = this.props;
+    this.socket.emit('requestResume', room);
+  }
+
+  onCancelResumeRequest() {
+    const { dispatch, room } = this.props;
+    dispatch(resumeDialogClose());
+    this.socket.emit('rejectResumeRequest', room);
+  }
+
+  onAgreeResumeRequest() {
+    const { dispatch, count } = this.props;
+    dispatch(resumeDialogClose());
+    this.socket.emit('agreeResumeRequest', count, this.socket.id);
+  }
+
+  handleCancelResumeClose() {
+    const { dispatch } = this.props;
+    dispatch(resumeDialogClose());
+    dispatch(cancelResumeDialogClose());
+  }
+
+  handleResumeOpen() {
+    const { dispatch } = this.props;
+    dispatch(resumeDialogOpen());
+  }
+
+  handleResumeClose() {
+    const { dispatch } = this.props;
+    dispatch(resumeDialogClose());
   }
 
   handlePauseOpen() {
@@ -384,6 +461,17 @@ class App extends Component {
     dispatch(pauseDialogClose());
   }
 
+  handleAnnounceSurrenderClose() {
+    const { dispatch } = this.props;
+    console.log('321');
+    dispatch(announceSurrenderDialogClose());
+  }
+
+  handleAnnounceSurrenderOpen() {
+    const { dispatch } = this.props;
+    console.log('123');
+    dispatch(announceSurrenderDialogOpen());
+  }
   // LOGIC
   newChessGame() {
     const { dispatch } = this.props;
@@ -414,9 +502,10 @@ class App extends Component {
   render() {
     const {
       alertName, cancelPauseOpen, pauseOpen, moveHistory,
-      capturedPiecesBlack, capturedPiecesWhite,
+      capturedPiecesBlack, capturedPiecesWhite, resumeOpen,
       playerB, playerW, error, messages, isWhite, thisUser,
       chooseGameModeOpen, chooseRoomOpen, chooseSideOpen, allRooms,
+      cancelResumeOpen, surrenderOpen,
     } = this.props;
 
     const pauseActions = [
@@ -433,6 +522,19 @@ class App extends Component {
       />,
     ];
 
+    const resumeActions = [
+      <FlatButton
+        label="No"
+        primary
+        onTouchTap={this.onCancelResumeRequest}
+      />,
+      <FlatButton
+        label="yes"
+        primary
+        onTouchTap={this.onAgreeResumeRequest}
+      />,
+    ];
+
     const cancelPauseActions = [
       <FlatButton
         label="Ok"
@@ -442,28 +544,38 @@ class App extends Component {
       />,
     ];
 
+    const cancelResumeActions = [
+      <FlatButton
+        label="Ok"
+        primary
+        keyboardFocused
+        onTouchTap={this.handleCancelResumeClose}
+      />,
+    ];
     const chooseGameModeActionsStyle = {
-      backgroundColor: 'blue',
-      width: '32%',
-      margin: '0.5vh',
+      margin: '1px',
+      padding: '1px',
     };
 
     const chooseGameModeActions = [
       <RaisedButton
         style={chooseGameModeActionsStyle}
         label="Player vs Player"
+        fullWidth
         secondary
         onTouchTap={this.onPVPmodeSelected}
       />,
       <RaisedButton
         style={chooseGameModeActionsStyle}
         label="Player vs AI"
+        fullWidth
         secondary
         onTouchTap={this.onPVCmodeSelected}
       />,
       <RaisedButton
         style={chooseGameModeActionsStyle}
         label="AI vs AI"
+        fullWidth
         secondary
         onTouchTap={this.onCVCmodeSelected}
       />,
@@ -478,21 +590,38 @@ class App extends Component {
       />,
     ];
 
+    const selectSideActionsStyle = {
+      margin: '1px',
+      padding: '1px',
+    };
+
     const selectSideActions = [
       <RaisedButton
-        label="Black"
-        secondary
-        onTouchTap={this.handleCreateRoomAsBlack}
-      />,
-      <RaisedButton
         label="White"
-        secondary
+        style={selectSideActionsStyle}
+        primary
         onTouchTap={this.handleCreateRoomAsWhite}
       />,
       <RaisedButton
+        label="Black"
+        style={selectSideActionsStyle}
+        primary
+        onTouchTap={this.handleCreateRoomAsBlack}
+      />,
+      <RaisedButton
         label="Go back"
+        style={selectSideActionsStyle}
         secondary
         onTouchTap={this.handleSelectSideCloseOnFailure}
+      />,
+    ];
+
+    const surrenderActions = [
+      <RaisedButton
+        label="Ok"
+        style={selectSideActionsStyle}
+        secondary
+        onTouchTap={this.handleAnnounceSurrenderClose}
       />,
     ];
 
@@ -500,7 +629,8 @@ class App extends Component {
       <div className="site-wrap">
         <Header
           sendPauseRequest={this.sendPauseRequest}
-          onSurrander={this.onSurrander}
+          sendResumeRequest={this.sendResumeRequest}
+          handleSurrender={this.handleSurrender}
         />
         <div className="content">
           <div className="flex-row">
@@ -564,7 +694,7 @@ class App extends Component {
               <ChatBox messages={messages} sendMessage={this.sendMessage} />
             </div>
 
-            <div className="control-pause">
+            <div className="control-general">
               <Alert
                 className="pause-request"
                 title="Would you like to pause this game?"
@@ -574,10 +704,31 @@ class App extends Component {
               />
               <Alert
                 className="cancel-pause-request"
-                title={`Pause request has been canceled by ${alertName}`}
+                title={`Pause request has been canceled first by ${alertName}`}
                 actions={cancelPauseActions}
                 open={cancelPauseOpen}
                 handleClose={this.handleCancelPauseClose}
+              />
+              <Alert
+                className="resume-request"
+                title="Are you ready to resume this game?"
+                actions={resumeActions}
+                open={resumeOpen}
+                handleClose={this.handleCancelResumeClose}
+              />
+              <Alert
+                className="cancel-resume-request"
+                title={`Resume request has been canceled first by ${alertName}`}
+                actions={cancelResumeActions}
+                open={cancelResumeOpen}
+                handleClose={this.handleCancelResumeClose}
+              />
+              <Alert
+                className="announce-surrender"
+                title={`${alertName} has surrendered`}
+                actions={surrenderActions}
+                open={surrenderOpen}
+                handleClose={this.handleAnnounceSurrenderClose}
               />
             </div>
             <div className="control-login">
@@ -641,7 +792,10 @@ function mapStateToProps(state) {
   } = userState;
   const { message, error } = moveState;
   const {
+    surrenderOpen,
+    resumeOpen,
     pauseOpen,
+    cancelResumeOpen,
     cancelPauseOpen,
     alertName,
     chooseGameModeOpen,
@@ -649,6 +803,9 @@ function mapStateToProps(state) {
     chooseSideOpen,
   } = controlState;
   return {
+    surrenderOpen,
+    cancelResumeOpen,
+    resumeOpen,
     thisEmail,
     count,
     roomQueue,
