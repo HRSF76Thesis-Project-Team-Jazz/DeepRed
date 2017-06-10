@@ -15,9 +15,8 @@ import {
   selectSideOpen, selectSideClose, updateAllRooms, updateRoomQueue, setPlayerId,
   enPassantMove, pawnPromotionMove, resumeDialogOpen, resumeDialogClose, cancelResumeDialogOpen,
   cancelResumeDialogClose, announceSurrenderDialogOpen, announceSurrenderDialogClose,
-  openWinnerDialog, openCheckDialog,
+  openWinnerDialog, openCheckDialog, updateGameMode,
 } from '../store/actions';
-import ScrollArea from 'react-scrollbar';
 
 // Components
 import Header from '../components/Header';
@@ -315,7 +314,7 @@ class App extends Component {
   }
 
   decrementTimerW() {
-    const { dispatch } = this.props;
+    const { dispatch, playerWemail, playerBemail } = this.props;
     let { timeW, counterWinstance } = this.props;
     counterWinstance = setInterval(() => {
       if (timeW > 0) {
@@ -364,13 +363,13 @@ class App extends Component {
   }
 
   handleCreateRoomAsBlack() {
-    const { thisUser, thisEmail } = this.props;
-    this.socket.emit('createRoomAsBlack', thisUser, thisEmail, this.socket.id);
+    const { thisUser, thisEmail, gameMode } = this.props;
+    this.socket.emit('createRoomAsBlack', thisUser, thisEmail, this.socket.id, gameMode);
   }
 
   handleCreateRoomAsWhite() {
-    const { thisUser, thisEmail } = this.props;
-    this.socket.emit('createRoomAsWhite', thisUser, thisEmail, this.socket.id);
+    const { thisUser, thisEmail, gameMode } = this.props;
+    this.socket.emit('createRoomAsWhite', thisUser, thisEmail, this.socket.id, gameMode);
   }
 
   handleJoinRoomAsWhite(count) {
@@ -405,6 +404,7 @@ class App extends Component {
 
   onPVCmodeSelected() {
     const { dispatch } = this.props;
+    dispatch(updateGameMode('AI'));
     dispatch(selectGameModeClose());
     dispatch(selectSideOpen());
   }
@@ -416,6 +416,7 @@ class App extends Component {
 
   onPVPmodeSelected() {
     const { dispatch } = this.props;
+    dispatch(updateGameMode('default'));
     dispatch(selectGameModeClose());
     this.socket.emit('getAllRooms', this.socket.id);
     dispatch(selectRoomOpen());
@@ -797,6 +798,7 @@ class App extends Component {
 function mapStateToProps(state) {
   const { gameState, moveState, userState, controlState } = state;
   const {
+    gameMode,
     gameTurn,
     counterBinstance,
     counterWinstance,
@@ -834,6 +836,7 @@ function mapStateToProps(state) {
     chooseSideOpen,
   } = controlState;
   return {
+    gameMode,
     surrenderOpen,
     cancelResumeOpen,
     resumeOpen,
