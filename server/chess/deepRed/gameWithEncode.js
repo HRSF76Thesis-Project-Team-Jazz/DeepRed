@@ -2,4 +2,4 @@ const gamePlay = require('./gamePlay');
 
 const { simulateGames, displayEncode } = gamePlay;
 
-simulateGames(1000, false, displayEncode);
+simulateGames(10, false, displayEncode);

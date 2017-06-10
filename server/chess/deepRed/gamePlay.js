@@ -2,10 +2,10 @@ const safeMoves = require('./safeMoves');
 const endGameChecks = require('./endGameChecks');
 const basic = require('./basic');
 const display = require('./display');
-const chessEval = require('../chessEval');
+const chessEncode = require('../chessEncode');
 
 const { displayBoard } = display;
-const { transcribeBoard, encodeBoard } = chessEval;
+const { transcribeBoard, encodeBoard } = chessEncode;
 
 const { mutateBoard } = basic;
 
@@ -215,8 +215,8 @@ const blackMove = (board, pieceState) => {
 
 const simulateGames = (number, displayAll, displayFn) => {
 
-  // let transcribeCount = 0;
-  // let encodeCount = 0;
+  let transcribeCount = 0;
+  let encodeCount = 0;
 
   let gameCount = 0;
   // const interval = 2;
@@ -228,6 +228,7 @@ const simulateGames = (number, displayAll, displayFn) => {
     stalemateByPieces: 0,
     stalemateNoWhiteMoves: 0,
     stalemateNoBlackMoves: 0,
+    end100moves: 0,
     castleKing: 0,
     castleQueen: 0,
     pawnPromotion: 0,
@@ -256,8 +257,8 @@ const simulateGames = (number, displayAll, displayFn) => {
 
 
 
-    // transcribeCount += transcribeBoard(board).length;
-    // encodeCount += encodeBoard(board).length;
+    transcribeCount += transcribeBoard(board).length;
+    encodeCount += encodeBoard(board).length;
 
 
 
@@ -315,8 +316,8 @@ const simulateGames = (number, displayAll, displayFn) => {
 
       !gameEnded && displayFn(board);
 
-      // transcribeCount += transcribeBoard(board).length;
-      // encodeCount += encodeBoard(board).length;
+      transcribeCount += transcribeBoard(board).length;
+      encodeCount += encodeBoard(board).length;
 
       /* END */
 
@@ -349,6 +350,21 @@ const simulateGames = (number, displayAll, displayFn) => {
           gameSummary.games;
         gameSummary.averageMovesPerGame = gameSummary.averageMovesPerGame.toFixed(2);
       }
+
+      /*  ONE HUNDRED MOVES */
+
+      if ((newState.moveCount >= 100)) {
+        gameEnded = true;
+        console.log('**** 100 Moves ***', newState);
+        gameSummary.end100moves += 1;
+        gameSummary.averageMovesPerGame = ((gameSummary.averageMovesPerGame *
+          (gameSummary.games - 1)) + newState.moveCount) /
+          gameSummary.games;
+        gameSummary.averageMovesPerGame = gameSummary.averageMovesPerGame.toFixed(2);
+      }
+
+      /* END */
+
       if (newState.countBlackPieces + newState.countWhitePieces === 2) {
         gameEnded = true;
         console.log('**** STALEMATE BY PIECES ***', newState);
@@ -378,8 +394,8 @@ const simulateGames = (number, displayAll, displayFn) => {
         newState = currentMoveBlack[1];
         board = mutateBoard(board, move);
 
-        // transcribeCount += transcribeBoard(board).length;
-        // encodeCount += encodeBoard(board).length;
+        transcribeCount += transcribeBoard(board).length;
+        encodeCount += encodeBoard(board).length;
 
         if (displayAll) console.log(`                             === [${moveCount}] BLACK MOVE ===`);
         !gameEnded && displayFn(board);
@@ -412,6 +428,23 @@ const simulateGames = (number, displayAll, displayFn) => {
             gameSummary.games;
           gameSummary.averageMovesPerGame = gameSummary.averageMovesPerGame.toFixed(2);
         }
+
+
+        /*  ONE HUNDRED MOVES */
+
+        if ((newState.moveCount >= 100)) {
+          gameEnded = true;
+          console.log('**** 100 Moves ***', newState);
+          gameSummary.end100moves += 1;
+          gameSummary.averageMovesPerGame = ((gameSummary.averageMovesPerGame *
+            (gameSummary.games - 1)) + newState.moveCount) /
+            gameSummary.games;
+          gameSummary.averageMovesPerGame = gameSummary.averageMovesPerGame.toFixed(2);
+        }
+
+      /* END */
+
+
         if (newState.countBlackPieces + newState.countWhitePieces === 2) {
           gameEnded = true;
           console.log('**** STALEMATE BY PIECES ***', newState);
@@ -429,11 +462,11 @@ const simulateGames = (number, displayAll, displayFn) => {
     gameCount += 1;
   }
 
-  // console.log('Games Played:     ', gameCount);
-  // console.log('Transcribe Count: ', transcribeCount);
-  // console.log('Encode Count:     ', encodeCount);
-  // console.log('Data compression: ', 1 - (encodeCount / transcribeCount));
-
+  console.log('Games Played:     ', gameCount);
+  console.log('Transcribe Count: ', transcribeCount);
+  console.log('Encode Count:     ', encodeCount);
+  console.log('Data compression: ', 1 - (encodeCount / transcribeCount));
+  console.log('Game summary:     ', gameSummary);
   return gameSummary;
 };
 
