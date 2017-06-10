@@ -73,7 +73,6 @@ module.exports = (io, client) => {
 
   client.on('joinRoomAsWhite', (currentUserName, currentUserEmail, clientCount) => {
     client.join(allRooms[clientCount].room, () => {
-      allRooms[clientCount].room = allRooms[clientCount];
       allRooms[clientCount].playerW = currentUserName;
       allRooms[clientCount].playerWemail = currentUserEmail;
       allRooms[clientCount].playerWid = client.client.id;
@@ -102,7 +101,7 @@ module.exports = (io, client) => {
   client.on('disconnect', () => {
     const id = client.client.id;
     for (let i = 0; i < allRooms.length; i += 1) {
-      if (allRooms[i] !== null || allRooms[i] !== undefined) {
+      if (allRooms[i] !== null && allRooms[i] !== undefined) {
         if (allRooms[i].playerBid === id) {
           io.in(allRooms[i].room).emit('beforeDisconnect', allRooms[i].playerB);
           console.log(`${allRooms[i].playerB} has left the room`);
