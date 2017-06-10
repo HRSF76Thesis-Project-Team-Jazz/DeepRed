@@ -1,32 +1,35 @@
 import React , { Component } from 'react';
-import Infinite from 'react-infinite';
-import ScrollArea from 'react-scrollbar';
-
+import MobileTearSheet from './MobileTearSheet';
+import { Tabs, Tab } from 'material-ui/Tabs';
+import ChatBox from './ChatBox';
+import ChatBox2 from './ChatBox2';
 class Messages extends Component {
     constructor(props) {
         super(props);
-        // this.componentWillUpdate = this.componentWillUpdate.bind(this)
-}
-
-// componentWillUpdate(){
-//     this.context.scrollArea.scrollBottom();
-// }
+    }   
 
     render() {
         return (
-            <div onClick={() => this.refresh()}>
-              <ul className="message-list" >
-                {this.props.messages.map((msg, i) =>
-                <div className="message" key={i + msg} >{msg}</div>,
-                )}
-              </ul>
-            </div>
+            <Tabs>
+                <Tab label='A'>
+                <MobileTearSheet>
+                <ul className="message-list" >
+                    {this.props.messages.map((msg, i) =>
+                    <div className="message" key={i + msg} >{msg}</div>
+                    )}
+                </ul>
+                </MobileTearSheet>
+                 <ChatBox sendMessage={this.props.sendMessage}/>
+                </Tab>
+                <Tab label='B'>
+                    <p>Feed of Universal Chatroom</p>
+                <ChatBox2 sendMessage={this.props.sendMessage}/>
+                </Tab>
+            
+            </Tabs>
         )
     }
 }
 
-Messages.contextTypes = {
-    scrollArea: React.PropTypes.object
-}
 
 export default Messages;
