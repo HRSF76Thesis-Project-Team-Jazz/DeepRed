@@ -6,7 +6,7 @@ import { red50, red900 } from 'material-ui/styles/colors';
 
 import './css/ChatBox.css';
 
-class ChatBox extends Component {
+class ChatBoxGlobal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,7 +19,7 @@ class ChatBox extends Component {
 
   submit(info) {
     info.preventDefault();
-    this.props.sendMessage(this.state.message);
+    this.props.sendMessageGlobal(this.state.message);
     this.state.message = '';
   }
 
@@ -37,7 +37,7 @@ class ChatBox extends Component {
 
   render() {
     return (
-        <div style = {{ position: 'relative'}}>
+      <div>
         <form>
           <TextField
             className="text-field"
@@ -63,4 +63,4 @@ class ChatBox extends Component {
 }
 
 
-export default ChatBox;
+export default ChatBoxGlobal;

@@ -28,7 +28,8 @@ const gameState = (state = Immutable({
   capturedPiecesWhite: [],
   gameTurn: 'W',
   moveHistory: [],
-  messages: [],
+  messagesLocal: [],
+  messagesGlobal: [],
   counterBinstance: '',
   counterWinstance: '',
 }), action) => {
@@ -124,12 +125,19 @@ const gameState = (state = Immutable({
         counterWinstance: action.ref,
       });
     }
-    case types.SEND_MESSAGE: {
+    case types.SEND_MESSAGE_LOCAL: {
       return Immutable({
         ...state,
-        messages: state.messages.concat(action.msg),
+        messagesLocal: state.messagesLocal.concat(action.msg),
       });
     }
+    case types.SEND_MESSAGE_GLOBAL: {
+      return Immutable({
+        ...state,
+        messagesGlobal: state.messagesGlobal.concat(action.msg),
+      });
+    }
+
     default:
       return state;
   }

@@ -1,8 +1,8 @@
 import React , { Component } from 'react';
 import MobileTearSheet from './MobileTearSheet';
 import { Tabs, Tab } from 'material-ui/Tabs';
-import ChatBox from './ChatBox';
-import ChatBox2 from './ChatBox2';
+import ChatBoxLocal from './ChatBoxLocal';
+import ChatBoxGlobal from './ChatBoxGlobal';
 
 class Messages extends Component {
     constructor(props) {
@@ -12,21 +12,30 @@ class Messages extends Component {
     render() {
         return (
             <Tabs>
-                <Tab label='A'>
+                <Tab label='Local'>
                 <MobileTearSheet>
                 <ul className="message-list" >
-                    {this.props.messages.map((msg, i) =>
+                {this.props.messagesLocal.map((msg, i) =>
                     <div className="message" key={i + msg} >{msg}</div>
-                    )}
+                )}
                 </ul>
                 </MobileTearSheet>
-                 <ChatBox sendMessage={this.props.sendMessage}/>
+                 <ChatBoxLocal sendMessageLocal={this.props.sendMessageLocal}/>
                 </Tab>
-                <Tab label='B'>
-                    <p>Feed of Universal Chatroom</p>
-                <ChatBox2 sendMessage={this.props.sendMessage}/>
+                <Tab label='Global'>
+                <MobileTearSheet>
+                <ul className="message-list" >
+                {this.props.messagesGlobal.map((msg, i) =>
+                    <div className="message" key={i + msg} >{msg}</div>
+                )}
+                </ul>
+                </MobileTearSheet>
+                <ChatBoxGlobal sendMessageGlobal={this.props.sendMessageGlobal}/>
                 </Tab>
             
             </Tabs>
-
+        )
+    }
+}
+    
 export default Messages;

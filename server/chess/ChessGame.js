@@ -9,8 +9,6 @@
 
 const isLegalMove = require('./isLegalMove');
 // const moveToPGNString = require('./convertToPGN');
-const chessDB = require('../chessDB');
-
 
 const transcribeBoard = board => board.map((row) => {
   const pieceIndex = {
@@ -31,7 +29,6 @@ const transcribeBoard = board => board.map((row) => {
   const newRow = row.map(col => pieceIndex[col]);
   return newRow.join('');
 }).join('');
-
 
 class ChessGame {
 
@@ -60,7 +57,7 @@ class ChessGame {
     this.winner = null;
   }
 
-  movePiece(origin, dest, clientRoom, pawnPromotionValue = null) {
+  movePiece(origin, dest, pawnPromotionValue = null) {
     let error = this.errorCheck(origin, dest);
     if (error) {
       return { game: this, error };
@@ -85,7 +82,7 @@ class ChessGame {
       this.canEnPassant = legalMoveResult.canEnPassant || [];
       // add to capture array
       if (destPiece) {
-        this.addToCaptureArray(destPiece, clientRoom);
+        this.addToCaptureArray(destPiece);
       }
       this.board[dest[0]][dest[1]] = originPiece;
       this.board[origin[0]][origin[1]] = null;
@@ -96,12 +93,6 @@ class ChessGame {
       }
       // check for check/checkmate/stalemate
       this.history.push(transcribeBoard(this.board));
-      // save to DB
-      // chessDB.saveMove({
-      //   session_id: clientRoom,
-      //   history: transcribeBoard(this.board),
-      // })
-
       this.turn = (this.turn === 'W') ? 'B' : 'W';
       // console.log(this.history);
       console.log(this.board);
@@ -120,8 +111,6 @@ class ChessGame {
     return { game: this, error };
   }
   errorCheck(origin, dest) {
-
-  movePiece(origin, dest, clientRoom) {
     let error = null;
     if (dest === undefined) {
       error = 'Attempted destination is invalid.';
@@ -154,7 +143,6 @@ class ChessGame {
         return error;
       }
     }
-
     return error;
   }
   castlingMove(castlingStr) {
@@ -178,107 +166,8 @@ class ChessGame {
       this.board[7][7] = null;
       this.hasMovedWRK = true;
       this.hasMovedWK = true;
-
-    const legalMoveResult = isLegalMove(this, origin, dest, clientRoom);
-    if (legalMoveResult.bool) {
-      if (legalMoveResult.castling) {
-        if (legalMoveResult.castling === 'BRQ') {
-          this.board[0][3] = 'BR';
-          this.board[0][0] = null;
-          this.hasMovedBRQ = true;
-          this.hasMovedBK = true;
-        } else if (legalMoveResult.castling === 'BRK') {
-          this.board[0][5] = 'BR';
-          this.board[0][7] = null;
-          this.hasMovedBRK = true;
-          this.hasMovedBK = true;
-        } else if (legalMoveResult.castling === 'WRQ') {
-          this.board[7][3] = 'WR';
-          this.board[7][0] = null;
-          this.hasMovedWRQ = true;
-          this.hasMovedWK = true;
-        } else if (legalMoveResult.castling === 'BRQ') {
-          this.board[7][5] = 'WR';
-          this.board[7][7] = null;
-          this.hasMovedWRK = true;
-          this.hasMovedWK = true;
-        }
-      }
-      if (originPiece === 'WK' && JSON.stringify(origin) === JSON.stringify([7, 4])) {
-        this.hasMovedWK = true;
-      }
-      if (originPiece === 'BK' && JSON.stringify(origin) === JSON.stringify([0, 4])) {
-        this.hasMovedBK = true;
-      }
-      if (originPiece === 'WR' && JSON.stringify(origin) === JSON.stringify([7, 0])) {
-        this.hasMovedWRQ = true;
-      }
-      if (originPiece === 'WR' && JSON.stringify(origin) === JSON.stringify([7, 7])) {
-        this.hasMovedWRK = true;
-      }
-      if (originPiece === 'BR' && JSON.stringify(origin) === JSON.stringify([0, 0])) {
-        this.hasMovedBRQ = true;
-      }
-      if (originPiece === 'BR' && JSON.stringify(origin) === JSON.stringify([0, 7])) {
-        this.hasMovedBRK = true;
-      }
-      if (destPiece) {
-
-        this.capturePiece(destPiece, clientRoom);
-      }
-
-        // if (originPiece[0] === destPiece[0]) {
-        //   error = 'Cannot capture your own piece.';
-        //   console.log(this.board);
-        //   console.log(error);
-        //   return { game: this, error };
-        // }
-        // this.history += moveToPGNString(this.board, origin, dest, this.count);
-
-      // this.history[this.turn] = this.history[this.turn] || [];
-      // this.history[this.turn].push(origin);
-      // this.history[this.turn].push(dest);
-      // if (originPiece[0] === 'B') {
-      //   this.turn += 1;
-      // }
-
-      var board = this.board.map((row) => {
-      const pieceIndex = {
-        null: 0,
-        WP: 1,
-        WN: 2,
-        WB: 3,
-        WR: 4,
-        WQ: 5,
-        WK: 6,
-        BP: 'a',
-        BN: 'b',
-        BB: 'c',
-        BR: 'd',
-        BQ: 'e',
-        BK: 'f',
-      };
-        const newRow = row.map(col => pieceIndex[col]);
-        return newRow.join('');
-      }).join('');
-
-      chessDB.saveMove({
-        session_id: clientRoom,
-        history: board
-      )};
-
-      this.turn = (this.turn === 'W') ? 'B' : 'W';
-      this.board[dest[0]][dest[1]] = originPiece;
-      this.board[origin[0]][origin[1]] = null;
-      // check for check/checkmate/stalemate
-      // console.log('--------------', this.history);
-      console.log('Move piece is successful');
-      console.log(this.board);
-      return { game: this, error };
-
     }
   }
-
   toggleMovedRooksOrKings(origin, originPiece) {
     if (originPiece === 'WK' && JSON.stringify(origin) === JSON.stringify([7, 4])) {
       this.hasMovedWK = true;
@@ -299,30 +188,16 @@ class ChessGame {
       this.hasMovedBRK = true;
     }
   }
-
-  addToCaptureArray(piece, clientRoom) {
+  addToCaptureArray(piece) {
     if (piece[0] === 'W') {
       this.blackCapPieces.push(piece);
-      
-      // chessDB.saveBlackPiece({
-      //   session_id: clientRoom,
-      //   black_pieces: JSON.stringify(piece),
-      // })
-
     } else {
       this.whiteCapPieces.push(piece);
-
-      // chessDB.saveWhitePiece({
-      //   session_id: clientRoom,
-      //   white_pieces: JSON.stringify(piece),
-      // });
-
     }
   }
   promotePawn(originPiece, dest, pawnPromotionPiece) {
     if ((originPiece === 'WP' && dest[0] === 0) || (originPiece === 'BP' && dest[0] === 7)) {
       this.board[dest[0]][dest[1]] = pawnPromotionPiece;
-
     }
   }
   checkAllMovesOfOrigin(origin) {
