@@ -50,7 +50,7 @@ const transcribeBoard = board => board.map((row) => {
   return newRow.join('');
 }).join('');
 
-const code = {
+const encode = {
   WN: '0',
   WB: '1',
   WR: '2',
@@ -61,7 +61,7 @@ const code = {
   BR: '7',
   BQ: '8',
   BK: '9',
-  WP: 'A',
+  WP1: 'A',
   WP2: 'B',
   WP3: 'C',
   WP4: 'D',
@@ -69,7 +69,7 @@ const code = {
   WP6: 'F',
   WP7: 'G',
   WP8: 'H',
-  BP: 'I',
+  BP1: 'I',
   BP2: 'J',
   BP3: 'K',
   BP4: 'L',
@@ -77,7 +77,7 @@ const code = {
   BP6: 'N',
   BP7: 'O',
   BP8: 'P',
-  _: 'Q',
+  _1: 'Q',
   _2: 'R',
   _3: 'S',
   _4: 'T',
@@ -229,41 +229,33 @@ const decode = {
   '|': '_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_',
   ']': '_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_',
   '^': '_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_',
-  '_': '_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_',
+  _: '_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_',
 };
 
 const encodeBoard = (board) => {
-
-  const boardArray = [].concat.apply([], board);
-
+  const boardArray = [].concat(...board);
   let storage = '';
   let count = 1;
-  let result = '';
-
-  boardArray.forEach(piece => {
-    if (piece === null) {
-      piece = '_';
-    }
+  const result = [];
+  boardArray.forEach((input) => {
+    const piece = (input === null) ? '_' : input;
     if (piece === storage) {
       count += 1;
-    } else if (count > 1 && piece !== '_' && piece[1] !== 'P') {
-      result += code[storage + count];
-      result += code[piece];
+    } else if (piece !== '_' && piece[1] !== 'P') {
+      result.push(encode[storage + count]);
+      result.push(encode[piece]);
       count = 1;
-    } else if (count > 1 && (piece === '_' || piece[1] === 'P')) {
-      result += code[storage + count];
+    } else if (piece === '_' || piece[1] === 'P') {
+      result.push(encode[storage + count]);
       count = 1;
     } else {
-      result += code[piece];
+      result.push(encode[piece]);
       count = 1;
     }
-    if (piece === '_' || piece[1] === 'P') {
-      storage = piece;
-    } else {
-      storage = '';
-    }
+    storage = (piece === '_' || piece[1] === 'P') ? piece : '';
   });
-  return result;
+
+  return result.join('');
 };
 
 const decodeBoard = (code) => {
@@ -273,32 +265,36 @@ const decodeBoard = (code) => {
   }
 
   const array = string.split('|');
-  console.log(string);
-  console.log(array.length, array);
   const board = [];
-
-  for (let i = 0; i < 8; i += 1) {
-    console.log(array);
-    board.push(array.splice(0, 8));
-  }
+  let row = [];
+  array.forEach((piece, i) => {
+    if (piece === '_') {
+      row.push(null);
+    } else {
+      row.push(piece);
+    }
+    if ((i + 1) % 8 === 0) {
+      board.push(row);
+      row = [];
+    }
+  });
 
   return board;
 };
 
 const board = [
   ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
-  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'WP', 'BP', null],
+  [null, 'WP', null, 'WP', 'WP', null, null, null],
+  [null, null, null, null, 'BP', null, null, null],
+  [null, null, null, null, null, 'WB', null, null],
   [null, null, null, null, null, null, null, null],
   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+  ['WR', 'WN', 'WB', 'WK', null, 'WB', 'WN', 'WR'],
 ];
-
-const encoded = encodeBoard(board);
-console.log(encoded);
-console.log(decodeBoard(encoded));
+const encodeTest = decodeBoard(encodeBoard(board));
+console.log(encodeTest);
+console.log(JSON.stringify(board) === JSON.stringify(encodeTest));
 
 module.exports = {
   capturedPiecesScore,
