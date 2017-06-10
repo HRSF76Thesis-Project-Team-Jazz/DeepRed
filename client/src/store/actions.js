@@ -192,6 +192,14 @@ export const pauseDialogClose = () => ({
   type: types.PAUSE_DIALOG_CLOSE,
 });
 
+export const resumeDialogOpen = () => ({
+  type: types.RESUME_DIALOG_OPEN,
+});
+
+export const resumeDialogClose = () => ({
+  type: types.RESUME_DIALOG_CLOSE,
+});
+
 export const cancelPauseDialogOpen = () => ({
   type: types.CANCEL_PAUSE_DIALOG_OPEN,
 });
@@ -200,9 +208,25 @@ export const cancelPauseDialogClose = () => ({
   type: types.CANCEL_PAUSE_DIALOG_CLOSE,
 });
 
+export const cancelResumeDialogOpen = () => ({
+  type: types.CANCEL_RESUME_DIALOG_OPEN,
+});
+
+export const cancelResumeDialogClose = () => ({
+  type: types.CANCEL_RESUME_DIALOG_CLOSE,
+});
+
 export const updateAlertName = alertName => ({
   type: types.UPDATE_ALERT_NAME,
   alertName,
+});
+
+export const announceSurrenderDialogOpen = () => ({
+  type: types.ANNOUNCE_SURRENDER_DIALOG_OPEN,
+});
+
+export const announceSurrenderDialogClose = () => ({
+  type: types.ANNOUNCE_SURRENDER_DIALOG_CLOSE,
 });
 
 export const selectGameModeOpen = () => ({

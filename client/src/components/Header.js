@@ -3,7 +3,7 @@ import SettingsDrawer from '../components/SettingsDrawer';
 
 import './css/Header.css';
 
-const Header = ({ sendPauseRequest, onSurrander }) => (
+const Header = ({ sendPauseRequest, sendResumeRequest, handleSurrender }) => (
   <div className="header">
     <table>
       <tbody>
@@ -11,8 +11,9 @@ const Header = ({ sendPauseRequest, onSurrander }) => (
           <td><img className="banner-img" src={'/assets/deepRed-dark-bg.png'} alt={''} /></td>
           <td className="button-cell">
             <SettingsDrawer
+              sendResumeRequest={sendResumeRequest}
               sendPauseRequest={sendPauseRequest}
-              onSurrander={onSurrander}
+              handleSurrender={handleSurrender}
             />
             <a href="/profile" className="button">Home</a>
             <a href="/logout" className="button">Logout</a>

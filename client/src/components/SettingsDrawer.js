@@ -58,13 +58,19 @@ class SettingsDrawer extends Component {
             onTouchTap={this.props.sendPauseRequest}
             leftIcon={<SocialPerson />}
           >
-            Pause request
+            Pause
           </MenuItem>
           <MenuItem
-            onTouchTap={this.props.onSurrander}
+            onTouchTap={this.props.sendResumeRequest}
             leftIcon={<SocialShare />}
           >
-            Surrander
+            Resume
+          </MenuItem>
+          <MenuItem
+            onTouchTap={this.props.handleSurrender}
+            leftIcon={<SocialShare />}
+          >
+            Surrender
           </MenuItem>
           <MenuItem
             onTouchTap={this.handleClose}
