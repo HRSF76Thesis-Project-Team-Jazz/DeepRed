@@ -127,7 +127,9 @@ module.exports = (io, client) => {
             allRooms[i].playerBemail = '';
             allRooms[i].playerBid = '';
             allRooms[i].playerBtime = 600;
-            if (allRooms[i].playerW === undefined) {
+            if (allRooms[i].playerW === undefined || allRooms[i].playerW === 'AI') {
+              console.log('playerW: ', allRooms[i].playerW);
+              console.log('1234567');
               allRooms[i] = null;
               queue.push(i);
             }
@@ -142,7 +144,7 @@ module.exports = (io, client) => {
             allRooms[i].playerWemail = '';
             allRooms[i].playerWid = '';
             allRooms[i].playerWtime = 600;
-            if (allRooms[i].playerB === undefined) {
+            if (allRooms[i].playerB === undefined || allRooms[i].playerB === 'AI') {
               allRooms[i] = null;
               queue.push(i);
             }
