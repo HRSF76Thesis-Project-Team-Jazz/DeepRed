@@ -263,7 +263,12 @@ export const fetchGame = () => (dispatch) => {
     );
 };
 
-export const sendMsg = msg => ({
-  type: types.SEND_MESSAGE,
+export const sendMsgLocal = msg => ({
+  type: types.SEND_MESSAGE_LOCAL,
+  msg,
+});
+
+export const sendMsgGlobal = msg => ({
+  type: types.SEND_MESSAGE_GLOBAL,
   msg,
 });

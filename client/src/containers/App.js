@@ -9,7 +9,7 @@ import {
   updateTimer, cancelPauseDialogClose, updateAlertName,
   cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayer,
   updateRoomInfo, getRequestFailure, receiveGame, movePiece, resetBoolBoard,
-  unselectPiece, capturePiece, displayError, colorSquare, sendMsg,
+  unselectPiece, capturePiece, displayError, colorSquare, sendMsgLocal, sendMsgGlobal,
   updateTimerB, timeInstanceB, updateTimerW, timeInstanceW, saveBoolBoard, castlingMove,
   selectGameModeClose, selectGameModeOpen, selectRoomOpen, selectRoomClose,
   selectSideOpen, selectSideClose, updateAllRooms, updateRoomQueue, setPlayerId,
@@ -17,6 +17,7 @@ import {
   cancelResumeDialogClose, announceSurrenderDialogOpen, announceSurrenderDialogClose,
   openWinnerDialog, openCheckDialog,
 } from '../store/actions';
+import ScrollArea from 'react-scrollbar';
 
 // Components
 import Header from '../components/Header';
@@ -25,9 +26,9 @@ import Message from '../components/Message';
 import CapturedPieces from '../components/CapturedPieces';
 import MoveHistory from '../components/MoveHistory';
 import Alert from './Alert';
-import ChatBox from '../components/ChatBox';
 import PlayerName from '../components/PlayerName';
 import Clock from '../components/Clock';
+import Messages from '../components/Messages';
 import './css/App.css';
 
 // Needed for onTouchTap
@@ -47,7 +48,8 @@ class App extends Component {
     this.sendResumeRequest = this.sendResumeRequest.bind(this);
     this.handlePauseOpen = this.handlePauseOpen.bind(this);
     this.handlePauseClose = this.handlePauseClose.bind(this);
-    this.sendMessage = this.sendMessage.bind(this);
+    this.sendMessageLocal = this.sendMessageLocal.bind(this);
+    this.sendMessageGlobal = this.sendMessageGlobal.bind(this);
     this.onCancelPauseRequest = this.onCancelPauseRequest.bind(this);
     this.handleCancelPauseClose = this.handleCancelPauseClose.bind(this);
     this.onAgreePauseRequest = this.onAgreePauseRequest.bind(this);
@@ -154,8 +156,12 @@ class App extends Component {
       this.decrementTimerW();
     });
 
-    this.socket.on('message', (msg) => {
-      dispatch(sendMsg(msg));
+    this.socket.on('messageLocal', (msg) => {
+      dispatch(sendMsgLocal(msg));
+    });
+
+    this.socket.on('messageGlobal', (msg) => {
+      dispatch(sendMsgGlobal(msg));
     });
 
     this.socket.on('attemptMoveResult', (error, origin, dest, selection, gameTurn, castling, enPassantCoord, pawnPromotionPiece, playerInCheck, winner) => {
@@ -494,16 +500,21 @@ class App extends Component {
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
-  sendMessage(msg) {
+  sendMessageLocal(msg) {
     const { count } = this.props;
-    this.socket.emit('message', msg, count);
+    this.socket.emit('messageLocal', msg, count);
+  }
+
+  sendMessageGlobal(msg) {
+    const { count } = this.props;
+    this.socket.emit('messageGlobal', msg, count);    
   }
 
   render() {
     const {
       alertName, cancelPauseOpen, pauseOpen, moveHistory,
       capturedPiecesBlack, capturedPiecesWhite, resumeOpen,
-      playerB, playerW, error, messages, isWhite, thisUser,
+      playerB, playerW, error, messagesLocal, messagesGlobal, isWhite, thisUser,
       chooseGameModeOpen, chooseRoomOpen, chooseSideOpen, allRooms,
       cancelResumeOpen, surrenderOpen,
     } = this.props;
@@ -691,7 +702,7 @@ class App extends Component {
 
             <div className="flex-col right-col">
               <Message message={error} />
-              <ChatBox messages={messages} sendMessage={this.sendMessage} />
+              <Messages messagesLocal={messagesLocal} sendMessageLocal={this.sendMessageLocal} messagesGlobal={messagesGlobal} sendMessageGlobal={this.sendMessageGlobal}/>
             </div>
 
             <div className="control-general">
@@ -776,7 +787,8 @@ function mapStateToProps(state) {
     moveHistory,
     capturedPiecesBlack,
     capturedPiecesWhite,
-    messages,
+    messagesLocal,
+    messagesGlobal,
   } = gameState;
   const {
     thisEmail,
@@ -831,7 +843,8 @@ function mapStateToProps(state) {
     capturedPiecesBlack,
     capturedPiecesWhite,
     error,
-    messages,
+    messagesLocal,
+    messagesGlobal,
     isWhite,
   };
 }

@@ -8,6 +8,9 @@ const newGame = (game) => {
       black: null,
       result: null,
       turns: 0,
+      history: '[]',
+      black_pieces: '[]',
+      white_pieces: '[]',
     }).into('games').then((res) => {
       console.log(res);
     });
@@ -18,6 +21,9 @@ const newGame = (game) => {
       black: game.display,
       result: null,
       turns: 0,
+      history: '[]',
+      black_pieces: '[]',
+      white_pieces: '[]',
     }).into('games').then((res) => {
       console.log(res);
     });
@@ -40,12 +46,6 @@ const joinGame = (game) => {
   }
 };
 
-// // game = {
-// //   session_id: 32155,
-// //   history: 'string of history'
-     // black_pieces: '',
-     // white_pieces: '',
-// // }
 
 const saveMove = (game) => {
   knex('games').where({ session_id: game.session_id })
@@ -54,15 +54,52 @@ const saveMove = (game) => {
       console.log(res)
    );
 
-  knex('games').where({ session_id: game.session_id }).update({
-    history: game.history,
-    black_pieces: game.black_pieces,
-    white_pieces: game.white_pieces
+  knex('games').where('session_id', game.session_id).then((res) => { 
+      
+  var history = JSON.parse(res[0].history);
+  history.push(game.history);
+
+    knex('games').where({ session_id: game.session_id }).update({
+      history: JSON.stringify(history)
+    }).then((res) =>
+        console.log(res)
+    )
+  });
+}
+
+const saveWhitePiece = (game) => {
+
+  knex('games').where('session_id', game.session_id).then((res) => {
+
+  var history = JSON.parse(res[0].white_pieces);
+  history.push(JSON.parse(game.white_pieces));
+
+    knex('games').where({ session_id: game.session_id }).update({
+    white_pieces: JSON.stringify(history),
   }).then((res) =>
       console.log(res)
    );
+  });
+
+
+
 }
 
+const saveBlackPiece = (game) => {
+
+  knex('games').where('session_id', game.session_id).then((res) => {
+
+  var history = JSON.parse(res[0].black_pieces);
+  history.push(JSON.parse(game.black_pieces));
+
+    knex('games').where({ session_id: game.session_id }).update({
+    black_pieces: JSON.stringify(history),
+  }).then((res) =>
+      console.log(res)
+   );
+  });
+
+}
 
 // // game = {
 // //   session_id: 'session_id'
@@ -194,11 +231,12 @@ const requestBlackPieces = (game) => {
 
 module.exports.newGame = newGame;
 module.exports.joinGame = joinGame;
-// module.exports = saveMove;
+module.exports.saveMove = saveMove;
+module.exports.saveWhitePiece = saveWhitePiece;
+module.exports.saveBlackPiece = saveBlackPiece;
 // module.exports = finishGame;
 // module.exports = requestClient;
 // module.exports = requestGame;
-// module.exports = requestHistory;
+// module.exports.requestHistory = requestHistory;
 // module.exports = requestWhitePieces;
 // module.exports = requestBlackPieces;
-

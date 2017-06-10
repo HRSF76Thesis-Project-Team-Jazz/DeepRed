@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { red50, red900 } from 'material-ui/styles/colors';
+// import Messages from './Messages'
 
 import './css/ChatBox.css';
 
-class ChatBox extends Component {
+class ChatBoxLocal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,7 +19,7 @@ class ChatBox extends Component {
 
   submit(info) {
     info.preventDefault();
-    this.props.sendMessage(this.state.message);
+    this.props.sendMessageLocal(this.state.message);
     this.state.message = '';
   }
 
@@ -36,7 +37,7 @@ class ChatBox extends Component {
 
   render() {
     return (
-      <div>
+        <div>
         <form>
           <TextField
             className="text-field"
@@ -56,14 +57,9 @@ class ChatBox extends Component {
             labelColor={red50}
           /> */}
         </form>
-        <ul className="message-list">
-          {this.props.messages.map((msg, i) =>
-            <div className="message" key={i + msg}>{msg}</div>,
-          )}
-        </ul>
-      </div>
+        </div>
     );
   }
 }
 
-export default ChatBox;
+export default ChatBoxLocal;
