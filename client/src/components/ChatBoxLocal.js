@@ -26,7 +26,7 @@ import ScrollArea from 'react-scrollbar';
 >>>>>>> rebase
 import './css/ChatBox.css';
 
-class ChatBox extends Component {
+class ChatBoxLocal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +39,7 @@ class ChatBox extends Component {
 
   submit(info) {
     info.preventDefault();
-    this.props.sendMessage(this.state.message);
+    this.props.sendMessageLocal(this.state.message);
     this.state.message = '';
   }
 
@@ -92,4 +92,4 @@ class ChatBox extends Component {
 }
 
 
-export default ChatBox;
+export default ChatBoxLocal;
