@@ -132,25 +132,29 @@ class App extends Component {
       dispatch(updateAllRooms(allRooms));
     });
 
-    this.socket.on('createRoomAsWhiteComplete', (roomInfo) => {
+    this.socket.on('createRoomAsWhiteComplete', (roomInfo, allRooms) => {
+      dispatch(updateAllRooms(allRooms));
       dispatch(updateRoomInfo(roomInfo));
       this.socket.emit('getAllRooms', this.socket.id);
       dispatch(selectSideClose());
     });
 
-    this.socket.on('createRoomAsBlackComplete', (roomInfo) => {
+    this.socket.on('createRoomAsBlackComplete', (roomInfo, allRooms) => {
+      dispatch(updateAllRooms(allRooms));
       dispatch(updateRoomInfo(roomInfo));
       this.socket.emit('getAllRooms', this.socket.id);
       dispatch(selectSideClose());
     });
 
-    this.socket.on('joinRoomAsWhiteComplete', (roomInfo) => {
+    this.socket.on('joinRoomAsWhiteComplete', (roomInfo, allRooms) => {
+      dispatch(updateAllRooms(allRooms));
       dispatch(updateRoomInfo(roomInfo));
       dispatch(updateTimer(roomInfo));
       this.decrementTimerW();
     });
 
-    this.socket.on('joinRoomAsBlackComplete', (roomInfo) => {
+    this.socket.on('joinRoomAsBlackComplete', (roomInfo, allRooms) => {
+      dispatch(updateAllRooms(allRooms));
       dispatch(updateRoomInfo(roomInfo));
       dispatch(updateTimer(roomInfo));
       this.decrementTimerW();
@@ -264,8 +268,8 @@ class App extends Component {
       dispatch(updateTimer(roomInfo));
     });
 
-    this.socket.on('roomInfoUpdateOnDisconnect', (roomInfo) => {
-      dispatch(updateRoomInfo(roomInfo));
+    this.socket.on('updateAllRooms', (allRooms) => {
+      dispatch(updateAllRooms(allRooms));
     });
 
     this.socket.on('beforeDisconnect', (playerName) => {
@@ -521,7 +525,7 @@ class App extends Component {
 
   sendMessageGlobal(msg) {
     const { count } = this.props;
-    this.socket.emit('messageGlobal', msg, count);    
+    this.socket.emit('messageGlobal', msg, count);
   }
 
   render() {

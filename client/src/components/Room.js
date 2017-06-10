@@ -17,35 +17,37 @@ const Room = ({ allRooms, createNewPVPRoom, handleJoinRoomAsBlack, handleJoinRoo
     <tbody>
       {
         allRooms.map((room) => {
-          return (
-            <tr>
-              <th>
-                {room.room}
-              </th>
-              <th>
-                <RaisedButton
-                  label="White"
-                  disabled={room.playerW !== undefined}
-                  secondary
-                  onTouchTap={() => handleJoinRoomAsWhite(room.count)}
-                />
-              </th>
-              <th>
-                {room.playerW}
-              </th>
-              <th>
-                <RaisedButton
-                  label="Black"
-                  disabled={room.playerB !== undefined}
-                  primary
-                  onTouchTap={() => handleJoinRoomAsBlack(room.count)}
-                />
-              </th>
-              <th>
-                {room.playerB}
-              </th>
-            </tr>
-          );
+          if (room !== null) {
+            return (
+              <tr>
+                <th>
+                  {room.room}
+                </th>
+                <th>
+                  <RaisedButton
+                    label="White"
+                    disabled={room.playerW !== undefined}
+                    secondary
+                    onTouchTap={() => handleJoinRoomAsWhite(room.count)}
+                  />
+                </th>
+                <th>
+                  {room.playerW}
+                </th>
+                <th>
+                  <RaisedButton
+                    label="Black"
+                    disabled={room.playerB !== undefined}
+                    primary
+                    onTouchTap={() => handleJoinRoomAsBlack(room.count)}
+                  />
+                </th>
+                <th>
+                  {room.playerB}
+                </th>
+              </tr>
+            );
+          }
         })
       }
     </tbody>
