@@ -1,6 +1,20 @@
 # Deep Red
 
-On line chess game with options for (1) 2 player virtual play or (2) playing against an artificially intelligent computer.
+Deep Red is an online, real-time chess platform with options for:
+1. 2 player virtual play
+2. Player against an artificially intelligent computer
+3. AI vs. AI players
+
+### Deep Red: Chess Engine
+Deep Red is a computer that has been programmed with all the rules of chess.  At any given board and game state, Deep Red is able to evaluate all available moves for a given player.
+
+###Machine Learning / AI: Reinforcement Learning
+Deep Red improves its performance with game training experience from various sources:
+- Seeded historical game data
+- Player vs. player games completed on the platform
+- AI vs. AI games completed
+
+For addition information on Deep Red's machine learning capabilities, click here: [Overview of Deep Red: Chess Master](DeepRed.md).
 
 
 ## Team
