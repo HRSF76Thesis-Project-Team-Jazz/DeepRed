@@ -153,9 +153,13 @@ board = [
 **Transcribe Pieces**
 - Pieces/empty positions are represented by pseudo hexadecimal characters
 
-Piece: | Empty | WP | WN | WB | WR | WQ | WK | BP | BN | BB | BR | BQ | BK
----|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---
-Character: | 0 | 1 | 2 | 3 | 4 | 5 | 6 | a | b | c | d | e | f
+Piece: | Empty | WP | WN | WB | WR | WQ | WK 
+---|---|---|---|---|---|---|---|---|---|---|---
+Character: | 0 | 1 | 2 | 3 | 4 | 5 | 6 
+
+Piece: | BP | BN | BB | BR | BQ | BK
+---|---|---|---|---|---|---|---|---
+Character: | a | b | c | d | e | f
 
 **Example Board String: Starting Position**
 
@@ -165,9 +169,15 @@ storedBoard = 'dbcefcbdaaaaaaaa000000000000000000000000000000001111111142356324'
 
 **Example Database Entry**
 
-UUID | Previous Board State (Parent Node) | New Board State (Child Node) | Player | White Wins | Black Wins | Stalemate
----|---|---|---|---|---|---|---
-1 | dbcefcbdaaaaaaaa000000000000000000000000000000001111111142356324 | dbcefcbdaaaaaaaa000000000000000000001000000000001111011142356324 | W | 100 | 50 | 25
+Field | Value
+--- | ---
+UUID | 1
+Previous Board State (Parent Node) | dbcefcbdaaaaaaaa000000000000000000000000000000001111111142356324
+New Board State (Child Node) | dbcefcbdaaaaaaaa000000000000000000001000000000001111011142356324
+Player | W
+White Wins | 100
+Black Wins | 50
+Stalemate | 25
 
 **Database Key:**
 - Each database entry represents a possible move that takes a game from a `Parent Board State` to a `New Board State`
