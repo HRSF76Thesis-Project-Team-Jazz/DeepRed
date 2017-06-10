@@ -21,7 +21,7 @@ module.exports = (io, client) => {
 
   client.on('createRoomAsWhite', (currentUserName, currentUserEmail, id) => {
     if (queue.length !== 0) {
-      room = `room ${queue[0]}`;
+      room = `room ${queue.splice(0, 1)}`;
     } else {
       room = `room ${count}`;
     }
@@ -42,7 +42,7 @@ module.exports = (io, client) => {
 
   client.on('createRoomAsBlack', (currentUserName, currentUserEmail, id) => {
     if (queue.length !== 0) {
-      room = `room ${queue[0]}`;
+      room = `room ${queue.splice(0, 1)}`;
     } else {
       room = `room ${count}`;
     }
@@ -82,6 +82,64 @@ module.exports = (io, client) => {
       allRooms[clientCount].playerBclicked = false;
       createAndSaveNewGame(allRooms[clientCount].room);
       io.in(allRooms[clientCount].room).emit('joinRoomAsBlackComplete', allRooms[clientCount]);
+    });
+  });
+
+  client.on('onDisconnectBlack', (clientRoom, clientCount, currentUser) => {
+    console.log('black disconnected from the game');
+    io.in(clientRoom).emit('beforeDisconnect', currentUser);
+    client.leave(clientRoom, () => {
+      allRooms[clientCount].playerB = '';
+      allRooms[clientCount].playerBemail = '';
+      allRooms[clientCount].playerBid = '';
+      io.in(clientRoom).emit('roomInfoUpdateOnDisconnect', allRooms[clientCount]);
+      if (allRooms[clientCount].playerW === '') {
+        queue.push(clientCount);
+      }
+    });
+  });
+
+  client.on('disconnect', () => {
+    const id = client.client.id;
+    for (let i = 0; i < allRooms.length; i += 1) {
+      if (allRooms[i].playerBid === id) {
+        io.in(allRooms[i].room).emit('beforeDisconnect', allRooms[i].playerB);
+        client.leave(allRooms[i].room, () => {
+          allRooms[i].playerB = undefined;
+          allRooms[i].playerBemail = '';
+          allRooms[i].playerBid = '';
+          io.in(allRooms[i].room).emit('roomInfoUpdateOnDisconnect', allRooms[i]);
+          if (allRooms[i].playerW === '') {
+            queue.push(i);
+          }
+        });
+      }
+      if (allRooms[i].playerWid === id) {
+        io.in(allRooms[i].room).emit('beforeDisconnect', allRooms[i].playerW);
+        client.leave(allRooms[i].room, () => {
+          allRooms[i].playerW = undefined;
+          allRooms[i].playerWemail = '';
+          allRooms[i].playerWid = '';
+          io.in(allRooms[i].room).emit('roomInfoUpdateOnDisconnect', allRooms[i]);
+          if (allRooms[i].playerB === '') {
+            queue.push(i);
+          }
+        });
+      }
+    }
+  });
+
+  client.on('onDisconnectWhite', (clientRoom, clientCount, currentUser) => {
+    console.log('white disconnected from the game');
+    io.in(clientRoom).emit('beforeDisconnect', currentUser);
+    client.leave(clientRoom, () => {
+      allRooms[clientCount].playerW = '';
+      allRooms[clientCount].playerWemail = '';
+      allRooms[clientCount].playerWid = '';
+      io.in(clientRoom).emit('roomInfoUpdateOnDisconnect', allRooms[clientCount]);
+      if (allRooms[clientCount].playerB === '') {
+        queue.push(clientCount);
+      }
     });
   });
 
@@ -125,7 +183,8 @@ module.exports = (io, client) => {
     if (id === allRooms[clientCount].playerWid) {
       allRooms[clientCount].playerWclicked = true;
     }
-    if (allRooms[clientCount].playerBclicked === true && allRooms[clientCount].playerWclicked === true) {
+    if (allRooms[clientCount].playerBclicked === true
+      && allRooms[clientCount].playerWclicked === true) {
       io.in(allRooms[clientCount].room).emit('executePauseRequest');
       allRooms[clientCount].playerBclicked = false;
       allRooms[clientCount].playerWclicked = false;

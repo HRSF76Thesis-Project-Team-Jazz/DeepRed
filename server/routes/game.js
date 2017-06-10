@@ -15,7 +15,7 @@ router.route('/')
 
 router.route('/updateUserGameStat')
   .post((req, res) => {
-    console.log('hahahahaha');
+    console.log(req.body);
     // query function goes here to update user game win lose stats
     res.send();
   });

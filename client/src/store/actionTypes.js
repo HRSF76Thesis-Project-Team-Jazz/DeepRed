@@ -65,6 +65,10 @@ export const UPDATE_ALL_ROOMS = 'UPDATE_ALL_ROOMS';
 
 export const UPDATE_ROOM_QUEUE = 'UPDATE_ROOM_QUEUE';
 
+export const GAME_WIN_LOSE = 'GAME_WIN_LOSE';
+
+export const GAME_DRAW = 'GAME_DRAW';
+
 // controlState action types
 export const PAUSE_DIALOG_OPEN = 'PAUSE_DIALOG_OPEN';
 
