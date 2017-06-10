@@ -1,4 +1,5 @@
 // gameState types
+
 export const UPDATE_TIMER = 'UPDATE_TIMER';
 
 export const UPDATE_TIMER_B = 'UPDATE_TIMER_B';
@@ -100,3 +101,4 @@ export const SELECT_ROOM_CLOSE = 'SELECT_ROOM_CLOSE';
 export const SELECT_SIDE_OPEN = 'SELECT_SIDE_OPEN';
 
 export const SELECT_SIDE_CLOSE = 'SELECT_SIDE_CLOSE';
+
