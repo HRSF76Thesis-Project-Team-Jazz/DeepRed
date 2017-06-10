@@ -87,48 +87,52 @@ const isDiagPathClear = (board, origin, dest) => {
   return true;
 };
 
-const isLegalMovePawn = (board, origin, dest) => {
+const isLegalMovePawn = ({ board, canEnPassant }, origin, dest) => {
   const xDist = Math.abs(origin[0] - dest[0]);
   const yDist = Math.abs(origin[1] - dest[1]);
   const originPieceColor = board[origin[0]][origin[1]][0];
 
   if (origin[1] === dest[1]) { // vertical movement
     if (board[dest[0]][dest[1]]) {
-      return false;
+      return { bool: false };
     }
     if (originPieceColor === 'B' && origin[0] < dest[0]) {
-      if (origin[0] === 1) {
-        return isVertPathClear(board, origin, dest, 2);
+      if (origin[0] === 1 && dest[0] === 3) {
+        return {
+          bool: isVertPathClear(board, origin, dest, 2),
+          canEnPassant: [3, origin[1]],
+        };
+      } else if (origin[0] === 1) {
+        return { bool: isVertPathClear(board, origin, dest, 2) };
       }
-      return isVertPathClear(board, origin, dest, 1);
+      return { bool: isVertPathClear(board, origin, dest, 1) };
     } else if (originPieceColor === 'W' && origin[0] > dest[0]) {
-      if (origin[0] === 6) {
-        return isVertPathClear(board, origin, dest, 2);
+      if (origin[0] === 6 && dest[0] === 4) {
+        return {
+          bool: isVertPathClear(board, origin, dest, 2),
+          canEnPassant: [4, origin[1]],
+        };
+      } else if (origin[0] === 6) {
+        return { bool: isVertPathClear(board, origin, dest, 2) };
       }
-      return isVertPathClear(board, origin, dest, 1);
+      return { bool: isVertPathClear(board, origin, dest, 1) };
     }
   } else if (xDist === 1 && yDist === 1) {
     if (board[dest[0]][dest[1]]) {
       const destPieceColor = board[dest[0]][dest[1]][0];
       if (originPieceColor === 'B' && destPieceColor === 'W' && origin[0] < dest[0]) {
-        return true;
+        return { bool: true };
       } else if (originPieceColor === 'W' && destPieceColor === 'B' && origin[0] > dest[0]) {
-        return true;
+        return { bool: true };
       }
+    } else if ((originPieceColor === 'W' && canEnPassant[0] === dest[0] + 1 && canEnPassant[1] === dest[1]) || (originPieceColor === 'B' && canEnPassant[0] === dest[0] - 1 && canEnPassant[1] === dest[1])) {
+      return { bool: true, enPassant: true };
     }
   }
-  return false;
+  return { bool: false };
 };
 
 const isLegalMoveRook = (board, origin, dest) => {
-  // const originPiece = board[origin[0]][origin[1]];
-  // let moved = '';
-  // if (originPiece === 'WR' && JSON.stringify(origin) === JSON.stringify([7, 0])) {
-  //   moved = 'WRQ';
-  // }
-  // if (originPiece === 'WR' && JSON.stringify(origin) === JSON.stringify([7, 7])) {
-  //   moved = 'WRK';
-  // }
   if (origin[1] === dest[1]) {
     return { bool: isVertPathClear(board, origin, dest) };
   } else if (origin[0] === dest[0]) {
@@ -194,7 +198,7 @@ const isLegalMove = (game, origin, dest) => {
     }
     const originType = game.board[origin[0]][origin[1]][1];
     if (originType === 'P') {
-      return { bool: isLegalMovePawn(game.board, origin, dest) };
+      return isLegalMovePawn(game, origin, dest);
     } else if (originType === 'R') {
       return isLegalMoveRook(game.board, origin, dest);
     } else if (originType === 'N') {
@@ -207,7 +211,7 @@ const isLegalMove = (game, origin, dest) => {
       return isLegalMoveKing(game, origin, dest);
     }
   }
-  return false;
+  return { bool: false };
 };
 
 module.exports = isLegalMove;

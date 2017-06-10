@@ -1,25 +1,26 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import FlatButton from 'material-ui/FlatButton';
 
-import { invalidSelection, selectPiece, colorSquare, displayError } from '../store/actions';
+import { invalidSelection, selectPiece, colorSquare, displayError, openPromotionDialog, closePromotionDialog } from '../store/actions';
+
+import Alert from './Alert';
 import './css/Board.css';
 
 class Board extends Component {
   constructor(props) {
     super(props);
     this.onClick = this.onClick.bind(this);
+    this.handlePromotion = this.handlePromotion.bind(this);
     this.onMouseEnter = this.onMouseEnter.bind(this);
     this.onMouseLeave = this.onMouseLeave.bind(this);
     this.selectSquareClass = this.selectSquareClass.bind(this);
   }
 
-  componentDidMount() {
-  }
-
   onClick(coordinates) {
     const {
       dispatch, board, fromPosition, selectedPiece, room, gameTurn,
-      isWhite, attemptMove, checkLegalMoves,
+      isWhite, attemptMove, checkLegalMoves, boolBoard,
     } = this.props;
 
     if ((isWhite && gameTurn === 'B') || (!isWhite && gameTurn === 'W')) {
@@ -39,6 +40,10 @@ class Board extends Component {
         } else {
           dispatch(invalidSelection(coordinates));
         }
+      } else if (selectedPiece === 'WP' && coordinates[0] === 0 && boolBoard[coordinates[0]][coordinates[1]]) {
+        dispatch(openPromotionDialog(coordinates));
+      } else if (selectedPiece === 'BP' && coordinates[0] === 7 && boolBoard[coordinates[0]][coordinates[1]]) {
+        dispatch(openPromotionDialog(coordinates));
       } else {
         attemptMove(fromPosition, coordinates, selection, room);
       }
@@ -70,6 +75,14 @@ class Board extends Component {
     }
   }
 
+  handlePromotion(pieceType) {
+    const { dispatch, board, attemptMove, fromPosition, pawnPromotionCoord, room } = this.props;
+    const selection = board[pawnPromotionCoord[0]][pawnPromotionCoord[1]];
+    console.log(pieceType);
+    attemptMove(fromPosition, pawnPromotionCoord, selection, room, pieceType);
+    dispatch(closePromotionDialog());
+  }
+
   selectSquareClass(rowIndex, colIndex) {
     const { color, hover, fromPosition } = this.props;
     if ((color && hover[0] === rowIndex && hover[1] === colIndex) ||
@@ -82,50 +95,66 @@ class Board extends Component {
   }
 
   render() {
-    const { board, isWhite } = this.props;
+    const { board, isWhite, showPromotionDialog } = this.props;
     const offset = (isWhite) ? 0 : 7;
+    const promotionActions = [
+      <FlatButton
+        label="Queen"
+        primary
+        onTouchTap={() => this.handlePromotion('Q')}
+      />,
+      <FlatButton
+        label="Rook"
+        primary
+        keyboardFocused
+        onTouchTap={() => this.handlePromotion('R')}
+      />,
+      <FlatButton
+        label="Knight"
+        primary
+        keyboardFocused
+        onTouchTap={() => this.handlePromotion('N')}
+      />,
+      <FlatButton
+        label="Bishop"
+        primary
+        keyboardFocused
+        onTouchTap={() => this.handlePromotion('B')}
+      />,
+    ];
 
     return (
-      <div className="board">
-        {board.map((row, rowIndex) => (
-          <div key={Math.random()} className="board-row">
-            {row.map((col, colIndex) => (
-              <div
-                className={this.selectSquareClass(Math.abs(offset - rowIndex),
-                  Math.abs(offset - colIndex))}
-                key={(Math.abs(offset - rowIndex)).toString() +
-                   (Math.abs(offset - colIndex)).toString()}
-                role={'button'}
-                onClick={() => this.onClick([(Math.abs(offset - rowIndex)),
-                   (Math.abs(offset - colIndex))])}
-                onMouseEnter={() => this.onMouseEnter([(Math.abs(offset - rowIndex)),
-                  (Math.abs(offset - colIndex))])}
-                onMouseLeave={() => this.onMouseLeave([(Math.abs(offset - rowIndex)),
-                  (Math.abs(offset - colIndex))])}
-              >
-                <img className="piece-img" src={`/assets/${board[Math.abs(offset - rowIndex)][Math.abs(offset - colIndex)]}.png`} alt={''} />
-              </div>),
-            )}
-          </div>
-        ),
-        )}
-        {/*{board.map((row, rowIndex) => (
-          <div key={Math.random()} className="board-row">
-            {row.map((col, colIndex) => (
-              <div
-                className={this.selectSquareClass(rowIndex, colIndex)}
-                key={rowIndex.toString() + colIndex.toString()}
-                role={'button'}
-                onClick={() => this.onClick([rowIndex, colIndex])}
-                onMouseEnter={() => this.onMouseEnter([rowIndex, colIndex])}
-                onMouseLeave={() => this.onMouseLeave([rowIndex, colIndex])}
-              >
-                <img className="piece-img" src={`/assets/${col}.png`} alt={''} />
-              </div>),
-            )}
-          </div>
-        ),
-        )}*/}
+      <div>
+        <div className="board">
+          {board.map((row, rowIndex) => (
+            <div key={Math.random()} className="board-row">
+              {row.map((col, colIndex) => (
+                <div
+                  className={this.selectSquareClass(Math.abs(offset - rowIndex),
+                    Math.abs(offset - colIndex))}
+                  key={(Math.abs(offset - rowIndex)).toString() +
+                     (Math.abs(offset - colIndex)).toString()}
+                  role={'button'}
+                  onClick={() => this.onClick([(Math.abs(offset - rowIndex)),
+                     (Math.abs(offset - colIndex))])}
+                  onMouseEnter={() => this.onMouseEnter([(Math.abs(offset - rowIndex)),
+                    (Math.abs(offset - colIndex))])}
+                  onMouseLeave={() => this.onMouseLeave([(Math.abs(offset - rowIndex)),
+                    (Math.abs(offset - colIndex))])}
+                >
+                  <img className="piece-img" src={`/assets/${board[Math.abs(offset - rowIndex)][Math.abs(offset - colIndex)]}.png`} alt={''} />
+                </div>),
+              )}
+            </div>
+          ),
+          )}
+        </div>
+        <Alert
+          className="pauseRequest"
+          title="Please select an upgrade."
+          actions={promotionActions}
+          open={showPromotionDialog}
+        />
       </div>
     );
   }
@@ -135,7 +164,8 @@ function mapStateToProps(state) {
   const { gameState, boardState, moveState, userState, squareState } = state;
   const { playerColor, gameTurn } = gameState;
   const { board } = boardState;
-  const { fromPosition, selectedPiece, boolBoard } = moveState;
+  const { fromPosition, selectedPiece, boolBoard, pawnPromotionCoord,
+    showPromotionDialog } = moveState;
   const { room, isWhite } = userState;
   const { color, hover } = squareState;
   return {
@@ -144,6 +174,8 @@ function mapStateToProps(state) {
     fromPosition,
     selectedPiece,
     boolBoard,
+    pawnPromotionCoord,
+    showPromotionDialog,
     room,
     color,
     hover,

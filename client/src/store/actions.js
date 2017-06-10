@@ -92,6 +92,32 @@ export const castlingMove = (fromPosition, coordinates, castling, gameTurn) => (
   gameTurn,
 });
 
+export const enPassantMove = (fromPosition, coordinates, enPassantCoord, gameTurn) => ({
+  type: types.EN_PASSANT_MOVE,
+  fromPosition,
+  coordinates,
+  enPassantCoord,
+  gameTurn,
+});
+
+export const pawnPromotionMove = (fromPosition, coordinates, pawnPromotionPiece, gameTurn) => ({
+  type: types.PAWN_PROMOTION_MOVE,
+  fromPosition,
+  coordinates,
+  pawnPromotionPiece,
+  gameTurn,
+});
+
+export const openPromotionDialog = coordinates => ({
+  type: types.OPEN_PROMOTION_DIALOG,
+  coordinates,
+});
+
+export const closePromotionDialog = coordinates => ({
+  type: types.CLOSE_PROMOTION_DIALOG,
+  coordinates,
+});
+
 export const receiveMove = (query, move) => ({
   type: types.RECEIVE_MOVE,
   query,
@@ -109,9 +135,14 @@ export const receiveGame = game => ({
 });
 
 // userState actions
-export const setPlayerW = player => ({
-  type: types.SET_PLAYER_W,
+export const setPlayer = player => ({
+  type: types.SET_PLAYER,
   player,
+});
+
+export const setPlayerId = id => ({
+  type: types.SET_PLAYER_ID,
+  id,
 });
 
 export const getRequestFailure = message => ({
@@ -122,6 +153,16 @@ export const getRequestFailure = message => ({
 export const updateRoomInfo = roomInfo => ({
   type: types.UPDATE_ROOM_INFO,
   roomInfo,
+});
+
+export const updateAllRooms = allRooms => ({
+  type: types.UPDATE_ALL_ROOMS,
+  allRooms,
+});
+
+export const updateRoomQueue = queue => ({
+  type: types.UPDATE_ROOM_QUEUE,
+  queue,
 });
 
 // controlState actions
@@ -144,6 +185,30 @@ export const cancelPauseDialogClose = () => ({
 export const updateAlertName = alertName => ({
   type: types.UPDATE_ALERT_NAME,
   alertName,
+});
+
+export const selectGameModeOpen = () => ({
+  type: types.SELECT_GAME_MODE_OPEN,
+});
+
+export const selectGameModeClose = () => ({
+  type: types.SELECT_GAME_MODE_CLOSE,
+});
+
+export const selectRoomOpen = () => ({
+  type: types.SELECT_ROOM_OPEN,
+});
+
+export const selectRoomClose = () => ({
+  type: types.SELECT_ROOM_CLOSE,
+});
+
+export const selectSideOpen = () => ({
+  type: types.SELECT_SIDE_OPEN,
+});
+
+export const selectSideClose = () => ({
+  type: types.SELECT_SIDE_CLOSE,
 });
 
 // other requests

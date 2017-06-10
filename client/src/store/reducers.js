@@ -44,13 +44,33 @@ const gameState = (state = Immutable({
       });
     }
     case types.CASTLING_MOVE: {
-      // fromPosition,
-      // coordinates,
-      // castling,
-      // gameTurn,
+      let castleNotation = 'O-O';
+      if (action.castling[2] === 'Q') {
+        castleNotation = 'O-O-O';
+      }
       return Immutable({
         ...state,
-        // moveHistory: state.moveHistory.concat({ from, to }),
+        moveHistory: state.moveHistory.concat({ castleNotation }),
+        gameTurn: action.gameTurn,
+      });
+    }
+    case types.EN_PASSANT_MOVE: {
+      const cols = 'abcdefgh';
+      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
+      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      return Immutable({
+        ...state,
+        moveHistory: state.moveHistory.concat({ from, to }),
+        gameTurn: action.gameTurn,
+      });
+    }
+    case types.PAWN_PROMOTION_MOVE: {
+      const cols = 'abcdefgh';
+      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
+      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      return Immutable({
+        ...state,
+        moveHistory: state.moveHistory.concat({ from, to }),
         gameTurn: action.gameTurn,
       });
     }
@@ -162,6 +182,21 @@ const boardState = (state = {
       }
       return { board };
     }
+    case types.EN_PASSANT_MOVE: {
+      const board = state.board.slice(0);
+      board[action.coordinates[0]][action.coordinates[1]]
+        = board[action.fromPosition[0]][action.fromPosition[1]];
+      board[action.fromPosition[0]][action.fromPosition[1]] = null;
+      board[action.enPassantCoord[0]][action.enPassantCoord[1]] = null;
+      return { board };
+    }
+    case types.PAWN_PROMOTION_MOVE: {
+      const board = state.board.slice(0);
+      board[action.coordinates[0]][action.coordinates[1]]
+        = action.pawnPromotionPiece;
+      board[action.fromPosition[0]][action.fromPosition[1]] = null;
+      return { board };
+    }
     case types.RECEIVE_GAME: {
       return { board: action.game.board };
     }
@@ -186,8 +221,23 @@ const moveState = (state = Immutable({
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
   ],
+  pawnPromotion: null,
+  pawnPromotionCoord: [],
+  showPromotionDialog: false,
 }), action) => {
   switch (action.type) {
+    case types.OPEN_PROMOTION_DIALOG:
+      return Immutable({
+        ...state,
+        pawnPromotionCoord: action.coordinates,
+        showPromotionDialog: true,
+      });
+    case types.CLOSE_PROMOTION_DIALOG:
+      return Immutable({
+        ...state,
+        pawnPromotionCoord: [],
+        showPromotionDialog: false,
+      });
     case types.SAVE_BOOL_BOARD:
       return Immutable({
         ...state,
@@ -252,6 +302,30 @@ const moveState = (state = Immutable({
         error: '',
       });
     }
+    case types.CASTLING_MOVE: {
+      const cols = 'abcdefgh';
+      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
+      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      return Immutable({
+        ...state,
+        fromPosition: '',
+        selectedPiece: '',
+        message: `Castling: ${from}-${to} - ${action.castling}`,
+        error: '',
+      });
+    }
+    case types.EN_PASSANT_MOVE: {
+      const cols = 'abcdefgh';
+      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
+      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      return Immutable({
+        ...state,
+        fromPosition: '',
+        selectedPiece: '',
+        message: `En Passant: ${from}-${to} - ${action.castling}`,
+        error: '',
+      });
+    }
     case types.CAPTURE_PIECE: {
       const cols = 'abcdefgh';
       const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
@@ -281,21 +355,24 @@ const userState = (state = Immutable({
   thisUser: '',
   thisUserId: '',
   isWhite: true,
+  allRooms: [],
+  roomQueue: [],
+  count: 0,
 }), action) => {
   switch (action.type) {
-    case types.SET_PLAYER_W: {
+    case types.SET_PLAYER: {
       return Immutable({
         ...state,
-        playerW: action.player.data.display,
-        playerWemail: action.player.data.email,
+        // playerW: action.player.data.display,
+        // playerWemail: action.player.data.email,
         thisUser: action.player.data.display,
         thisEmail: action.player.data.email,
       });
     }
-    case types.SET_PLAYER_B: {
+    case types.SET_PLAYER_ID: {
       return Immutable({
         ...state,
-        playerB: action.player.data.display,
+        thisUserId: action.id,
       });
     }
     case types.GET_REQUEST_FAILURE: {
@@ -307,6 +384,7 @@ const userState = (state = Immutable({
     case types.UPDATE_ROOM_INFO: {
       return Immutable({
         ...state,
+        count: action.roomInfo.count,
         room: action.roomInfo.room,
         playerB: action.roomInfo.playerB,
         playerW: action.roomInfo.playerW,
@@ -315,7 +393,20 @@ const userState = (state = Immutable({
         playerBemail: action.roomInfo.playerBemail,
         playerWemail: action.roomInfo.playerWemail,
         thisUserId: (state.thisUserId === '') ? action.roomInfo.thisUserId : state.thisUserId,
-        isWhite: (!action.roomInfo.playerB) ? true : state.thisUserId !== '',
+        isWhite: (state.thisUser !== action.roomInfo.playerB),
+      });
+    }
+    // isWhite: (!action.roomInfo.playerB) ? true : state.thisUserId !== '',
+    case types.UPDATE_ALL_ROOMS: {
+      return Immutable({
+        ...state,
+        allRooms: action.allRooms,
+      });
+    }
+    case types.UPDATE_ROOM_QUEUE: {
+      return Immutable({
+        ...state,
+        roomQueue: action.queue,
       });
     }
     default:
@@ -344,6 +435,9 @@ const controlState = (state = Immutable({
   alertName: '',
   cancelPauseOpen: false,
   pauseOpen: false,
+  chooseGameModeOpen: false,
+  chooseRoomOpen: false,
+  chooseSideOpen: false,
 }), action) => {
   switch (action.type) {
     case types.PAUSE_DIALOG_OPEN: {
@@ -375,6 +469,42 @@ const controlState = (state = Immutable({
         ...state,
         alertName: action.alertName,
       });
+    }
+    case types.SELECT_GAME_MODE_OPEN: {
+      return Immutable({
+        ...state,
+        chooseGameModeOpen: true,
+      });
+    }
+    case types.SELECT_GAME_MODE_CLOSE: {
+      return Immutable({
+        ...state,
+        chooseGameModeOpen: false,
+      });
+    }
+    case types.SELECT_ROOM_OPEN: {
+      return Immutable({
+        ...state,
+        chooseRoomOpen: true,
+      });
+    }
+    case types.SELECT_ROOM_CLOSE: {
+      return Immutable({
+        ...state,
+        chooseRoomOpen: false,
+      });
+    }
+    case types.SELECT_SIDE_OPEN: {
+      return Immutable({
+        ...state,
+        chooseSideOpen: true,
+      });
+    }
+    case types.SELECT_SIDE_CLOSE: {
+      return Immutable({
+        ...state,
+        chooseSideOpen: false,
+      })
     }
     default:
       return state;

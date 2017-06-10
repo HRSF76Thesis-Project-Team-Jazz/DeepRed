@@ -33,7 +33,7 @@ describe('ChessGame', () => {
     expect(testChessGame.movePiece).to.be.a('function');
   });
   it('should return object with capturePiece method', () => {
-    expect(testChessGame.capturePiece).to.be.a('function');
+    expect(testChessGame.addToCaptureArray).to.be.a('function');
   });
 });
 
@@ -72,19 +72,18 @@ describe('ChessGame.movePiece', () => {
   });
 });
 
-const captChessGame = new ChessGame();
-captChessGame.board = [
-  ['BR', 'BN', 'BB', 'BK', null, null, 'BN', 'BR'],
-  ['BP', 'BP', 'BP', null, 'BQ', 'BP', 'BP', 'BP'],
-  [null, null, null, null, 'BP', null, null, null],
-  [null, null, null, 'BP', null, null, 'WN', null],
-  ['WP', 'BB', null, null, 'WP', null, null, 'WP'],
-  [null, null, null, null, null, 'WP', null, null],
-  [null, 'WP', 'WP', 'WP', null, null, 'WP', null],
-  ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
-];
-
 describe('ChessGame.capturePiece', () => {
+  const captChessGame = new ChessGame();
+  captChessGame.board = [
+    ['BR', 'BN', 'BB', 'BK', null, null, 'BN', 'BR'],
+    ['BP', 'BP', 'BP', null, 'BQ', 'BP', 'BP', 'BP'],
+    [null, null, null, null, 'BP', null, null, null],
+    [null, null, null, 'BP', null, null, 'WN', null],
+    ['WP', 'BB', null, null, 'WP', null, null, 'WP'],
+    [null, null, null, null, null, 'WP', null, null],
+    [null, 'WP', 'WP', 'WP', null, null, 'WP', null],
+    ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
+  ];
   const expectedMovePawnCapBoard1 = [
     ['BR', 'BN', 'BB', 'BK', null, null, 'BN', 'BR'],
     ['BP', 'BP', 'BP', null, 'BQ', 'BP', 'BP', 'BP'],
@@ -334,6 +333,93 @@ describe('isLegalMovePawn', () => {
   });
 });
 //
+describe('En Passant', () => {
+  const enPassantGame = new ChessGame();
+  it('should return object with empty canEnPassant', () => {
+    expect(enPassantGame.canEnPassant).to.eql([]);
+  });
+  const enPassantGameBoard = [
+    ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+    ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, 'WP', null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'WP', 'WP', null, 'WP', 'WP', 'WP', 'WP'],
+    ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
+  ];
+  it('should move pawn', () => {
+    expect(enPassantGame.movePiece([6, 3], [4, 3]).game.board).to.be.eql(enPassantGameBoard);
+  });
+  it('should return object with dest canEnPassant', () => {
+    expect(enPassantGame.canEnPassant).to.eql([4, 3]);
+  });
+  const enPassantGameBoard2 = [
+    ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+    ['BP', 'BP', null, 'BP', 'BP', 'BP', 'BP', 'BP'],
+    [null, null, 'BP', null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, 'WP', null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'WP', 'WP', null, 'WP', 'WP', 'WP', 'WP'],
+    ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
+  ];
+  it('should move pawn', () => {
+    expect(enPassantGame.movePiece([1, 2], [2, 2]).game.board).to.be.eql(enPassantGameBoard2);
+  });
+  it('should return object with empty canEnPassant', () => {
+    expect(enPassantGame.canEnPassant).to.eql([]);
+  });
+  const enPassantGameBoard3 = [
+    ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+    ['BP', 'BP', null, 'BP', 'BP', 'BP', 'BP', 'BP'],
+    [null, null, 'BP', null, null, null, null, null],
+    [null, null, null, 'WP', null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'WP', 'WP', null, 'WP', 'WP', 'WP', 'WP'],
+    ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
+  ];
+  it('should move pawn', () => {
+    expect(enPassantGame.movePiece([4, 3], [3, 3]).game.board).to.be.eql(enPassantGameBoard3);
+  });
+  it('should return object with empty canEnPassant', () => {
+    expect(enPassantGame.canEnPassant).to.eql([]);
+  });
+  const enPassantGameBoard4 = [
+    ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+    ['BP', 'BP', null, 'BP', null, 'BP', 'BP', 'BP'],
+    [null, null, 'BP', null, null, null, null, null],
+    [null, null, null, 'WP', 'BP', null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'WP', 'WP', null, 'WP', 'WP', 'WP', 'WP'],
+    ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
+  ];
+  it('should move pawn', () => {
+    expect(enPassantGame.movePiece([1, 4], [3, 4]).game.board).to.be.eql(enPassantGameBoard4);
+  });
+  it('should return object with empty canEnPassant', () => {
+    expect(enPassantGame.canEnPassant).to.eql([3, 4]);
+  });
+  const enPassantGameBoard5 = [
+    ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+    ['BP', 'BP', null, 'BP', null, 'BP', 'BP', 'BP'],
+    [null, null, 'BP', null, 'WP', null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'WP', 'WP', null, 'WP', 'WP', 'WP', 'WP'],
+    ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
+  ];
+  it('should capture pawn via en passant', () => {
+    expect(enPassantGame.movePiece([3, 3], [2, 4]).game.board).to.be.eql(enPassantGameBoard5);
+  });
+  it('should return object with empty canEnPassant', () => {
+    expect(enPassantGame.canEnPassant).to.eql([]);
+  });
+});
+
 describe('isLegalMoveRook', () => {
   const rookGame = new ChessGame();
   rookGame.board = [
@@ -531,7 +617,6 @@ describe('isLegalMoveBishop', () => {
   });
 });
 
-
 describe('isLegalMoveQueen', () => {
   const queenGame = new ChessGame();
   queenGame.board = [
@@ -658,5 +743,71 @@ describe('isLegalMoveKing', () => {
   }
   it('king cannot be blocked', () => {
     expect(actualKingResultBoard2).to.eql(expectedKingResultBoard);
+  });
+  const kingCastleGame = new ChessGame();
+  kingCastleGame.board = [
+    ['BR', null, null, null, 'BK', null, null, 'BR'],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WR', null, null, null, 'WK', null, null, 'WR'],
+  ];
+  const expectedWKingCastleResultBoard = [
+    [false, false, false, false, false, false, false, false],
+    [false, false, false, false, false, false, false, false],
+    [false, false, false, false, false, false, false, false],
+    [false, false, false, false, false, false, false, false],
+    [false, false, false, false, false, false, false, false],
+    [false, false, false, false, false, false, false, false],
+    [false, false, false, true, true, true, false, false],
+    [false, false, true, true, false, true, true, false],
+  ];
+  const actualKingCastleResultBoard = [];
+  for (let i = 0; i < 8; i += 1) {
+    actualKingCastleResultBoard[i] = new Array(8);
+  }
+  for (let i = 0; i < 8; i += 1) {
+    for (let j = 0; j < 8; j += 1) {
+      actualKingCastleResultBoard[i][j] = isLegalMove(kingCastleGame, [7, 4], [i, j]).bool;
+    }
+  }
+  it('white king can castle expected', () => {
+    expect(actualKingCastleResultBoard).to.eql(expectedWKingCastleResultBoard);
+  });
+  const kingCastleGame2 = new ChessGame();
+  kingCastleGame2.board = [
+    ['BR', null, null, null, 'BK', null, null, 'BR'],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WR', null, null, null, 'WK', null, null, 'WR'],
+  ];
+  const actualKingCastleResultBoard2 = [];
+  for (let i = 0; i < 8; i += 1) {
+    actualKingCastleResultBoard2[i] = new Array(8);
+  }
+  for (let i = 0; i < 8; i += 1) {
+    for (let j = 0; j < 8; j += 1) {
+      actualKingCastleResultBoard2[i][j] = isLegalMove(kingCastleGame2, [0, 4], [i, j]).bool;
+    }
+  }
+  const expectedBKingCastleResultBoard = [
+    [false, false, true, true, false, true, true, false],
+    [false, false, false, true, true, true, false, false],
+    [false, false, false, false, false, false, false, false],
+    [false, false, false, false, false, false, false, false],
+    [false, false, false, false, false, false, false, false],
+    [false, false, false, false, false, false, false, false],
+    [false, false, false, false, false, false, false, false],
+    [false, false, false, false, false, false, false, false],
+  ];
+  it('black king can castle expected', () => {
+    expect(actualKingCastleResultBoard2).to.eql(expectedBKingCastleResultBoard);
   });
 });
