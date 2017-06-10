@@ -10,29 +10,6 @@
 const isLegalMove = require('./isLegalMove');
 const endGameChecks = require('./deepRed/endGameChecks');
 // const moveToPGNString = require('./convertToPGN');
-<<<<<<< HEAD
-<<<<<<< HEAD
-const chessDB = require('../chessDB')
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> working on DB schema func
-=======
->>>>>>> working on DB schema func
-=======
->>>>>>> working on DB schema func
-=======
->>>>>>> working on DB schema func
-=======
-const chessDB = require('../chessDB');
->>>>>>> progress on chatbox
-=======
->>>>>>> added global chat
 
 const transcribeBoard = board => board.map((row) => {
   const pieceIndex = {
@@ -53,21 +30,6 @@ const transcribeBoard = board => board.map((row) => {
   const newRow = row.map(col => pieceIndex[col]);
   return newRow.join('');
 }).join('');
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> working on DB schema func
-<<<<<<< HEAD
-=======
->>>>>>> working on DB schema func
-=======
->>>>>>> working on DB schema func
-=======
->>>>>>> working on DB schema func
-=======
->>>>>>> working on DB schema func
-=======
->>>>>>> added global chat
 
 class ChessGame {
 
@@ -97,66 +59,9 @@ class ChessGame {
     this.winner = null;
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   movePiece(origin, dest, pawnPromotionValue = null) {
     const error = this.errorCheck(origin, dest);
-=======
-=======
->>>>>>> working on DB schema func
-  movePiece(origin, dest, pawnPromotionPiece = null) {
-=======
-  movePiece(origin, dest, clientRoom, pawnPromotionPiece = null) {
->>>>>>> progress on chatbox
-=======
-  movePiece(origin, dest, clientRoom, pawnPromotionValue = null) {
->>>>>>> rebase
-    let error = this.errorCheck(origin, dest);
->>>>>>> working on DB schema func
     if (error) {
-=======
-  movePiece(origin, dest, clientRoom) {
-    let error = null;
-    if (dest === undefined) {
-      error = 'Attempted destination is invalid.';
-      console.log(this.board);
-      console.log(error);
-      return { game: this, error };
-    } else if (!origin || !this.board[origin[0]] || !this.board[origin[0]][origin[1]]) {
-      error = 'Origin is invalid.';
-      console.log(this.board);
-      console.log(error);
-      return { game: this, error };
-    } else if (origin[0] === dest[0] && origin[1] === dest[1]) {
-      error = 'Origin and destination cannot be the same.';
-      console.log(this.board);
-      console.log(error);
-      return { game: this, error };
-    } else if (this.turn !== this.board[origin[0]][origin[1]][0]) {
-      error = 'Not your turn.';
-      console.log(this.board);
-      console.log(error);
-<<<<<<< HEAD
->>>>>>> working on DB schema func
-=======
-=======
->>>>>>> working on DB schema func
-  movePiece(origin, dest, pawnPromotionPiece = null) {
-=======
-  movePiece(origin, dest, pawnPromotionValue = null) {
->>>>>>> added global chat
-    let error = this.errorCheck(origin, dest);
-    if (error) {
->>>>>>> working on DB schema func
       return { game: this, error };
     }
     const originPiece = this.board[origin[0]][origin[1]];
@@ -197,31 +102,8 @@ class ChessGame {
       if (destPiece) {
         this.addToCaptureArray(destPiece);
       }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 
       // swap location
-=======
-=======
-
->>>>>>> working on DB schema func
-      // this.history[this.turn] = this.history[this.turn] || [];
-      // this.history[this.turn].push(origin);
-      // this.history[this.turn].push(dest);
-      // if (originPiece[0] === 'B') {
-      //   this.turn += 1;
-      // }
-
-      chessDB.saveMove({
-        session_id: clientRoom,
-        history: JSON.stringify([ origin , dest])
-      })
-
-      this.turn = (this.turn === 'W') ? 'B' : 'W';
->>>>>>> working on DB schema func
-=======
->>>>>>> rebase
       this.board[dest[0]][dest[1]] = originPiece;
       this.board[origin[0]][origin[1]] = null;
 
@@ -232,14 +114,6 @@ class ChessGame {
         this.promotePawn(originPiece, dest, pawnPromotionPiece);
       }
       // check for check/checkmate/stalemate
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-      chessDB.saveMove({
-        session_id: clientRoom,
-        history: transcribeBoard(this.board)
-      })
->>>>>>> progress on chatbox
 
       this.history.push(transcribeBoard(this.board));
 
@@ -264,18 +138,6 @@ class ChessGame {
           this.playerInCheck = null;
         }
       }
-=======
-      this.history.push(transcribeBoard(this.board));
-<<<<<<< HEAD
-      // save to DB
-      // chessDB.saveMove({
-      //   session_id: clientRoom,
-      //   history: transcribeBoard(this.board),
-      // })
-
->>>>>>> rebase
-=======
->>>>>>> added global chat
       this.turn = (this.turn === 'W') ? 'B' : 'W';
       // console.log(this.history);
       console.log(this.board);
@@ -292,50 +154,7 @@ class ChessGame {
     // console.log(error);
     return { game: this, error: 'Move is not allowed.' };
   }
-<<<<<<< HEAD
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-<<<<<<< HEAD
   errorCheck(origin, dest) {
-<<<<<<< HEAD
-
-  movePiece(origin, dest, clientRoom) {
-<<<<<<< HEAD
->>>>>>> working on DB schema func
-<<<<<<< HEAD
-=======
-  movePiece(origin, dest, clientRoom) {
->>>>>>> working on DB schema func
-=======
-=======
-  errorCheck(origin, dest) {
-<<<<<<< HEAD
->>>>>>> working on DB schema func
-=======
-
->>>>>>> working on DB schema func
-  movePiece(origin, dest, clientRoom) {
->>>>>>> working on DB schema func
-=======
-  movePiece(origin, dest, clientRoom) {
->>>>>>> working on DB schema func
-=======
->>>>>>> working on DB schema func
-=======
->>>>>>> working on DB schema func
-=======
-  movePiece(origin, dest, clientRoom) {
->>>>>>> working on DB schema func
-=======
-  errorCheck(origin, dest, clientRoom) {
->>>>>>> progress on chatbox
-=======
-  errorCheck(origin, dest) {
->>>>>>> rebase
-=======
->>>>>>> added global chat
     let error = null;
     if (dest === undefined) {
       error = 'Attempted destination is invalid.';
@@ -391,176 +210,6 @@ class ChessGame {
       this.board[7][7] = null;
       this.hasMovedWRK = true;
       this.hasMovedWK = true;
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-    const legalMoveResult = isLegalMove(this, origin, dest, clientRoom);
-=======
-    const legalMoveResult = isLegalMove(this, origin, dest);
->>>>>>> working on DB schema func
-=======
-    const legalMoveResult = isLegalMove(this, origin, dest, clientRoom);
->>>>>>> updated schema, working on chat
-    if (legalMoveResult.bool) {
-      if (legalMoveResult.castling) {
-        if (legalMoveResult.castling === 'BRQ') {
-          this.board[0][3] = 'BR';
-          this.board[0][0] = null;
-          this.hasMovedBRQ = true;
-          this.hasMovedBK = true;
-        } else if (legalMoveResult.castling === 'BRK') {
-          this.board[0][5] = 'BR';
-          this.board[0][7] = null;
-          this.hasMovedBRK = true;
-          this.hasMovedBK = true;
-        } else if (legalMoveResult.castling === 'WRQ') {
-          this.board[7][3] = 'WR';
-          this.board[7][0] = null;
-          this.hasMovedWRQ = true;
-          this.hasMovedWK = true;
-        } else if (legalMoveResult.castling === 'BRQ') {
-          this.board[7][5] = 'WR';
-          this.board[7][7] = null;
-          this.hasMovedWRK = true;
-          this.hasMovedWK = true;
-        }
-      }
-      if (originPiece === 'WK' && JSON.stringify(origin) === JSON.stringify([7, 4])) {
-        this.hasMovedWK = true;
-      }
-      if (originPiece === 'BK' && JSON.stringify(origin) === JSON.stringify([0, 4])) {
-        this.hasMovedBK = true;
-      }
-      if (originPiece === 'WR' && JSON.stringify(origin) === JSON.stringify([7, 0])) {
-        this.hasMovedWRQ = true;
-      }
-      if (originPiece === 'WR' && JSON.stringify(origin) === JSON.stringify([7, 7])) {
-        this.hasMovedWRK = true;
-      }
-      if (originPiece === 'BR' && JSON.stringify(origin) === JSON.stringify([0, 0])) {
-        this.hasMovedBRQ = true;
-      }
-      if (originPiece === 'BR' && JSON.stringify(origin) === JSON.stringify([0, 7])) {
-        this.hasMovedBRK = true;
-      }
-      if (destPiece) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> updated schema, working on chat
-
-        this.capturePiece(destPiece, clientRoom);
-      }
-
-        // if (originPiece[0] === destPiece[0]) {
-        //   error = 'Cannot capture your own piece.';
-        //   console.log(this.board);
-        //   console.log(error);
-        //   return { game: this, error };
-        // }
-        // this.history += moveToPGNString(this.board, origin, dest, this.count);
-<<<<<<< HEAD
-<<<<<<< HEAD
-        this.capturePiece(destPiece, clientRoom);
-      }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> working on DB schema func
-        // if (originPiece[0] === destPiece[0]) {
-        //   error = 'Cannot capture your own piece.';
-        //   console.log(this.board);
-        //   console.log(error);
-        //   return { game: this, error };
-        // }
-        // this.history += moveToPGNString(this.board, origin, dest, this.count);
-        this.capturePiece(destPiece, clientRoom);
-      }
-<<<<<<< HEAD
->>>>>>> working on DB schema func
-=======
->>>>>>> working on DB schema func
-=======
-        // this.capturePiece(destPiece, clientRoom);
-      
->>>>>>> updated schema, working on chat
-=======
->>>>>>> working on DB schema func
-=======
-        // this.capturePiece(destPiece, clientRoom);
-      
->>>>>>> updated schema, working on chat
-      // this.history[this.turn] = this.history[this.turn] || [];
-      // this.history[this.turn].push(origin);
-      // this.history[this.turn].push(dest);
-      // if (originPiece[0] === 'B') {
-      //   this.turn += 1;
-      // }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> updated schema, working on chat
-      var board = this.board.map((row) => {
-      const pieceIndex = {
-        null: 0,
-        WP: 1,
-        WN: 2,
-        WB: 3,
-        WR: 4,
-        WQ: 5,
-        WK: 6,
-        BP: 'a',
-        BN: 'b',
-        BB: 'c',
-        BR: 'd',
-        BQ: 'e',
-        BK: 'f',
-      };
-        const newRow = row.map(col => pieceIndex[col]);
-        return newRow.join('');
-      }).join('');
-<<<<<<< HEAD
-
-      chessDB.saveMove({
-        session_id: clientRoom,
-        history: board
-=======
-
-      chessDB.saveMove({
-        session_id: clientRoom,
-        history: JSON.stringify([ origin , dest])
->>>>>>> working on DB schema func
-=======
-
-      chessDB.saveMove({
-        session_id: clientRoom,
-        history: board
->>>>>>> updated schema, working on chat
-      })
-
-      this.turn = (this.turn === 'W') ? 'B' : 'W';
-      this.board[dest[0]][dest[1]] = originPiece;
-      this.board[origin[0]][origin[1]] = null;
-      // check for check/checkmate/stalemate
-      // console.log('--------------', this.history);
-      console.log('Move piece is successful');
-      console.log(this.board);
-      return { game: this, error };
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
->>>>>>> working on DB schema func
-=======
-
->>>>>>> working on DB schema func
-=======
->>>>>>> rebase
-=======
->>>>>>> added global chat
     }
   }
   toggleMovedRooksOrKings(origin, originPiece) {
@@ -583,86 +232,11 @@ class ChessGame {
       this.hasMovedBRK = true;
     }
   }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  addToCaptureArray(piece) {
-
-
-  capturePiece(piece, clientRoom) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> working on DB schema func
-=======
->>>>>>> working on DB schema func
-=======
->>>>>>> working on DB schema func
-=======
-=======
->>>>>>> working on DB schema func
->>>>>>> working on DB schema func
-=======
->>>>>>> working on DB schema func
-=======
-
-<<<<<<< HEAD
-
-  capturePiece(piece, clientRoom) {
->>>>>>> working on DB schema func
-=======
-=======
->>>>>>> rebase
-  addToCaptureArray(piece, clientRoom) {
->>>>>>> progress on chatbox
-    if (piece[0] === 'W') {
-      this.blackCapPieces.push(piece);
-
-      // chessDB.saveBlackPiece({
-      //   session_id: clientRoom,
-      //   black_pieces: JSON.stringify(piece),
-      // });
-
-    } else {
-      this.whiteCapPieces.push(piece);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> working on DB schema func
-=======
->>>>>>> working on DB schema func
-
-      chessDB.saveWhitePiece({
-        session_id: clientRoom,
-        white_pieces: JSON.stringify(piece),
-      })
-
-    }
-  }
->>>>>>> working on DB schema func
-=======
->>>>>>> working on DB schema func
-=======
->>>>>>> working on DB schema func
-
-      // chessDB.saveWhitePiece({
-      //   session_id: clientRoom,
-      //   white_pieces: JSON.stringify(piece),
-      // });
-
-=======
   addToCaptureArray(piece) {
     if (piece[0] === 'W') {
       this.blackCapPieces.push(piece);
     } else {
       this.whiteCapPieces.push(piece);
->>>>>>> added global chat
     }
   }
   promotePawn(originPiece, dest, pawnPromotionPiece) {

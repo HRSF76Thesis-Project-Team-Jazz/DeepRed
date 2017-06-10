@@ -2,28 +2,8 @@ import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { red50, red900 } from 'material-ui/styles/colors';
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-// import Messages from './Messages'
-=======
-import ScrollArea from 'react-scrollbar';
-
->>>>>>> working on Chatbox css
-=======
-// import Messages from './Messages'
->>>>>>> updated schema, working on chat
-=======
-=======
->>>>>>> rebase
 // import Messages from './Messages'
 
-<<<<<<< HEAD
->>>>>>> progress on chatbox
->>>>>>> progress on chatbox
-=======
->>>>>>> rebase
 import './css/ChatBox.css';
 
 class ChatBoxLocal extends Component {
@@ -57,7 +37,7 @@ class ChatBoxLocal extends Component {
 
   render() {
     return (
-      <div>
+        <div>
         <form>
           <TextField
             className="text-field"
@@ -77,16 +57,7 @@ class ChatBoxLocal extends Component {
             labelColor={red50}
           /> */}
         </form>
-<<<<<<< HEAD
-<<<<<<< HEAD
         </div>
-=======
-      </div>
-
->>>>>>> working on Chatbox css
-=======
-        </div>
->>>>>>> updated schema, working on chat
     );
   }
 }

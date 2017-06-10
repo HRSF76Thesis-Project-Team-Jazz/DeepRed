@@ -271,4 +271,4 @@ export const sendMsgLocal = msg => ({
 export const sendMsgGlobal = msg => ({
   type: types.SEND_MESSAGE_GLOBAL,
   msg,
-})
+});

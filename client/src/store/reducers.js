@@ -135,7 +135,12 @@ const gameState = (state = Immutable({
         messagesLocal: state.messagesLocal.concat(action.msg),
       });
     }
-<<<<<<< HEAD
+    case types.SEND_MESSAGE_GLOBAL: {
+      return Immutable({
+        ...state,
+        messagesGlobal: state.messagesGlobal.concat(action.msg),
+      });
+    }
     case types.OPEN_CHECK_DIALOG: {
       return Immutable({
         ...state,
@@ -163,15 +168,6 @@ const gameState = (state = Immutable({
         winner: null,
       });
     }
-=======
-    case types.SEND_MESSAGE_GLOBAL: {
-      return Immutable({
-        ...state,
-        messagesGlobal: state.messagesGlobal.concat(action.msg),
-      });
-    }
-
->>>>>>> added global chat
     default:
       return state;
   }

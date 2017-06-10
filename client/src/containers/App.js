@@ -513,13 +513,8 @@ class App extends Component {
   render() {
     const {
       alertName, cancelPauseOpen, pauseOpen, moveHistory,
-<<<<<<< HEAD
       capturedPiecesBlack, capturedPiecesWhite, resumeOpen,
-      playerB, playerW, error, messages, isWhite, thisUser,
-=======
-      capturedPiecesBlack, capturedPiecesWhite,
       playerB, playerW, error, messagesLocal, messagesGlobal, isWhite, thisUser,
->>>>>>> added global chat
       chooseGameModeOpen, chooseRoomOpen, chooseSideOpen, allRooms,
       cancelResumeOpen, surrenderOpen,
     } = this.props;
@@ -707,33 +702,7 @@ class App extends Component {
 
             <div className="flex-col right-col">
               <Message message={error} />
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> updated schema, working on chat
-              <ScrollArea>
-              <Messages messages={messages} />
-              </ScrollArea>           
-              <ChatBox sendMessage={this.sendMessage} />
-<<<<<<< HEAD
-=======
-                    <ScrollArea>
-                      <div>
-                        <ul className="message-list">
-                          {this.props.messages.map((msg, i) =>
-                            <div className="message" key={i + msg}>{msg}</div>,
-                          )}
-                        </ul>
-                        </div>
-                      </ScrollArea>
-              <ChatBox messages={messages} sendMessage={this.sendMessage} />
->>>>>>> working on Chatbox css
-=======
->>>>>>> updated schema, working on chat
-=======
               <Messages messagesLocal={messagesLocal} sendMessageLocal={this.sendMessageLocal} messagesGlobal={messagesGlobal} sendMessageGlobal={this.sendMessageGlobal}/>
->>>>>>> added global chat
             </div>
 
             <div className="control-general">
