@@ -265,6 +265,11 @@ const decodeBoard = (code) => {
   }
 
   const array = string.split('|');
+<<<<<<< HEAD
+=======
+  // console.log(string);
+  // console.log(array.length, array);
+>>>>>>> gamePlay modes
   const board = [];
   let row = [];
   array.forEach((piece, i) => {

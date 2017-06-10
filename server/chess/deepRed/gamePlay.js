@@ -213,7 +213,10 @@ const blackMove = (board, pieceState) => {
 };
 
 
-const simulateGames = (number) => {
+const simulateGames = (number, displayAll, displayFn) => {
+
+  // let transcribeCount = 0;
+  // let encodeCount = 0;
 
   let gameCount = 0;
   // const interval = 2;
@@ -251,6 +254,13 @@ const simulateGames = (number) => {
       ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
     ];
 
+
+
+    // transcribeCount += transcribeBoard(board).length;
+    // encodeCount += encodeBoard(board).length;
+
+
+
     const pieceState = {
       hasMovedWK: false,
       hasMovedWKR: false,
@@ -270,8 +280,10 @@ const simulateGames = (number) => {
     };
 
 
-    // console.log('=== START GAME ===');
-    // displayBoard(board);
+    if (displayAll) {
+      console.log('=== START GAME ===');
+      displayFn(board);
+    };
 
     let currentMoveWhite;
     let currentMoveBlack;
@@ -280,7 +292,7 @@ const simulateGames = (number) => {
     let moveCount = 1;
 
     while (!gameEnded) {
-      // console.log(`=== [${moveCount}] WHITE MOVE ===`);
+      if (displayAll) console.log(`=== [${moveCount}] WHITE MOVE ===`);
       currentMoveWhite = whiteMove(board, pieceState);
       move = currentMoveWhite[0];
 
@@ -299,10 +311,15 @@ const simulateGames = (number) => {
       newState = currentMoveWhite[1];
       board = mutateBoard(board, move);
 
-      // !gameEnded && displayBoard(board);
-      !gameEnded && console.log(board);
-      // !gameEnded && console.log(transcribeBoard(board));
-      // !gameEnded && console.log(encodeBoard(board));
+      /* DISPLAY BOARD   */
+
+      !gameEnded && displayFn(board);
+
+      // transcribeCount += transcribeBoard(board).length;
+      // encodeCount += encodeBoard(board).length;
+
+      /* END */
+
       if (isCheckmateWhite(board)) {
         gameEnded = true;
         console.log('**** WHITE CHECKMATE ***');
@@ -361,11 +378,11 @@ const simulateGames = (number) => {
         newState = currentMoveBlack[1];
         board = mutateBoard(board, move);
 
-        // console.log(`                             === [${moveCount}] BLACK MOVE ===`);
-        // !gameEnded && displayBoard(board);
-        !gameEnded && console.log(board);
-        // !gameEnded && console.log(transcribeBoard(board));
-        // !gameEnded && console.log(encodeBoard(board));
+        // transcribeCount += transcribeBoard(board).length;
+        // encodeCount += encodeBoard(board).length;
+
+        if (displayAll) console.log(`                             === [${moveCount}] BLACK MOVE ===`);
+        !gameEnded && displayFn(board);
         if (isCheckmateBlack(board)) {
           gameEnded = true;
           console.log('**** BLACK CHECKMATE ***');
@@ -411,81 +428,34 @@ const simulateGames = (number) => {
     moveCount = 1;
     gameCount += 1;
   }
+
+  // console.log('Games Played:     ', gameCount);
+  // console.log('Transcribe Count: ', transcribeCount);
+  // console.log('Encode Count:     ', encodeCount);
+  // console.log('Data compression: ', 1 - (encodeCount / transcribeCount));
+
   return gameSummary;
 };
 
-console.log(simulateGames(1000));
+const displayTranscribe = (board) => {
+  console.log(transcribeBoard(board));
+};
 
+const displayEncode = (board) => {
+  console.log(encodeBoard(board));
+};
 
-    // setInterval(() => {
-    //   if (!gameEnded) {
-    //     console.log(`=== [${moveCount}] WHITE MOVE ===`);
-    //     currentMoveWhite = whiteMove(board, pieceState);
-    //     move = currentMoveWhite[0];
-    //     newState = currentMoveWhite[1];
-    //     board = mutateBoard(board, move);
+const displayFullBoard = (board) => {
+  displayBoard(board);
+};
 
-    //     !gameEnded && displayBoard(board);
-    //     if (isCheckmateWhite(board)) {
-    //       gameEnded = true;
-    //       console.log('**** WHITE CHECKMATE ***');
-    //     }
-    //     if (isStalemateBlack(board)) {
-    //       gameEnded = true;
-    //       console.log('**** STALEMATE: BLACK CAN NOT MOVE ***', newState);
-    //     }
-    //     if ((newState.moveCount - newState.lastCapture > 50) &&
-    //       (newState.moveCount - newState.lastPawn > 50)
-    //     ) {
-    //       gameEnded = true;
-    //       console.log('**** STALEMATE BY MOVES ***', newState);
-    //     }
-    //     if (newState.countBlackPieces + newState.countWhitePieces === 2) {
-    //       gameEnded = true;
-    //       console.log('**** STALEMATE BY PIECES ***', newState);
-    //     }
-    //   }
+// console.log(simulateGames(1000, false, displayFullBoard));
+// console.log(simulateGames(1000, false, displayTranscribe));
+// console.log(simulateGames(1000, false, displayEncode));
 
-    //   if (!gameEnded) {
-    //     currentMoveBlack = blackMove(board, newState);
-    //     move = currentMoveBlack[0];
-    //     newState = currentMoveBlack[1];
-    //     board = mutateBoard(board, move);
-
-    //     setTimeout(() => {
-    //       console.log(`                             === [${moveCount}] BLACK MOVE ===`);
-    //       !gameEnded && displayBoard(board);
-    //       if (isCheckmateBlack(board)) {
-    //         gameEnded = true;
-    //         console.log('**** BLACK CHECKMATE ***');
-    //       }
-    //       if (isStalemateWhite(board)) {
-    //         gameEnded = true;
-    //         console.log('**** STALEMATE: WHITE CAN NOT MOVE ***', newState);
-    //       }
-    //       if ((newState.moveCount - newState.lastCapture > 50) &&
-    //         (newState.moveCount - newState.lastPawn > 50)
-    //       ) {
-    //         gameEnded = true;
-    //         console.log('**** STALEMATE BY MOVES ***', newState);
-    //       }
-    //       if (newState.countBlackPieces + newState.countWhitePieces === 2) {
-    //         gameEnded = true;
-    //         console.log('**** STALEMATE BY PIECES ***', newState);
-    //       }
-    //     }, interval / 2);
-    //   }
-
-    //   moveCount += 1;
-    // }, interval);
-
-//   }
-
-
-
-
-
-
-// }
-
-
+module.exports = {
+  simulateGames,
+  displayFullBoard,
+  displayTranscribe,
+  displayEncode,
+};
