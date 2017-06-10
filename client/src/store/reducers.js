@@ -168,6 +168,7 @@ const gameState = (state = Immutable({
         winner: null,
       });
     }
+
     default:
       return state;
   }

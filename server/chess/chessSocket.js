@@ -202,5 +202,5 @@ module.exports = (io, client) => {
     }
     io.emit('messageGlobal', `${user}: ${msg}`);
   });
-
+  
 };

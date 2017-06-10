@@ -62,5 +62,4 @@ class ChatBoxLocal extends Component {
   }
 }
 
-
 export default ChatBoxLocal;
