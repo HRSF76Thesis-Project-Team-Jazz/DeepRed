@@ -12,7 +12,7 @@ const { isCheckmateWhite, isStalemateBlack, blackIsChecked, isCheckmateBlack,
 isStalemateWhite, whiteIsChecked } = require('./deepRed/endGameChecks');
 const { whiteMove, blackMove } = require('./deepRed/playerVsAI');
 const { encodeWithState } = require('./chessEncode');
-
+const chessDB = require('../chessDB')
 class ChessGame {
 
   constructor() {

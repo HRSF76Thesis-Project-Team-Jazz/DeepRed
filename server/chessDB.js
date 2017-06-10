@@ -240,13 +240,15 @@ const knex = require('knex')(require('../knexfile'));
 // module.exports.requestHistory = requestHistory;
 // module.exports = requestWhitePieces;
 // module.exports = requestBlackPieces;
+const test = () => {
+  console.log('test')
+}
 
 const saveDeepRedWhite = (move) => {
   // search table , if parent = parent & move = move
     // increment blackWins & whiteWins 
     // update winPercentage to whiteWins / blackWins + whiteWins
     // else insert
-  knex('DeepRed_WhiteMoves')
 
   knex.insert({
     parent: move.parent,
@@ -255,7 +257,7 @@ const saveDeepRedWhite = (move) => {
     whiteWins: move.whiteWins,
     stalemate: move.stalemate,
     winPercentage: move.winPercentage,
-  }).into('DeepRed_WhiteMoves').into('games').then((res) => {
+  }).into('DeepRed_WhiteMoves').then((res) => {
     console.log(res);
   });
 }
@@ -268,7 +270,10 @@ const saveDeepRedBlack = (move) => {
     whiteWins: move.whiteWins,
     stalemate: move.stalemate,
     winPercentage: move.winPercentage,
-  }).into('DeepRed_Black22Moves').into('games').then((res) => {
+  }).into('DeepRed_BlackMoves').then((res) => {
     console.log(res);
   });
 }
+
+module.exports.saveDeepRedWhite = saveDeepRedWhite;
+module.exports.saveDeepRedBlack = saveDeepRedBlack;
