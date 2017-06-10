@@ -10,6 +10,7 @@
 const isLegalMove = require('./isLegalMove');
 const endGameChecks = require('./deepRed/endGameChecks');
 // const moveToPGNString = require('./convertToPGN');
+const chessDB = require('../chessDB');
 
 const transcribeBoard = board => board.map((row) => {
   const pieceIndex = {
@@ -47,7 +48,7 @@ class ChessGame {
     this.blackCapPieces = [];
     this.whiteCapPieces = [];
     this.turn = 'W';
-    this.history = [this.board];
+    this.history = [transcribeBoard(this.board)];
     this.hasMovedWRK = false;
     this.hasMovedWRQ = false;
     this.hasMovedWK = false;
@@ -120,8 +121,54 @@ class ChessGame {
       if (this.turn === 'W') {
         if (endGameChecks.isCheckmateWhite(this.board)) {
           this.winner = 'W';
+
+          for (var i = 1; i < this.history.length; i++){
+            if (i % 2 === 1){
+              chessDB.saveDeepRedWhite({
+                parent: this.history[i-1],
+                move: this.history[i],
+                blackWins: 0,
+                whiteWins: 1,
+                stalemate: 0,
+                winPercentage: 100,
+              });
+            } else {
+              chessDB.saveDeepRedBlack({
+                parent: this.history[i-1],
+                move: this.history[i],
+                blackWins: 0,
+                whiteWins: 1,
+                stalemate: 0,
+                winPercentage: 0,
+              });
+            }
+          }
+
         } else if (endGameChecks.isStalemateBlack(this.board)) {
           this.winner = 'D';
+
+          for (var i = 1; i < this.history.length; i++){
+            if (i % 2 === 1){
+              chessDB.saveDeepRedWhite({
+                parent: this.history[i-1],
+                move: this.history[i],
+                blackWins: 0,
+                whiteWins: 0,
+                stalemate: 1,
+                winPercentage: 0,
+              });
+            } else {
+              chessDB.saveDeepRedBlack({
+                parent: this.history[i-1],
+                move: this.history[i],
+                blackWins: 0,
+                whiteWins: 0,
+                stalemate: 1,
+                winPercentage: 0,
+              });
+            }
+          }
+
         } else if (endGameChecks.blackIsChecked(this.board)) {
           this.playerInCheck = 'B';
         } else {
@@ -130,6 +177,29 @@ class ChessGame {
       } else if (this.turn === 'B') {
         if (endGameChecks.isCheckmateBlack(this.board)) {
           this.winner = 'B';
+          
+          for (var i = 1; i < this.history.length; i++){
+            if (i % 2 === 1){
+              chessDB.saveDeepRedWhite({
+                parent: this.history[i-1],
+                move: this.history[i],
+                blackWins: 1,
+                whiteWins: 0,
+                stalemate: 0,
+                winPercentage: 0,
+              });
+            } else {
+              chessDB.saveDeepRedBlack({
+                parent: this.history[i-1],
+                move: this.history[i],
+                blackWins: 1,
+                whiteWins: 0,
+                stalemate: 0,
+                winPercentage: 100,
+              });
+            }
+          }
+
         } else if (endGameChecks.isStalemateWhite(this.board)) {
           this.winner = 'D';
         } else if (endGameChecks.whiteIsChecked(this.board)) {
