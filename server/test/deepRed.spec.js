@@ -30,14 +30,14 @@ const pieceState = {
 describe('Find Piece Position', () => {
 
   const board = [
-    ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+    ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
     ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
     ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-    ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+    ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
   ];
 
   it('findPiecePosition should exist and should be function', () => {
@@ -51,8 +51,8 @@ describe('Find Piece Position', () => {
   });
 
   it('should find the kings', () => {
-    expect(findPiecePosition('WK', board)).to.eql([[7, 3]]);
-    expect(findPiecePosition('BK', board)).to.eql([[0, 3]]);
+    expect(findPiecePosition('WK', board)).to.eql([[7, 4]]);
+    expect(findPiecePosition('BK', board)).to.eql([[0, 4]]);
 
     const board2 = [
       ['BR', 'BN', 'BB', null, 'BQ', 'BB', 'BN', 'BR'],

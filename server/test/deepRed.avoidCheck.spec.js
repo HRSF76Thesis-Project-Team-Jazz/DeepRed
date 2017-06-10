@@ -71,8 +71,6 @@ describe('Should know when King is in check: ', () => {
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, 'WK'],
   ];
-
-  console.log(getSafeMovesWhite(bkWPCheck));
   
   const bkWQCheck = [
     ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
@@ -94,6 +92,9 @@ describe('Should know when King is in check: ', () => {
     expect(whiteIsChecked(board)).to.eql(false);
     expect(whiteIsChecked(wkBQCheck)).to.eql(true);
     expect(whiteIsChecked(wkBPCheck)).to.eql(true);
+  });
+
+  it('should know when the Black King is in check', () => {
     expect(blackIsChecked(board)).to.eql(false);
     expect(blackIsChecked(bkWQCheck)).to.eql(true);
     expect(blackIsChecked(bkWPCheck)).to.eql(true);
