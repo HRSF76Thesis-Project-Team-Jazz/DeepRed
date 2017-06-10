@@ -118,6 +118,24 @@ export const closePromotionDialog = coordinates => ({
   coordinates,
 });
 
+export const openCheckDialog = playerInCheck => ({
+  type: types.OPEN_CHECK_DIALOG,
+  playerInCheck,
+});
+
+export const closeCheckDialog = () => ({
+  type: types.CLOSE_CHECK_DIALOG,
+});
+
+export const openWinnerDialog = winner => ({
+  type: types.OPEN_WINNER_DIALOG,
+  winner,
+});
+
+export const closeWinnerDialog = () => ({
+  type: types.CLOSE_WINNER_DIALOG,
+});
+
 export const receiveMove = (query, move) => ({
   type: types.RECEIVE_MOVE,
   query,
