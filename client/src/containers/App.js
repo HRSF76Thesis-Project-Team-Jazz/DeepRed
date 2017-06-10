@@ -15,7 +15,6 @@ import {
   selectSideOpen, selectSideClose, updateAllRooms, updateRoomQueue, setPlayerId,
   enPassantMove, pawnPromotionMove,
 } from '../store/actions';
-import ScrollArea from 'react-scrollbar';
 
 // Components
 import Header from '../components/Header';
@@ -560,10 +559,7 @@ class App extends Component {
 
             <div className="flex-col right-col">
               <Message message={error} />
-              <ScrollArea>
-              <Messages messages={messages} />
-              </ScrollArea>           
-              <ChatBox sendMessage={this.sendMessage} />
+              <Messages messages={messages} sendMessage={this.sendMessage}/>
             </div>
 
             <div className="control-pause">

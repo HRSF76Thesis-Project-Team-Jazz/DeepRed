@@ -37,7 +37,7 @@ class ChatBox extends Component {
 
   render() {
     return (
-      <div>
+        <div style = {{ position: 'relative'}}>
         <form>
           <TextField
             className="text-field"

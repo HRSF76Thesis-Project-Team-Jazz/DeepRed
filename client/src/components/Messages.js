@@ -3,6 +3,7 @@ import MobileTearSheet from './MobileTearSheet';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import ChatBox from './ChatBox';
 import ChatBox2 from './ChatBox2';
+
 class Messages extends Component {
     constructor(props) {
         super(props);
@@ -27,9 +28,5 @@ class Messages extends Component {
                 </Tab>
             
             </Tabs>
-        )
-    }
-}
-
 
 export default Messages;
