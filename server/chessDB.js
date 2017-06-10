@@ -240,9 +240,6 @@ const knex = require('knex')(require('../knexfile'));
 // module.exports.requestHistory = requestHistory;
 // module.exports = requestWhitePieces;
 // module.exports = requestBlackPieces;
-const test = () => {
-  console.log('test')
-}
 
 const saveDeepRedWhite = (move) => {
   // search table , if parent = parent & move = move
@@ -277,3 +274,4 @@ const saveDeepRedBlack = (move) => {
 
 module.exports.saveDeepRedWhite = saveDeepRedWhite;
 module.exports.saveDeepRedBlack = saveDeepRedBlack;
+
