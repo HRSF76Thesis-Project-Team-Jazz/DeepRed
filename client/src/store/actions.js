@@ -183,6 +183,18 @@ export const updateRoomQueue = queue => ({
   queue,
 });
 
+export const gameWinLose = (winner, loser) => ({
+  type: types.GAME_WIN_LOSE,
+  winner,
+  loser,
+});
+
+export const gameDraw = (player1, player2) => ({
+  type: types.GAME_DRAW,
+  player1,
+  player2,
+});
+
 // controlState actions
 export const pauseDialogOpen = () => ({
   type: types.PAUSE_DIALOG_OPEN,

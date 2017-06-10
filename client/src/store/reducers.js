@@ -389,6 +389,7 @@ const userState = (state = Immutable({
   allRooms: [],
   roomQueue: [],
   count: 0,
+  gameResult: {},
 }), action) => {
   switch (action.type) {
     case types.SET_PLAYER: {
@@ -574,7 +575,7 @@ const controlState = (state = Immutable({
       return Immutable({
         ...state,
         chooseSideOpen: false,
-      })
+      });
     }
     default:
       return state;

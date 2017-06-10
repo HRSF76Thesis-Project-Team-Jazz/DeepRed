@@ -68,8 +68,6 @@ class App extends Component {
     this.handleCreateRoomAsWhite = this.handleCreateRoomAsWhite.bind(this);
     this.handleJoinRoomAsBlack = this.handleJoinRoomAsBlack.bind(this);
     this.handleJoinRoomAsWhite = this.handleJoinRoomAsWhite.bind(this);
-    this.onPlayerWdefeat = this.onPlayerWdefeat.bind(this);
-    this.onPlayerBdefeat = this.onPlayerWdefeat.bind(this);
     this.handleSurrender = this.handleSurrender.bind(this);
     this.handleResumeOpen = this.handleResumeOpen.bind(this);
     this.onCancelResumeRequest = this.onCancelResumeRequest.bind(this);
@@ -78,6 +76,7 @@ class App extends Component {
     this.handleAnnounceSurrenderOpen = this.handleAnnounceSurrenderOpen.bind(this);
     this.handleAnnounceSurrenderClose = this.handleAnnounceSurrenderClose.bind(this);
     this.updateUserGameStat = this.updateUserGameStat.bind(this);
+    this.winLoseResult = this.winLoseResult.bind(this);
   }
 
   componentDidMount() {
@@ -101,8 +100,8 @@ class App extends Component {
       });
   }
 
-  updateUserGameStat() {
-    axios.post('/api/game/updateUserGameStat')
+  updateUserGameStat(arr) {
+    axios.post('/api/game/updateUserGameStat', arr)
       .then((response) => {
         console.log('successfully sent user win lose information to server: ', response);
       })
@@ -112,10 +111,11 @@ class App extends Component {
   }
 
   startSocket() {
-    const { dispatch, playerW, playerWemail, gameTurn, timeB, timeW } = this.props;
+    const { dispatch, playerW, playerB, thisUser, thisEmail,
+       gameTurn, timeB, timeW } = this.props;
 
-    const name = playerW;
-    const email = playerWemail;
+    const name = thisUser;
+    const email = thisEmail;
     // instantiate socket instance on the client side
     this.socket = io.connect();
 
@@ -241,9 +241,16 @@ class App extends Component {
     });
 
     this.socket.on('announceSurrender', (playerName) => {
+      const { playerW, playerB, playerWemail, playerBemail } = this.props;
+      if (playerName === playerW) {
+        console.log('player W surrendered');
+        this.updateUserGameStat(this.winLoseResult(playerBemail, playerWemail));
+      } else if (playerName === playerB) {
+        console.log('player B surrendered');
+        this.updateUserGameStat(this.winLoseResult(playerWemail, playerBemail));
+      }
       dispatch(updateAlertName(playerName));
       this.onChangePlayerTurn();
-      this.updateUserGameStat();
       this.handleAnnounceSurrenderOpen();
     });
 
@@ -253,6 +260,14 @@ class App extends Component {
   }
 
   // GAME control
+  winLoseResult(player1, player2) {
+    const arr = [];
+    arr[0] = { winner: player1, win: 1, draw: 0, lose: 0 };
+    arr[1] = { loser: player2, win: 0, draw: 0, lose: 1 };
+    console.log('win lose: ', arr);
+    return arr;
+  }
+
   toggleTimers() {
     const { gameTurn } = this.props;
     this.onChangePlayerTurn();
@@ -265,7 +280,7 @@ class App extends Component {
   }
 
   decrementTimerB() {
-    const { dispatch } = this.props;
+    const { dispatch, playerWemail, playerBemail } = this.props;
     let { timeB, counterBinstance } = this.props;
     counterBinstance = setInterval(() => {
       if (timeB > 0) {
@@ -273,7 +288,7 @@ class App extends Component {
       } else {
         timeB = 0;
         this.stopTimerB();
-        this.updateUserGameStat();
+        this.updateUserGameStat(this.winLoseResult(playerWemail, playerBemail));
         // player B lose, fire signal to server
       }
       dispatch(updateTimerB(timeB));
@@ -290,7 +305,7 @@ class App extends Component {
       } else {
         timeW = 0;
         this.stopTimerW();
-        this.updateUserGameStat();
+        this.updateUserGameStat(this.winLoseResult(playerWemail, playerBemail));
         // player W lose, fire signal to server
       }
       dispatch(updateTimerW(timeW));
@@ -318,14 +333,6 @@ class App extends Component {
   }
 
   // CONTROL function
-  onPlayerWdefeat() {
-
-  }
-
-  onPlayerBdefeat() {
-
-  }
-
   handleSurrender() {
     const { thisUser, room } = this.props;
     this.socket.emit('onSurrender', thisUser, room);
@@ -463,13 +470,11 @@ class App extends Component {
 
   handleAnnounceSurrenderClose() {
     const { dispatch } = this.props;
-    console.log('321');
     dispatch(announceSurrenderDialogClose());
   }
 
   handleAnnounceSurrenderOpen() {
     const { dispatch } = this.props;
-    console.log('123');
     dispatch(announceSurrenderDialogOpen());
   }
   // LOGIC
@@ -784,6 +789,7 @@ function mapStateToProps(state) {
     allRooms,
     thisUser,
     playerWemail,
+    playerBemail,
     playerW,
     playerB,
     room,
@@ -818,6 +824,7 @@ function mapStateToProps(state) {
     counterBinstance,
     counterWinstance,
     playerWemail,
+    playerBemail,
     timeB,
     timeW,
     alertName,
