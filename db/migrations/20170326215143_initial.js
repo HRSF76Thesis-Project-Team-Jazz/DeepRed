@@ -22,18 +22,22 @@ exports.up = function (knex, Promise) {
       table.string('salt', 100).nullable();
       table.integer('profile_id').references('profiles.id').onDelete('CASCADE');
     }),
-    knex.schema.createTableIfNotExists('games', function(table) {
-      table.increments('game').unsigned().primary();
-      table.string('session_id').nullable();
-      table.string('white').nullable();
-      table.string('black').nullable();
-      table.string('result').nullable();
-      table.integer('turns').nullable();
-      table.text('history').nullable();
-      table.text('black_pieces').nullable();
-      table.text('white_pieces').nullable();
-      table.timestamps(true, true);
-    })
+    knex.schema.createTableIfNotExists('DeepRed_WhiteMoves', function(table) {
+      table.string('parent').nullable();
+      table.string('move').nullable();
+      table.integer('blackWins').nullable();
+      table.integer('whiteWins').nullable();
+      table.integer('stalemate').nullable();
+      table.integer('winPercentage').nullable();
+    }),
+    knex.schema.createTableIfNotExists('DeepRed_BlackMoves', function(table) {
+      table.string('parent').nullable();
+      table.string('move').nullable();
+      table.integer('blackWins').nullable();
+      table.integer('whiteWins').nullable();
+      table.integer('stalemate').nullable();
+      table.integer('winPercentage').nullable();
+    }),
   ]);
 };
 
@@ -41,6 +45,8 @@ exports.down = function (knex, Promise) {
   return Promise.all([
     knex.schema.dropTable('auths'),
     knex.schema.dropTable('profiles'),
+    knex.schema.dropTable('DeepRed_WhiteMoves'),
+    knex.schema.dropTable('DeepRed_BlackMoves'),
   ]);
 };
 
