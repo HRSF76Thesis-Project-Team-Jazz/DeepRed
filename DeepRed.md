@@ -154,11 +154,11 @@ board = [
 - Pieces/empty positions are represented by pseudo hexadecimal characters
 
 Piece: | Empty | WP | WN | WB | WR | WQ | WK 
----|---|---|---|---|---|---|---|---|---|---|---
+---|---|---|---|---|---|---|---
 Character: | 0 | 1 | 2 | 3 | 4 | 5 | 6 
 
 Piece: | BP | BN | BB | BR | BQ | BK
----|---|---|---|---|---|---|---|---
+---|---|---|---|---|---|---
 Character: | a | b | c | d | e | f
 
 **Example Board String: Starting Position**
