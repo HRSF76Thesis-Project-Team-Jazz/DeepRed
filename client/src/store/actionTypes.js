@@ -17,16 +17,16 @@ export const SELECT_PIECE = 'SELECT_PIECE';
 
 export const UNSELECT_PIECE = 'UNSELECT_PIECE';
 
-export const CAPTURE_PIECE = 'CAPTURE_PIECE';
-
-export const MOVE_PIECE = 'MOVE_PIECE';
-
-export const CASTLING_MOVE = 'CASTLING_MOVE';
-
-export const EN_PASSANT_MOVE = 'EN_PASSANT_MOVE';
-
-export const PAWN_PROMOTION_MOVE = 'PAWN_PROMOTION_MOVE';
-
+// export const CAPTURE_PIECE = 'CAPTURE_PIECE';
+//
+// export const MOVE_PIECE = 'MOVE_PIECE';
+//
+// export const CASTLING_MOVE = 'CASTLING_MOVE';
+//
+// export const EN_PASSANT_MOVE = 'EN_PASSANT_MOVE';
+//
+// export const PAWN_PROMOTION_MOVE = 'PAWN_PROMOTION_MOVE';
+//
 export const OPEN_PROMOTION_DIALOG = 'OPEN_PROMOTION_DIALOG';
 
 export const CLOSE_PROMOTION_DIALOG = 'CLOSE_PROMOTION_DIALOG';
@@ -108,4 +108,3 @@ export const SELECT_ROOM_CLOSE = 'SELECT_ROOM_CLOSE';
 export const SELECT_SIDE_OPEN = 'SELECT_SIDE_OPEN';
 
 export const SELECT_SIDE_CLOSE = 'SELECT_SIDE_CLOSE';
-

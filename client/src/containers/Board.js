@@ -20,69 +20,66 @@ class Board extends Component {
     this.handleCloseWinnerDialog = this.handleCloseWinnerDialog.bind(this);
   }
 
-  onClick(coordinates) {
+  onClick(dest) {
     const {
-      dispatch, board, fromPosition, selectedPiece, room, gameTurn,
+      dispatch, board, origin, selectedPiece, room, gameTurn,
       isWhite, attemptMove, checkLegalMoves, boolBoard,
     } = this.props;
 
     if ((isWhite && gameTurn === 'B') || (!isWhite && gameTurn === 'W')) {
       dispatch(displayError('Not your turn.'));
     } else {
-      const x = coordinates[0];
-      const y = coordinates[1];
-      const selection = board[x][y];
+      const selection = board[dest[0]][dest[1]];
       console.log('SELECTION: ', selection);
       // If no piece is currently selected
       if (selectedPiece === '') {
         if (selection) {
-          dispatch(selectPiece(selection, coordinates));
-          dispatch(colorSquare('board-col green', coordinates));
+          dispatch(selectPiece(selection, dest));
+          dispatch(colorSquare('board-col green', dest));
           dispatch(displayError(''));
-          checkLegalMoves(coordinates, room);
+          checkLegalMoves(dest, room);
         } else {
-          dispatch(invalidSelection(coordinates));
+          dispatch(invalidSelection(dest));
         }
-      } else if (selectedPiece === 'WP' && coordinates[0] === 0 && boolBoard[coordinates[0]][coordinates[1]]) {
-        dispatch(openPromotionDialog(coordinates));
-      } else if (selectedPiece === 'BP' && coordinates[0] === 7 && boolBoard[coordinates[0]][coordinates[1]]) {
-        dispatch(openPromotionDialog(coordinates));
+      } else if (selectedPiece === 'WP' && dest[0] === 0 && boolBoard[dest[0]][dest[1]]) {
+        dispatch(openPromotionDialog(dest));
+      } else if (selectedPiece === 'BP' && dest[0] === 7 && boolBoard[dest[0]][dest[1]]) {
+        dispatch(openPromotionDialog(dest));
       } else {
-        attemptMove(fromPosition, coordinates, selection, room);
+        attemptMove(origin, dest, selection, room);
       }
     }
   }
 
-  onMouseEnter(coordinates) {
+  onMouseEnter(dest) {
     const { dispatch, selectedPiece, boolBoard } = this.props;
     if (selectedPiece) {
-      const bool = boolBoard[coordinates[0]][coordinates[1]];
+      const bool = boolBoard[dest[0]][dest[1]];
       let color = 'board-col red';
       if (bool) {
         color = 'board-col green';
       }
-      dispatch(colorSquare(color, coordinates));
+      dispatch(colorSquare(color, dest));
     }
   }
 
-  onMouseLeave(coordinates) {
-    const { dispatch, fromPosition } = this.props;
-    if (fromPosition) {
-      if (fromPosition[0] !== coordinates[0] && fromPosition[1] !== coordinates[1]) {
-        if ((coordinates[0] + coordinates[1]) % 2 === 1) {
-          dispatch(colorSquare('board-col dark', coordinates));
+  onMouseLeave(dest) {
+    const { dispatch, origin } = this.props;
+    if (origin) {
+      if (origin[0] !== dest[0] && origin[1] !== dest[1]) {
+        if ((dest[0] + dest[1]) % 2 === 1) {
+          dispatch(colorSquare('board-col dark', dest));
         } else {
-          dispatch(colorSquare('board-col dark', coordinates));
+          dispatch(colorSquare('board-col dark', dest));
         }
       }
     }
   }
 
-  handlePromotion(pieceType) {
-    const { dispatch, board, attemptMove, fromPosition, pawnPromotionCoord, room } = this.props;
+  handlePromotion(pawnPromoteType) {
+    const { dispatch, board, attemptMove, origin, pawnPromotionCoord, room } = this.props;
     const selection = board[pawnPromotionCoord[0]][pawnPromotionCoord[1]];
-    console.log(pieceType);
-    attemptMove(fromPosition, pawnPromotionCoord, selection, room, pieceType);
+    attemptMove(origin, pawnPromotionCoord, selection, room, pawnPromoteType);
     dispatch(closePromotionDialog());
   }
 
@@ -97,9 +94,9 @@ class Board extends Component {
   }
 
   selectSquareClass(rowIndex, colIndex) {
-    const { color, hover, fromPosition } = this.props;
+    const { color, hover, origin } = this.props;
     if ((color && hover[0] === rowIndex && hover[1] === colIndex) ||
-    (fromPosition && (fromPosition[0] === rowIndex && fromPosition[1] === colIndex))) {
+    (origin && (origin[0] === rowIndex && origin[1] === colIndex))) {
       return color;
     } else if ((rowIndex + colIndex) % 2 === 1) {
       return 'board-col dark';
@@ -108,7 +105,8 @@ class Board extends Component {
   }
 
   render() {
-    const { board, isWhite, showPromotionDialog, winner, playerInCheck, showCheckDialog, showWinnerDialog } = this.props;
+    const { board, isWhite, showPromotionDialog, winner, playerInCheck,
+      showCheckDialog, showWinnerDialog } = this.props;
     const offset = (isWhite) ? 0 : 7;
 
     const promotionActions = [
@@ -206,14 +204,14 @@ function mapStateToProps(state) {
   const { gameState, boardState, moveState, userState, squareState } = state;
   const { playerColor, gameTurn, playerInCheck, winner, showCheckDialog, showWinnerDialog } = gameState;
   const { board } = boardState;
-  const { fromPosition, selectedPiece, boolBoard, pawnPromotionCoord,
+  const { origin, selectedPiece, boolBoard, pawnPromotionCoord,
     showPromotionDialog } = moveState;
   const { room, isWhite } = userState;
   const { color, hover } = squareState;
   return {
     playerColor,
     board,
-    fromPosition,
+    origin,
     selectedPiece,
     boolBoard,
     pawnPromotionCoord,

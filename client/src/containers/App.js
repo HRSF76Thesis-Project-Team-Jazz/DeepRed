@@ -15,7 +15,7 @@ import {
   selectSideOpen, selectSideClose, updateAllRooms, updateRoomQueue, setPlayerId,
   enPassantMove, pawnPromotionMove, resumeDialogOpen, resumeDialogClose, cancelResumeDialogOpen,
   cancelResumeDialogClose, announceSurrenderDialogOpen, announceSurrenderDialogClose,
-  openWinnerDialog, openCheckDialog, updateGameMode,
+  updateGameMode, openWinnerDialog, openCheckDialog,
 } from '../store/actions';
 
 // Components
@@ -167,7 +167,7 @@ class App extends Component {
       dispatch(sendMsgGlobal(msg));
     });
 
-    this.socket.on('attemptMoveResult', (error, game, origin, dest, selection, gameTurn, castling, enPassantCoord, pawnPromotionPiece, playerInCheck, winner) => {
+    this.socket.on('attemptMoveResult', (error, game, origin, dest, selection) => {
       if (error === null) {
         // if (pawnPromotionPiece) {
         //   dispatch(pawnPromotionMove(origin, dest, pawnPromotionPiece, gameTurn));
@@ -180,6 +180,7 @@ class App extends Component {
         // } else {
         //   dispatch(movePiece(origin, dest, gameTurn));
         // }
+        dispatch(receiveGame(game));
         if (game.winner) {
           dispatch(openWinnerDialog(game.winner));
         } else if (game.playerInCheck) {
@@ -505,10 +506,10 @@ class App extends Component {
     this.socket.on('createdChessGame', game => dispatch(receiveGame(game)));
   }
 
-  attemptMove(origin, dest, selection, room, pieceType = null) {
+  attemptMove(origin, dest, selection, room, pawnPromoteType = null, gameMode) {
     // const { dispatch, room} = this.props;
     console.log('sending origin and dest coordinates to server');
-    this.socket.emit('attemptMove', origin, dest, selection, pieceType, room, this.socket.id);
+    this.socket.emit('attemptMove', origin, dest, selection, pawnPromoteType, room, this.socket.id);
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 

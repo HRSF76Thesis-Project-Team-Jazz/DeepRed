@@ -39,10 +39,20 @@ const gameState = (state = Immutable({
   gameMode: 'default',
 }), action) => {
   switch (action.type) {
+    case types.RECEIVE_GAME: {
+      return Immutable({
+        ...state,
+        capturedPiecesBlack: action.game.blackCapPieces,
+        capturedPiecesWhite: action.game.whiteCapPieces,
+        gameTurn: action.game.turn,
+        playerInCheck: action.game.playerInCheck,
+        winner: action.game.winner,
+      });
+    }
     case types.MOVE_PIECE: {
       const cols = 'abcdefgh';
-      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
-      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      const from = cols[action.origin[1]] + (8 - action.origin[0]);
+      const to = cols[action.dest[1]] + (8 - action.dest[0]);
       return Immutable({
         ...state,
         moveHistory: state.moveHistory.concat({ from, to }),
@@ -62,8 +72,8 @@ const gameState = (state = Immutable({
     }
     case types.EN_PASSANT_MOVE: {
       const cols = 'abcdefgh';
-      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
-      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      const from = cols[action.origin[1]] + (8 - action.origin[0]);
+      const to = cols[action.dest[1]] + (8 - action.dest[0]);
       return Immutable({
         ...state,
         moveHistory: state.moveHistory.concat({ from, to }),
@@ -72,8 +82,8 @@ const gameState = (state = Immutable({
     }
     case types.PAWN_PROMOTION_MOVE: {
       const cols = 'abcdefgh';
-      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
-      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      const from = cols[action.origin[1]] + (8 - action.origin[0]);
+      const to = cols[action.dest[1]] + (8 - action.dest[0]);
       return Immutable({
         ...state,
         moveHistory: state.moveHistory.concat({ from, to }),
@@ -82,8 +92,8 @@ const gameState = (state = Immutable({
     }
     case types.CAPTURE_PIECE: {
       const cols = 'abcdefgh';
-      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
-      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      const from = cols[action.origin[1]] + (8 - action.origin[0]);
+      const to = cols[action.dest[1]] + (8 - action.dest[0]);
       const capturedPiece = action.capturedPiece;
       const capturedPiecesArray = (capturedPiece[0] === 'W') ? 'capturedPiecesBlack' : 'capturedPiecesWhite';
       const newState = {
@@ -193,55 +203,55 @@ const boardState = (state = {
   ],
 }, action) => {
   switch (action.type) {
-    case types.MOVE_PIECE: {
-      const board = state.board.slice(0);
-      board[action.coordinates[0]][action.coordinates[1]]
-        = board[action.fromPosition[0]][action.fromPosition[1]];
-      board[action.fromPosition[0]][action.fromPosition[1]] = null;
-      return { board };
-    }
-    case types.CAPTURE_PIECE: {
-      const board = state.board.slice(0);
-      board[action.coordinates[0]][action.coordinates[1]]
-        = board[action.fromPosition[0]][action.fromPosition[1]];
-      board[action.fromPosition[0]][action.fromPosition[1]] = null;
-      return { board };
-    }
-    case types.CASTLING_MOVE: {
-      const board = state.board.slice(0);
-      board[action.coordinates[0]][action.coordinates[1]]
-        = board[action.fromPosition[0]][action.fromPosition[1]];
-      board[action.fromPosition[0]][action.fromPosition[1]] = null;
-      if (action.castling === 'BRQ') {
-        board[0][3] = 'BR';
-        board[0][0] = null;
-      } else if (action.castling === 'BRK') {
-        board[0][5] = 'BR';
-        board[0][7] = null;
-      } else if (action.castling === 'WRQ') {
-        board[7][3] = 'WR';
-        board[7][0] = null;
-      } else if (action.castling === 'WRK') {
-        board[7][5] = 'WR';
-        board[7][7] = null;
-      }
-      return { board };
-    }
-    case types.EN_PASSANT_MOVE: {
-      const board = state.board.slice(0);
-      board[action.coordinates[0]][action.coordinates[1]]
-        = board[action.fromPosition[0]][action.fromPosition[1]];
-      board[action.fromPosition[0]][action.fromPosition[1]] = null;
-      board[action.enPassantCoord[0]][action.enPassantCoord[1]] = null;
-      return { board };
-    }
-    case types.PAWN_PROMOTION_MOVE: {
-      const board = state.board.slice(0);
-      board[action.coordinates[0]][action.coordinates[1]]
-        = action.pawnPromotionPiece;
-      board[action.fromPosition[0]][action.fromPosition[1]] = null;
-      return { board };
-    }
+    // case types.MOVE_PIECE: {
+    //   const board = state.board.slice(0);
+    //   board[action.dest[0]][action.dest[1]]
+    //     = board[action.origin[0]][action.origin[1]];
+    //   board[action.origin[0]][action.origin[1]] = null;
+    //   return { board };
+    // }
+    // case types.CAPTURE_PIECE: {
+    //   const board = state.board.slice(0);
+    //   board[action.dest[0]][action.dest[1]]
+    //     = board[action.origin[0]][action.origin[1]];
+    //   board[action.origin[0]][action.origin[1]] = null;
+    //   return { board };
+    // }
+    // case types.CASTLING_MOVE: {
+    //   const board = state.board.slice(0);
+    //   board[action.dest[0]][action.dest[1]]
+    //     = board[action.origin[0]][action.origin[1]];
+    //   board[action.origin[0]][action.origin[1]] = null;
+    //   if (action.castling === 'BRQ') {
+    //     board[0][3] = 'BR';
+    //     board[0][0] = null;
+    //   } else if (action.castling === 'BRK') {
+    //     board[0][5] = 'BR';
+    //     board[0][7] = null;
+    //   } else if (action.castling === 'WRQ') {
+    //     board[7][3] = 'WR';
+    //     board[7][0] = null;
+    //   } else if (action.castling === 'WRK') {
+    //     board[7][5] = 'WR';
+    //     board[7][7] = null;
+    //   }
+    //   return { board };
+    // }
+    // case types.EN_PASSANT_MOVE: {
+    //   const board = state.board.slice(0);
+    //   board[action.dest[0]][action.dest[1]]
+    //     = board[action.origin[0]][action.origin[1]];
+    //   board[action.origin[0]][action.origin[1]] = null;
+    //   board[action.enPassantCoord[0]][action.enPassantCoord[1]] = null;
+    //   return { board };
+    // }
+    // case types.PAWN_PROMOTION_MOVE: {
+    //   const board = state.board.slice(0);
+    //   board[action.dest[0]][action.dest[1]]
+    //     = action.pawnPromotionPiece;
+    //   board[action.origin[0]][action.origin[1]] = null;
+    //   return { board };
+    // }
     case types.RECEIVE_GAME: {
       return { board: action.game.board };
     }
@@ -252,7 +262,7 @@ const boardState = (state = {
 
 const moveState = (state = Immutable({
   message: 'New Game',
-  fromPosition: '',
+  origin: '',
   selectedPiece: '',
   error: '',
   open: false,
@@ -274,7 +284,7 @@ const moveState = (state = Immutable({
     case types.OPEN_PROMOTION_DIALOG:
       return Immutable({
         ...state,
-        pawnPromotionCoord: action.coordinates,
+        pawnPromotionCoord: action.dest,
         showPromotionDialog: true,
       });
     case types.CLOSE_PROMOTION_DIALOG:
@@ -319,29 +329,29 @@ const moveState = (state = Immutable({
     case types.INVALID_SELECTION:
       return Immutable({
         ...state,
-        message: `Invalid selection [${action.coordinates}] - select again`,
+        message: `Invalid selection [${action.dest}] - select again`,
       });
     case types.SELECT_PIECE:
       return Immutable({
         ...state,
-        fromPosition: action.coordinates,
+        origin: action.dest,
         selectedPiece: action.selectedPiece,
-        message: `Selected: ${action.coordinates}`,
+        message: `Selected: ${action.dest}`,
       });
     case types.UNSELECT_PIECE:
       return Immutable({
         ...state,
-        fromPosition: '',
+        origin: '',
         selectedPiece: '',
         message: '',
       });
     case types.MOVE_PIECE: {
       const cols = 'abcdefgh';
-      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
-      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      const from = cols[action.origin[1]] + (8 - action.origin[0]);
+      const to = cols[action.dest[1]] + (8 - action.dest[0]);
       return Immutable({
         ...state,
-        fromPosition: '',
+        origin: '',
         selectedPiece: '',
         message: `Move: ${from}-${to}`,
         error: '',
@@ -349,11 +359,11 @@ const moveState = (state = Immutable({
     }
     case types.CASTLING_MOVE: {
       const cols = 'abcdefgh';
-      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
-      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      const from = cols[action.origin[1]] + (8 - action.origin[0]);
+      const to = cols[action.dest[1]] + (8 - action.dest[0]);
       return Immutable({
         ...state,
-        fromPosition: '',
+        origin: '',
         selectedPiece: '',
         message: `Castling: ${from}-${to} - ${action.castling}`,
         error: '',
@@ -361,11 +371,11 @@ const moveState = (state = Immutable({
     }
     case types.EN_PASSANT_MOVE: {
       const cols = 'abcdefgh';
-      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
-      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      const from = cols[action.origin[1]] + (8 - action.origin[0]);
+      const to = cols[action.dest[1]] + (8 - action.dest[0]);
       return Immutable({
         ...state,
-        fromPosition: '',
+        origin: '',
         selectedPiece: '',
         message: `En Passant: ${from}-${to} - ${action.castling}`,
         error: '',
@@ -373,11 +383,11 @@ const moveState = (state = Immutable({
     }
     case types.CAPTURE_PIECE: {
       const cols = 'abcdefgh';
-      const from = cols[action.fromPosition[1]] + (8 - action.fromPosition[0]);
-      const to = cols[action.coordinates[1]] + (8 - action.coordinates[0]);
+      const from = cols[action.origin[1]] + (8 - action.origin[0]);
+      const to = cols[action.dest[1]] + (8 - action.dest[0]);
       return Immutable({
         ...state,
-        fromPosition: '',
+        origin: '',
         selectedPiece: '',
         message: `Move: ${from}x${to}`,
       });
