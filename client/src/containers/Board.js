@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 
-import { invalidSelection, selectPiece, colorSquare, displayError, openPromotionDialog, closePromotionDialog } from '../store/actions';
+import { invalidSelection, selectPiece, colorSquare, displayError, openPromotionDialog, closePromotionDialog, closeCheckDialog, closeWinnerDialog } from '../store/actions';
 
 import Alert from './Alert';
 import './css/Board.css';
@@ -15,6 +16,8 @@ class Board extends Component {
     this.onMouseEnter = this.onMouseEnter.bind(this);
     this.onMouseLeave = this.onMouseLeave.bind(this);
     this.selectSquareClass = this.selectSquareClass.bind(this);
+    this.handleCloseCheckDialog = this.handleCloseCheckDialog.bind(this);
+    this.handleCloseWinnerDialog = this.handleCloseWinnerDialog.bind(this);
   }
 
   onClick(coordinates) {
@@ -24,7 +27,7 @@ class Board extends Component {
     } = this.props;
 
     if ((isWhite && gameTurn === 'B') || (!isWhite && gameTurn === 'W')) {
-      dispatch(displayError('Not your turn'));
+      dispatch(displayError('Not your turn.'));
     } else {
       const x = coordinates[0];
       const y = coordinates[1];
@@ -83,6 +86,16 @@ class Board extends Component {
     dispatch(closePromotionDialog());
   }
 
+  handleCloseCheckDialog() {
+    const { dispatch } = this.props;
+    dispatch(closeCheckDialog());
+  }
+
+  handleCloseWinnerDialog() {
+    const { dispatch } = this.props;
+    dispatch(closeWinnerDialog());
+  }
+
   selectSquareClass(rowIndex, colIndex) {
     const { color, hover, fromPosition } = this.props;
     if ((color && hover[0] === rowIndex && hover[1] === colIndex) ||
@@ -95,8 +108,9 @@ class Board extends Component {
   }
 
   render() {
-    const { board, isWhite, showPromotionDialog } = this.props;
+    const { board, isWhite, showPromotionDialog, winner, playerInCheck, showCheckDialog, showWinnerDialog } = this.props;
     const offset = (isWhite) ? 0 : 7;
+
     const promotionActions = [
       <FlatButton
         label="Queen"
@@ -120,6 +134,22 @@ class Board extends Component {
         primary
         keyboardFocused
         onTouchTap={() => this.handlePromotion('B')}
+      />,
+    ];
+
+    const checkActions = [
+      <RaisedButton
+        label="OK"
+        secondary
+        onTouchTap={this.handleCloseCheckDialog}
+      />,
+    ];
+
+    const winnerActions = [
+      <RaisedButton
+        label="Ok"
+        secondary
+        onTouchTap={this.handleCloseWinnerDialog}
       />,
     ];
 
@@ -155,6 +185,18 @@ class Board extends Component {
           actions={promotionActions}
           open={showPromotionDialog}
         />
+        <Alert
+          className="pauseRequest"
+          title={`${playerInCheck} is in check.`}
+          actions={checkActions}
+          open={showCheckDialog}
+        />
+        <Alert
+          className="pauseRequest"
+          title={`Winner is ${winner}!`}
+          actions={winnerActions}
+          open={showWinnerDialog}
+        />
       </div>
     );
   }
@@ -162,7 +204,7 @@ class Board extends Component {
 
 function mapStateToProps(state) {
   const { gameState, boardState, moveState, userState, squareState } = state;
-  const { playerColor, gameTurn } = gameState;
+  const { playerColor, gameTurn, playerInCheck, winner, showCheckDialog, showWinnerDialog } = gameState;
   const { board } = boardState;
   const { fromPosition, selectedPiece, boolBoard, pawnPromotionCoord,
     showPromotionDialog } = moveState;
@@ -181,6 +223,10 @@ function mapStateToProps(state) {
     hover,
     isWhite,
     gameTurn,
+    playerInCheck,
+    winner,
+    showCheckDialog,
+    showWinnerDialog,
   };
 }
 

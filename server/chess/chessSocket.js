@@ -98,13 +98,10 @@ module.exports = (io, client) => {
     console.log('room number: ', clientRoom);
     const newState = allGames[clientRoom].movePiece(origin, dest, pieceType);
     const { error, game, castling, enPassantCoord, pawnPromotionPiece } = newState;
-    io.in(clientRoom).emit('attemptMoveResult', error, origin, dest, selection, game.turn, castling, enPassantCoord, pawnPromotionPiece);
+    io.in(clientRoom).emit('attemptMoveResult', error, origin, dest, selection, game.turn, castling, enPassantCoord, pawnPromotionPiece, game.playerInCheck, game.winner);
   });
 
   client.on('checkLegalMoves', (origin, clientRoom, id) => {
-    // console.log('checkLegalMove: ', origin, dest);
-    // console.log('room number: ', room);
-    // const bool = isLegalMove(allGames[clientRoom], origin, dest).bool;
     if (origin) {
       const boolBoard = allGames[clientRoom].checkAllMovesOfOrigin(origin);
       io.to(id).emit('checkLegalMovesResults', boolBoard);

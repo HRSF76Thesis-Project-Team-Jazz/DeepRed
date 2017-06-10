@@ -31,6 +31,10 @@ const gameState = (state = Immutable({
   messages: [],
   counterBinstance: '',
   counterWinstance: '',
+  playerInCheck: null,
+  winner: null,
+  showCheckDialog: false,
+  showWinnerDialog: false,
 }), action) => {
   switch (action.type) {
     case types.MOVE_PIECE: {
@@ -128,6 +132,33 @@ const gameState = (state = Immutable({
       return Immutable({
         ...state,
         messages: state.messages.concat(action.msg),
+      });
+    }
+    case types.OPEN_CHECK_DIALOG: {
+      return Immutable({
+        ...state,
+        showCheckDialog: true,
+        playerInCheck: action.playerInCheck,
+      });
+    }
+    case types.CLOSE_CHECK_DIALOG: {
+      return Immutable({
+        ...state,
+        showCheckDialog: false,
+      });
+    }
+    case types.OPEN_WINNER_DIALOG: {
+      return Immutable({
+        ...state,
+        showWinnerDialog: true,
+        winner: action.winner,
+      });
+    }
+    case types.CLOSE_WINNER_DIALOG: {
+      return Immutable({
+        ...state,
+        showWinnerDialog: false,
+        winner: null,
       });
     }
     default:

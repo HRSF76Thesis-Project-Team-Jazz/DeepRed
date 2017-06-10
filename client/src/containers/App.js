@@ -13,7 +13,7 @@ import {
   updateTimerB, timeInstanceB, updateTimerW, timeInstanceW, saveBoolBoard, castlingMove,
   selectGameModeClose, selectGameModeOpen, selectRoomOpen, selectRoomClose,
   selectSideOpen, selectSideClose, updateAllRooms, updateRoomQueue, setPlayerId,
-  enPassantMove, pawnPromotionMove,
+  enPassantMove, pawnPromotionMove, openWinnerDialog, openCheckDialog,
 } from '../store/actions';
 
 // Components
@@ -138,8 +138,7 @@ class App extends Component {
       dispatch(sendMsg(msg));
     });
 
-    this.socket.on('attemptMoveResult', (error, origin, dest, selection, gameTurn, castling, enPassantCoord, pawnPromotionPiece) => {
-
+    this.socket.on('attemptMoveResult', (error, origin, dest, selection, gameTurn, castling, enPassantCoord, pawnPromotionPiece, playerInCheck, winner) => {
       if (error === null) {
         if (pawnPromotionPiece) {
           dispatch(pawnPromotionMove(origin, dest, pawnPromotionPiece, gameTurn));
@@ -149,13 +148,17 @@ class App extends Component {
           dispatch(enPassantMove(origin, dest, enPassantCoord, gameTurn));
         } else if (selection) {
           dispatch(capturePiece(origin, dest, selection, gameTurn));
-
         } else {
           dispatch(movePiece(origin, dest, gameTurn));
         }
+        if (winner) {
+          dispatch(openWinnerDialog(winner));
+        } else if (playerInCheck) {
+          dispatch(openCheckDialog(playerInCheck));
+        }
         this.toggleTimers();
       } else {
-        console.log('---------- ERROR: ', error);
+        console.log('ERROR: ', error);
         dispatch(displayError(error));
       }
       dispatch(unselectPiece());
@@ -495,7 +498,7 @@ class App extends Component {
 
     return (
       <div className="site-wrap">
-        <Header 
+        <Header
           sendPauseRequest={this.sendPauseRequest}
           onSurrander={this.onSurrander}
         />

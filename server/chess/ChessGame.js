@@ -69,7 +69,7 @@ class ChessGame {
     const legalMoveResult = isLegalMove(this, origin, dest);
     if (legalMoveResult.bool) {
       // prevent putting yourself in check
-      const testBoard = this.board.slice(0);
+      const testBoard = this.board.map(row => row.map(x => x));
       testBoard[dest[0]][dest[1]] = originPiece;
       testBoard[origin[0]][origin[1]] = null;
       if (this.turn === 'W' && endGameChecks.whiteIsChecked(testBoard)) {
@@ -124,6 +124,8 @@ class ChessGame {
           this.winner = 'D';
         } else if (endGameChecks.blackIsChecked(this.board)) {
           this.playerInCheck = 'B';
+        } else {
+          this.playerInCheck = null;
         }
       } else if (this.turn === 'B') {
         if (endGameChecks.isCheckmateBlack(this.board)) {
@@ -132,12 +134,14 @@ class ChessGame {
           this.winner = 'D';
         } else if (endGameChecks.whiteIsChecked(this.board)) {
           this.playerInCheck = 'W';
+        } else {
+          this.playerInCheck = null;
         }
       }
       this.turn = (this.turn === 'W') ? 'B' : 'W';
       // console.log(this.history);
-      // console.log(this.board);
-      // console.log('Move piece is successful.');
+      console.log(this.board);
+      console.log('Move piece is successful.');
       return {
         game: this,
         error: null,

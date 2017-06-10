@@ -840,6 +840,20 @@ describe('Check', () => {
   it('should allow move if getting out of check', () => {
     expect(checkWChessGame.movePiece([0, 4], [1, 5]).error).to.eql(null);
   });
+  const expectedCheckWChessBoard = [
+    ['BR', null, 'BB', 'BQ', null, 'BB', 'BN', 'BR'],
+    ['BP', 'BP', 'BP', 'BP', null, 'BK', 'BP', 'BP'],
+    [null, null, 'BN', null, null, null, null, null],
+    [null, null, null, null, 'BP', null, null, null],
+    [null, null, null, null, 'WP', null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'WP', 'WP', 'WP', null, 'WP', 'WP', 'WP'],
+    ['WR', 'WN', 'WB', null, 'WK', 'WB', 'WN', 'WR'],
+  ];
+  it('board state should be as expected', () => {
+    console.log(checkWChessGame.board);
+    expect(checkWChessGame.board).to.eql(expectedCheckWChessBoard);
+  });
 });
 
 describe('White Checkmate', () => {
