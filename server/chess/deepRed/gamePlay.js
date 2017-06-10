@@ -2,8 +2,11 @@ const safeMoves = require('./safeMoves');
 const endGameChecks = require('./endGameChecks');
 const basic = require('./basic');
 const display = require('./display');
+const chessEval = require('../chessEval');
 
 const { displayBoard } = display;
+const { transcribeBoard, encodeBoard } = chessEval;
+
 const { mutateBoard } = basic;
 
 const {
@@ -238,6 +241,8 @@ const simulateGames = (number) => {
     let board = [
       ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
       ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+      // [null, null, null, 'BK', null, null, null, null],
+      // [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -295,6 +300,9 @@ const simulateGames = (number) => {
       board = mutateBoard(board, move);
 
       // !gameEnded && displayBoard(board);
+      !gameEnded && console.log(board);
+      // !gameEnded && console.log(transcribeBoard(board));
+      // !gameEnded && console.log(encodeBoard(board));
       if (isCheckmateWhite(board)) {
         gameEnded = true;
         console.log('**** WHITE CHECKMATE ***');
@@ -355,6 +363,9 @@ const simulateGames = (number) => {
 
         // console.log(`                             === [${moveCount}] BLACK MOVE ===`);
         // !gameEnded && displayBoard(board);
+        !gameEnded && console.log(board);
+        // !gameEnded && console.log(transcribeBoard(board));
+        // !gameEnded && console.log(encodeBoard(board));
         if (isCheckmateBlack(board)) {
           gameEnded = true;
           console.log('**** BLACK CHECKMATE ***');
