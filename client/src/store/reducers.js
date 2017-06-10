@@ -36,6 +36,7 @@ const gameState = (state = Immutable({
   winner: null,
   showCheckDialog: false,
   showWinnerDialog: false,
+  gameMode: 'default',
 }), action) => {
   switch (action.type) {
     case types.MOVE_PIECE: {
@@ -168,7 +169,12 @@ const gameState = (state = Immutable({
         winner: null,
       });
     }
-
+    case types.UPDATE_GAME_MODE: {
+      return Immutable({
+        ...state,
+        gameMode: action.mode,
+      });
+    }
     default:
       return state;
   }

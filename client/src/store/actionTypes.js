@@ -1,4 +1,5 @@
 // gameState types
+export const UPDATE_GAME_MODE = 'UPDATE_GAME_MODE';
 
 export const UPDATE_TIMER = 'UPDATE_TIMER';
 

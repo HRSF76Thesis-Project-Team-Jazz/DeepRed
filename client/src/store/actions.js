@@ -6,6 +6,11 @@ import * as types from './actionTypes';
  * Actions = { type: TYPE, vars: VALS }
  */
 // gameState actions
+export const updateGameMode = mode => ({
+  type: types.UPDATE_GAME_MODE,
+  mode,
+});
+
 export const updateTimer = roomInfo => ({
   type: types.UPDATE_TIMER,
   roomInfo,

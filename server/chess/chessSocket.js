@@ -19,7 +19,7 @@ module.exports = (io, client) => {
     io.to(id).emit('returnAllRooms', allRooms);
   });
 
-  client.on('createRoomAsWhite', (currentUserName, currentUserEmail, id) => {
+  client.on('createRoomAsWhite', (currentUserName, currentUserEmail, id, gameMode) => {
     if (queue.length !== 0) {
       room = `room ${queue.splice(0, 1)}`;
     } else {
@@ -33,19 +33,28 @@ module.exports = (io, client) => {
       roomInfo.playerWtime = 600;
       roomInfo.playerWclicked = false;
       const num = parseInt(room[room.length - 1]);
-      console.log('num: ', num);
       if (count !== num) {
         count = num;
       }
       roomInfo.count = count;
       allRooms[count] = roomInfo;
       io.to(room).emit('createRoomAsWhiteComplete', roomInfo, allRooms);
+      if (gameMode === 'AI') {
+        roomInfo.playerB = 'AI';
+        roomInfo.playerBemail = 'AI@AI';
+        roomInfo.playerBid = 12345;
+        roomInfo.playerBtime = 600;
+        roomInfo.playerBclicked = false;
+        createAndSaveNewGame(room);
+        io.in(room).emit('joinRoomAsBlackComplete', roomInfo, allRooms);
+        io.emit('updateAllRooms', allRooms);
+      }
       count += 1;
       roomInfo = {};
     });
   });
 
-  client.on('createRoomAsBlack', (currentUserName, currentUserEmail, id) => {
+  client.on('createRoomAsBlack', (currentUserName, currentUserEmail, id, gameMode) => {
     if (queue.length !== 0) {
       room = `room ${queue.splice(0, 1)}`;
     } else {
@@ -59,13 +68,22 @@ module.exports = (io, client) => {
       roomInfo.playerBtime = 600;
       roomInfo.playerBclicked = false;
       const num = parseInt(room[room.length - 1]);
-      console.log('num: ', num);
       if (count !== num) {
         count = num;
       }
       roomInfo.count = count;
       allRooms[count] = roomInfo;
       io.to(room).emit('createRoomAsBlackComplete', roomInfo, allRooms);
+      if (gameMode === 'AI') {
+        roomInfo.playerW = 'AI';
+        roomInfo.playerWemail = 'AI@AI';
+        roomInfo.playerWid = 12345;
+        roomInfo.playerWtime = 600;
+        roomInfo.playerWclicked = false;
+        createAndSaveNewGame(room);
+        io.in(room).emit('joinRoomAsWhiteComplete', roomInfo, allRooms);
+        io.emit('updateAllRooms', allRooms);
+      }
       count += 1;
       roomInfo = {};
     });
@@ -78,7 +96,6 @@ module.exports = (io, client) => {
       allRooms[clientCount].playerWid = client.client.id;
       allRooms[clientCount].playerWtime = 600;
       allRooms[clientCount].playerWclicked = false;
-      console.log('white: ', allRooms[clientCount]);
       createAndSaveNewGame(allRooms[clientCount].room);
       io.in(allRooms[clientCount].room).emit('joinRoomAsWhiteComplete', allRooms[clientCount], allRooms);
       io.emit('updateAllRooms', allRooms);
@@ -110,8 +127,9 @@ module.exports = (io, client) => {
             allRooms[i].playerBemail = '';
             allRooms[i].playerBid = '';
             allRooms[i].playerBtime = 600;
-            if (allRooms[i].playerW === undefined) {
-              console.log('123');
+            if (allRooms[i].playerW === undefined || allRooms[i].playerW === 'AI') {
+              console.log('playerW: ', allRooms[i].playerW);
+              console.log('1234567');
               allRooms[i] = null;
               queue.push(i);
             }
@@ -126,8 +144,7 @@ module.exports = (io, client) => {
             allRooms[i].playerWemail = '';
             allRooms[i].playerWid = '';
             allRooms[i].playerWtime = 600;
-            if (allRooms[i].playerB === undefined) {
-              console.log('321');
+            if (allRooms[i].playerB === undefined || allRooms[i].playerB === 'AI') {
               allRooms[i] = null;
               queue.push(i);
             }
@@ -222,12 +239,12 @@ module.exports = (io, client) => {
   });
 
   client.on('updateTime', (clientRoom, clientCount, timeB, timeW) => {
-    console.log('room: ', clientRoom, 'count: ', clientCount, 'timeB: ', timeB, 'timeW: ', timeW);
+    // console.log('room: ', clientRoom, 'count: ', clientCount,
+    // 'timeB: ', timeB, 'timeW: ', timeW);
     allRooms[clientCount].playerBtime = timeB;
     allRooms[clientCount].playerWtime = timeW;
     io.in(clientRoom).emit('sendUpdatedTime', allRooms[clientCount]);
   });
-
 
   // messaging communications
   client.on('messageLocal', (msg, count) => {
