@@ -156,10 +156,10 @@ module.exports = (io, client) => {
   });
 
   // logic socket communications
-  client.on('attemptMove', (origin, dest, selection, pawnPromoteType, clientRoom) => {
+  client.on('attemptMove', (origin, dest, selection, pawnPromoteType, clientRoom, gameMode) => {
     console.log('Attempted Move: ', origin, dest);
     console.log('Room Number: ', clientRoom);
-    const newGameState = allGames[clientRoom].movePiece(origin, dest, pawnPromoteType);
+    const newGameState = allGames[clientRoom].movePiece(origin, dest, pawnPromoteType, gameMode);
     io.in(clientRoom).emit('attemptMoveResult', newGameState.error, newGameState.game, origin, dest, selection);
   });
 

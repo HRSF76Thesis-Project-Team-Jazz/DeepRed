@@ -9,7 +9,7 @@
 
 const isLegalMove = require('./isLegalMove');
 const endGameChecks = require('./deepRed/endGameChecks');
-const { whiteMove, blackMove, mutateBoard } = require('./deepRed/gamePlay');
+const { whiteMove, blackMove, mutateBoard } = require('./deepRed/playerVsAI');
 // const moveToPGNString = require('./convertToPGN');
 
 const transcribeBoard = board => board.map((row) => {
@@ -60,7 +60,7 @@ class ChessGame {
     this.winner = null;
   }
 
-  movePiece(origin, dest, pawnPromotionValue = null, isVersusAI = false) {
+  movePiece(origin, dest, pawnPromotionValue = null, gameMode = 'default') {
     const error = this.errorCheck(origin, dest);
     if (error) {
       return { game: this, error };
@@ -141,7 +141,7 @@ class ChessGame {
       }
       this.turn = (this.turn === 'W') ? 'B' : 'W';
 
-      if (isVersusAI) {
+      if (gameMode === 'AI' && !this.winner) {
         const pieceState = {
           hasMovedWK: this.hasMovedWK,
           hasMovedWKR: this.hasMovedWRK,
@@ -158,6 +158,7 @@ class ChessGame {
         } else if (this.turn === 'B') {
           deepRedMove = blackMove(this.board, pieceState);
         }
+        console.log(deepRedMove);
         this.board = mutateBoard(this.board, deepRedMove[0]);
         const newState = deepRedMove[1];
         this.hasMovedWK = newState.hasMovedWK;

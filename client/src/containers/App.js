@@ -509,7 +509,7 @@ class App extends Component {
   attemptMove(origin, dest, selection, room, pawnPromoteType = null, gameMode) {
     // const { dispatch, room} = this.props;
     console.log('sending origin and dest coordinates to server');
-    this.socket.emit('attemptMove', origin, dest, selection, pawnPromoteType, room, this.socket.id);
+    this.socket.emit('attemptMove', origin, dest, selection, pawnPromoteType, room, gameMode);
     // this.socket.emit('checkLegalMove', originDestCoord);
   }
 
