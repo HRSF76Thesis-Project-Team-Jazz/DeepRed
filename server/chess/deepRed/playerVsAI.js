@@ -61,32 +61,11 @@ const whiteMove = (board, pieceState) => {
         newState.hasMovedWQR = true;
       }
     }
-    if (move.move === 'enpassant') {
-      newState.lastCapture = newState.moveCount;
-      newState.capturedWhite.push('BP');
-      newState.countBlackPieces -= 1;
-      newState.enPassant += 1;
-    }
-    if (move.move === 'pawnPromotion') {
-      const row = move.to[0];
-      const col = move.to[1];
-      if (board[row][col]) {
-        newState.countBlackPieces -= 1;
-        newState.capturedWhite.push(board[row][col]);
-      }
-    }
   } else {
     const row = move[0][0];
     const toRow = move[1][0];
     const col = move[0][1];
     const toCol = move[1][1];
-    if (board[row][col][1] === 'P') newState.lastPawn = newState.moveCount;
-    if (board[toRow][toCol]) {
-      newState.lastCapture = newState.moveCount;
-      newState.capturedWhite.push(board[toRow][toCol]);
-      newState.countBlackPieces -= 1;
-    }
-
     if (board[row][col] === 'WP' && +row === 6 && +toRow === 4) {
       newState.canEnPassantB = `4${col}`;
     }
@@ -135,31 +114,11 @@ const blackMove = (board, pieceState) => {
         newState.hasMovedWQR = true;
       }
     }
-    if (move.move === 'enpassant') {
-      newState.lastCapture = newState.moveCount;
-      newState.capturedBlack.push('WP');
-      newState.countWhitePieces -= 1;
-      newState.enPassant += 1;
-    }
-    if (move.move === 'pawnPromotion') {
-      const row = move.to[0];
-      const col = move.to[1];
-      if (board[row][col]) {
-        newState.countWhitePieces -= 1;
-        newState.capturedBlack.push(board[row][col]);
-      }
-    }
   } else {
     const row = move[0][0];
     const toRow = move[1][0];
     const col = move[0][1];
     const toCol = move[1][1];
-    if (board[row][col][1] === 'P') newState.lastPawn = newState.moveCount;
-    if (board[toRow][toCol]) {
-      newState.lastCapture = newState.moveCount;
-      newState.capturedBlack.push(board[toRow][toCol]);
-      newState.countWhitePieces -= 1;
-    }
     if (board[row][col] === 'WP' && +row === 1 && +toRow === 3) {
       newState.canEnPassantW = `3${col}`;
     }

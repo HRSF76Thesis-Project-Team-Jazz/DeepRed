@@ -9,6 +9,7 @@
 
 const isLegalMove = require('./isLegalMove');
 const endGameChecks = require('./deepRed/endGameChecks');
+const { whiteMove, blackMove, mutateBoard } = require('./deepRed/playerVsAI');
 // const moveToPGNString = require('./convertToPGN');
 
 const transcribeBoard = board => board.map((row) => {
@@ -59,7 +60,7 @@ class ChessGame {
     this.winner = null;
   }
 
-  movePiece(origin, dest, pawnPromotionValue = null) {
+  movePiece(origin, dest, pawnPromotionValue = null, gameMode = 'default') {
     const error = this.errorCheck(origin, dest);
     if (error) {
       return { game: this, error };
@@ -139,6 +140,37 @@ class ChessGame {
         }
       }
       this.turn = (this.turn === 'W') ? 'B' : 'W';
+
+      if (gameMode === 'AI' && !this.winner) {
+        const pieceState = {
+          hasMovedWK: this.hasMovedWK,
+          hasMovedWKR: this.hasMovedWRK,
+          hasMovedWQR: this.hasMovedWRQ,
+          hasMovedBK: this.hasMovedBK,
+          hasMovedBKR: this.hasMovedBRK,
+          hasMovedBQR: this.hasMovedBRQ,
+          canEnPassantW: this.canEnPassant,
+          canEnPassantB: this.canEnPassant,
+        };
+        let deepRedMove;
+        if (this.turn === 'W') {
+          deepRedMove = whiteMove(this.board, pieceState);
+        } else if (this.turn === 'B') {
+          deepRedMove = blackMove(this.board, pieceState);
+        }
+        console.log(deepRedMove);
+        this.board = mutateBoard(this.board, deepRedMove[0]);
+        const newState = deepRedMove[1];
+        this.hasMovedWK = newState.hasMovedWK;
+        this.hasMovedWRK = newState.hasMovedWKR;
+        this.hasMovedWRQ = newState.hasMovedWQR;
+        this.hasMovedBK = newState.hasMovedBK;
+        this.hasMovedBRK = newState.hasMovedBKR;
+        this.hasMovedBRQ = newState.hasMovedBQR;
+        this.canEnPassantW = newState.canEnPassant;
+        this.canEnPassantB = newState.canEnPassant;
+        this.turn = (this.turn === 'W') ? 'B' : 'W';
+      }
       // console.log(this.history);
       console.log(this.board);
       console.log('Move piece is successful.');

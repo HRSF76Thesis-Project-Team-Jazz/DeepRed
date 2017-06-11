@@ -44,15 +44,15 @@ export const clearError = () => ({
   type: types.CLEAR_ERROR,
 });
 
-export const invalidSelection = coordinates => ({
+export const invalidSelection = dest => ({
   type: types.INVALID_SELECTION,
-  coordinates,
+  dest,
 });
 
-export const selectPiece = (selectedPiece, coordinates) => ({
+export const selectPiece = (selectedPiece, dest) => ({
   type: types.SELECT_PIECE,
   selectedPiece,
-  coordinates,
+  dest,
 });
 
 export const saveBoolBoard = boolBoard => ({
@@ -74,53 +74,53 @@ export const colorSquare = (color, hover) => ({
   hover,
 });
 
-export const movePiece = (fromPosition, coordinates, gameTurn) => ({
-  type: types.MOVE_PIECE,
-  fromPosition,
-  coordinates,
-  gameTurn,
-});
+// export const movePiece = (fromPosition, dest, gameTurn) => ({
+//   type: types.MOVE_PIECE,
+//   fromPosition,
+//   dest,
+//   gameTurn,
+// });
+//
+// export const capturePiece = (fromPosition, dest, capturedPiece, gameTurn) => ({
+//   type: types.CAPTURE_PIECE,
+//   fromPosition,
+//   dest,
+//   capturedPiece,
+//   gameTurn,
+// });
+//
+// export const castlingMove = (fromPosition, dest, castling, gameTurn) => ({
+//   type: types.CASTLING_MOVE,
+//   fromPosition,
+//   dest,
+//   castling,
+//   gameTurn,
+// });
+//
+// export const enPassantMove = (fromPosition, dest, enPassantCoord, gameTurn) => ({
+//   type: types.EN_PASSANT_MOVE,
+//   fromPosition,
+//   dest,
+//   enPassantCoord,
+//   gameTurn,
+// });
+//
+// export const pawnPromotionMove = (fromPosition, dest, pawnPromotionPiece, gameTurn) => ({
+//   type: types.PAWN_PROMOTION_MOVE,
+//   fromPosition,
+//   dest,
+//   pawnPromotionPiece,
+//   gameTurn,
+// });
 
-export const capturePiece = (fromPosition, coordinates, capturedPiece, gameTurn) => ({
-  type: types.CAPTURE_PIECE,
-  fromPosition,
-  coordinates,
-  capturedPiece,
-  gameTurn,
-});
-
-export const castlingMove = (fromPosition, coordinates, castling, gameTurn) => ({
-  type: types.CASTLING_MOVE,
-  fromPosition,
-  coordinates,
-  castling,
-  gameTurn,
-});
-
-export const enPassantMove = (fromPosition, coordinates, enPassantCoord, gameTurn) => ({
-  type: types.EN_PASSANT_MOVE,
-  fromPosition,
-  coordinates,
-  enPassantCoord,
-  gameTurn,
-});
-
-export const pawnPromotionMove = (fromPosition, coordinates, pawnPromotionPiece, gameTurn) => ({
-  type: types.PAWN_PROMOTION_MOVE,
-  fromPosition,
-  coordinates,
-  pawnPromotionPiece,
-  gameTurn,
-});
-
-export const openPromotionDialog = coordinates => ({
+export const openPromotionDialog = dest => ({
   type: types.OPEN_PROMOTION_DIALOG,
-  coordinates,
+  dest,
 });
 
-export const closePromotionDialog = coordinates => ({
+export const closePromotionDialog = dest => ({
   type: types.CLOSE_PROMOTION_DIALOG,
-  coordinates,
+  dest,
 });
 
 export const openCheckDialog = playerInCheck => ({

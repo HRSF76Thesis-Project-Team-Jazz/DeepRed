@@ -7,16 +7,8 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import {
   updateTimer, cancelPauseDialogClose, updateAlertName,
-  cancelPauseDialogOpen, pauseDialogOpen, pauseDialogClose, setPlayer,
-  updateRoomInfo, getRequestFailure, receiveGame, movePiece, resetBoolBoard,
-  unselectPiece, capturePiece, displayError, colorSquare, sendMsgLocal, sendMsgGlobal,
-  updateTimerB, timeInstanceB, updateTimerW, timeInstanceW, saveBoolBoard, castlingMove,
-  selectGameModeClose, selectGameModeOpen, selectRoomOpen, selectRoomClose,
-  selectSideOpen, selectSideClose, updateAllRooms, updateRoomQueue, setPlayerId,
-  enPassantMove, pawnPromotionMove, resumeDialogOpen, resumeDialogClose, cancelResumeDialogOpen,
-  cancelResumeDialogClose, announceSurrenderDialogOpen, announceSurrenderDialogClose,
-  updateGameMode, openWinnerDialog, openCheckDialog,
 } from '../store/actions';
+import ScrollArea from 'react-scrollbar';
 
 // Components
 import Header from '../components/Header';
@@ -81,34 +73,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.getUserInfo();
-  }
-
-  getUserInfo() {
-    const { dispatch } = this.props;
-    axios.get('/api/profiles/id')
-      .then((response) => {
-        console.log('successfully fetched current user infomation: ');
-        dispatch(setPlayer(response));
-      })
-      .then(() => {
-        this.handleChooseGameModeOpen();
-        this.startSocket();
-      })
-      .catch((err) => {
-        dispatch(getRequestFailure(err));
-        console.error('failed to obtain current user infomation!', err);
-      });
-  }
-
-  updateUserGameStat(arr) {
-    axios.post('/api/game/updateUserGameStat', arr)
-      .then((response) => {
-        console.log('successfully sent user win lose information to server: ', response);
-      })
-      .catch((err) => {
-        console.error('failed to send user win lose information to the server! ', err);
-      });
+    this.startSocket();
   }
 
   startSocket() {
@@ -126,210 +91,9 @@ class App extends Component {
       this.socket.emit('getAllRooms', this.socket.id);
       this.socket.emit('sendCurrentUserNameAndEmail', name, email);
     });
-
-    this.socket.on('returnAllRooms', (allRooms) => {
-      dispatch(updateAllRooms(allRooms));
-    });
-
-    this.socket.on('createRoomAsWhiteComplete', (roomInfo, allRooms) => {
-      dispatch(updateAllRooms(allRooms));
-      dispatch(updateRoomInfo(roomInfo));
-      this.socket.emit('getAllRooms', this.socket.id);
-      dispatch(selectSideClose());
-    });
-
-    this.socket.on('createRoomAsBlackComplete', (roomInfo, allRooms) => {
-      dispatch(updateAllRooms(allRooms));
-      dispatch(updateRoomInfo(roomInfo));
-      this.socket.emit('getAllRooms', this.socket.id);
-      dispatch(selectSideClose());
-    });
-
-    this.socket.on('joinRoomAsWhiteComplete', (roomInfo, allRooms) => {
-      dispatch(updateAllRooms(allRooms));
-      dispatch(updateRoomInfo(roomInfo));
-      dispatch(updateTimer(roomInfo));
-      this.decrementTimerW();
-    });
-
-    this.socket.on('joinRoomAsBlackComplete', (roomInfo, allRooms) => {
-      dispatch(updateAllRooms(allRooms));
-      dispatch(updateRoomInfo(roomInfo));
-      dispatch(updateTimer(roomInfo));
-      this.decrementTimerW();
-    });
-
-    this.socket.on('messageLocal', (msg) => {
-      dispatch(sendMsgLocal(msg));
-    });
-
-    this.socket.on('messageGlobal', (msg) => {
-      dispatch(sendMsgGlobal(msg));
-    });
-
-    this.socket.on('attemptMoveResult', (error, game, origin, dest, selection) => {
-      if (error === null) {
-        // if (pawnPromotionPiece) {
-        //   dispatch(pawnPromotionMove(origin, dest, pawnPromotionPiece, gameTurn));
-        // } else if (castling) {
-        //   dispatch(castlingMove(origin, dest, castling, gameTurn));
-        // } else if (enPassantCoord) {
-        //   dispatch(enPassantMove(origin, dest, enPassantCoord, gameTurn));
-        // } else if (selection) {
-        //   dispatch(capturePiece(origin, dest, selection, gameTurn));
-        // } else {
-        //   dispatch(movePiece(origin, dest, gameTurn));
-        // }
-        dispatch(receiveGame(game));
-        if (game.winner) {
-          dispatch(openWinnerDialog(game.winner));
-        } else if (game.playerInCheck) {
-          dispatch(openCheckDialog(game.playerInCheck));
-        }
-        this.toggleTimers();
-      } else {
-        console.log('ERROR: ', error);
-        dispatch(displayError(error));
-      }
-      dispatch(unselectPiece());
-      dispatch(resetBoolBoard());
-      dispatch(colorSquare(null, dest));
-    });
-
-    this.socket.on('checkLegalMovesResults', (boolBoard) => {
-      dispatch(saveBoolBoard(boolBoard));
-    });
-
-    this.socket.on('requestPauseDialogBox', () => {
-      this.handlePauseOpen();
-    });
-
-    this.socket.on('rejectPauseRequestNotification', () => {
-      const { count } = this.props;
-      this.socket.emit('handleRejectPauseRequest', count, this.socket.id);
-    });
-
-    this.socket.on('cancelPauseNotification', (playerName) => {
-      dispatch(updateAlertName(playerName));
-      dispatch(cancelPauseDialogOpen());
-      setTimeout(() => {
-        dispatch(cancelPauseDialogClose());
-        dispatch(pauseDialogClose());
-      }, 3000);
-    });
-
-    this.socket.on('executePauseRequest', () => {
-      this.onChangePlayerTurn();
-    });
-
-    this.socket.on('requestResumeDialogBox', () => {
-      this.handleResumeOpen();
-    });
-
-    this.socket.on('rejectResumeRequestNotification', () => {
-      const { count } = this.props;
-      this.socket.emit('handleRejectResumeRequest', count, this.socket.id);
-    });
-
-    this.socket.on('cancelResumeNotification', (playerName) => {
-      dispatch(updateAlertName(playerName));
-      dispatch(cancelResumeDialogOpen());
-      setTimeout(() => {
-        dispatch(cancelResumeDialogClose());
-        dispatch(resumeDialogClose());
-      }, 3000);
-    });
-
-    this.socket.on('executeResumeRequest', () => {
-      const { gameTurn } = this.props;
-      if (gameTurn === 'W') {
-        this.decrementTimerW();
-      }
-      if (gameTurn === 'B') {
-        this.decrementTimerB();
-      }
-    });
-
-    this.socket.on('announceSurrender', (playerName) => {
-      const { playerW, playerB, playerWemail, playerBemail } = this.props;
-      if (playerName === playerW) {
-        console.log('player W surrendered');
-        this.updateUserGameStat(this.winLoseResult(playerBemail, playerWemail));
-      } else if (playerName === playerB) {
-        console.log('player B surrendered');
-        this.updateUserGameStat(this.winLoseResult(playerWemail, playerBemail));
-      }
-      dispatch(updateAlertName(playerName));
-      this.onChangePlayerTurn();
-      this.handleAnnounceSurrenderOpen();
-    });
-
-    this.socket.on('sendUpdateTime', (roomInfo) => {
-      dispatch(updateTimer(roomInfo));
-    });
-
-    this.socket.on('updateAllRooms', (allRooms) => {
-      dispatch(updateAllRooms(allRooms));
-    });
-
-    this.socket.on('beforeDisconnect', (playerName) => {
-      console.log(`player ${playerName} has disconnected from the server`);
-    });
   }
 
   // GAME control
-  winLoseResult(player1, player2) {
-    const arr = [];
-    arr[0] = { winner: player1, win: 1, draw: 0, lose: 0 };
-    arr[1] = { loser: player2, win: 0, draw: 0, lose: 1 };
-    console.log('win lose: ', arr);
-    return arr;
-  }
-
-  toggleTimers() {
-    const { gameTurn } = this.props;
-    this.onChangePlayerTurn();
-    if (gameTurn === 'B') {
-      this.decrementTimerB();
-    }
-    if (gameTurn === 'W') {
-      this.decrementTimerW();
-    }
-  }
-
-  decrementTimerB() {
-    const { dispatch, playerWemail, playerBemail } = this.props;
-    let { timeB, counterBinstance } = this.props;
-    counterBinstance = setInterval(() => {
-      if (timeB > 0) {
-        timeB -= 1;
-      } else {
-        timeB = 0;
-        this.stopTimerB();
-        this.updateUserGameStat(this.winLoseResult(playerWemail, playerBemail));
-        // player B lose, fire signal to server
-      }
-      dispatch(updateTimerB(timeB));
-      dispatch(timeInstanceB(counterBinstance));
-    }, 1000);
-  }
-
-  decrementTimerW() {
-    const { dispatch, playerWemail, playerBemail } = this.props;
-    let { timeW, counterWinstance } = this.props;
-    counterWinstance = setInterval(() => {
-      if (timeW > 0) {
-        timeW -= 1;
-      } else {
-        timeW = 0;
-        this.stopTimerW();
-        this.updateUserGameStat(this.winLoseResult(playerWemail, playerBemail));
-        // player W lose, fire signal to server
-      }
-      dispatch(updateTimerW(timeW));
-      dispatch(timeInstanceW(counterWinstance));
-    }, 1000);
-  }
 
   stopTimerB() {
     const { dispatch, timeB, counterBinstance } = this.props;
@@ -364,13 +128,13 @@ class App extends Component {
   }
 
   handleCreateRoomAsBlack() {
-    const { thisUser, thisEmail, gameMode } = this.props;
-    this.socket.emit('createRoomAsBlack', thisUser, thisEmail, this.socket.id, gameMode);
+    const { thisUser, thisEmail } = this.props;
+    this.socket.emit('createRoomAsBlack', thisUser, thisEmail, this.socket.id);
   }
 
   handleCreateRoomAsWhite() {
-    const { thisUser, thisEmail, gameMode } = this.props;
-    this.socket.emit('createRoomAsWhite', thisUser, thisEmail, this.socket.id, gameMode);
+    const { thisUser, thisEmail } = this.props;
+    this.socket.emit('createRoomAsWhite', thisUser, thisEmail, this.socket.id);
   }
 
   handleJoinRoomAsWhite(count) {
@@ -405,7 +169,6 @@ class App extends Component {
 
   onPVCmodeSelected() {
     const { dispatch } = this.props;
-    dispatch(updateGameMode('AI'));
     dispatch(selectGameModeClose());
     dispatch(selectSideOpen());
   }
@@ -417,7 +180,6 @@ class App extends Component {
 
   onPVPmodeSelected() {
     const { dispatch } = this.props;
-    dispatch(updateGameMode('default'));
     dispatch(selectGameModeClose());
     this.socket.emit('getAllRooms', this.socket.id);
     dispatch(selectRoomOpen());
@@ -435,100 +197,6 @@ class App extends Component {
     this.socket.emit('rejectPauseRequest', room);
   }
 
-  handleCancelPauseClose() {
-    const { dispatch } = this.props;
-    dispatch(pauseDialogClose());
-    dispatch(cancelPauseDialogClose());
-  }
-
-  sendPauseRequest() {
-    const { room } = this.props;
-    this.socket.emit('requestPause', room);
-  }
-
-  sendResumeRequest() {
-    const { room } = this.props;
-    this.socket.emit('requestResume', room);
-  }
-
-  onCancelResumeRequest() {
-    const { dispatch, room } = this.props;
-    dispatch(resumeDialogClose());
-    this.socket.emit('rejectResumeRequest', room);
-  }
-
-  onAgreeResumeRequest() {
-    const { dispatch, count } = this.props;
-    dispatch(resumeDialogClose());
-    this.socket.emit('agreeResumeRequest', count, this.socket.id);
-  }
-
-  handleCancelResumeClose() {
-    const { dispatch } = this.props;
-    dispatch(resumeDialogClose());
-    dispatch(cancelResumeDialogClose());
-  }
-
-  handleResumeOpen() {
-    const { dispatch } = this.props;
-    dispatch(resumeDialogOpen());
-  }
-
-  handleResumeClose() {
-    const { dispatch } = this.props;
-    dispatch(resumeDialogClose());
-  }
-
-  handlePauseOpen() {
-    const { dispatch } = this.props;
-    dispatch(pauseDialogOpen());
-  }
-
-  handlePauseClose() {
-    const { dispatch } = this.props;
-    dispatch(pauseDialogClose());
-  }
-
-  handleAnnounceSurrenderClose() {
-    const { dispatch } = this.props;
-    dispatch(announceSurrenderDialogClose());
-  }
-
-  handleAnnounceSurrenderOpen() {
-    const { dispatch } = this.props;
-    dispatch(announceSurrenderDialogOpen());
-  }
-  // LOGIC
-  newChessGame() {
-    const { dispatch } = this.props;
-    console.log('make new game');
-    this.socket.emit('newChessGame');
-    this.socket.on('createdChessGame', game => dispatch(receiveGame(game)));
-  }
-
-  attemptMove(origin, dest, selection, room, pawnPromoteType = null, gameMode) {
-    // const { dispatch, room} = this.props;
-    console.log('sending origin and dest coordinates to server');
-    this.socket.emit('attemptMove', origin, dest, selection, pawnPromoteType, room, gameMode);
-    // this.socket.emit('checkLegalMove', originDestCoord);
-  }
-
-  checkLegalMoves(origin, room) {
-    // const { dispatch } = this.props;
-    console.log('checking legal moves');
-    this.socket.emit('checkLegalMoves', origin, room, this.socket.id);
-    // this.socket.emit('checkLegalMove', originDestCoord);
-  }
-
-  sendMessageLocal(msg) {
-    const { count } = this.props;
-    this.socket.emit('messageLocal', msg, count);
-  }
-
-  sendMessageGlobal(msg) {
-    const { count } = this.props;
-    this.socket.emit('messageGlobal', msg, count);
-  }
 
   render() {
     const {
@@ -799,7 +467,6 @@ class App extends Component {
 function mapStateToProps(state) {
   const { gameState, moveState, userState, controlState } = state;
   const {
-    gameMode,
     gameTurn,
     counterBinstance,
     counterWinstance,
@@ -837,7 +504,6 @@ function mapStateToProps(state) {
     chooseSideOpen,
   } = controlState;
   return {
-    gameMode,
     surrenderOpen,
     cancelResumeOpen,
     resumeOpen,
