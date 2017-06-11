@@ -21,50 +21,6 @@ const {
   isStalemateBlack,
 } = endGameChecks;
 
-// let board = [
-//   [null, null, null, null, 'BK', null, null, null],
-//   [null, null, null, null, null, null, null, null],
-//   [null, null, null, null, null, null, null, null],
-//   [null, null, null, null, null, null, null, null],
-//   [null, null, null, null, null, null, null, null],
-//   [null, null, null, null, null, null, null, null],
-//   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-//   ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
-// ['WR', null, null, null, 'WK', null, null, 'WR'],
-// ];
-
-// let board = [
-//   ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
-//   ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
-//   [null, null, null, null, null, null, null, null],
-//   [null, null, null, null, null, null, null, null],
-//   [null, null, null, null, null, null, null, null],
-//   [null, null, null, null, null, null, null, null],
-//   ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-//   ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
-// ];
-
-// const pieceState = {
-//   hasMovedWK: false,
-//   hasMovedWKR: false,
-//   hasMovedWQR: false,
-//   hasMovedBK: false,
-//   hasMovedBKR: false,
-//   hasMovedBQR: false,
-//   canEnPassantW: '',
-//   canEnPassantB: '',
-//   countBlackPieces: 16,
-//   countWhitePieces: 16,
-//   capturedWhite: [],
-//   capturedBlack: [],
-//   lastCapture: 0,
-//   lastPawn: 0,
-//   moveCount: 0,
-//   castle: 0,
-//   pawnPromotion: 0,
-//   enPassant: 0,
-// };
-
 const whiteMove = (board, pieceState) => {
   const moves = getSafeMovesWhite(board, pieceState);
   const newState = pieceState;

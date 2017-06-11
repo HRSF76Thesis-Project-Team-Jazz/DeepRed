@@ -1,7 +1,7 @@
-const chessEval = require('../chessEval');
+const chessEncode = require('../chessEncode');
 const deepRed = require('../deepRed');
 
-const { transcribeBoard } = chessEval;
+const { encodeBoard, encodeWithState } = chessEncode;
 const { findPiecePosition, mutateBoard } = deepRed.basic;
 const { getAllMovesWhite } = deepRed.movesWhite;
 const { getAllMovesBlack } = deepRed.movesBlack;
@@ -26,10 +26,34 @@ const convertToArray = (pgn) => {
   return array.filter(x => x !== '');
 };
 
-const transcribeMove = (moveString, color, board) => {
+const transcribeMove = (moveString, color, board, pieceState) => {
   if (moveString.indexOf('#') >= 0) console.log(`Winner: ${color}`);
-  if (moveString === 'O-O') return { move: 'castle', color, side: 'O-O' };
-  if (moveString === 'O-O-O') return { move: 'castle', color, side: 'O-O-O' };
+
+  const newState = Object.assign({}, pieceState, { canEnPassantW: '', canEnPassantB: '' });
+
+  if (moveString === 'O-O' || moveString === 'O-O-O') {
+    const side = moveString;
+    if (color === 'W') {
+      newState.hasMovedWK = true;
+      if (side === 'O-O') {
+        newState.hasMovedWKR = true;
+      } else {
+        newState.hasMovedWQR = true;
+      }
+    } else {
+      newState.hasMovedBK = true;
+      if (side === 'O-O') {
+        newState.hasMovedBKR = true;
+      } else {
+        newState.hasMovedBQR = true;
+      }
+    }
+
+    return {
+      move: { move: 'castle', color, side },
+      newState,
+    };
+  }
 
   const cols = {
     a: 0,
@@ -53,7 +77,10 @@ const transcribeMove = (moveString, color, board) => {
     const from = `${toRow + (direction * 1)}${cols[split[0][0]]}`;
     const to = `${toRow}${cols[split[0][0]]}`;
     const newPiece = `${color}${piece[0]}`;
-    return { move: 'pawnPromotion', from, to, newPiece };
+    return {
+      move: { move: 'pawnPromotion', from, to, newPiece },
+      newState,
+    };
   }
 
   // King
@@ -62,7 +89,14 @@ const transcribeMove = (moveString, color, board) => {
     const toPosition = moveString.substring(1);
     const toRow = 8 - toPosition[1];
     const toCol = cols[toPosition[0]];
-    return [piecePosition, [toRow, toCol]];
+
+    newState.hasMovedWK = (color === 'W') ? true : newState.hasMovedWK;
+    newState.hasMovedBK = (color === 'B') ? true : newState.hasMovedBK;
+
+    return {
+      move: [piecePosition, [toRow, toCol]],
+      newState,
+    };
   }
 
   // Queen
@@ -71,7 +105,10 @@ const transcribeMove = (moveString, color, board) => {
     const toPosition = moveString.substring(1);
     const toRow = 8 - toPosition[1];
     const toCol = cols[toPosition[0]];
-    return [piecePosition, [toRow, toCol]];
+    return {
+      move: [piecePosition, [toRow, toCol]],
+      newState,
+    };
   }
 
   const moves = (color === 'W') ? getAllMovesWhite(board) : getAllMovesBlack(board);
@@ -97,7 +134,37 @@ const transcribeMove = (moveString, color, board) => {
 
   for (let i = 0; i < keys.length; i += 1) {
     const index = moves[keys[i]].map(x => JSON.stringify(x)).indexOf(searchVal);
-    if (index >= 0) return [keys[i], [toRow, toCol].join('')];
+    if (index >= 0) {
+
+      if (piece[1] === 'P') {
+        if (Math.abs(toRow - keys[i][0]) > 1) {
+          if (color === 'W') {
+            newState.canEnPassantB = `${toRow}${toCol}`;
+          } else {
+            newState.canEnPassantW = `${toRow}${toCol}`;
+          }
+        }
+      }
+
+      if (piece[1] === 'R') {
+        if (color === 'W') {
+          if (keys[i] === '70') {
+            newState.hasMovedWQR = true;
+          } else if (keys[i] === '77') {
+            newState.hasMovedWKR = true;
+          }
+        } else if (keys[i] === '00') {
+          newState.hasMovedBQR = true;
+        } else if (keys[i] === '07') {
+          newState.hasMovedBKR = true;
+        }
+      }
+
+      return {
+        move: [keys[i], [toRow, toCol].join('')],
+        newState,
+      };
+    }
   }
 
   // handle en passant
@@ -105,7 +172,11 @@ const transcribeMove = (moveString, color, board) => {
   const from = `${toRow + direction}${originCol}`;
   const to = `${toRow}${toCol}`;
   const captured = `${toRow + direction}${toCol}`;
-  return { move: 'enpassant', from, to, captured, color };
+
+  return {
+    move: { move: 'enpassant', from, to, captured, color },
+    newState,
+  };
 };
 
 
@@ -132,9 +203,37 @@ const startBoard = [
   ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
 ];
 
+
+const startPieceState = {
+  hasMovedWK: false,
+  hasMovedWKR: false,
+  hasMovedWQR: false,
+  hasMovedBK: false,
+  hasMovedBKR: false,
+  hasMovedBQR: false,
+  canEnPassantW: '',
+  canEnPassantB: '',
+};
+
+
 let board = startBoard;
+let pieceState = startPieceState;
 
 const games = [game, game2, enPassant, game3];
+
+const showBoard = true;
+
+console.log('Game 1: ', game);
+console.log();
+console.log('===============');
+console.log('Game 2: ', game2);
+console.log();
+console.log('===============');
+console.log('enPassant: ', enPassant);
+console.log();
+console.log('===============');
+console.log('Game 3: ', game3);
+
 
 games.forEach((thisGame) => {
   console.log();
@@ -142,12 +241,24 @@ games.forEach((thisGame) => {
   board = startBoard;
   const gameArray = convertToArray(thisGame);
 
+  let stringCount = encodeBoard(board).length;
+
   for (let i = 0; i < gameArray.length; i += 1) {
-    // console.log(`**** [${Math.floor(i / 2) + 1}] ${gameArray[i]} ****`);
-    const move = transcribeMove(gameArray[i], (i % 2 === 0) ? 'W' : 'B', board);
-    // console.log(move);
+    console.log(`**** [${Math.floor(i / 2) + 1}] ${gameArray[i]} ****`);
+    const moveAndState = transcribeMove(gameArray[i], (i % 2 === 0) ? 'W' : 'B', board, pieceState);
+    const move = moveAndState.move;
+    pieceState = moveAndState.newState;
+    console.log(moveAndState);
     board = mutateBoard(board, move);
-    // displayBoard(board);
-    console.log(transcribeBoard(board));
+    if (showBoard) displayBoard(board);
+    const encodedBoard = encodeWithState(board, pieceState);
+    stringCount += encodedBoard.length;
+    console.log(encodedBoard);
   }
+
+  console.log('Transcribed: ', gameArray.length * 64);
+  console.log('Encoded:     ', stringCount);
+  console.log('Compression: ', ((gameArray.length * 64) - stringCount) / (gameArray.length * 64));
+
+  stringCount = 0;
 });
