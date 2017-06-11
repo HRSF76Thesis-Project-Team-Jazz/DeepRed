@@ -16,7 +16,7 @@ const MobileTearSheet = React.createClass({
     const styles = {
       root: {
         float: 'left',
-        marginTop: '10vw',
+        marginTop: '0vw',
         // marginBottom: '10vw',
         marginRight: 24,
         width: '100%',

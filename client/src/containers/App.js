@@ -728,7 +728,7 @@ class App extends Component {
 
             <div className="flex-col right-col">
               <Message message={error} />
-              <Messages messagesLocal={messagesLocal} sendMessageLocal={this.sendMessageLocal} messagesGlobal={messagesGlobal} sendMessageGlobal={this.sendMessageGlobal}/>
+              <Messages messagesLocal={messagesLocal} sendMessageLocal={this.sendMessageLocal} messagesGlobal={messagesGlobal} sendMessageGlobal={this.sendMessageGlobal} />
             </div>
 
             <div className="control-general">
@@ -741,7 +741,7 @@ class App extends Component {
               />
               <Alert
                 className="cancel-pause-request"
-                title={`Pause request has been canceled first by ${alertName}`}
+                title={`Pause request has been denied by ${alertName}`}
                 actions={cancelPauseActions}
                 open={cancelPauseOpen}
                 handleClose={this.handleCancelPauseClose}
@@ -755,7 +755,7 @@ class App extends Component {
               />
               <Alert
                 className="cancel-resume-request"
-                title={`Resume request has been canceled first by ${alertName}`}
+                title={`Resume request has been denied by ${alertName}`}
                 actions={cancelResumeActions}
                 open={cancelResumeOpen}
                 handleClose={this.handleCancelResumeClose}
@@ -771,7 +771,7 @@ class App extends Component {
             <div className="control-login">
               <Alert
                 className="choose-mode"
-                title={`Hi ${thisUser}, Welcome to DeepRed!`}
+                title={`Welcome to Deep Red | Chess Master: ${thisUser}`}
                 actions={chooseGameModeActions}
                 open={chooseGameModeOpen}
               />
@@ -784,13 +784,13 @@ class App extends Component {
                 handleJoinRoomAsWhite={this.handleJoinRoomAsWhite}
                 showRooms
                 className="choose-room"
-                title={'Choose or create a room to join!'}
+                title={'Choose or create a room to join:'}
                 actions={selectRoomActions}
                 open={chooseRoomOpen}
               />
               <Alert
                 className="choose-side"
-                title={'which side would you like be on?'}
+                title={'Select your color:'}
                 actions={selectSideActions}
                 open={chooseSideOpen}
               />
