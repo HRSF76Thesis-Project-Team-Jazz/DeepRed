@@ -291,6 +291,7 @@ class ChessGame {
     this.canEnPassantW = newState.canEnPassant;
     this.canEnPassantB = newState.canEnPassant;
     this.turn = (this.turn === 'W') ? 'B' : 'W';
+    console.log('************************', this);
   }
 }
 

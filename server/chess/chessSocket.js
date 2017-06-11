@@ -46,7 +46,6 @@ module.exports = (io, client) => {
         roomInfo.playerBid = 12345;
         roomInfo.playerBtime = 600;
         roomInfo.playerBclicked = false;
-        createAndSaveNewGame(room);
         io.in(room).emit('joinRoomAsBlackComplete', roomInfo, allRooms);
         io.emit('updateAllRooms', allRooms);
       }
@@ -82,7 +81,6 @@ module.exports = (io, client) => {
         roomInfo.playerWid = 12345;
         roomInfo.playerWtime = 600;
         roomInfo.playerWclicked = false;
-        createAndSaveNewGame(room);
         io.in(room).emit('joinRoomAsWhiteComplete', roomInfo, allRooms);
         io.emit('updateAllRooms', allRooms);
       }
