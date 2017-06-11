@@ -281,7 +281,7 @@ const encodeWithState = (board, pieceState) => {
   const epW = pieceState.canEnPassantW;
   const epB = pieceState.canEnPassantB;
 
-  if (epW !== '') result += +epW - 31;
+  if (epW !== '') result += +epW - 29;
   if (epB !== '') result += String.fromCharCode(+epB + 56);
 
   return result;
@@ -308,7 +308,7 @@ const decodeWithState = (codeWithState) => {
     if (isNaN(stateString[6])) {
       state.canEnPassantB = (stateString[6].charCodeAt() - 56).toString();
     } else {
-      state.canEnPassantW = (+stateString[6] + 31).toString();
+      state.canEnPassantW = (+stateString[6] + 29).toString();
     }
   }
 
