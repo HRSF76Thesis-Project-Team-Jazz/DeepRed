@@ -23,7 +23,7 @@ class Board extends Component {
   onClick(dest) {
     const {
       dispatch, board, origin, selectedPiece, room, gameTurn,
-      isWhite, attemptMove, checkLegalMoves, boolBoard,
+      isWhite, attemptMove, checkLegalMoves, boolBoard, gameMode,
     } = this.props;
 
     if ((isWhite && gameTurn === 'B') || (!isWhite && gameTurn === 'W')) {
@@ -46,7 +46,7 @@ class Board extends Component {
       } else if (selectedPiece === 'BP' && dest[0] === 7 && boolBoard[dest[0]][dest[1]]) {
         dispatch(openPromotionDialog(dest));
       } else {
-        attemptMove(origin, dest, selection, room);
+        attemptMove(origin, dest, selection, room, null, gameMode);
       }
     }
   }
@@ -77,9 +77,9 @@ class Board extends Component {
   }
 
   handlePromotion(pawnPromoteType) {
-    const { dispatch, board, attemptMove, origin, pawnPromotionCoord, room } = this.props;
+    const { dispatch, board, attemptMove, origin, pawnPromotionCoord, room, gameMode } = this.props;
     const selection = board[pawnPromotionCoord[0]][pawnPromotionCoord[1]];
-    attemptMove(origin, pawnPromotionCoord, selection, room, pawnPromoteType);
+    attemptMove(origin, pawnPromotionCoord, selection, room, pawnPromoteType, gameMode);
     dispatch(closePromotionDialog());
   }
 
@@ -202,7 +202,7 @@ class Board extends Component {
 
 function mapStateToProps(state) {
   const { gameState, boardState, moveState, userState, squareState } = state;
-  const { playerColor, gameTurn, playerInCheck, winner, showCheckDialog, showWinnerDialog } = gameState;
+  const { playerColor, gameTurn, playerInCheck, winner, showCheckDialog, showWinnerDialog, gameMode } = gameState;
   const { board } = boardState;
   const { origin, selectedPiece, boolBoard, pawnPromotionCoord,
     showPromotionDialog } = moveState;
@@ -225,6 +225,7 @@ function mapStateToProps(state) {
     winner,
     showCheckDialog,
     showWinnerDialog,
+    gameMode,
   };
 }
 

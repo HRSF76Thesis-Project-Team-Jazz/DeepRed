@@ -491,4 +491,7 @@ module.exports = {
   displayFullBoard,
   displayTranscribe,
   displayEncode,
+  whiteMove,
+  blackMove,
+  mutateBoard,
 };
