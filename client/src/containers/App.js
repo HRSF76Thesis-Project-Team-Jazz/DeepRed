@@ -149,7 +149,9 @@ class App extends Component {
       dispatch(updateAllRooms(allRooms));
       dispatch(updateRoomInfo(roomInfo));
       dispatch(updateTimer(roomInfo));
-      dispatch(receiveGame(game));
+      if (game) {
+        dispatch(receiveGame(game));
+      }
       this.decrementTimerW();
     });
 
@@ -157,7 +159,9 @@ class App extends Component {
       dispatch(updateAllRooms(allRooms));
       dispatch(updateRoomInfo(roomInfo));
       dispatch(updateTimer(roomInfo));
-      dispatch(receiveGame(game));
+      if (game) {
+        dispatch(receiveGame(game));
+      }
       this.decrementTimerW();
     });
 
