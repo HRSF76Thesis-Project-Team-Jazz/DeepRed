@@ -8,9 +8,8 @@
 // K = King
 
 const isLegalMove = require('./isLegalMove');
-const endGameChecks = require('./deepRed/endGameChecks');
+const { isCheckmateWhite, isStalemateBlack, blackIsChecked, isCheckmateBlack, isStalemateWhite, whiteIsChecked } = require('./deepRed/endGameChecks');
 const { whiteMove, blackMove, mutateBoard } = require('./deepRed/playerVsAI');
-// const moveToPGNString = require('./convertToPGN');
 
 const transcribeBoard = board => board.map((row) => {
   const pieceIndex = {
@@ -73,12 +72,12 @@ class ChessGame {
       const testBoard = this.board.map(row => row.map(x => x));
       testBoard[dest[0]][dest[1]] = originPiece;
       testBoard[origin[0]][origin[1]] = null;
-      if (this.turn === 'W' && endGameChecks.whiteIsChecked(testBoard)) {
+      if (this.turn === 'W' && whiteIsChecked(testBoard)) {
         return {
           game: this,
           error: 'Cannot leave yourself in check.',
         };
-      } else if (this.turn === 'B' && endGameChecks.blackIsChecked(testBoard)) {
+      } else if (this.turn === 'B' && blackIsChecked(testBoard)) {
         return {
           game: this,
           error: 'Cannot leave yourself in check.',
@@ -118,58 +117,11 @@ class ChessGame {
 
       this.history.push(transcribeBoard(this.board));
 
-      if (this.turn === 'W') {
-        if (endGameChecks.isCheckmateWhite(this.board)) {
-          this.winner = 'W';
-        } else if (endGameChecks.isStalemateBlack(this.board)) {
-          this.winner = 'D';
-        } else if (endGameChecks.blackIsChecked(this.board)) {
-          this.playerInCheck = 'B';
-        } else {
-          this.playerInCheck = null;
-        }
-      } else if (this.turn === 'B') {
-        if (endGameChecks.isCheckmateBlack(this.board)) {
-          this.winner = 'B';
-        } else if (endGameChecks.isStalemateWhite(this.board)) {
-          this.winner = 'D';
-        } else if (endGameChecks.whiteIsChecked(this.board)) {
-          this.playerInCheck = 'W';
-        } else {
-          this.playerInCheck = null;
-        }
-      }
+      this.endGameChecks();
       this.turn = (this.turn === 'W') ? 'B' : 'W';
 
       if (gameMode === 'AI' && !this.winner) {
-        const pieceState = {
-          hasMovedWK: this.hasMovedWK,
-          hasMovedWKR: this.hasMovedWRK,
-          hasMovedWQR: this.hasMovedWRQ,
-          hasMovedBK: this.hasMovedBK,
-          hasMovedBKR: this.hasMovedBRK,
-          hasMovedBQR: this.hasMovedBRQ,
-          canEnPassantW: this.canEnPassant,
-          canEnPassantB: this.canEnPassant,
-        };
-        let deepRedMove;
-        if (this.turn === 'W') {
-          deepRedMove = whiteMove(this.board, pieceState);
-        } else if (this.turn === 'B') {
-          deepRedMove = blackMove(this.board, pieceState);
-        }
-        console.log(deepRedMove);
-        this.board = mutateBoard(this.board, deepRedMove[0]);
-        const newState = deepRedMove[1];
-        this.hasMovedWK = newState.hasMovedWK;
-        this.hasMovedWRK = newState.hasMovedWKR;
-        this.hasMovedWRQ = newState.hasMovedWQR;
-        this.hasMovedBK = newState.hasMovedBK;
-        this.hasMovedBRK = newState.hasMovedBKR;
-        this.hasMovedBRQ = newState.hasMovedBQR;
-        this.canEnPassantW = newState.canEnPassant;
-        this.canEnPassantB = newState.canEnPassant;
-        this.turn = (this.turn === 'W') ? 'B' : 'W';
+        this.moveAI();
       }
       // console.log(this.history);
       console.log(this.board);
@@ -288,7 +240,58 @@ class ChessGame {
     }
     return resultBoard;
   }
-
+  endGameChecks() {
+    if (this.turn === 'W') {
+      if (isCheckmateWhite(this.board)) {
+        this.winner = 'W';
+      } else if (isStalemateBlack(this.board)) {
+        this.winner = 'D';
+      } else if (blackIsChecked(this.board)) {
+        this.playerInCheck = 'B';
+      } else {
+        this.playerInCheck = null;
+      }
+    } else if (this.turn === 'B') {
+      if (isCheckmateBlack(this.board)) {
+        this.winner = 'B';
+      } else if (isStalemateWhite(this.board)) {
+        this.winner = 'D';
+      } else if (whiteIsChecked(this.board)) {
+        this.playerInCheck = 'W';
+      } else {
+        this.playerInCheck = null;
+      }
+    }
+  }
+  moveAI() {
+    const pieceState = {
+      hasMovedWK: this.hasMovedWK,
+      hasMovedWKR: this.hasMovedWRK,
+      hasMovedWQR: this.hasMovedWRQ,
+      hasMovedBK: this.hasMovedBK,
+      hasMovedBKR: this.hasMovedBRK,
+      hasMovedBQR: this.hasMovedBRQ,
+      canEnPassantW: this.canEnPassant,
+      canEnPassantB: this.canEnPassant,
+    };
+    let deepRedMove;
+    if (this.turn === 'W') {
+      deepRedMove = whiteMove(this.board, pieceState);
+    } else if (this.turn === 'B') {
+      deepRedMove = blackMove(this.board, pieceState);
+    }
+    this.board = mutateBoard(this.board, deepRedMove[0]);
+    const newState = deepRedMove[1];
+    this.hasMovedWK = newState.hasMovedWK;
+    this.hasMovedWRK = newState.hasMovedWKR;
+    this.hasMovedWRQ = newState.hasMovedWQR;
+    this.hasMovedBK = newState.hasMovedBK;
+    this.hasMovedBRK = newState.hasMovedBKR;
+    this.hasMovedBRQ = newState.hasMovedBQR;
+    this.canEnPassantW = newState.canEnPassant;
+    this.canEnPassantB = newState.canEnPassant;
+    this.turn = (this.turn === 'W') ? 'B' : 'W';
+  }
 }
 
 module.exports = ChessGame;

@@ -145,17 +145,19 @@ class App extends Component {
       dispatch(selectSideClose());
     });
 
-    this.socket.on('joinRoomAsWhiteComplete', (roomInfo, allRooms) => {
+    this.socket.on('joinRoomAsWhiteComplete', (roomInfo, allRooms, game) => {
       dispatch(updateAllRooms(allRooms));
       dispatch(updateRoomInfo(roomInfo));
       dispatch(updateTimer(roomInfo));
+      dispatch(receiveGame(game));
       this.decrementTimerW();
     });
 
-    this.socket.on('joinRoomAsBlackComplete', (roomInfo, allRooms) => {
+    this.socket.on('joinRoomAsBlackComplete', (roomInfo, allRooms, game) => {
       dispatch(updateAllRooms(allRooms));
       dispatch(updateRoomInfo(roomInfo));
       dispatch(updateTimer(roomInfo));
+      dispatch(receiveGame(game));
       this.decrementTimerW();
     });
 
