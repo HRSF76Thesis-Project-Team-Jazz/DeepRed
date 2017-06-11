@@ -32,7 +32,8 @@ module.exports = (io, client) => {
       roomInfo.playerWid = client.client.id;
       roomInfo.playerWtime = 600;
       roomInfo.playerWclicked = false;
-      const num = parseInt(room[room.length - 1]);
+      createAndSaveNewGame(room);
+      const num = parseInt(room[room.length - 1], 10);
       if (count !== num) {
         count = num;
       }
@@ -67,7 +68,8 @@ module.exports = (io, client) => {
       roomInfo.playerBid = client.client.id;
       roomInfo.playerBtime = 600;
       roomInfo.playerBclicked = false;
-      const num = parseInt(room[room.length - 1]);
+      createAndSaveNewGame(room);
+      const num = parseInt(room[room.length - 1], 10);
       if (count !== num) {
         count = num;
       }
@@ -96,8 +98,9 @@ module.exports = (io, client) => {
       allRooms[clientCount].playerWid = client.client.id;
       allRooms[clientCount].playerWtime = 600;
       allRooms[clientCount].playerWclicked = false;
-      createAndSaveNewGame(allRooms[clientCount].room);
-      io.in(allRooms[clientCount].room).emit('joinRoomAsWhiteComplete', allRooms[clientCount], allRooms);
+      // createAndSaveNewGame(allRooms[clientCount].room);
+      const currentGame = allGames[allRooms[clientCount].room];
+      io.in(allRooms[clientCount].room).emit('joinRoomAsWhiteComplete', allRooms[clientCount], allRooms, currentGame);
       io.emit('updateAllRooms', allRooms);
     });
   });
@@ -109,8 +112,9 @@ module.exports = (io, client) => {
       allRooms[clientCount].playerBid = client.client.id;
       allRooms[clientCount].playerBtime = 600;
       allRooms[clientCount].playerBclicked = false;
-      createAndSaveNewGame(allRooms[clientCount].room);
-      io.in(allRooms[clientCount].room).emit('joinRoomAsBlackComplete', allRooms[clientCount], allRooms);
+      // createAndSaveNewGame(allRooms[clientCount].room);
+      const currentGame = allGames[allRooms[clientCount].room];
+      io.in(allRooms[clientCount].room).emit('joinRoomAsBlackComplete', allRooms[clientCount], allRooms, currentGame);
       io.emit('updateAllRooms', allRooms);
     });
   });
