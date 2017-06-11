@@ -1,7 +1,7 @@
 const chessEncode = require('../chessEncode');
 const deepRed = require('../deepRed');
 
-const { encodeBoard, encodeWithState } = chessEncode;
+const { encodeWithState, decodeWithState } = chessEncode;
 const { findPiecePosition, mutateBoard } = deepRed.basic;
 const { getAllMovesWhite } = deepRed.movesWhite;
 const { getAllMovesBlack } = deepRed.movesBlack;
@@ -18,10 +18,10 @@ const convertToArray = (pgn) => {
   });
 
   array = array.filter(x => x !== '');
-  const last = array[array.length - 1];
-  if (last === '1-0') console.log('** WINNER: WHITE **');
-  if (last === '0-1') console.log('** WINNER: BLACK **');
-  if (['1-0', '0-1'].indexOf(array[array.length - 1]) >= 0) array.pop();
+  // const last = array[array.length - 1];
+  // if (last === '1-0') console.log('** WINNER: WHITE **');
+  // if (last === '0-1') console.log('** WINNER: BLACK **');
+  // if (['1-0', '0-1'].indexOf(array[array.length - 1]) >= 0) array.pop();
 
   return array.filter(x => x !== '');
 };
@@ -179,12 +179,91 @@ const transcribeMove = (moveString, color, board, pieceState) => {
   };
 };
 
+const encodePGN = (gameString) => {
+
+  console.log();
+  console.log('============== GAME: PGN Notation ============');
+  console.log(gameString);
+  console.log();
+
+  let board = [
+    ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+    ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+    ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
+  ];
+
+  let pieceState = {
+    hasMovedWK: false,
+    hasMovedWKR: false,
+    hasMovedWQR: false,
+    hasMovedBK: false,
+    hasMovedBKR: false,
+    hasMovedBQR: false,
+    canEnPassantW: '',
+    canEnPassantB: '',
+  };
+
+  const gameArray = convertToArray(gameString);
+
+  const last = gameArray[gameArray.length - 1];
+
+  let winner = '';
+  const movesList = [];
+  let parent = encodeWithState(board, pieceState);
+
+  const wins = {
+    parent,
+    board,
+    white_win: 0,
+    black_win: 0,
+    draw: 0,
+  };
+
+  if (last === '1-0') {
+    winner = 'W';
+    gameArray.pop();
+    wins.white_win = 1;
+  } else if (last === '0-1') {
+    winner = 'B';
+    gameArray.pop();
+    wins.black_win = 1;
+  } else if (last === '1/2-1/2') {
+    winner = 'draw';
+    wins.draw = 1;
+    gameArray.pop();
+  } else if (last.indexOf('#') >= 0) {
+    winner = (gameArray.length % 2 === 0) ? 'B' : 'W';
+    if (winner === 'W') wins.white_win = 1;
+    if (winner === 'B') wins.black_win = 1;
+  }
+
+
+  for (let i = 0; i < gameArray.length; i += 1) {
+    const moveAndState = transcribeMove(gameArray[i], (i % 2 === 0) ? 'W' : 'B', board, pieceState);
+    const move = moveAndState.move;
+    pieceState = moveAndState.newState;
+    board = mutateBoard(board, move);
+    const encodedBoard = encodeWithState(board, pieceState);
+    movesList.push(Object.assign({}, wins, {
+      parent,
+      board: encodedBoard,
+    }));
+    parent = encodedBoard;
+  }
+
+  return movesList;
+};
 
 /**
  *    TESTING
  */
 
-const game = '1. e4 e5 2. Nf3 Nc6 3. Bb5 Nf6 4. O-O Bd6 5. Bc6 dc6 6. d4 Bg4 7. Qd3 Bf3 8. gf3 Nh5 9. Nc3 ed4 10. Ne2 Qh4 11. Ng3 O-O 12. Qd4 Rfd8 13. Qc3 Ng3 14. fg3 Bg3 15. hg3 Qg3 16. Kh1 Rd6 17. Qe1 Qh3 18. Kg1 Rg6 19. Kf2 Rg2 20. Ke3 f5 21. e5 Rc2 22. Bd2 Rd8 23. Bc3 f4 24. Kf4 Qh6 25. Ke4 Qg6 26. Kf4 Qh6 27. Ke4 Rh2 28. Rd1 Rh4 29. f4 Qg6 30. Ke3 Rh3 31. Rf3 Rf3 32. Kf3 Rd1 33. Qe2 Rd3';
+const game = '1. e4 e5 2. Nf3 Nc6 3. Bb5 Nf6 4. O-O Bd6 5. Bc6 dc6 6. d4 Bg4 7. Qd3 Bf3 8. gf3 Nh5 9. Nc3 ed4 10. Ne2 Qh4 11. Ng3 O-O 12. Qd4 Rfd8 13. Qc3 Ng3 14. fg3 Bg3 15. hg3 Qg3 16. Kh1 Rd6 17. Qe1 Qh3 18. Kg1 Rg6 19. Kf2 Rg2 20. Ke3 f5 21. e5 Rc2 22. Bd2 Rd8 23. Bc3 f4 24. Kf4 Qh6 25. Ke4 Qg6 26. Kf4 Qh6 27. Ke4 Rh2 28. Rd1 Rh4 29. f4 Qg6 30. Ke3 Rh3 31. Rf3 Rf3 32. Kf3 Rd1 33. Qe2 Rd3 0-1';
 
 const game2 = '1. d4 d5 2. Nf3 Nf6 3. e3 c6 4. c4 e6 5. Nc3 Nbd7 6. Bd3 Bd6 7. O-O O-O 8. e4 dxe4 9. Nxe4 Nxe4 10. Bxe4 Nf6 11. Bc2 h6 12. b3 b6 13. Bb2 Bb7 14. Qd3 g6 15. Rae1 Nh5 16. Bc1 Kg7 17. Rxe6 Nf6 18. Ne5 c5 19. Bxh6+ Kxh6 20. Nxf7+ 1-0';
 
@@ -223,42 +302,8 @@ const games = [game, game2, enPassant, game3];
 
 const showBoard = true;
 
-console.log('Game 1: ', game);
-console.log();
-console.log('===============');
-console.log('Game 2: ', game2);
-console.log();
-console.log('===============');
-console.log('enPassant: ', enPassant);
-console.log();
-console.log('===============');
-console.log('Game 3: ', game3);
+games.forEach(thisGame => console.log(encodePGN(thisGame)));
 
+const game4 = '1.e4 a5 0-1';
 
-games.forEach((thisGame) => {
-  console.log();
-  console.log('** NEW GAME **');
-  board = startBoard;
-  const gameArray = convertToArray(thisGame);
-
-  let stringCount = encodeBoard(board).length;
-
-  for (let i = 0; i < gameArray.length; i += 1) {
-    console.log(`**** [${Math.floor(i / 2) + 1}] ${gameArray[i]} ****`);
-    const moveAndState = transcribeMove(gameArray[i], (i % 2 === 0) ? 'W' : 'B', board, pieceState);
-    const move = moveAndState.move;
-    pieceState = moveAndState.newState;
-    console.log(moveAndState);
-    board = mutateBoard(board, move);
-    if (showBoard) displayBoard(board);
-    const encodedBoard = encodeWithState(board, pieceState);
-    stringCount += encodedBoard.length;
-    console.log(encodedBoard);
-  }
-
-  console.log('Transcribed: ', gameArray.length * 64);
-  console.log('Encoded:     ', stringCount);
-  console.log('Compression: ', ((gameArray.length * 64) - stringCount) / (gameArray.length * 64));
-
-  stringCount = 0;
-});
+console.log(encodePGN(game4));
