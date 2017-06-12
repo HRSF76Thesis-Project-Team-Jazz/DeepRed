@@ -183,12 +183,12 @@ class Board extends Component {
           actions={promotionActions}
           open={showPromotionDialog}
         />
-        <Alert
+        {/* <Alert
           className="pauseRequest"
           title={`${playerInCheck} is in check.`}
           actions={checkActions}
           open={showCheckDialog}
-        />
+        /> */}
         <Alert
           className="pauseRequest"
           title={`Winner is ${winner}!`}
@@ -202,7 +202,8 @@ class Board extends Component {
 
 function mapStateToProps(state) {
   const { gameState, boardState, moveState, userState, squareState } = state;
-  const { playerColor, gameTurn, playerInCheck, winner, showCheckDialog, showWinnerDialog, gameMode } = gameState;
+  const { playerColor, gameTurn, playerInCheck, winner, showCheckDialog,
+    showWinnerDialog, gameMode } = gameState;
   const { board } = boardState;
   const { origin, selectedPiece, boolBoard, pawnPromotionCoord,
     showPromotionDialog } = moveState;
