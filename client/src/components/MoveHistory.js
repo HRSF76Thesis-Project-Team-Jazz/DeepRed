@@ -1,19 +1,33 @@
-import React from 'react';
-import uuidV4 from 'uuid/v4';
+import React, { Component } from 'react';
 import { List, ListItem } from 'material-ui/List';
 import MobileTearSheet from './MobileTearSheet';
 
-const MoveHistory = ({ moveHistory }) => (
-  <MobileTearSheet>
-    <List>
-      {moveHistory.map((move, i) => (
-        <ListItem
-          key={`${i}-${move}`}
-          primaryText={`${i + 1}. ${move}`}
-        />
-      ))}
-    </List>
-  </MobileTearSheet>
-);
+class MoveHistory extends Component {
 
+  componentDidMount() {
+    document.getElementById('end-of-moves').scrollIntoView();
+  }
+
+  componentDidUpdate() {
+    document.getElementById('end-of-moves').scrollIntoView();
+  }
+
+  render() {
+    const { moveHistory } = this.props;
+
+    return (
+      <MobileTearSheet>
+        <List>
+          {moveHistory.map((move, i) => (
+            <ListItem
+              key={`${i}-${move}`}
+              primaryText={`${i + 1}. ${move}`}
+            />
+          ))}
+        </List>
+        <div id="end-of-moves" />
+      </MobileTearSheet>
+    );
+  }
+}
 export default MoveHistory;
