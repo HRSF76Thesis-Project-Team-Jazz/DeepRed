@@ -55,9 +55,11 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
     "seamless-immutable": "^7.1.2",
+    "should": "^11.2.1",
     "socket.io": "^2.0.1",
     "socket.io-client": "^2.0.1",
-    "uuid": "^3.0.1"
+    "uuid": "^3.0.1",
+    "watson-developer-cloud": "^2.32.1"
   },
   "devDependencies": {
     "babel-loader": "^7.0.0",

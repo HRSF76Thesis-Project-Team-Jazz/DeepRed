@@ -1,56 +1,122 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
+import Messages from './Messages';
 import RaisedButton from 'material-ui/RaisedButton';
+import Paper from 'material-ui/Paper';
 import './css/Room.css';
 
+const selectSideActionsStyle = {
+  margin: '1px',
+  padding: '1px',
+};
 
-const Room = ({ allRooms, createNewPVPRoom, handleJoinRoomAsBlack, handleJoinRoomAsWhite }) => (
-  <div className="room-container">
-    <p className="dialog-box-title">Choose or create a room to join!</p>
-    <RaisedButton
-      className="create-room-button"
-      label="Create new room"
-      primary
-      onTouchTap={createNewPVPRoom}
-    />
-    <p className="dialog-box-title">Existing rooms: </p>
-    <tbody>
-      {
-        allRooms.map((room) => {
-          if (room !== null) {
-            return (
-              <tr>
-                <th>
-                  {room.room}
-                </th>
-                <th>
-                  <RaisedButton
-                    label="White"
-                    disabled={room.playerW !== undefined}
-                    secondary
-                    onTouchTap={() => handleJoinRoomAsWhite(room.count)}
-                  />
-                </th>
-                <th>
-                  {room.playerW}
-                </th>
-                <th>
-                  <RaisedButton
-                    label="Black"
-                    disabled={room.playerB !== undefined}
-                    primary
-                    onTouchTap={() => handleJoinRoomAsBlack(room.count)}
-                  />
-                </th>
-                <th>
-                  {room.playerB}
-                </th>
-              </tr>
-            );
+const messageStyle = {
+  width: '100%',
+  height: '100%',
+}
+
+const style = {
+  height: 100,
+  width: 100,
+  margin: 20,
+  textAlign: 'center',
+  display: 'inline-block',
+};
+
+const Room = ({ allRooms, handleJoinRoomAsBlack, handleJoinRoomAsWhite,
+handleCreateRoomAsWhite, handleCreateRoomAsBlack, sendMessageGlobal,
+messagesGlobal, sendMessageLocal, messagesLocal, thisUser, isWhite }) => (
+  <div className="container">
+    <h3>{`Welcome to Deep Red | Chess Master: ${thisUser}`}</h3>
+    <div className="room-container">
+      <div className="control-box">
+        <p className="title-text">Player vs Player</p>
+        <RaisedButton
+          label="White"
+          style={selectSideActionsStyle}
+          secondary
+          onTouchTap={() => handleCreateRoomAsWhite('default')}
+        />
+        <RaisedButton
+          label="Black"
+          style={selectSideActionsStyle}
+          primary
+          onTouchTap={() => handleCreateRoomAsBlack('default')}
+        />
+        <p>Player vs DeepRed</p>
+        <RaisedButton
+          label="White"
+          style={selectSideActionsStyle}
+          secondary
+          onTouchTap={() => handleCreateRoomAsWhite('AI')}
+        />
+        <RaisedButton
+          label="Black"
+          style={selectSideActionsStyle}
+          primary
+          onTouchTap={() => handleCreateRoomAsBlack('AI')}
+        />
+        <p>AI vs AI</p>
+        <RaisedButton
+          label="Start"
+          style={selectSideActionsStyle}
+          secondary
+          onTouchTap={() => handleCreateRoomAsWhite('default')}
+        />
+      </div>
+      <div className="grid existing-room">
+      <p className="title-text">Existing rooms </p>
+        <tbody>
+          {
+            allRooms.map((room) => {
+              if (room !== null) {
+                return (
+                  <tr>
+                    <th className="room-name">
+                      {room.room}
+                    </th>
+                    <th>
+                      <RaisedButton
+                        label="White"
+                        disabled={room.playerW !== undefined}
+                        secondary
+                        onTouchTap={() => handleJoinRoomAsWhite(room.count)}
+                      />
+                    </th>
+                    <th className="room-name">
+                      {room.playerW}
+                    </th>
+                    <th>
+                      <RaisedButton
+                        label="Black"
+                        disabled={room.playerB !== undefined}
+                        primary
+                        onTouchTap={() => handleJoinRoomAsBlack(room.count)}
+                      />
+                    </th>
+                    <th className="room-name">
+                      {room.playerB}
+                    </th>
+                  </tr>
+                );
+              }
+            })
           }
-        })
-      }
-    </tbody>
+        </tbody>
+      </div>
+      <div className="grid">
+        <p className="title-text">Global Chat</p>
+        {/*<Messages
+          style={messageStyle}
+          messagesLocal={messagesLocal}
+          sendMessageLocal={sendMessageLocal}
+          messagesGlobal={messagesGlobal}
+          sendMessageGlobal={sendMessageGlobal}
+          isWhite={isWhite}
+          thisUser={thisUser}
+        />*/}
+      </div> 
+    </div>
   </div>
 );
 

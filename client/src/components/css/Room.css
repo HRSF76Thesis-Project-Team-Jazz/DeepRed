@@ -1,11 +1,43 @@
+.container {
+  
+}
+
 .room-container {
-  margin: 20px;
+  /*box-shadow: inset 1px 1px 10px grey, 0 0 10px grey;*/
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 80vw;
+  height: 26vw;
 }
 
-.dialog-box-title {
-  font-size: 24px;
+.grid {
+  margin: 10px;
+  padding: 10px;
+  flex: 0 0 220px;
+  height: 250px;;
+  /*box-shadow: inset 1px 1px 10px grey, 0 0 10px grey;*/
+  flex-grow: 1;
 }
 
-.create-room-button {
-  margin: 20px;
+.control-box {
+  margin: 10px;
+  padding: 10px;
+  flex: 0 0 220px;
+  height: 250px;;
+  /*box-shadow: inset 1px 1px 10px grey, 0 0 10px grey;*/
+}
+
+.existing-room {
+  flex-grow: 2;
+}
+
+.room-name {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+
+.title-text {
 }

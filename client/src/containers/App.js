@@ -17,7 +17,6 @@ import {
   cancelResumeDialogClose, announceSurrenderDialogOpen, announceSurrenderDialogClose,
   updateGameMode, openWinnerDialog, openCheckDialog,
 } from '../store/actions';
-
 // Components
 import Header from '../components/Header';
 import Board from './Board';
@@ -43,6 +42,11 @@ class App extends Component {
     this.checkLegalMoves = this.checkLegalMoves.bind(this);
     this.newChessGame = this.newChessGame.bind(this);
     this.startSocket = this.startSocket.bind(this);
+    this.stopTimerB = this.stopTimerB.bind(this);
+    this.stopTimerW = this.stopTimerW.bind(this);
+    this.toggleTimers = this.toggleTimers.bind(this);
+    this.decrementTimerB = this.decrementTimerB.bind(this);
+    this.decrementTimerW = this.decrementTimerW.bind(this);
     this.sendPauseRequest = this.sendPauseRequest.bind(this);
     this.sendResumeRequest = this.sendResumeRequest.bind(this);
     this.handlePauseOpen = this.handlePauseOpen.bind(this);
@@ -53,18 +57,6 @@ class App extends Component {
     this.handleCancelPauseClose = this.handleCancelPauseClose.bind(this);
     this.onAgreePauseRequest = this.onAgreePauseRequest.bind(this);
     this.onChangePlayerTurn = this.onChangePlayerTurn.bind(this);
-    this.decrementTimerB = this.decrementTimerB.bind(this);
-    this.decrementTimerW = this.decrementTimerW.bind(this);
-    this.stopTimerB = this.stopTimerB.bind(this);
-    this.stopTimerW = this.stopTimerW.bind(this);
-    this.toggleTimers = this.toggleTimers.bind(this);
-    this.onPVPmodeSelected = this.onPVPmodeSelected.bind(this);
-    this.onPVCmodeSelected = this.onPVCmodeSelected.bind(this);
-    this.onCVCmodeSelected = this.onCVCmodeSelected.bind(this);
-    this.handleSelectRoomCloseOnFailure = this.handleSelectRoomCloseOnFailure.bind(this);
-    this.handleSelectSideCloseOnFailure = this.handleSelectSideCloseOnFailure.bind(this);
-    this.handleChooseGameModeOpen = this.handleChooseGameModeOpen.bind(this);
-    this.createNewPVPRoom = this.createNewPVPRoom.bind(this);
     this.handleCreateRoomAsBlack = this.handleCreateRoomAsBlack.bind(this);
     this.handleCreateRoomAsWhite = this.handleCreateRoomAsWhite.bind(this);
     this.handleJoinRoomAsBlack = this.handleJoinRoomAsBlack.bind(this);
@@ -78,10 +70,13 @@ class App extends Component {
     this.handleAnnounceSurrenderClose = this.handleAnnounceSurrenderClose.bind(this);
     this.updateUserGameStat = this.updateUserGameStat.bind(this);
     this.winLoseResult = this.winLoseResult.bind(this);
+    this.closeDialog = this.closeDialog.bind(this);
+    // this.watson = this.watson.bind(this);
   }
 
   componentDidMount() {
     this.getUserInfo();
+    // this.watson();
   }
 
   getUserInfo() {
@@ -92,14 +87,29 @@ class App extends Component {
         dispatch(setPlayer(response));
       })
       .then(() => {
-        this.handleChooseGameModeOpen();
+        dispatch(selectRoomOpen());
         this.startSocket();
       })
+
       .catch((err) => {
         dispatch(getRequestFailure(err));
         console.error('failed to obtain current user infomation!', err);
       });
   }
+
+  // watson() {
+  //   const option = {
+  //     text: 'nice move',
+  //   };
+
+  //   axios.post(option, '/api/game/conversation')
+  //     .then((response) => {
+  //       console.log('message sent!', response);
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+  // }
 
   updateUserGameStat(arr) {
     axios.post('/api/game/updateUserGameStat', arr)
@@ -131,31 +141,14 @@ class App extends Component {
       dispatch(updateAllRooms(allRooms));
     });
 
-    this.socket.on('createRoomAsWhiteComplete', (roomInfo, allRooms) => {
+    this.socket.on('createRoomCompleted', (roomInfo, allRooms) => {
       dispatch(updateAllRooms(allRooms));
       dispatch(updateRoomInfo(roomInfo));
       this.socket.emit('getAllRooms', this.socket.id);
-      dispatch(selectSideClose());
     });
 
-    this.socket.on('createRoomAsBlackComplete', (roomInfo, allRooms) => {
-      dispatch(updateAllRooms(allRooms));
-      dispatch(updateRoomInfo(roomInfo));
-      this.socket.emit('getAllRooms', this.socket.id);
-      dispatch(selectSideClose());
-    });
-
-    this.socket.on('joinRoomAsWhiteComplete', (roomInfo, allRooms, game) => {
-      dispatch(updateAllRooms(allRooms));
-      dispatch(updateRoomInfo(roomInfo));
-      dispatch(updateTimer(roomInfo));
-      if (game) {
-        dispatch(receiveGame(game));
-      }
-      this.decrementTimerW();
-    });
-
-    this.socket.on('joinRoomAsBlackComplete', (roomInfo, allRooms, game) => {
+    this.socket.on('joinRoomCompleted', (roomInfo, allRooms, game) => {
+      dispatch(selectRoomClose());
       dispatch(updateAllRooms(allRooms));
       dispatch(updateRoomInfo(roomInfo));
       dispatch(updateTimer(roomInfo));
@@ -288,7 +281,6 @@ class App extends Component {
     const arr = [];
     arr[0] = { winner: player1, win: 1, draw: 0, lose: 0 };
     arr[1] = { loser: player2, win: 0, draw: 0, lose: 1 };
-    console.log('win lose: ', arr);
     return arr;
   }
 
@@ -313,7 +305,6 @@ class App extends Component {
         timeB = 0;
         this.stopTimerB();
         this.updateUserGameStat(this.winLoseResult(playerWemail, playerBemail));
-        // player B lose, fire signal to server
       }
       dispatch(updateTimerB(timeB));
       dispatch(timeInstanceB(counterBinstance));
@@ -330,7 +321,6 @@ class App extends Component {
         timeW = 0;
         this.stopTimerW();
         this.updateUserGameStat(this.winLoseResult(playerWemail, playerBemail));
-        // player W lose, fire signal to server
       }
       dispatch(updateTimerW(timeW));
       dispatch(timeInstanceW(counterWinstance));
@@ -357,26 +347,26 @@ class App extends Component {
   }
 
   // CONTROL function
+  closeDialog() {
+    const { dispatch } = this.props;
+    dispatch(selectRoomClose());
+  }
+
   handleSurrender() {
     const { thisUser, room } = this.props;
-    // this.socket.disconnect();
     this.socket.emit('onSurrender', thisUser, room);
   }
 
-  createNewPVPRoom() {
-    const { dispatch } = this.props;
-    dispatch(selectRoomClose());
-    dispatch(selectSideOpen());
+  handleCreateRoomAsBlack(mode) {
+    const { dispatch, thisUser, thisEmail } = this.props;
+    dispatch(updateGameMode(mode));
+    this.socket.emit('createRoomAsBlack', thisUser, thisEmail, this.socket.id, mode);
   }
 
-  handleCreateRoomAsBlack() {
-    const { thisUser, thisEmail, gameMode } = this.props;
-    this.socket.emit('createRoomAsBlack', thisUser, thisEmail, this.socket.id, gameMode);
-  }
-
-  handleCreateRoomAsWhite() {
-    const { thisUser, thisEmail, gameMode } = this.props;
-    this.socket.emit('createRoomAsWhite', thisUser, thisEmail, this.socket.id, gameMode);
+  handleCreateRoomAsWhite(mode) {
+    const { dispatch, thisUser, thisEmail } = this.props;
+    dispatch(updateGameMode(mode));
+    this.socket.emit('createRoomAsWhite', thisUser, thisEmail, this.socket.id, mode);
   }
 
   handleJoinRoomAsWhite(count) {
@@ -389,44 +379,6 @@ class App extends Component {
     const { dispatch, thisUser, thisEmail } = this.props;
     this.socket.emit('joinRoomAsBlack', thisUser, thisEmail, count);
     dispatch(selectRoomClose());
-  }
-
-  handleChooseGameModeOpen() {
-    const { dispatch } = this.props;
-    dispatch(selectGameModeOpen());
-  }
-
-
-  handleSelectSideCloseOnFailure() {
-    const { dispatch } = this.props;
-    dispatch(selectSideClose());
-    dispatch(selectGameModeOpen());
-  }
-
-  handleSelectRoomCloseOnFailure() {
-    const { dispatch } = this.props;
-    dispatch(selectRoomClose());
-    this.handleChooseGameModeOpen();
-  }
-
-  onPVCmodeSelected() {
-    const { dispatch } = this.props;
-    dispatch(updateGameMode('AI'));
-    dispatch(selectGameModeClose());
-    dispatch(selectSideOpen());
-  }
-
-  onCVCmodeSelected() {
-    const { dispatch } = this.props;
-    dispatch(selectGameModeClose());
-  }
-
-  onPVPmodeSelected() {
-    const { dispatch } = this.props;
-    dispatch(updateGameMode('default'));
-    dispatch(selectGameModeClose());
-    this.socket.emit('getAllRooms', this.socket.id);
-    dispatch(selectRoomOpen());
   }
 
   onAgreePauseRequest() {
@@ -589,74 +541,19 @@ class App extends Component {
         onTouchTap={this.handleCancelResumeClose}
       />,
     ];
-    const chooseGameModeActionsStyle = {
-      margin: '1px',
-      padding: '1px',
-    };
-
-    const chooseGameModeActions = [
-      <RaisedButton
-        style={chooseGameModeActionsStyle}
-        label="Player vs Player"
-        fullWidth
-        secondary
-        onTouchTap={this.onPVPmodeSelected}
-      />,
-      <RaisedButton
-        style={chooseGameModeActionsStyle}
-        label="Player vs AI"
-        fullWidth
-        secondary
-        onTouchTap={this.onPVCmodeSelected}
-      />,
-      <RaisedButton
-        style={chooseGameModeActionsStyle}
-        label="AI vs AI"
-        fullWidth
-        secondary
-        onTouchTap={this.onCVCmodeSelected}
-      />,
-    ];
 
     const selectRoomActions = [
       <RaisedButton
-        label="Go back"
+        label="Close"
         secondary
         keyboardFocused
-        onTouchTap={this.handleSelectRoomCloseOnFailure}
-      />,
-    ];
-
-    const selectSideActionsStyle = {
-      margin: '1px',
-      padding: '1px',
-    };
-
-    const selectSideActions = [
-      <RaisedButton
-        label="White"
-        style={selectSideActionsStyle}
-        primary
-        onTouchTap={this.handleCreateRoomAsWhite}
-      />,
-      <RaisedButton
-        label="Black"
-        style={selectSideActionsStyle}
-        primary
-        onTouchTap={this.handleCreateRoomAsBlack}
-      />,
-      <RaisedButton
-        label="Go back"
-        style={selectSideActionsStyle}
-        secondary
-        onTouchTap={this.handleSelectSideCloseOnFailure}
+        onTouchTap={this.closeDialog}
       />,
     ];
 
     const surrenderActions = [
       <RaisedButton
         label="Ok"
-        style={selectSideActionsStyle}
         secondary
         onTouchTap={this.handleAnnounceSurrenderClose}
       />,
@@ -775,31 +672,24 @@ class App extends Component {
                 handleClose={this.handleAnnounceSurrenderClose}
               />
             </div>
-            <div className="control-login">
-              <Alert
-                className="choose-mode"
-                title={`Welcome to Deep Red | Chess Master: ${thisUser}`}
-                actions={chooseGameModeActions}
-                open={chooseGameModeOpen}
-              />
-            </div>
             <div className="control-room">
               <Alert
-                createNewPVPRoom={this.createNewPVPRoom}
+                thisUser={thisUser}
                 allRooms={allRooms}
+                handleCreateRoomAsWhite={this.handleCreateRoomAsWhite}
+                handleCreateRoomAsBlack={this.handleCreateRoomAsBlack}
                 handleJoinRoomAsBlack={this.handleJoinRoomAsBlack}
                 handleJoinRoomAsWhite={this.handleJoinRoomAsWhite}
+                sendMessageGlobal={this.sendMessageGlobal}
+                sendMessageLocal={this.sendMessageLocal}
+                messagesGlobal={messagesGlobal}
+                messagesLocal={messagesLocal}
+                isWhite={isWhite}
                 showRooms
                 className="choose-room"
                 title={'Choose or create a room to join:'}
                 actions={selectRoomActions}
                 open={chooseRoomOpen}
-              />
-              <Alert
-                className="choose-side"
-                title={'Select your color:'}
-                actions={selectSideActions}
-                open={chooseSideOpen}
               />
             </div>
           </div>

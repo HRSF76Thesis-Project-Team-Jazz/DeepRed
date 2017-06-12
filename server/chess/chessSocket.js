@@ -39,14 +39,15 @@ module.exports = (io, client) => {
       }
       roomInfo.count = count;
       allRooms[count] = roomInfo;
-      io.to(room).emit('createRoomAsWhiteComplete', roomInfo, allRooms);
+      io.emit('updateAllRooms', allRooms);
+      io.to(room).emit('createRoomCompleted', roomInfo, allRooms);
       if (gameMode === 'AI') {
         roomInfo.playerB = 'AI';
         roomInfo.playerBemail = 'AI@AI';
         roomInfo.playerBid = 12345;
         roomInfo.playerBtime = 600;
         roomInfo.playerBclicked = false;
-        io.in(room).emit('joinRoomAsBlackComplete', roomInfo, allRooms);
+        io.in(room).emit('joinRoomCompleted', roomInfo, allRooms);
         io.emit('updateAllRooms', allRooms);
       }
       count += 1;
@@ -74,7 +75,8 @@ module.exports = (io, client) => {
       }
       roomInfo.count = count;
       allRooms[count] = roomInfo;
-      io.to(room).emit('createRoomAsBlackComplete', roomInfo, allRooms);
+      io.emit('updateAllRooms', allRooms);
+      io.to(room).emit('createRoomCompleted', roomInfo, allRooms);
       if (gameMode === 'AI') {
         roomInfo.playerW = 'AI';
         roomInfo.playerWemail = 'AI@AI';
@@ -83,7 +85,7 @@ module.exports = (io, client) => {
         roomInfo.playerWclicked = false;
         const currentGame = allGames[room];
         currentGame.moveAI();
-        io.in(room).emit('joinRoomAsWhiteComplete', roomInfo, allRooms, currentGame);
+        io.in(room).emit('joinRoomCompleted', roomInfo, allRooms, currentGame);
         io.emit('updateAllRooms', allRooms);
       }
       count += 1;
@@ -100,7 +102,7 @@ module.exports = (io, client) => {
       allRooms[clientCount].playerWclicked = false;
       // createAndSaveNewGame(allRooms[clientCount].room);
       const currentGame = allGames[allRooms[clientCount].room];
-      io.in(allRooms[clientCount].room).emit('joinRoomAsWhiteComplete', allRooms[clientCount], allRooms, currentGame);
+      io.in(allRooms[clientCount].room).emit('joinRoomCompleted', allRooms[clientCount], allRooms, currentGame);
       io.emit('updateAllRooms', allRooms);
     });
   });
@@ -114,7 +116,7 @@ module.exports = (io, client) => {
       allRooms[clientCount].playerBclicked = false;
       // createAndSaveNewGame(allRooms[clientCount].room);
       const currentGame = allGames[allRooms[clientCount].room];
-      io.in(allRooms[clientCount].room).emit('joinRoomAsBlackComplete', allRooms[clientCount], allRooms, currentGame);
+      io.in(allRooms[clientCount].room).emit('joinRoomCompleted', allRooms[clientCount], allRooms, currentGame);
       io.emit('updateAllRooms', allRooms);
     });
   });
