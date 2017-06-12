@@ -11,7 +11,7 @@ import {
   updateRoomInfo, getRequestFailure, receiveGame, movePiece, resetBoolBoard,
   unselectPiece, capturePiece, displayError, colorSquare, sendMsgLocal, sendMsgGlobal,
   updateTimerB, timeInstanceB, updateTimerW, timeInstanceW, saveBoolBoard, castlingMove,
-  selectGameModeClose, selectGameModeOpen, selectRoomOpen, selectRoomClose,
+  selectGameModeClose, selectRoomOpen, selectRoomClose,
   selectSideOpen, selectSideClose, updateAllRooms, updateRoomQueue, setPlayerId,
   enPassantMove, pawnPromotionMove, resumeDialogOpen, resumeDialogClose, cancelResumeDialogOpen,
   cancelResumeDialogClose, announceSurrenderDialogOpen, announceSurrenderDialogClose,
@@ -47,6 +47,7 @@ class App extends Component {
     this.toggleTimers = this.toggleTimers.bind(this);
     this.decrementTimerB = this.decrementTimerB.bind(this);
     this.decrementTimerW = this.decrementTimerW.bind(this);
+    this.closeDialog = this.closeDialog.bind(this);
     this.sendPauseRequest = this.sendPauseRequest.bind(this);
     this.sendResumeRequest = this.sendResumeRequest.bind(this);
     this.handlePauseOpen = this.handlePauseOpen.bind(this);
@@ -70,13 +71,19 @@ class App extends Component {
     this.handleAnnounceSurrenderClose = this.handleAnnounceSurrenderClose.bind(this);
     this.updateUserGameStat = this.updateUserGameStat.bind(this);
     this.winLoseResult = this.winLoseResult.bind(this);
-    this.closeDialog = this.closeDialog.bind(this);
-    // this.watson = this.watson.bind(this);
+    this.deepRedConversation = this.deepRedConversation.bind(this);
   }
 
   componentDidMount() {
     this.getUserInfo();
-    // this.watson();
+    this.deepRedConversation('Player-lose', 'nice move');
+  }
+
+  onChangePlayerTurn() {
+    const { room, count, timeB, timeW } = this.props;
+    this.stopTimerB();
+    this.stopTimerW();
+    this.socket.emit('updateTime', room, count, timeB, timeW);
   }
 
   getUserInfo() {
@@ -96,20 +103,27 @@ class App extends Component {
         console.error('failed to obtain current user infomation!', err);
       });
   }
+  // this.deepRedConversation(`${player1}-win`);
+  deepRedConversation(context, message) {
+    const payload = {
+      intent: {
+        intent: context || {},
+      },
+      input: {
+        input: message || {},
+      },
+    };
+    axios.post('/api/game/conversation', payload)
+      .then((response) => {
+        console.log('message sent!', response);
+        const { dispatch, playerW, playerB, playerWid, playerBid, thisUser, thisUserId} = this.props;
+        
 
-  // watson() {
-  //   const option = {
-  //     text: 'nice move',
-  //   };
-
-  //   axios.post(option, '/api/game/conversation')
-  //     .then((response) => {
-  //       console.log('message sent!', response);
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //     });
-  // }
+      })
+      .catch((err) => {
+        console.error('failed to send message to watson conversation service: ', err);
+      });
+  }
 
   updateUserGameStat(arr) {
     axios.post('/api/game/updateUserGameStat', arr)
@@ -122,9 +136,7 @@ class App extends Component {
   }
 
   startSocket() {
-    const { dispatch, playerW, playerB, thisUser, thisEmail, room, count,
-       gameTurn, timeB, timeW } = this.props;
-
+    const { dispatch, thisUser, thisEmail } = this.props;
     const name = thisUser;
     const email = thisEmail;
     // instantiate socket instance on the client side
@@ -248,7 +260,7 @@ class App extends Component {
         this.decrementTimerB();
       }
     });
-
+    
     this.socket.on('announceSurrender', (playerName) => {
       const { playerW, playerB, playerWemail, playerBemail } = this.props;
       if (playerName === playerW) {
@@ -337,13 +349,6 @@ class App extends Component {
     const { dispatch, timeW, counterWinstance } = this.props;
     dispatch(updateTimerW(timeW));
     clearInterval(counterWinstance);
-  }
-
-  onChangePlayerTurn() {
-    const { room, count, timeB, timeW } = this.props;
-    this.stopTimerB();
-    this.stopTimerW();
-    this.socket.emit('updateTime', room, count, timeB, timeW);
   }
 
   // CONTROL function
