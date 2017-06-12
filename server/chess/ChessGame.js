@@ -11,7 +11,7 @@ const isLegalMove = require('./isLegalMove');
 const { isCheckmateWhite, isStalemateBlack, blackIsChecked, isCheckmateBlack,
 isStalemateWhite, whiteIsChecked } = require('./deepRed/endGameChecks');
 const { whiteMove, blackMove } = require('./deepRed/playerVsAI');
-const { encodeWithState, decodeWithState } = require('./chessEncode');
+const { encodeWithState } = require('./chessEncode');
 
 class ChessGame {
 
@@ -40,7 +40,7 @@ class ChessGame {
     this.playerInCheck = null;
     this.winner = null;
     this.moveHistoryEntry = [];
-    this.event = '';
+    this.event = [];
   }
 
   movePiece(origin, dest, pawnPromotionValue = null, gameMode = 'default') {
@@ -48,6 +48,7 @@ class ChessGame {
     if (error) {
       return { game: this, error };
     }
+    this.event = [];
     const originPiece = this.board[origin[0]][origin[1]];
     const destPiece = this.board[dest[0]][dest[1]];
     const legalMoveResult = isLegalMove(this, origin, dest);
@@ -71,6 +72,7 @@ class ChessGame {
       // handle castling
       if (legalMoveResult.castling) {
         this.castlingMove(legalMoveResult.castling);
+        this.event.push('castle');
       }
       this.toggleMovedRooksOrKings(origin, originPiece);
       // handle toggling en Passant
@@ -78,11 +80,13 @@ class ChessGame {
         const pawn = this.board[this.canEnPassant[0]][this.canEnPassant[1]];
         this.addToCaptureArray(pawn);
         this.board[this.canEnPassant[0]][this.canEnPassant[1]] = null;
+        this.event.push('enpassant');
       }
       this.canEnPassant = legalMoveResult.canEnPassant || [];
       // add to capture array
       if (destPiece) {
         this.addToCaptureArray(destPiece);
+        this.event.push(destPiece);
       }
 
       // swap location
@@ -94,6 +98,7 @@ class ChessGame {
       if (pawnPromotionValue) {
         pawnPromotionPiece = originPiece[0] + pawnPromotionValue;
         this.promotePawn(originPiece, dest, pawnPromotionPiece);
+        this.event.push(`=${pawnPromotionPiece}`);
       }
       // check for check/checkmate/stalemate
       const pieceStateForEncode = this.generatePieceState();
@@ -248,6 +253,11 @@ class ChessGame {
         this.playerInCheck = null;
       }
     }
+    if (this.winner) {
+      this.event.push(`#${this.winner}`);
+    } else if (this.playerInCheck) {
+      this.event.push(`+${this.playerInCheck}`);
+    }
   }
 
   generatePieceState() {
@@ -273,6 +283,9 @@ class ChessGame {
   }
 
   generateMoveHistoryEntry(origin, dest, destPiece, pawnPromotionValue, legalMoveResult) {
+    const cols = 'abcdefgh';
+    const from = cols[origin[1]] + (8 - origin[0]);
+    const to = cols[dest[1]] + (8 - dest[0]);
     let returnStr = '';
     if (legalMoveResult.castling) {
       if (legalMoveResult.castling[2] === 'Q') {
@@ -281,9 +294,9 @@ class ChessGame {
         return 'O-O';
       }
     } else if (legalMoveResult.enPassant || destPiece) {
-      returnStr = `${origin} X ${dest}`;
+      returnStr = `${from} X ${to}`;
     } else {
-      returnStr = `${origin} - ${dest}`;
+      returnStr = `${from} - ${to}`;
     }
     if (pawnPromotionValue) {
       returnStr += ` = ${pawnPromotionValue}`;
