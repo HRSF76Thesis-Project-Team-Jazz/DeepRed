@@ -8,7 +8,8 @@
 // K = King
 
 const isLegalMove = require('./isLegalMove');
-const { isCheckmateWhite, isStalemateBlack, blackIsChecked, isCheckmateBlack, isStalemateWhite, whiteIsChecked } = require('./deepRed/endGameChecks');
+const { isCheckmateWhite, isStalemateBlack, blackIsChecked, isCheckmateBlack,
+isStalemateWhite, whiteIsChecked } = require('./deepRed/endGameChecks');
 const { whiteMove, blackMove, mutateBoard } = require('./deepRed/playerVsAI');
 
 const transcribeBoard = board => board.map((row) => {
@@ -138,6 +139,7 @@ class ChessGame {
     // console.log(error);
     return { game: this, error: 'Move is not allowed.' };
   }
+
   errorCheck(origin, dest) {
     let error = null;
     if (dest === undefined) {
@@ -173,6 +175,7 @@ class ChessGame {
     }
     return error;
   }
+
   castlingMove(castlingStr) {
     if (castlingStr === 'BRQ') {
       this.board[0][3] = 'BR';
@@ -196,6 +199,7 @@ class ChessGame {
       this.hasMovedWK = true;
     }
   }
+
   toggleMovedRooksOrKings(origin, originPiece) {
     if (originPiece === 'WK' && JSON.stringify(origin) === JSON.stringify([7, 4])) {
       this.hasMovedWK = true;
@@ -216,6 +220,7 @@ class ChessGame {
       this.hasMovedBRK = true;
     }
   }
+
   addToCaptureArray(piece) {
     if (piece[0] === 'W') {
       this.blackCapPieces.push(piece);
@@ -223,11 +228,13 @@ class ChessGame {
       this.whiteCapPieces.push(piece);
     }
   }
+
   promotePawn(originPiece, dest, pawnPromotionPiece) {
     if ((originPiece === 'WP' && dest[0] === 0) || (originPiece === 'BP' && dest[0] === 7)) {
       this.board[dest[0]][dest[1]] = pawnPromotionPiece;
     }
   }
+
   checkAllMovesOfOrigin(origin) {
     const resultBoard = [];
     for (let i = 0; i < 8; i += 1) {
@@ -240,6 +247,7 @@ class ChessGame {
     }
     return resultBoard;
   }
+
   endGameChecks() {
     if (this.turn === 'W') {
       if (isCheckmateWhite(this.board)) {
@@ -263,6 +271,7 @@ class ChessGame {
       }
     }
   }
+
   moveAI() {
     const pieceState = {
       hasMovedWK: this.hasMovedWK,
@@ -280,6 +289,20 @@ class ChessGame {
     } else if (this.turn === 'B') {
       deepRedMove = blackMove(this.board, pieceState);
     }
+    if (Array.isArray(deepRedMove[0])) {
+      console.log(deepRedMove[0][1]);
+      const deepRedDest = deepRedMove[0][1];
+      const deepRedCapPiece = this.board[deepRedDest[0]][deepRedDest[1]];
+      if (deepRedCapPiece) {
+        this.addToCaptureArray(deepRedCapPiece);
+      }
+    } else if (deepRedMove[0].move === 'enpassant') {
+      if (this.turn === 'W') {
+        this.addToCaptureArray('BP');
+      } else if (this.turn === 'B') {
+        this.addToCaptureArray('WP');
+      }
+    }
     this.board = mutateBoard(this.board, deepRedMove[0]);
     const newState = deepRedMove[1];
     this.hasMovedWK = newState.hasMovedWK;
@@ -292,6 +315,7 @@ class ChessGame {
     this.canEnPassantB = newState.canEnPassant;
     this.turn = (this.turn === 'W') ? 'B' : 'W';
   }
+
 }
 
 module.exports = ChessGame;
