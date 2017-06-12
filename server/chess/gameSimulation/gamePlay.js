@@ -1,7 +1,7 @@
-const safeMoves = require('./safeMoves');
-const endGameChecks = require('./endGameChecks');
-const basic = require('./basic');
-const display = require('./display');
+const safeMoves = require('../deepRed/safeMoves');
+const endGameChecks = require('../deepRed/endGameChecks');
+const basic = require('../deepRed/basic');
+const display = require('../deepRed/display');
 const chessEncode = require('../chessEncode');
 const gameConfig = require('./gameConfig');
 
@@ -201,7 +201,7 @@ const simulateGames = (number, displayAll, displayFn) => {
     gameSummary.games += 1;
 
     let board = [
-      ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
+      ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
       ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
       // [null, null, null, 'BK', null, null, null, null],
       // [null, null, null, null, null, null, null, null],
@@ -210,7 +210,7 @@ const simulateGames = (number, displayAll, displayFn) => {
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-      ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
+      ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
     ];
 
     transcribeCount += transcribeBoard(board).length;

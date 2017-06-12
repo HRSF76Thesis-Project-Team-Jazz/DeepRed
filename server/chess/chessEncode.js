@@ -245,7 +245,6 @@ const decodeBoard = (code) => {
   return board;
 };
 
-
 /**
  * Returns string of encoded board and state
  * @param {array} board = 8 x 8 array of arrays
@@ -286,7 +285,6 @@ const encodeWithState = (board, pieceState) => {
 
   return result;
 };
-
 
 const decodeWithState = (codeWithState) => {
   const array = codeWithState.split('|');
