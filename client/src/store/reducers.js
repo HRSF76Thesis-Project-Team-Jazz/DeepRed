@@ -47,6 +47,8 @@ const gameState = (state = Immutable({
         gameTurn: action.game.turn,
         playerInCheck: action.game.playerInCheck,
         winner: action.game.winner,
+        // moveHistory: state.moveHistory.concat([...action.game.moveHistoryEntry]),
+        moveHistory: action.game.moveHistoryEntry,
       });
     }
     case types.MOVE_PIECE: {
