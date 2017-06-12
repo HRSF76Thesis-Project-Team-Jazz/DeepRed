@@ -12,7 +12,7 @@
 
 # Move Decisions (from Experience / Known Choices)
 - **Deep Red chooses its move based on its experience**: Deep Red chooses the previously known / learned move that has resulted in the best possible outcome
-  - Best possible outcome is measured by how may times a particular choice or path has resulted in a favorable win / loss ratio
+  - Best possible outcome is measured by how many times a particular choice or path has resulted in a favorable win / loss ratio
   - Win loss ratio is based on aggregate amount of wins and losses for that entire subtree
 
 ![](images/deepRed-decisions.png?raw=true)
