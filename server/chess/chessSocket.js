@@ -81,7 +81,9 @@ module.exports = (io, client) => {
         roomInfo.playerWid = 12345;
         roomInfo.playerWtime = 600;
         roomInfo.playerWclicked = false;
-        io.in(room).emit('joinRoomAsWhiteComplete', roomInfo, allRooms);
+        const currentGame = allGames[room];
+        currentGame.moveAI();
+        io.in(room).emit('joinRoomAsWhiteComplete', roomInfo, allRooms, currentGame);
         io.emit('updateAllRooms', allRooms);
       }
       count += 1;
