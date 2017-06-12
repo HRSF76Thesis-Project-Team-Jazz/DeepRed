@@ -124,8 +124,8 @@ class ChessGame {
         this.moveAI();
       }
       // console.log(this.history);
-      console.log(this.board);
-      console.log('Move piece is successful.');
+      // console.log(this.board);
+      // console.log('Move piece is successful.');
       return {
         game: this,
         error: null,
@@ -291,7 +291,6 @@ class ChessGame {
     this.canEnPassantW = newState.canEnPassant;
     this.canEnPassantB = newState.canEnPassant;
     this.turn = (this.turn === 'W') ? 'B' : 'W';
-    console.log('************************', this);
   }
 }
 
