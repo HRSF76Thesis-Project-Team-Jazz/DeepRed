@@ -3,17 +3,29 @@ import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import './css/Room.css';
 
+const selectSideActionsStyle = {
+  margin: '1px',
+  padding: '1px',
+};
 
-const Room = ({ allRooms, createNewPVPRoom, handleJoinRoomAsBlack, handleJoinRoomAsWhite }) => (
+const Room = ({ allRooms, handleJoinRoomAsBlack, handleJoinRoomAsWhite,
+handleCreateRoomAsWhite, handleCreateRoomAsBlack, thisUser }) => (
   <div className="room-container">
-    <p className="dialog-box-title">Choose or create a room to join!</p>
+    <h3>{`Welcome to Deep Red | Chess Master: ${thisUser}`}</h3>
+    <p>Player vs Player</p>
     <RaisedButton
-      className="create-room-button"
-      label="Create new room"
-      primary
-      onTouchTap={createNewPVPRoom}
+      label="White"
+      style={selectSideActionsStyle}
+      secondary
+      onTouchTap={() => handleCreateRoomAsWhite('default')}
     />
-    <p className="dialog-box-title">Existing rooms: </p>
+    <RaisedButton
+      label="Black"
+      style={selectSideActionsStyle}
+      primary
+      onTouchTap={() => handleCreateRoomAsBlack('default')}
+    />
+    <p>Existing rooms: </p>
     <tbody>
       {
         allRooms.map((room) => {
@@ -51,8 +63,27 @@ const Room = ({ allRooms, createNewPVPRoom, handleJoinRoomAsBlack, handleJoinRoo
         })
       }
     </tbody>
+    <p>Player vs DeepRed</p>
+    <RaisedButton
+      label="White"
+      style={selectSideActionsStyle}
+      secondary
+      onTouchTap={() => handleCreateRoomAsWhite('AI')}
+    />
+    <RaisedButton
+      label="Black"
+      style={selectSideActionsStyle}
+      primary
+      onTouchTap={() => handleCreateRoomAsBlack('AI')}
+    />
   </div>
 );
 
 export default Room;
 
+// <RaisedButton
+//  className="create-room-button"
+//  label="Create new room"
+//  primary
+//  onTouchTap={createNewPVPRoom}
+// />

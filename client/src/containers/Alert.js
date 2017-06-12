@@ -13,15 +13,19 @@ import Room from '../components/Room';
 // };
 
 const Alert = ({ title, open, actions, handleClose, showRooms,
-allRooms, createNewPVPRoom, handleJoinRoomAsBlack, handleJoinRoomAsWhite }) => (
+allRooms, createNewPVPRoom, handleJoinRoomAsBlack, handleJoinRoomAsWhite,
+handleCreateRoomAsWhite, handleCreateRoomAsBlack, thisUser,  }) => (
   <div>
     <Dialog
       title={showRooms === true ?
         <Room
+          thisUser={thisUser}
           allRooms={allRooms}
           createNewPVPRoom={createNewPVPRoom}
           handleJoinRoomAsBlack={handleJoinRoomAsBlack}
           handleJoinRoomAsWhite={handleJoinRoomAsWhite}
+          handleCreateRoomAsWhite={handleCreateRoomAsWhite}
+          handleCreateRoomAsBlack={handleCreateRoomAsBlack}
         />
         : title}
       actions={actions}

@@ -81,10 +81,12 @@ class App extends Component {
     this.handleAnnounceSurrenderClose = this.handleAnnounceSurrenderClose.bind(this);
     this.updateUserGameStat = this.updateUserGameStat.bind(this);
     this.winLoseResult = this.winLoseResult.bind(this);
+    // this.watson = this.watson.bind(this);
   }
 
   componentDidMount() {
     this.getUserInfo();
+    // this.watson();
   }
 
   getUserInfo() {
@@ -95,14 +97,30 @@ class App extends Component {
         dispatch(setPlayer(response));
       })
       .then(() => {
-        this.handleChooseGameModeOpen();
+        // this.handleChooseGameModeOpen();
+        dispatch(selectRoomOpen());
         this.startSocket();
       })
+
       .catch((err) => {
         dispatch(getRequestFailure(err));
         console.error('failed to obtain current user infomation!', err);
       });
   }
+
+  // watson() {
+  //   const option = {
+  //     text: 'nice move',
+  //   };
+
+  //   axios.post(option, '/api/game/conversation')
+  //     .then((response) => {
+  //       console.log('message sent!', response);
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+  // }
 
   updateUserGameStat(arr) {
     axios.post('/api/game/updateUserGameStat', arr)
@@ -138,14 +156,14 @@ class App extends Component {
       dispatch(updateAllRooms(allRooms));
       dispatch(updateRoomInfo(roomInfo));
       this.socket.emit('getAllRooms', this.socket.id);
-      dispatch(selectSideClose());
+      dispatch(selectRoomClose());
     });
 
     this.socket.on('createRoomAsBlackComplete', (roomInfo, allRooms) => {
       dispatch(updateAllRooms(allRooms));
       dispatch(updateRoomInfo(roomInfo));
       this.socket.emit('getAllRooms', this.socket.id);
-      dispatch(selectSideClose());
+      dispatch(selectRoomClose());
     });
 
     this.socket.on('joinRoomAsWhiteComplete', (roomInfo, allRooms, game) => {
@@ -372,14 +390,16 @@ class App extends Component {
     dispatch(selectSideOpen());
   }
 
-  handleCreateRoomAsBlack() {
-    const { thisUser, thisEmail, gameMode } = this.props;
-    this.socket.emit('createRoomAsBlack', thisUser, thisEmail, this.socket.id, gameMode);
+  handleCreateRoomAsBlack(mode) {
+    const { dispatch, thisUser, thisEmail } = this.props;
+    dispatch(updateGameMode(mode));
+    this.socket.emit('createRoomAsBlack', thisUser, thisEmail, this.socket.id, mode);
   }
 
-  handleCreateRoomAsWhite() {
-    const { thisUser, thisEmail, gameMode } = this.props;
-    this.socket.emit('createRoomAsWhite', thisUser, thisEmail, this.socket.id, gameMode);
+  handleCreateRoomAsWhite(mode) {
+    const { dispatch, thisUser, thisEmail } = this.props;
+    dispatch(updateGameMode(mode));
+    this.socket.emit('createRoomAsWhite', thisUser, thisEmail, this.socket.id, mode);
   }
 
   handleJoinRoomAsWhite(count) {
@@ -789,6 +809,9 @@ class App extends Component {
             <div className="control-room">
               <Alert
                 createNewPVPRoom={this.createNewPVPRoom}
+                handleCreateRoomAsWhite={this.handleCreateRoomAsWhite}
+                handleCreateRoomAsBlack={this.handleCreateRoomAsBlack}
+                thisUser={thisUser}
                 allRooms={allRooms}
                 handleJoinRoomAsBlack={this.handleJoinRoomAsBlack}
                 handleJoinRoomAsWhite={this.handleJoinRoomAsWhite}
