@@ -1,12 +1,9 @@
 .message-list {
-  /*border-radius: 5px;*/
-  margin: 1vw;
+  margin: 2px;
   padding: 0px;
 }
 .message {
-  /*border-radius: 5px;*/
-  /*margin: 1vw;*/
-  padding-top: 1vh;
+  padding-top: 2px;
 }
 .text-field {
   margin-left: 1vw;

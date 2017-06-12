@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
 import { red50, red900 } from 'material-ui/styles/colors';
 // import Messages from './Messages'
 
@@ -19,8 +18,13 @@ class ChatBoxLocal extends Component {
 
   submit(info) {
     info.preventDefault();
-    this.props.sendMessageLocal(this.state.message);
-    this.state.message = '';
+    this.props.sendMessageLocal({
+      user: this.props.thisUser,
+      color: (this.props.isWhite) ? 'W' : 'B',
+      message: this.state.message,
+      timeStamp: new Date(),
+    });
+    this.setState({ message: '' });
   }
 
   handleChange(info) {
@@ -37,7 +41,7 @@ class ChatBoxLocal extends Component {
 
   render() {
     return (
-        <div>
+      <div>
         <form>
           <TextField
             className="text-field"
@@ -49,15 +53,8 @@ class ChatBoxLocal extends Component {
             onChange={this.handleChange}
             onKeyDown={this.handleKeyDown}
           />
-          {/* <RaisedButton
-            label="Submit"
-            style={{ margin: 12 }}
-            onClick={info => this.submit(info)}
-            backgroundColor="#600003"
-            labelColor={red50}
-          /> */}
         </form>
-        </div>
+      </div>
     );
   }
 }

@@ -27,7 +27,7 @@ const MobileTearSheet = React.createClass({
         border: 'solid 0px #d9d9d9',
         borderBottom: 'none',
         height: this.props.height,
-        minHeight: '24vw',
+        minHeight: '30vw',
         maxHeight: '24vw',
         overflow: 'auto',
       },

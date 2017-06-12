@@ -249,6 +249,7 @@ module.exports = (io, client) => {
 
   // messaging communications
   client.on('messageLocal', (msg, count) => {
+    console.log('MESSAGE: ', msg);
     let user = '';
     for (let key in allRooms[count]) {
       if (allRooms[count][key] === client.id) {
@@ -259,7 +260,7 @@ module.exports = (io, client) => {
         }
       }
     }
-    io.in(allRooms[count].room).emit('messageLocal', `${user}: ${msg}`);
+    io.in(allRooms[count].room).emit('messageLocal', msg);
   });
 
   client.on('messageGlobal', (msg, count) => {
@@ -273,6 +274,6 @@ module.exports = (io, client) => {
         }
       }
     }
-    io.emit('messageGlobal', `${user}: ${msg}`);
+    io.emit('messageGlobal', msg);
   });
 };

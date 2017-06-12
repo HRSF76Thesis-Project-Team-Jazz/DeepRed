@@ -728,7 +728,14 @@ class App extends Component {
 
             <div className="flex-col right-col">
               <Message message={error} />
-              <Messages messagesLocal={messagesLocal} sendMessageLocal={this.sendMessageLocal} messagesGlobal={messagesGlobal} sendMessageGlobal={this.sendMessageGlobal} />
+              <Messages
+                messagesLocal={messagesLocal}
+                sendMessageLocal={this.sendMessageLocal}
+                messagesGlobal={messagesGlobal}
+                sendMessageGlobal={this.sendMessageGlobal}
+                isWhite={isWhite}
+                thisUser={thisUser}
+              />
             </div>
 
             <div className="control-general">
