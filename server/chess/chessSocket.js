@@ -240,8 +240,6 @@ module.exports = (io, client) => {
   });
 
   client.on('updateTime', (clientRoom, clientCount, timeB, timeW) => {
-    // console.log('room: ', clientRoom, 'count: ', clientCount,
-    // 'timeB: ', timeB, 'timeW: ', timeW);
     allRooms[clientCount].playerBtime = timeB;
     allRooms[clientCount].playerWtime = timeW;
     io.in(clientRoom).emit('sendUpdatedTime', allRooms[clientCount]);
@@ -249,7 +247,6 @@ module.exports = (io, client) => {
 
   // messaging communications
   client.on('messageLocal', (msg, count) => {
-    console.log('MESSAGE: ', msg);
     let user = '';
     for (let key in allRooms[count]) {
       if (allRooms[count][key] === client.id) {
