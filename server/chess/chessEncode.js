@@ -315,66 +315,6 @@ const decodeWithState = (codeWithState) => {
   return [board, state];
 };
 
-/**
- * TESTING
- */
-
-let board = [
-  ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR'],
-  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-  ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
-];
-
-let pieceState = {
-  hasMovedWK: false,
-  hasMovedWKR: false,
-  hasMovedWQR: false,
-  hasMovedBK: false,
-  hasMovedBKR: false,
-  hasMovedBQR: false,
-  canEnPassantW: '',
-  canEnPassantB: '',
-};
-
-// console.log(JSON.stringify(board) ===
-//   JSON.stringify(decodeWithState(encodeWithState(board, pieceState))[0]));
-// console.log(JSON.stringify(pieceState) ===
-//   JSON.stringify(decodeWithState(encodeWithState(board, pieceState))[1]));
-
-// board = [
-//   ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', null],
-//   ['BP', null, 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
-//   [null, null, null, null, null, null, null, null],
-//   [null, null, null, null, null, null, null, 'BR'],
-//   ['WP', 'BP', null, null, null, null, null, null],
-//   ['WR', null, null, 'WP', null, null, null, null],
-//   [null, 'WP', 'WP', 'WK', 'WP', 'WP', 'WP', 'WP'],
-//   [null, 'WN', 'WB', 'WQ', null, 'WB', 'WN', 'WR'],
-// ];
-
-// pieceState = {
-//   hasMovedWK: false,
-//   hasMovedWKR: false,
-//   hasMovedWQR: true,
-//   hasMovedBK: false,
-//   hasMovedBKR: true,
-//   hasMovedBQR: false,
-//   canEnPassantW: '',
-//   canEnPassantB: '40',
-// };
-
-// console.log(encodeWithState(board, pieceState));
-// console.log(JSON.stringify(board) ===
-//   JSON.stringify(decodeWithState(encodeWithState(board, pieceState))[0]));
-// console.log(JSON.stringify(pieceState) ===
-//   JSON.stringify(decodeWithState(encodeWithState(board, pieceState))[1]));
-
-
 module.exports = {
   transcribeBoard,
   encodeBoard,
