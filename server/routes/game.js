@@ -22,7 +22,7 @@ const processResponse = (err, response) => {
     if (!response.output) {
       response.output = {};
     }
-    // console.log('response: ', response);
+    console.log('response: ', response);
     return response;
   }
 };
@@ -33,7 +33,7 @@ router.route('/')
     res.status(200).send(JSON.stringify(newGame));
   })
   .post((req, res) => {
-    console.log('in the correct route');
+    // console.log('in the correct route');
     res.status(201).send({ data: 'Posted!' });
   });
 
@@ -54,12 +54,14 @@ router.route('/conversation')
       input: req.body.input || {},
     };
 
-    conversation.message(payload, (err, data) => {
-      if (err) {
-        console.error('err occurred in watson conversation message function: ', err);
-      }
-      res.send(processResponse(err, data));
-    });
+    conversation.message(payload, processResponse);
+    res.send();
+    // conversation.message(payload, (err, data) => {
+      // if (err) {
+      //   console.error('err occurred in watson conversation message function: ', err);
+      // }
+      // res.send(processResponse(err, data));
+    // });
   });
 
 module.exports = router;

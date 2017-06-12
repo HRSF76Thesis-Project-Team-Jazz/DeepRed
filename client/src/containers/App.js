@@ -76,7 +76,7 @@ class App extends Component {
 
   componentDidMount() {
     this.getUserInfo();
-    this.deepRedConversation('Player-lose', 'nice move');
+    this.deepRedConversation('captureWin', 'WP');
   }
 
   onChangePlayerTurn() {
@@ -105,12 +105,18 @@ class App extends Component {
   }
   // this.deepRedConversation(`${player1}-win`);
   deepRedConversation(context, message) {
+    if(!message) {
+      message = '';
+    }
+    if(!context) {
+      context = '';
+    }
     const payload = {
       intent: {
-        intent: context || {},
+        intent: context,
       },
       input: {
-        input: message || {},
+        text: message,
       },
     };
     axios.post('/api/game/conversation', payload)
