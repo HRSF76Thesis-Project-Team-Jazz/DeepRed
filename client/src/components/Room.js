@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
+import Messages from './Messages';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 import './css/Room.css';
@@ -8,6 +9,11 @@ const selectSideActionsStyle = {
   margin: '1px',
   padding: '1px',
 };
+
+const messageStyle = {
+  width: '100%',
+  height: '100%',
+}
 
 const style = {
   height: 100,
@@ -18,7 +24,8 @@ const style = {
 };
 
 const Room = ({ allRooms, handleJoinRoomAsBlack, handleJoinRoomAsWhite,
-handleCreateRoomAsWhite, handleCreateRoomAsBlack, thisUser }) => (
+handleCreateRoomAsWhite, handleCreateRoomAsBlack, sendMessageGlobal,
+messagesGlobal, sendMessageLocal, messagesLocal, thisUser, isWhite }) => (
   <div className="container">
     <h3>{`Welcome to Deep Red | Chess Master: ${thisUser}`}</h3>
     <div className="room-container">
@@ -99,6 +106,15 @@ handleCreateRoomAsWhite, handleCreateRoomAsBlack, thisUser }) => (
       </div>
       <div className="grid">
         <p className="title-text">Global Chat</p>
+        {/*<Messages
+          style={messageStyle}
+          messagesLocal={messagesLocal}
+          sendMessageLocal={sendMessageLocal}
+          messagesGlobal={messagesGlobal}
+          sendMessageGlobal={sendMessageGlobal}
+          isWhite={isWhite}
+          thisUser={thisUser}
+        />*/}
       </div> 
     </div>
   </div>
@@ -106,9 +122,3 @@ handleCreateRoomAsWhite, handleCreateRoomAsBlack, thisUser }) => (
 
 export default Room;
 
-// <RaisedButton
-//  className="create-room-button"
-//  label="Create new room"
-//  primary
-//  onTouchTap={createNewPVPRoom}
-// />

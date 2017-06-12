@@ -22,7 +22,8 @@ const customContentStyle = {
 
 const Alert = ({ title, open, actions, handleClose, showRooms,
 allRooms, createNewPVPRoom, handleJoinRoomAsBlack, handleJoinRoomAsWhite,
-handleCreateRoomAsWhite, handleCreateRoomAsBlack, thisUser,  }) => (
+handleCreateRoomAsWhite, handleCreateRoomAsBlack, thisUser,
+messagesGlobal, sendMessageGlobal, sendMessageLocal, messagesLocal, isWhite }) => (
   <div>
     <Dialog 
       title={showRooms === true ?
@@ -34,6 +35,11 @@ handleCreateRoomAsWhite, handleCreateRoomAsBlack, thisUser,  }) => (
           handleJoinRoomAsWhite={handleJoinRoomAsWhite}
           handleCreateRoomAsWhite={handleCreateRoomAsWhite}
           handleCreateRoomAsBlack={handleCreateRoomAsBlack}
+          sendMessageGlobal={sendMessageGlobal}
+          sendMessageLocal={sendMessageLocal}
+          messagesGlobal={messagesGlobal}
+          messagesLocal={messagesLocal}
+          isWhite={isWhite}
         />
         : title}
       contentStyle={thisUser ? customContentStyle: null}
