@@ -1,5 +1,5 @@
 
-const NUMBER_OF_GAMES = 10;
+const NUMBER_OF_GAMES = 1000;
 const MAX_GAME_LENGTH = 100;
 
 module.exports = {

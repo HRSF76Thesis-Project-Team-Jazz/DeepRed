@@ -165,12 +165,14 @@ module.exports = (io, client) => {
   client.on('attemptMove', (origin, dest, selection, pawnPromoteType, clientRoom, gameMode) => {
     console.log('Attempted Move: ', origin, dest);
     console.log('Room Number: ', clientRoom);
-    const newGameState = allGames[clientRoom].movePiece(origin, dest, pawnPromoteType, gameMode);
-    io.in(clientRoom).emit('attemptMoveResult', newGameState.error, newGameState.game, origin, dest, selection);
+    if (allGames[clientRoom]) {
+      const newGameState = allGames[clientRoom].movePiece(origin, dest, pawnPromoteType, gameMode);
+      io.in(clientRoom).emit('attemptMoveResult', newGameState.error, newGameState.game, origin, dest, selection);
+    }
   });
 
   client.on('checkLegalMoves', (origin, clientRoom, id) => {
-    if (origin) {
+    if (origin && allGames[clientRoom]) {
       const boolBoard = allGames[clientRoom].checkAllMovesOfOrigin(origin);
       io.to(id).emit('checkLegalMovesResults', boolBoard);
     }
