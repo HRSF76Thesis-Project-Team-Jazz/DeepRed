@@ -58,6 +58,7 @@ class ChessGame {
     this.canEnPassant = [];
     this.playerInCheck = null;
     this.winner = null;
+    this.moveHistoryEntry = '';
   }
 
   movePiece(origin, dest, pawnPromotionValue = null, gameMode = 'default') {
@@ -120,7 +121,8 @@ class ChessGame {
 
       this.endGameChecks();
       this.turn = (this.turn === 'W') ? 'B' : 'W';
-
+      this.moveHistoryEntry = this.generateMoveHistoryEntry(origin, dest,
+        destPiece, pawnPromotionValue, legalMoveResult);
       if (gameMode === 'AI' && !this.winner) {
         this.moveAI();
       }
@@ -272,6 +274,29 @@ class ChessGame {
     }
   }
 
+  generateMoveHistoryEntry(origin, dest, destPiece, pawnPromotionValue, legalMoveResult) {
+    if (legalMoveResult.castling) {
+      if (legalMoveResult.castling[2] === 'Q') {
+        return 'O-O-O';
+      } else if (legalMoveResult.castling[2] === 'K') {
+        return 'O-O';
+      }
+    } else if (legalMoveResult.enPassant || destPiece) {
+      if (this.winner) {
+        return `${origin} X ${dest} #`;
+      } else if (this.playerInCheck) {
+        return `${origin} X ${dest} +`;
+      }
+      return `${origin} X ${dest}`;
+    }
+    if (this.winner) {
+      return `${origin} - ${dest} #`;
+    } else if (this.playerInCheck) {
+      return `${origin} - ${dest} +`;
+    }
+    return `${origin} - ${dest}`;
+  }
+
   moveAI() {
     const pieceState = {
       hasMovedWK: this.hasMovedWK,
@@ -290,7 +315,6 @@ class ChessGame {
       deepRedMove = blackMove(this.board, pieceState);
     }
     if (Array.isArray(deepRedMove[0])) {
-      console.log(deepRedMove[0][1]);
       const deepRedDest = deepRedMove[0][1];
       const deepRedCapPiece = this.board[deepRedDest[0]][deepRedDest[1]];
       if (deepRedCapPiece) {
