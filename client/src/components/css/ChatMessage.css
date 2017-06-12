@@ -1,0 +1,40 @@
+.chat-message-container {
+  border-radius: 2px;
+  margin: 2px;
+  padding: 5px;
+}
+.white-chat {
+  float: left;
+  clear: both;
+  text-align: left;
+  width: 90%;
+  background-color: white;
+  color: #383838;
+}
+.black-chat {
+  clear: both;
+  float: right;
+  text-align: right;
+  width: 90%;
+  background-color:#383838;
+  color: white;
+}
+.red-chat {
+  clear: both;
+  float: right;
+  text-align: right;
+  width: 90%;
+  background-color:#cc0000;
+  color: white;
+}
+.chat-message {
+  font-size: 1.5rem;
+}
+.chat-timeStamp {
+  clear: both;
+  font-size: 0.7rem;
+  color: white;
+  border-radius: 3px;
+  text-align: center;
+  margin-top: 5px;
+}

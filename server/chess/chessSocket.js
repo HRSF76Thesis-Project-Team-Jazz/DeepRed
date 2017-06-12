@@ -240,8 +240,6 @@ module.exports = (io, client) => {
   });
 
   client.on('updateTime', (clientRoom, clientCount, timeB, timeW) => {
-    // console.log('room: ', clientRoom, 'count: ', clientCount,
-    // 'timeB: ', timeB, 'timeW: ', timeW);
     allRooms[clientCount].playerBtime = timeB;
     allRooms[clientCount].playerWtime = timeW;
     io.in(clientRoom).emit('sendUpdatedTime', allRooms[clientCount]);
@@ -259,7 +257,7 @@ module.exports = (io, client) => {
         }
       }
     }
-    io.in(allRooms[count].room).emit('messageLocal', `${user}: ${msg}`);
+    io.in(allRooms[count].room).emit('messageLocal', msg);
   });
 
   client.on('messageGlobal', (msg, count) => {
@@ -273,6 +271,6 @@ module.exports = (io, client) => {
         }
       }
     }
-    io.emit('messageGlobal', `${user}: ${msg}`);
+    io.emit('messageGlobal', msg);
   });
 };
