@@ -10,7 +10,7 @@
 const isLegalMove = require('./isLegalMove');
 const { isCheckmateWhite, isStalemateBlack, blackIsChecked, isCheckmateBlack,
 isStalemateWhite, whiteIsChecked } = require('./deepRed/endGameChecks');
-const { whiteMove, blackMove, mutateBoard } = require('./deepRed/playerVsAI');
+const { whiteMove, blackMove } = require('./deepRed/playerVsAI');
 
 const transcribeBoard = board => board.map((row) => {
   const pieceIndex = {
@@ -59,6 +59,7 @@ class ChessGame {
     this.playerInCheck = null;
     this.winner = null;
     this.moveHistoryEntry = [];
+    this.event = '';
   }
 
   movePiece(origin, dest, pawnPromotionValue = null, gameMode = 'default') {
@@ -313,7 +314,7 @@ class ChessGame {
     }
     let deepRedOrigin;
     let deepRedDest;
-    let deepRedPawnPromotionValue;
+    let deepRedPawnPromotionValue = null;
     if (Array.isArray(deepRedMove[0])) {
       deepRedOrigin = [parseInt(deepRedMove[0][0][0], 10), parseInt(deepRedMove[0][0][1], 10)];
       deepRedDest = deepRedMove[0][1];
@@ -332,17 +333,6 @@ class ChessGame {
       }
     }
     this.movePiece(deepRedOrigin, deepRedDest, deepRedPawnPromotionValue, 'default');
-    // this.board = mutateBoard(this.board, deepRedMove[0]);
-    // const newState = deepRedMove[1];
-    // this.hasMovedWK = newState.hasMovedWK;
-    // this.hasMovedWRK = newState.hasMovedWKR;
-    // this.hasMovedWRQ = newState.hasMovedWQR;
-    // this.hasMovedBK = newState.hasMovedBK;
-    // this.hasMovedBRK = newState.hasMovedBKR;
-    // this.hasMovedBRQ = newState.hasMovedBQR;
-    // this.canEnPassant = newState.canEnPassantW || newState.canEnPassantB;
-    // this.turn = (this.turn === 'W') ? 'B' : 'W';
-    // this.moveHistoryEntry.push(this.generateMoveHistoryEntry(deepRedOrigin, deepRedDest, deepRedCapPiece, pawnPromotionValue, legalMoveResult));
   }
 
 }
