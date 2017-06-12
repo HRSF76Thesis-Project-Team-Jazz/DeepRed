@@ -20,7 +20,6 @@ module.exports = (io, client) => {
   });
 
   client.on('createRoomAsWhite', (currentUserName, currentUserEmail, id, gameMode) => {
-    console.log('gameMode: ', gameMode);
     if (queue.length !== 0) {
       room = `room ${queue.splice(0, 1)}`;
     } else {

@@ -1,6 +1,7 @@
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import Room from '../components/Room';
+import '../components/css/Room.css';
 /**
  * Dialog with action buttons. The actions are passed in as an array of React objects,
  * in this example [FlatButtons](/#/components/flat-button).
@@ -11,12 +12,19 @@ import Room from '../components/Room';
 //   width: '25%',
 //   maxWidth: 'none',
 // };
+const customContentStyle = {
+  width: '82%',
+  maxWidth: 'none',
+  maxheight:'none',
+  height: '100%',
+  opacity: 0.85,
+};
 
 const Alert = ({ title, open, actions, handleClose, showRooms,
 allRooms, createNewPVPRoom, handleJoinRoomAsBlack, handleJoinRoomAsWhite,
 handleCreateRoomAsWhite, handleCreateRoomAsBlack, thisUser,  }) => (
   <div>
-    <Dialog
+    <Dialog 
       title={showRooms === true ?
         <Room
           thisUser={thisUser}
@@ -28,6 +36,9 @@ handleCreateRoomAsWhite, handleCreateRoomAsBlack, thisUser,  }) => (
           handleCreateRoomAsBlack={handleCreateRoomAsBlack}
         />
         : title}
+      contentStyle={thisUser ? customContentStyle: null}
+      autoScrollBodyContent={true}
+      autoDetectWindowHeight={true}
       actions={actions}
       modal={false}
       open={open}
