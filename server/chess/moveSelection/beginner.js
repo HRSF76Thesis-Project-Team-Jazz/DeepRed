@@ -1,14 +1,20 @@
 const safeMoves = require('../deepRed/safeMoves');
+const pieceState = require('../pieceState');
+const display = require('../deepRed/display');
+const basic = require('../deepRed/basic');
 
 const {
   getSafeMovesWhite,
   getSafeMovesBlack,
 } = safeMoves;
 
-const whiteMove = (board, pieceState) => {
-  const moves = getSafeMovesWhite(board, pieceState);
-  const newState = pieceState;
-  newState.moveCount += 1;
+const { evalPieceState } = pieceState;
+const { displayBoard } = display;
+const { mutateBoard } = basic;
+
+const getRandomMove = (board, color, currentState) => {
+  const moves = (color === 'W') ?
+    getSafeMovesWhite(board, currentState) : getSafeMovesBlack(board, currentState);
 
   let count = 0;
   const keys = Object.keys(moves);
@@ -33,48 +39,43 @@ const whiteMove = (board, pieceState) => {
     count += moves[keys[i]].length;
   }
 
-  newState.canEnPassantB = '';
-
-  if (!Array.isArray(move)) {
-    if (move.move === 'castle') {
-      newState.hasMovedWK = true;
-      newState.castle += 1;
-      if (move.side === 'O-O') {
-        newState.hasMovedWKR = true;
-      } else {
-        newState.hasMovedWQR = true;
-      }
-    }
-    if (move.move === 'enpassant') {
-      newState.lastCapture = newState.moveCount;
-      newState.capturedWhite.push('BP');
-      newState.countBlackPieces -= 1;
-      newState.enPassant += 1;
-    }
-    if (move.move === 'pawnPromotion') {
-      const row = move.to[0];
-      const col = move.to[1];
-      if (board[row][col]) {
-        newState.countBlackPieces -= 1;
-        newState.capturedWhite.push(board[row][col]);
-      }
-    }
-  } else {
-    const row = move[0][0];
-    const toRow = move[1][0];
-    const col = move[0][1];
-    const toCol = move[1][1];
-    if (board[row][col][1] === 'P') newState.lastPawn = newState.moveCount;
-    if (board[toRow][toCol]) {
-      newState.lastCapture = newState.moveCount;
-      newState.capturedWhite.push(board[toRow][toCol]);
-      newState.countBlackPieces -= 1;
-    }
-
-    if (board[row][col] === 'WP' && +row === 6 && +toRow === 4) {
-      newState.canEnPassantB = `4${col}`;
-    }
-  }
-
-  return [move, newState];
+  return [move, evalPieceState(board, move, color, currentState)];
 };
+
+module.exports = {
+  getRandomMove,
+};
+
+let state = {
+  hasMovedWK: false,
+  hasMovedWKR: false,
+  hasMovedWQR: false,
+  hasMovedBK: false,
+  hasMovedBKR: false,
+  hasMovedBQR: false,
+  canEnPassantW: '',
+  canEnPassantB: '',
+};
+
+let board = [
+  ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+  ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
+];
+
+let turn = 'W';
+
+displayBoard(board);
+for (let i = 0; i < 10; i += 1) {
+  const moveAndState = getRandomMove(board, turn, state);
+  state = moveAndState[1];
+  turn = (turn === 'W') ? 'B' : 'W';
+  board = mutateBoard(board, moveAndState[0]);
+  displayBoard(board);
+  console.log(state);
+}
