@@ -70,6 +70,7 @@ class App extends Component {
     this.handleAnnounceSurrenderClose = this.handleAnnounceSurrenderClose.bind(this);
     this.updateUserGameStat = this.updateUserGameStat.bind(this);
     this.winLoseResult = this.winLoseResult.bind(this);
+    this.closeDialog = this.closeDialog.bind(this);
     // this.watson = this.watson.bind(this);
   }
 
@@ -346,6 +347,11 @@ class App extends Component {
   }
 
   // CONTROL function
+  closeDialog() {
+    const { dispatch } = this.props;
+    dispatch(selectRoomClose());
+  }
+
   handleSurrender() {
     const { thisUser, room } = this.props;
     this.socket.emit('onSurrender', thisUser, room);
@@ -538,10 +544,10 @@ class App extends Component {
 
     const selectRoomActions = [
       <RaisedButton
-        label="Refresh"
+        label="Close"
         secondary
         keyboardFocused
-        onTouchTap={this.handleSelectRoomCloseOnFailure}
+        onTouchTap={this.closeDialog}
       />,
     ];
 

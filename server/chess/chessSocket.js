@@ -39,6 +39,7 @@ module.exports = (io, client) => {
       }
       roomInfo.count = count;
       allRooms[count] = roomInfo;
+      io.emit('updateAllRooms', allRooms);
       io.to(room).emit('createRoomCompleted', roomInfo, allRooms);
       if (gameMode === 'AI') {
         roomInfo.playerB = 'AI';
@@ -74,6 +75,7 @@ module.exports = (io, client) => {
       }
       roomInfo.count = count;
       allRooms[count] = roomInfo;
+      io.emit('updateAllRooms', allRooms);
       io.to(room).emit('createRoomCompleted', roomInfo, allRooms);
       if (gameMode === 'AI') {
         roomInfo.playerW = 'AI';
