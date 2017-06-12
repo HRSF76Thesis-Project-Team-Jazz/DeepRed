@@ -264,7 +264,6 @@ class ChessGame {
     }
   }
   moveAI() {
-    console.log('******************** MOVE AI ********************')
     const pieceState = {
       hasMovedWK: this.hasMovedWK,
       hasMovedWKR: this.hasMovedWRK,
