@@ -3,6 +3,7 @@ const endGameChecks = require('./endGameChecks');
 const basic = require('./basic');
 const display = require('./display');
 const chessEncode = require('../chessEncode');
+const gameConfig = require('./gameConfig');
 
 const { displayBoard } = display;
 const { transcribeBoard, encodeBoard } = chessEncode;
@@ -20,6 +21,8 @@ const {
   isStalemateWhite,
   isStalemateBlack,
 } = endGameChecks;
+
+const { MAX_GAME_LENGTH } = gameConfig;
 
 const whiteMove = (board, pieceState) => {
   const moves = getSafeMovesWhite(board, pieceState);
@@ -170,7 +173,6 @@ const blackMove = (board, pieceState) => {
 
 
 const simulateGames = (number, displayAll, displayFn) => {
-
   let transcribeCount = 0;
   let encodeCount = 0;
 
@@ -211,12 +213,8 @@ const simulateGames = (number, displayAll, displayFn) => {
       ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR'],
     ];
 
-
-
     transcribeCount += transcribeBoard(board).length;
     encodeCount += encodeBoard(board).length;
-
-
 
     const pieceState = {
       hasMovedWK: false,
@@ -240,7 +238,7 @@ const simulateGames = (number, displayAll, displayFn) => {
     if (displayAll) {
       console.log('=== START GAME ===');
       displayFn(board);
-    };
+    }
 
     let currentMoveWhite;
     let currentMoveBlack;
@@ -309,9 +307,9 @@ const simulateGames = (number, displayAll, displayFn) => {
 
       /*  ONE HUNDRED MOVES */
 
-      if ((newState.moveCount >= 100)) {
+      if ((newState.moveCount >= MAX_GAME_LENGTH)) {
         gameEnded = true;
-        console.log('**** 100 Moves ***', newState);
+        console.log(`**** Max Moves ${MAX_GAME_LENGTH} ***`, newState);
         gameSummary.end100moves += 1;
         gameSummary.averageMovesPerGame = ((gameSummary.averageMovesPerGame *
           (gameSummary.games - 1)) + newState.moveCount) /
@@ -437,10 +435,6 @@ const displayEncode = (board) => {
 const displayFullBoard = (board) => {
   displayBoard(board);
 };
-
-// console.log(simulateGames(1000, false, displayFullBoard));
-// console.log(simulateGames(1000, false, displayTranscribe));
-// console.log(simulateGames(1000, false, displayEncode));
 
 module.exports = {
   simulateGames,
