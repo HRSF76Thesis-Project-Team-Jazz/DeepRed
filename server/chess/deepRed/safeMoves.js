@@ -67,8 +67,7 @@ const getEncodedSafeMoves = (board, state, color) => {
   const moves = (color === 'W') ? getSafeMovesWhite(board, state) : getSafeMovesBlack(board, state);
 
   const keys = Object.keys(moves).filter(x => x !== 'specialMoves');
-  console.log(moves);
-  
+
   for (let i = 0; i < keys.length; i += 1) {
     moves[keys[i]].forEach((dest) => {
       const move = [keys[i], dest];
