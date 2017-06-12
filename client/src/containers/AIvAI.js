@@ -384,8 +384,12 @@ class App extends Component {
             </div>
             <div className="flex-col">
               <Board attemptMove={this.attemptMove} checkLegalMoves={this.checkLegalMoves} />
+<<<<<<< HEAD
               {/* <Message message={message} />
               <Message message={error} /> */}
+=======
+
+>>>>>>> before rebase room resume state feature
             </div>
 
             <div className="flex-col right-col">

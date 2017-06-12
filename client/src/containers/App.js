@@ -17,7 +17,10 @@ import {
   cancelResumeDialogClose, announceSurrenderDialogOpen, announceSurrenderDialogClose,
   updateGameMode, openWinnerDialog, openCheckDialog,
 } from '../store/actions';
-
+// import {
+//   pauseActions, resumeActions, cancelPauseActions, cancelResumeActions,
+//   chooseGameModeActions, selectRoomActions, selectSideActions, surrenderActions,
+// } from '../components/Actions';
 // Components
 import Header from '../components/Header';
 import Board from './Board';
