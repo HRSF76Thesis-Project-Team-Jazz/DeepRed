@@ -29,9 +29,13 @@ passport.deserializeUser((id, done) => {
 passport.use('local-signup', new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password',
+  displayName: 'display',
+  firstName: 'first',
+  lastName: 'last',
   passReqToCallback: true,
 },
   (req, email, password, done) => {
+    console.log(Object.keys(req), req.body);
     // check to see if there is a local account with this email address
     return models.Profile.where({ email }).fetch({
       withRelated: [{
@@ -41,13 +45,16 @@ passport.use('local-signup', new LocalStrategy({
       .then((profile) => {
         // create a new profile if a profile does not exist
         if (!profile) {
-          return models.Profile.forge({ email, 
-                                        display: email, 
-                                        win: 0, 
-                                        loss: 0, 
-                                        draw: 0, 
-                                        total_games: 0
-                                       }).save();
+          return models.Profile.forge({
+            email,
+            display: req.body.display,
+            first: req.body.first,
+            last: req.body.last,
+            win: 0,
+            loss: 0,
+            draw: 0,
+            total_games: 0,
+          }).save();
         }
         // throw if local auth account already exists
         if (profile.related('auths').at(0)) {
@@ -72,7 +79,7 @@ passport.use('local-signup', new LocalStrategy({
         done(error, null);
       })
       .catch((err) => {
-        // console.warn(err);
+        console.warn(err);
         done(null, false, req.flash('signupMessage', 'An account with this email address already exists.'));
       });
   }));
