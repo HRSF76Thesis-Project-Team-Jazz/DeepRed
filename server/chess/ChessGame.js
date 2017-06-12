@@ -124,8 +124,8 @@ class ChessGame {
         this.moveAI();
       }
       // console.log(this.history);
-      console.log(this.board);
-      console.log('Move piece is successful.');
+      // console.log(this.board);
+      // console.log('Move piece is successful.');
       return {
         game: this,
         error: null,
@@ -264,7 +264,6 @@ class ChessGame {
     }
   }
   moveAI() {
-    console.log('******************** MOVE AI ********************')
     const pieceState = {
       hasMovedWK: this.hasMovedWK,
       hasMovedWKR: this.hasMovedWRK,
