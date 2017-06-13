@@ -3,8 +3,8 @@
     <div class="page-header text-center">
         <div class="logo"><img src="/assets/deepRed_100.png" /></div>
 
-        <h1><span class="fa fa-anchor"></span> Home Page</h1>
-        <a href="/" class="btn btn-default btn-sm">Return to Deep Red</a>
+        <h1>User Details</h1>
+        <a href="/" class="btn btn-default btn-sm">Play Chess</a>
         <a href="/logout" class="btn btn-default btn-sm">Logout</a>
     </div>
 
@@ -13,17 +13,35 @@
         <!-- LOCAL INFORMATION -->
         <div class="col-sm-12 profile-info">
           
-            <div class="well col-sm-6 well-container">
+            <div class="well well-container">
                 <h3><span class="fa fa-user"></span> Local</h3>
 
                 <% if (user.email) { %>
-                <p>
-                    <strong>Display Name</strong>: <%= user.display %><br>
-                    <strong>First Name</strong>: <%= user.first %><br>
-                    <strong>Last Name</strong>: <%= user.last %><br>
-                    <strong>User ID</strong>: <%= user.id %><br>
-                    <strong>Email Address</strong>: <%= user.email %>
-                </p>
+
+                <table class="profile-table">
+                  <tbody>
+                    <tr>
+                      <td><strong>Display Name</strong></td>
+                      <td><%= user.display %></td>
+                    </tr>
+                    <tr>
+                      <td><strong>First Name</strong></td>
+                      <td><%= user.first %></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Last Name</strong></td>
+                      <td><%= user.last %></td>
+                    </tr>
+                    <tr>
+                      <td><strong>User ID</strong></td>
+                      <td><%= user.id %></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Email Address</strong></td>
+                      <td><%= user.email %></td>
+                    </tr>
+                  </tbody>
+                </table>
 
                 <a href="/unlink/local" class="btn btn-default">Unlink</a>
                 <% } else { %>
