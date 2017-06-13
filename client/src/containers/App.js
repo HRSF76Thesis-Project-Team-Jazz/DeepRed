@@ -105,12 +105,8 @@ class App extends Component {
   }
   // this.conversation(`${player1}-win`);
   conversation(context, message) {
-    if(!message) {
-      message = '';
-    }
-    if(!context) {
-      context = '';
-    }
+    const text = message || '';
+    const intent = context || '';
     const payload = {
       intent: {
         intent: context,
@@ -124,7 +120,6 @@ class App extends Component {
         console.log('message sent!', response);
         const { dispatch, playerW, playerB, playerWid, playerBid, thisUser, thisUserId} = this.props;
         console.log('message: ', response.data.output);
-
       })
       .catch((err) => {
         console.error('failed to send message to watson conversation service: ', err);
@@ -185,12 +180,9 @@ class App extends Component {
     });
 
     this.socket.on('attemptMoveResult', (error, game, origin, dest, selection) => {
-      const { gameTurn, thisUser, playerW, playerB } = this.props;
-      let intent = '';
       console.log('+++++++++++++++++++++++++++++move: ', game.event);
-      console.log('-----------------------------turn: ', gameTurn);
-      // if gameTurn color and the captured piece color are opposite, 
-      // that means it is a win, 
+      // if gameTurn color and the captured piece color are opposite,
+      // that means it is a win,
       // if the gameTurn color and the captured piece's color are the same
       // that measn it is on the losing side
       if (error === null) {
@@ -204,32 +196,36 @@ class App extends Component {
         //   dispatch(capturePiece(origin, dest, selection, gameTurn));
         // } else {
         //   dispatch(movePiece(origin, dest, gameTurn));
-        // } 
+        // }
         const captureTable = {
-          'BP': 'capture',
-          'BB': 'capture',
-          'BR': 'capture',
-          'BK': 'capture',
-          'BQ': 'capture',
-          'WP': 'capture',
-          'WB': 'capture',
-          'WR': 'capture',
-          'WK': 'capture',
-          'BQ': 'capture',
-        }
+          BP: 'capture',
+          BB: 'capture',
+          BR: 'capture',
+          BN: 'capture',
+          BQ: 'capture',
+          WP: 'capture',
+          WB: 'capture',
+          WR: 'capture',
+          WN: 'capture',
+          WQ: 'capture',
+        };
 
         const specialTable = {
           '+B': 'check',
           '+W': 'check',
           '#B': 'checkMate',
           '#W': 'checkMate',
-          '=Q': 'promotion',
+          '=BQ': 'promotion',
+          '=WQ': 'promotion',
           'enpassant': 'enpassant',
           'castle': 'castle',
-        }
+        };
+        
+        var intent = '';
 
         if (game.event.length !== 0) {
-           for (let i = 0; i < game.event.length; i += 1) {
+          const { gameTurn, thisUser, playerW, playerB } = this.props;
+          for (let i = 0; i < game.event.length; i += 1) {
             // for capture event
             if (captureTable.hasOwnProperty(game.event[i])) {
               if (thisUser === playerW) {
@@ -238,35 +234,109 @@ class App extends Component {
                 } else {
                   intent = `${captureTable[game.event[i]]}Win`;
                 }
-              } 
+              }
               if (thisUser === playerB) {
                 if (game.event[i][0] === 'B') {
                   intent = `${captureTable[game.event[i]]}Lose`;
                 } else {
                   intent = `${captureTable[game.event[i]]}Win`;
                 }
-              } // for special events
-            } else if (specialTable.hasOwnProperty(game.event[i])) {
-                if (thisUser === playerW) {
-                  if (game.event[i][1] === 'B') {
-                    intent = `${specialTable[game.event[i]]}Win`;
-                  } else if (game.event[i][1] === 'W') {
-                    intent = `${specialTable[game.event[i]]}Lose`;
-                  } else if ((game.event === 'castle' || game.event === '=Q' || game.event === 'enpassant') && gameTurn === 'W'){
-                    intent = `${specialTable[game.event[i]]}Win`;
-                  }
-                }
-              if (thisUser === playerB) {
-                if (game.event[i][1] === 'W') {
-                  intent = `${specialTable[game.event[i]]}Win`;
-                }
-                else if (game.event[i][1] === 'B') {
-                  intent = `${specialTable[game.event[i]]}Lose`;
-                } else if ((game.event === 'castle' || game.event === '=Q' || game.event === 'enpassant') && gameTurn === 'B'){
-                  intent = `${specialTable[game.event[i]]}Win`;
-               }
               }
             }
+            // for special events
+            if (specialTable.hasOwnProperty(game.event[i])) {
+              if (thisUser === playerW) {
+                if (game.event[i] === '+B') {
+                  intent = `${specialTable[game.event[i]]}Win`;
+                }
+                if (game.event[i] === '+W') {
+                  intent = `${specialTable[game.event[i]]}Lose`;
+                }
+                if (game.event[i] === '#B') {
+                  intent = `${specialTable[game.event[i]]}Lose`;
+                }
+                if (game.event[i] === '#W') {
+                  intent = `${specialTable[game.event[i]]}Win`;
+                }
+                if (game.event[i] === '=BQ') {
+                  intent = `${specialTable[game.event[i]]}Lose`;
+                }
+                if (game.event[i] === '=WQ') {
+                  intent = `${specialTable[game.event[i]]}Win`;
+                }
+                if (game.event[i] === 'enpassant' && gameTurn === 'W') {
+                  intent = `${specialTable[game.event[i]]}Win`;
+                }
+                if (game.event[i] === 'castle' && gameTurn === 'W') {
+                  intent = `${specialTable[game.event[i]]}Win`;
+                }
+              }
+              if (thisUser === playerB) {
+                if (game.event[i] === '+B') {
+                  intent = `${specialTable[game.event[i]]}Lose`;
+                }
+                if (game.event[i] === '+W') {
+                  intent = `${specialTable[game.event[i]]}Win`; 
+                }
+                if (game.event[i] === '#B') {
+                  intent = `${specialTable[game.event[i]]}Win`;
+                }
+                if (game.event[i] === '#W') {
+                  intent = `${specialTable[game.event[i]]}Lose`;
+                }
+                if (game.event[i] === '=BQ') {
+                  intent = `${specialTable[game.event[i]]}Win`;
+                }
+                if (game.event[i] === '=WQ') {
+                  intent = `${specialTable[game.event[i]]}Lose`;
+                }
+                if (game.event[i] === 'enpassant' && gameTurn === 'B') {
+                  intent = `${specialTable[game.event[i]]}Win`;
+                }
+                if (game.event[i] === 'castle' && gameTurn === 'B') {
+                  intent = `${specialTable[game.event[i]]}Win`;
+                }
+              }
+            }
+            //  else if (specialTable.hasOwnProperty(game.event[i])) {
+            //   if (thisUser === playerW) {
+            //     if (game.event[i][1] === 'B') {
+            //       if (game.event[i][0] === '#') {
+            //         intent = `${specialTable[game.event[i]]}Lose`;
+            //       } else if (game.event[i][0] === '+') {
+            //         intent = `${specialTable[game.event[i]]}Win`;
+            //       }
+            //     } else if (game.event[i][1] === 'W') {
+            //       if (game.event[i][0] === '#') {
+            //         intent = `${specialTable[game.event[i]]}Win`;
+            //       }
+            //       if (game.event[i][0] === '+') {
+            //         intent = `${specialTable[game.event[i]]}Lose`;
+            //       }
+            //     } else if ((game.event === 'castle' || game.event === 'enpassant') && gameTurn === 'W') {
+            //       intent = `${specialTable[game.event[i]]}Win`;
+            //     }
+            //   }
+            //   if (thisUser === playerB) {
+            //     if (game.event[i][1] === 'W') {
+            //       if (game.event[i][0] === '#') {
+            //         intent = `${specialTable[game.event[i]]}Lose`;
+            //       }
+            //       if (game.event[i][0] === '+') {
+            //         intent = `${specialTable[game.event[i]]}Win`;
+            //       }
+            //     } else if (game.event[i][1] === 'B') {
+            //       if (game.event[i][0] === '#') {
+            //         intent = `${specialTable[game.event[i]]}Win`;
+            //       }
+            //       if (game.event[i][0] === '+') {
+            //         intent = `${specialTable[game.event[i]]}Lose`;
+            //       }
+            //     } else if ((game.event === 'castle' || game.event === 'enpassant') && gameTurn === 'B') {
+            //       intent = `${specialTable[game.event[i]]}Win`;
+            //     }
+            //   }
+            // }
             console.log('//////////////intent: ', intent);
           }
         }
@@ -339,7 +409,7 @@ class App extends Component {
         this.decrementTimerB();
       }
     });
-    
+
     this.socket.on('announceSurrender', (playerName) => {
       const { playerW, playerB, playerWemail, playerBemail } = this.props;
       if (playerName === playerW) {
