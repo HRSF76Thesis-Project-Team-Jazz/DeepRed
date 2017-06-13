@@ -237,52 +237,52 @@ class ChessGame {
       if (isCheckmateWhite(this.board)) {
         this.winner = 'W';
 
-          for (var i = 1; i < this.history.length; i++) {
-            if (i % 2 === 1){
-              chessDB.saveDeepRedWhite({
-                parent: this.history[i-1],
-                move: this.history[i],
-                white_win: 1,
-                black_win: 0,
-                draw: 0,
-                winPercentage: 100,
-              });
-            } else {
-              chessDB.saveDeepRedBlack({
-                parent: this.history[i-1],
-                move: this.history[i],
-                white_win: 1,
-                black_win: 0,
-                draw: 0,
-                winPercentage: 0,
-              });
-            }
-          }
+          // for (var i = 1; i < this.history.length; i++) {
+          //   if (i % 2 === 1){
+          //     chessDB.saveDeepRedWhite({
+          //       parent: this.history[i-1],
+          //       move: this.history[i],
+          //       white_win: 1,
+          //       black_win: 0,
+          //       draw: 0,
+          //       winPercentage: 100,
+          //     });
+          //   } else {
+          //     chessDB.saveDeepRedBlack({
+          //       parent: this.history[i-1],
+          //       move: this.history[i],
+          //       white_win: 1,
+          //       black_win: 0,
+          //       draw: 0,
+          //       winPercentage: 0,
+          //     });
+          //   }
+          // }
 
       } else if (isStalemateBlack(this.board)) {
         this.winner = 'D';
 
-          for (var i = 1; i < this.history.length; i++) {
-            if (i % 2 === 1){
-              chessDB.saveDeepRedWhite({
-                parent: this.history[i-1],
-                move: this.history[i],
-                white_win: 0,
-                black_win: 0,
-                draw: 1,
-                winPercentage: 0,
-              });
-            } else {
-              chessDB.saveDeepRedBlack({
-                parent: this.history[i-1],
-                move: this.history[i],
-                white_win: 0,
-                black_win: 0,
-                draw: 1,
-                winPercentage: 0,
-              });
-            }
-          }
+          // for (var i = 1; i < this.history.length; i++) {
+          //   if (i % 2 === 1){
+          //     chessDB.saveDeepRedWhite({
+          //       parent: this.history[i-1],
+          //       move: this.history[i],
+          //       white_win: 0,
+          //       black_win: 0,
+          //       draw: 1,
+          //       winPercentage: 0,
+          //     });
+          //   } else {
+          //     chessDB.saveDeepRedBlack({
+          //       parent: this.history[i-1],
+          //       move: this.history[i],
+          //       white_win: 0,
+          //       black_win: 0,
+          //       draw: 1,
+          //       winPercentage: 0,
+          //     });
+          //   }
+          // }
 
       } else if (blackIsChecked(this.board)) {
         this.playerInCheck = 'B';
@@ -293,52 +293,52 @@ class ChessGame {
       if (isCheckmateBlack(this.board)) {
         this.winner = 'B';
 
-          for (var i = 1; i < this.history.length; i++) {
-            if (i % 2 === 1){
-              chessDB.saveDeepRedWhite({
-                parent: this.history[i-1],
-                move: this.history[i],
-                white_win: 0,
-                black_win: 1,
-                draw: 0,
-                winPercentage: 0,
-              });
-            } else {
-              chessDB.saveDeepRedBlack({
-                parent: this.history[i-1],
-                move: this.history[i],
-                white_win: 0,
-                black_win: 1,
-                draw: 0,
-                winPercentage: 100,
-              });
-            }
-          }
+          // for (var i = 1; i < this.history.length; i++) {
+          //   if (i % 2 === 1){
+          //     chessDB.saveDeepRedWhite({
+          //       parent: this.history[i-1],
+          //       move: this.history[i],
+          //       white_win: 0,
+          //       black_win: 1,
+          //       draw: 0,
+          //       winPercentage: 0,
+          //     });
+          //   } else {
+          //     chessDB.saveDeepRedBlack({
+          //       parent: this.history[i-1],
+          //       move: this.history[i],
+          //       white_win: 0,
+          //       black_win: 1,
+          //       draw: 0,
+          //       winPercentage: 100,
+          //     });
+          //   }
+          // }
 
       } else if (isStalemateWhite(this.board)) {
         this.winner = 'D';
 
-          for (var i = 1; i < this.history.length; i++) {
-            if (i % 2 === 1){
-              chessDB.saveDeepRedWhite({
-                parent: this.history[i-1],
-                move: this.history[i],
-                white_win: 0,
-                black_win: 0,
-                draw: 1,
-                winPercentage: 0,
-              });
-            } else {
-              chessDB.saveDeepRedBlack({
-                parent: this.history[i-1],
-                move: this.history[i],
-                white_win: 0,
-                black_win: 0,
-                draw: 1,
-                winPercentage: 0,
-              });
-            }
-          }
+          // for (var i = 1; i < this.history.length; i++) {
+          //   if (i % 2 === 1){
+          //     chessDB.saveDeepRedWhite({
+          //       parent: this.history[i-1],
+          //       move: this.history[i],
+          //       white_win: 0,
+          //       black_win: 0,
+          //       draw: 1,
+          //       winPercentage: 0,
+          //     });
+          //   } else {
+          //     chessDB.saveDeepRedBlack({
+          //       parent: this.history[i-1],
+          //       move: this.history[i],
+          //       white_win: 0,
+          //       black_win: 0,
+          //       draw: 1,
+          //       winPercentage: 0,
+          //     });
+          //   }
+          // }
 
       } else if (whiteIsChecked(this.board)) {
         this.playerInCheck = 'W';
