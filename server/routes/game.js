@@ -50,18 +50,14 @@ router.route('/conversation')
 
     const payload = {
       workspace_id: '4440e6fc-92da-4518-afb9-9f47aae615cc',
-      context: req.body.intent || {},
+      context: req.body.context || {},
       input: req.body.input || {},
     };
 
-    conversation.message(payload, processResponse);
-    res.send();
-    // conversation.message(payload, (err, data) => {
-      // if (err) {
-      //   console.error('err occurred in watson conversation message function: ', err);
-      // }
-      // res.send(processResponse(err, data));
-    // });
+    conversation.message(payload, (err, data) => {
+      res.send(processResponse(err, data));
+    });
   });
 
 module.exports = router;
+

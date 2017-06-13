@@ -76,7 +76,7 @@ class App extends Component {
 
   componentDidMount() {
     this.getUserInfo();
-    this.conversation('captureWin', 'WP');
+    // this.conversation('captureWin', 'WP');
   }
 
   onChangePlayerTurn() {
@@ -105,8 +105,8 @@ class App extends Component {
   }
   // this.conversation(`${player1}-win`);
   conversation(context, message) {
-    const text = message || '';
-    const intent = context || '';
+    message = message || '';
+    context = context || '';
     const payload = {
       intent: {
         intent: context,
@@ -117,9 +117,12 @@ class App extends Component {
     };
     axios.post('/api/game/conversation', payload)
       .then((response) => {
-        console.log('message sent!', response);
-        const { dispatch, playerW, playerB, playerWid, playerBid, thisUser, thisUserId} = this.props;
-        console.log('message: ', response.data.output);
+        // console.log('message sent!', response);
+        console.log('message: ', response.data);
+        if (response) {
+          
+        }
+
       })
       .catch((err) => {
         console.error('failed to send message to watson conversation service: ', err);
@@ -222,6 +225,7 @@ class App extends Component {
         };
         
         var intent = '';
+        var text = '';
 
         if (game.event.length !== 0) {
           const { gameTurn, thisUser, playerW, playerB } = this.props;
@@ -337,7 +341,14 @@ class App extends Component {
             //     }
             //   }
             // }
-            console.log('//////////////intent: ', intent);
+            if (intent.slice(-3) === 'Win') {
+              text = `${game.event[i]}W`;
+            } else {
+              text = game.event[i];
+            }
+            // console.log('///////////////text: ', text);
+            // console.log('//////////////intent: ', intent);
+            this.conversation(intent, text);
           }
         }
         dispatch(receiveGame(game));
