@@ -14,7 +14,7 @@ exports.up = function (knex, Promise) {
       table.integer('total_games').nullable();
       table.timestamps(true, true);
     }),
-    knex.schema.createTableIfNotExists('auths', function(table) {
+    knex.schema.createTableIfNotExists('auths', function (table) {
       table.increments('id').unsigned().primary();
       table.string('type', 8).notNullable();
       table.string('oauth_id', 30).nullable();
@@ -22,7 +22,7 @@ exports.up = function (knex, Promise) {
       table.string('salt', 100).nullable();
       table.integer('profile_id').references('profiles.id').onDelete('CASCADE');
     }),
-    knex.schema.createTableIfNotExists('DeepRed_WhiteMoves', function(table) {
+    knex.schema.createTableIfNotExists('DeepRed_WhiteMoves', function (table) {
       table.string('parent').nullable();
       table.string('board').nullable();
       table.integer('white_win').nullable();
@@ -30,7 +30,7 @@ exports.up = function (knex, Promise) {
       table.integer('draw').nullable();
       table.decimal('winPercentage').nullable();
     }),
-    knex.schema.createTableIfNotExists('DeepRed_BlackMoves', function(table) {
+    knex.schema.createTableIfNotExists('DeepRed_BlackMoves', function (table) {
       table.string('parent').nullable();
       table.string('board').nullable();
       table.integer('white_win').nullable();
@@ -49,4 +49,3 @@ exports.down = function (knex, Promise) {
     // knex.schema.dropTable('DeepRed_BlackMoves'),
   ]);
 };
-

@@ -54,7 +54,6 @@ const chooseNewMove = (encodedParentBoard, color, callback) => {
  */
 
 const chooseBestMoveFromDB = (encodedParentBoard, color, callback) => {
-
   const moveFound = (moves) => {
     callback(evalMove(encodedParentBoard, moves[0].board, color));
   };
