@@ -494,4 +494,3 @@ module.exports.saveDeepRedWhite = saveDeepRedWhite;
 module.exports.saveDeepRedBlack = saveDeepRedBlack;
 module.exports.getBestMoveFromDB = getBestMoveFromDB;
 module.exports.getNewMove = getNewMove;
-
