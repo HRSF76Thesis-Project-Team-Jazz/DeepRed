@@ -7,7 +7,6 @@ const {
   getEncodedSafeMoves,
 } = safeMoves;
 
-
 const {
   decodeWithState,
 } = chessEncode;
@@ -18,6 +17,13 @@ const {
 
 const { evalMove } = chessMoves;
 
+/**
+ * Input a current board and state and find a move that DeepRed has not seen before (not in DB)
+ * @param {*} encodedParentBoard : encoded board with state
+ * @param {*} color : 'W' or 'B', current player's move
+ * @param {*} callback : function that executes on the return move
+ *                       callback(move) where move is a Deep Red format move
+ */
 
 const chooseNewMove = (encodedParentBoard, color, callback) => {
   const boardWithState = decodeWithState(encodedParentBoard);
@@ -46,6 +52,15 @@ const chooseNewMove = (encodedParentBoard, color, callback) => {
 
   return getMovesFromDB(encodedParentBoard, color, moveFound, moveNotFound);
 };
+
+/**
+ * Input a current board and state and find the best move available.
+ * If no such move exists in the database, a random move is selected
+ * @param {*} encodedParentBoard : encoded board with state
+ * @param {*} color : 'W' or 'B', current player's move
+ * @param {*} callback : function that executes on the return move
+ *                       callback(move) where move is a Deep Red format move
+ */
 
 const chooseBestMoveFromDB = (encodedParentBoard, color, callback) => {
 
