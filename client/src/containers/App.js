@@ -76,7 +76,6 @@ class App extends Component {
 
   componentDidMount() {
     this.getUserInfo();
-    // this.conversation('captureWin', 'WP');
   }
 
   onChangePlayerTurn() {
@@ -117,12 +116,14 @@ class App extends Component {
     };
     axios.post('/api/game/conversation', payload)
       .then((response) => {
-        // console.log('message sent!', response);
-        console.log('message: ', response.data);
-        if (response) {
-          
-        }
-
+        const { dispatch, messagesLocal, thisUser } = this.props;
+        console.log('message: ', response.data.output.text[0]);
+        dispatch(sendMsgLocal({
+          user: thisUser, 
+          color: 'red',
+          message: response.data.output.text[0],
+          // timeStamp: new Date(),
+        }));
       })
       .catch((err) => {
         console.error('failed to send message to watson conversation service: ', err);
