@@ -50,62 +50,62 @@ const gameState = (state = Immutable({
         moveHistory: action.game.moveHistoryEntry,
       });
     }
-    case types.MOVE_PIECE: {
-      const cols = 'abcdefgh';
-      const from = cols[action.origin[1]] + (8 - action.origin[0]);
-      const to = cols[action.dest[1]] + (8 - action.dest[0]);
-      return Immutable({
-        ...state,
-        moveHistory: state.moveHistory.concat({ from, to }),
-        gameTurn: action.gameTurn,
-      });
-    }
-    case types.CASTLING_MOVE: {
-      let castleNotation = 'O-O';
-      if (action.castling[2] === 'Q') {
-        castleNotation = 'O-O-O';
-      }
-      return Immutable({
-        ...state,
-        moveHistory: state.moveHistory.concat({ castleNotation }),
-        gameTurn: action.gameTurn,
-      });
-    }
-    case types.EN_PASSANT_MOVE: {
-      const cols = 'abcdefgh';
-      const from = cols[action.origin[1]] + (8 - action.origin[0]);
-      const to = cols[action.dest[1]] + (8 - action.dest[0]);
-      return Immutable({
-        ...state,
-        moveHistory: state.moveHistory.concat({ from, to }),
-        gameTurn: action.gameTurn,
-      });
-    }
-    case types.PAWN_PROMOTION_MOVE: {
-      const cols = 'abcdefgh';
-      const from = cols[action.origin[1]] + (8 - action.origin[0]);
-      const to = cols[action.dest[1]] + (8 - action.dest[0]);
-      return Immutable({
-        ...state,
-        moveHistory: state.moveHistory.concat({ from, to }),
-        gameTurn: action.gameTurn,
-      });
-    }
-    case types.CAPTURE_PIECE: {
-      const cols = 'abcdefgh';
-      const from = cols[action.origin[1]] + (8 - action.origin[0]);
-      const to = cols[action.dest[1]] + (8 - action.dest[0]);
-      const capturedPiece = action.capturedPiece;
-      const capturedPiecesArray = (capturedPiece[0] === 'W') ? 'capturedPiecesBlack' : 'capturedPiecesWhite';
-      const newState = {
-        ...state,
-        moveHistory: state.moveHistory.concat({ from, to, capturedPiece }),
-        capturedPiecesArray: state[capturedPiecesArray].concat(capturedPiece),
-        gameTurn: action.gameTurn,
-      };
-      newState[capturedPiecesArray] = state[capturedPiecesArray].concat(capturedPiece);
-      return Immutable(newState);
-    }
+    // case types.MOVE_PIECE: {
+    //   const cols = 'abcdefgh';
+    //   const from = cols[action.origin[1]] + (8 - action.origin[0]);
+    //   const to = cols[action.dest[1]] + (8 - action.dest[0]);
+    //   return Immutable({
+    //     ...state,
+    //     moveHistory: state.moveHistory.concat({ from, to }),
+    //     gameTurn: action.gameTurn,
+    //   });
+    // }
+    // case types.CASTLING_MOVE: {
+    //   let castleNotation = 'O-O';
+    //   if (action.castling[2] === 'Q') {
+    //     castleNotation = 'O-O-O';
+    //   }
+    //   return Immutable({
+    //     ...state,
+    //     moveHistory: state.moveHistory.concat({ castleNotation }),
+    //     gameTurn: action.gameTurn,
+    //   });
+    // }
+    // case types.EN_PASSANT_MOVE: {
+    //   const cols = 'abcdefgh';
+    //   const from = cols[action.origin[1]] + (8 - action.origin[0]);
+    //   const to = cols[action.dest[1]] + (8 - action.dest[0]);
+    //   return Immutable({
+    //     ...state,
+    //     moveHistory: state.moveHistory.concat({ from, to }),
+    //     gameTurn: action.gameTurn,
+    //   });
+    // }
+    // case types.PAWN_PROMOTION_MOVE: {
+    //   const cols = 'abcdefgh';
+    //   const from = cols[action.origin[1]] + (8 - action.origin[0]);
+    //   const to = cols[action.dest[1]] + (8 - action.dest[0]);
+    //   return Immutable({
+    //     ...state,
+    //     moveHistory: state.moveHistory.concat({ from, to }),
+    //     gameTurn: action.gameTurn,
+    //   });
+    // }
+    // case types.CAPTURE_PIECE: {
+    //   const cols = 'abcdefgh';
+    //   const from = cols[action.origin[1]] + (8 - action.origin[0]);
+    //   const to = cols[action.dest[1]] + (8 - action.dest[0]);
+    //   const capturedPiece = action.capturedPiece;
+    //   const capturedPiecesArray = (capturedPiece[0] === 'W') ? 'capturedPiecesBlack' : 'capturedPiecesWhite';
+    //   const newState = {
+    //     ...state,
+    //     moveHistory: state.moveHistory.concat({ from, to, capturedPiece }),
+    //     capturedPiecesArray: state[capturedPiecesArray].concat(capturedPiece),
+    //     gameTurn: action.gameTurn,
+    //   };
+    //   newState[capturedPiecesArray] = state[capturedPiecesArray].concat(capturedPiece);
+    //   return Immutable(newState);
+    // }
     case types.UPDATE_TIMER: {
       return Immutable({
         ...state,
