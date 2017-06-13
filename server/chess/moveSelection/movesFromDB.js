@@ -3,25 +3,16 @@ const safeMoves = require('../deepRed/safeMoves');
 const chessDB = require('../../chessDB');
 const chessMoves = require('../chessMoves');
 
-const {
-  getEncodedSafeMoves,
-} = safeMoves;
-
-const {
-  decodeWithState,
-} = chessEncode;
-
-const {
-  getMovesFromDB,
-} = chessDB;
-
+const { getEncodedSafeMoves } = safeMoves;
+const { decodeWithState } = chessEncode;
+const { getMovesFromDB } = chessDB;
 const { evalMove } = chessMoves;
 
 /**
  * Input a current board and state and find a move that DeepRed has not seen before (not in DB)
- * @param {*} encodedParentBoard : encoded board with state
- * @param {*} color : 'W' or 'B', current player's move
- * @param {*} callback : function that executes on the return move
+ * @param {string} encodedParentBoard : encoded board with state
+ * @param {string} color : 'W' or 'B', current player's move
+ * @param {function} callback : function that executes on the return move
  *                       callback(move) where move is a Deep Red format move
  */
 
@@ -56,9 +47,9 @@ const chooseNewMove = (encodedParentBoard, color, callback) => {
 /**
  * Input a current board and state and find the best move available.
  * If no such move exists in the database, a random move is selected
- * @param {*} encodedParentBoard : encoded board with state
- * @param {*} color : 'W' or 'B', current player's move
- * @param {*} callback : function that executes on the return move
+ * @param {string} encodedParentBoard : encoded board with state
+ * @param {string} color : 'W' or 'B', current player's move
+ * @param {function} callback : function that executes on the return move
  *                       callback(move) where move is a Deep Red format move
  */
 

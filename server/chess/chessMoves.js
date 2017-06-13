@@ -17,6 +17,13 @@ const {
 
 const { evalPieceState } = pieceState;
 
+/**
+ * Input a parent board and new board and return the move that resulted in the change
+ * @param {string} encodedParentBoard : parent board with state
+ * @param {string} encodedNewBoard : new board with state
+ * @param {string} color : 'W' or 'B'
+ */
+
 const evalMove = (encodedParentBoard, encodedNewBoard, color) => {
   const parentBoardWithState = decodeWithState(encodedParentBoard);
   const parentBoard = parentBoardWithState[0];
