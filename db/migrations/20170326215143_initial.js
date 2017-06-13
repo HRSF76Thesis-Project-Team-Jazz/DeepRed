@@ -45,8 +45,8 @@ exports.down = function (knex, Promise) {
   return Promise.all([
     knex.schema.dropTable('auths'),
     knex.schema.dropTable('profiles'),
-    knex.schema.dropTable('DeepRed_WhiteMoves'),
-    knex.schema.dropTable('DeepRed_BlackMoves'),
+    // knex.schema.dropTable('DeepRed_WhiteMoves'),
+    // knex.schema.dropTable('DeepRed_BlackMoves'),
   ]);
 };
 

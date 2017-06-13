@@ -337,7 +337,7 @@ const saveDeepRedWhite = (entry) => {
       }
     });
   }
-}
+};
 
 const saveDeepRedBlack = (entry) => {
   if (entry.white_win === 1) {
@@ -434,7 +434,7 @@ const saveDeepRedBlack = (entry) => {
       }
     });
   }
-} 
+}; 
 
 const getBestMoveFromDB = (encodedBoardWithState, color) => {
   if (color === 'white') {
@@ -488,7 +488,7 @@ const getNewMove = (encodedBoardWithState, color) => {
       }
     });
   }
-}
+};
 
 module.exports.saveDeepRedWhite = saveDeepRedWhite;
 module.exports.saveDeepRedBlack = saveDeepRedBlack;
