@@ -11,7 +11,7 @@ import {
   updateRoomInfo, getRequestFailure, receiveGame, movePiece, resetBoolBoard,
   unselectPiece, capturePiece, displayError, colorSquare, sendMsgLocal, sendMsgGlobal,
   updateTimerB, timeInstanceB, updateTimerW, timeInstanceW, saveBoolBoard, castlingMove,
-  selectGameModeClose, selectGameModeOpen, selectRoomOpen, selectRoomClose,
+  selectGameModeClose, selectRoomOpen, selectRoomClose,
   selectSideOpen, selectSideClose, updateAllRooms, updateRoomQueue, setPlayerId,
   enPassantMove, pawnPromotionMove, resumeDialogOpen, resumeDialogClose, cancelResumeDialogOpen,
   cancelResumeDialogClose, announceSurrenderDialogOpen, announceSurrenderDialogClose,
@@ -47,6 +47,7 @@ class App extends Component {
     this.toggleTimers = this.toggleTimers.bind(this);
     this.decrementTimerB = this.decrementTimerB.bind(this);
     this.decrementTimerW = this.decrementTimerW.bind(this);
+    this.closeDialog = this.closeDialog.bind(this);
     this.sendPauseRequest = this.sendPauseRequest.bind(this);
     this.sendResumeRequest = this.sendResumeRequest.bind(this);
     this.handlePauseOpen = this.handlePauseOpen.bind(this);
@@ -70,13 +71,18 @@ class App extends Component {
     this.handleAnnounceSurrenderClose = this.handleAnnounceSurrenderClose.bind(this);
     this.updateUserGameStat = this.updateUserGameStat.bind(this);
     this.winLoseResult = this.winLoseResult.bind(this);
-    this.closeDialog = this.closeDialog.bind(this);
-    // this.watson = this.watson.bind(this);
+    this.conversation = this.conversation.bind(this);
   }
 
   componentDidMount() {
     this.getUserInfo();
-    // this.watson();
+  }
+
+  onChangePlayerTurn() {
+    const { room, count, timeB, timeW } = this.props;
+    this.stopTimerB();
+    this.stopTimerW();
+    this.socket.emit('updateTime', room, count, timeB, timeW);
   }
 
   getUserInfo() {
@@ -96,20 +102,33 @@ class App extends Component {
         console.error('failed to obtain current user infomation!', err);
       });
   }
-
-  // watson() {
-  //   const option = {
-  //     text: 'nice move',
-  //   };
-
-  //   axios.post(option, '/api/game/conversation')
-  //     .then((response) => {
-  //       console.log('message sent!', response);
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //     });
-  // }
+  // this.conversation(`${player1}-win`);
+  conversation(context, message) {
+    message = message || '';
+    context = context || '';
+    const payload = {
+      intent: {
+        intent: context,
+      },
+      input: {
+        text: message,
+      },
+    };
+    axios.post('/api/game/conversation', payload)
+      .then((response) => {
+        const { dispatch, messagesLocal, thisUser } = this.props;
+        console.log('message: ', response.data.output.text[0]);
+        dispatch(sendMsgLocal({
+          user: thisUser, 
+          color: 'red',
+          message: response.data.output.text[0],
+          // timeStamp: new Date(),
+        }));
+      })
+      .catch((err) => {
+        console.error('failed to send message to watson conversation service: ', err);
+      });
+  }
 
   updateUserGameStat(arr) {
     axios.post('/api/game/updateUserGameStat', arr)
@@ -122,9 +141,7 @@ class App extends Component {
   }
 
   startSocket() {
-    const { dispatch, playerW, playerB, thisUser, thisEmail, room, count,
-       gameTurn, timeB, timeW } = this.props;
-
+    const { dispatch, thisUser, thisEmail, playerB, playerW } = this.props;
     const name = thisUser;
     const email = thisEmail;
     // instantiate socket instance on the client side
@@ -167,6 +184,11 @@ class App extends Component {
     });
 
     this.socket.on('attemptMoveResult', (error, game, origin, dest, selection) => {
+      console.log('+++++++++++++++++++++++++++++move: ', game.event);
+      // if gameTurn color and the captured piece color are opposite,
+      // that means it is a win,
+      // if the gameTurn color and the captured piece's color are the same
+      // that measn it is on the losing side
       if (error === null) {
         // if (pawnPromotionPiece) {
         //   dispatch(pawnPromotionMove(origin, dest, pawnPromotionPiece, gameTurn));
@@ -179,6 +201,157 @@ class App extends Component {
         // } else {
         //   dispatch(movePiece(origin, dest, gameTurn));
         // }
+        const captureTable = {
+          BP: 'capture',
+          BB: 'capture',
+          BR: 'capture',
+          BN: 'capture',
+          BQ: 'capture',
+          WP: 'capture',
+          WB: 'capture',
+          WR: 'capture',
+          WN: 'capture',
+          WQ: 'capture',
+        };
+
+        const specialTable = {
+          '+B': 'check',
+          '+W': 'check',
+          '#B': 'checkMate',
+          '#W': 'checkMate',
+          '=BQ': 'promotion',
+          '=WQ': 'promotion',
+          'enpassant': 'enpassant',
+          'castle': 'castle',
+        };
+        
+        var intent = '';
+        var text = '';
+
+        if (game.event.length !== 0) {
+          const { gameTurn, thisUser, playerW, playerB } = this.props;
+          for (let i = 0; i < game.event.length; i += 1) {
+            // for capture event
+            if (captureTable.hasOwnProperty(game.event[i])) {
+              if (thisUser === playerW) {
+                if (game.event[i][0] === 'W') {
+                  intent = `${captureTable[game.event[i]]}Lose`;
+                } else {
+                  intent = `${captureTable[game.event[i]]}Win`;
+                }
+              }
+              if (thisUser === playerB) {
+                if (game.event[i][0] === 'B') {
+                  intent = `${captureTable[game.event[i]]}Lose`;
+                } else {
+                  intent = `${captureTable[game.event[i]]}Win`;
+                }
+              }
+            }
+            // for special events
+            if (specialTable.hasOwnProperty(game.event[i])) {
+              if (thisUser === playerW) {
+                if (game.event[i] === '+B') {
+                  intent = `${specialTable[game.event[i]]}Win`;
+                }
+                if (game.event[i] === '+W') {
+                  intent = `${specialTable[game.event[i]]}Lose`;
+                }
+                if (game.event[i] === '#B') {
+                  intent = `${specialTable[game.event[i]]}Lose`;
+                }
+                if (game.event[i] === '#W') {
+                  intent = `${specialTable[game.event[i]]}Win`;
+                }
+                if (game.event[i] === '=BQ') {
+                  intent = `${specialTable[game.event[i]]}Lose`;
+                }
+                if (game.event[i] === '=WQ') {
+                  intent = `${specialTable[game.event[i]]}Win`;
+                }
+                if (game.event[i] === 'enpassant' && gameTurn === 'W') {
+                  intent = `${specialTable[game.event[i]]}Win`;
+                }
+                if (game.event[i] === 'castle' && gameTurn === 'W') {
+                  intent = `${specialTable[game.event[i]]}Win`;
+                }
+              }
+              if (thisUser === playerB) {
+                if (game.event[i] === '+B') {
+                  intent = `${specialTable[game.event[i]]}Lose`;
+                }
+                if (game.event[i] === '+W') {
+                  intent = `${specialTable[game.event[i]]}Win`; 
+                }
+                if (game.event[i] === '#B') {
+                  intent = `${specialTable[game.event[i]]}Win`;
+                }
+                if (game.event[i] === '#W') {
+                  intent = `${specialTable[game.event[i]]}Lose`;
+                }
+                if (game.event[i] === '=BQ') {
+                  intent = `${specialTable[game.event[i]]}Win`;
+                }
+                if (game.event[i] === '=WQ') {
+                  intent = `${specialTable[game.event[i]]}Lose`;
+                }
+                if (game.event[i] === 'enpassant' && gameTurn === 'B') {
+                  intent = `${specialTable[game.event[i]]}Win`;
+                }
+                if (game.event[i] === 'castle' && gameTurn === 'B') {
+                  intent = `${specialTable[game.event[i]]}Win`;
+                }
+              }
+            }
+            //  else if (specialTable.hasOwnProperty(game.event[i])) {
+            //   if (thisUser === playerW) {
+            //     if (game.event[i][1] === 'B') {
+            //       if (game.event[i][0] === '#') {
+            //         intent = `${specialTable[game.event[i]]}Lose`;
+            //       } else if (game.event[i][0] === '+') {
+            //         intent = `${specialTable[game.event[i]]}Win`;
+            //       }
+            //     } else if (game.event[i][1] === 'W') {
+            //       if (game.event[i][0] === '#') {
+            //         intent = `${specialTable[game.event[i]]}Win`;
+            //       }
+            //       if (game.event[i][0] === '+') {
+            //         intent = `${specialTable[game.event[i]]}Lose`;
+            //       }
+            //     } else if ((game.event === 'castle' || game.event === 'enpassant') && gameTurn === 'W') {
+            //       intent = `${specialTable[game.event[i]]}Win`;
+            //     }
+            //   }
+            //   if (thisUser === playerB) {
+            //     if (game.event[i][1] === 'W') {
+            //       if (game.event[i][0] === '#') {
+            //         intent = `${specialTable[game.event[i]]}Lose`;
+            //       }
+            //       if (game.event[i][0] === '+') {
+            //         intent = `${specialTable[game.event[i]]}Win`;
+            //       }
+            //     } else if (game.event[i][1] === 'B') {
+            //       if (game.event[i][0] === '#') {
+            //         intent = `${specialTable[game.event[i]]}Win`;
+            //       }
+            //       if (game.event[i][0] === '+') {
+            //         intent = `${specialTable[game.event[i]]}Lose`;
+            //       }
+            //     } else if ((game.event === 'castle' || game.event === 'enpassant') && gameTurn === 'B') {
+            //       intent = `${specialTable[game.event[i]]}Win`;
+            //     }
+            //   }
+            // }
+            if (intent.slice(-3) === 'Win') {
+              text = `${game.event[i]}W`;
+            } else {
+              text = game.event[i];
+            }
+            // console.log('///////////////text: ', text);
+            // console.log('//////////////intent: ', intent);
+            this.conversation(intent, text);
+          }
+        }
         dispatch(receiveGame(game));
         if (game.winner) {
           dispatch(openWinnerDialog(game.winner));
@@ -337,13 +510,6 @@ class App extends Component {
     const { dispatch, timeW, counterWinstance } = this.props;
     dispatch(updateTimerW(timeW));
     clearInterval(counterWinstance);
-  }
-
-  onChangePlayerTurn() {
-    const { room, count, timeB, timeW } = this.props;
-    this.stopTimerB();
-    this.stopTimerW();
-    this.socket.emit('updateTime', room, count, timeB, timeW);
   }
 
   // CONTROL function
