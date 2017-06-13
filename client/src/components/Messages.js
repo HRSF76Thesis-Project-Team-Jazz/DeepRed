@@ -1,36 +1,64 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import MobileTearSheet from './MobileTearSheet';
 import ChatBoxLocal from './ChatBoxLocal';
 import ChatBoxGlobal from './ChatBoxGlobal';
-import ChatMessage from './ChatMessage';
+import ChatMessageLocal from './ChatMessageLocal';
+import ChatMessageGlobal from './ChatMessageGlobal';
 
-const Messages = ({
-  messagesLocal, messagesGlobal, sendMessageLocal,
-  sendMessageGlobal, isWhite, thisUser }) => (
-    <Tabs>
+class Messages extends Component {
+
+  componentDidMount() {
+    document.getElementById('end-of-local').scrollIntoView();
+    document.getElementById('end-of-global').scrollIntoView();
+  }
+
+  componentDidUpdate() {
+    document.getElementById('end-of-local').scrollIntoView();
+    document.getElementById('end-of-global').scrollIntoView();
+  }
+
+  render() {
+    const {
+      messagesLocal, messagesGlobal, sendMessageLocal,
+      sendMessageGlobal, isWhite, thisUser,
+    } = this.props;
+
+    return (<Tabs>
       <Tab label="Local">
         <MobileTearSheet>
-          <ul className="message-list" >
-            {messagesLocal.map((msg, i) =>
-              <ChatMessage key={i + msg} color={msg.color} user={msg.user} message={msg.message} timeStamp={msg.timeStamp} />
-            )}
-          </ul>
+          {messagesLocal.map((msg, i) => (
+            <ChatMessageLocal
+              key={i + msg}
+              color={msg.color}
+              user={msg.user}
+              message={msg.message}
+              timeStamp={msg.timeStamp}
+            />
+          ))}
+          <div id="end-of-local" />
         </MobileTearSheet>
         <ChatBoxLocal sendMessageLocal={sendMessageLocal} isWhite={isWhite} thisUser={thisUser} />
       </Tab>
       <Tab label="Global">
         <MobileTearSheet>
-          <ul className="message-list" >
-            {messagesGlobal.map((msg, i) =>
-              <div className="message" key={i + msg} ><span>{msg.user}</span>{msg.message}</div>
-            )}
-          </ul>
+          {messagesGlobal.map((msg, i) => (
+            <ChatMessageGlobal
+              key={i + msg}
+              isThisUser={msg.user === thisUser}
+              color={msg.color}
+              user={msg.user}
+              message={msg.message}
+              timeStamp={msg.timeStamp}
+            />
+          ))}
+          <div id="end-of-global" />
         </MobileTearSheet>
         <ChatBoxGlobal sendMessageGlobal={sendMessageGlobal} isWhite={isWhite} thisUser={thisUser} />
       </Tab>
-    </Tabs>
-  );
+    </Tabs>);
+  }
+}
 
 export default Messages;
 
