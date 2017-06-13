@@ -1,11 +1,13 @@
 const chessEncode = require('../chessEncode');
 const deepRed = require('../deepRed');
+const chessDB = require('../../chessDB');
 
 const { encodeWithState, decodeWithState } = chessEncode;
 const { findPiecePosition, mutateBoard } = deepRed.basic;
 const { getAllMovesWhite } = deepRed.movesWhite;
 const { getAllMovesBlack } = deepRed.movesBlack;
 const { displayBoard } = deepRed.display;
+const { saveDeepRedWhite, saveDeepRedBlack } = chessDB;
 
 const convertToArray = (pgn) => {
   let array = pgn.split('+').join('');
@@ -302,8 +304,19 @@ const games = [game, game2, enPassant, game3];
 
 const showBoard = true;
 
-games.forEach(thisGame => console.log(encodePGN(thisGame)));
 
 const game4 = '1.e4 a5 0-1';
 
 console.log(encodePGN(game4));
+
+const saveToDB = (moveList) => {
+  for (let i = 0; i < moveList.length; i += 1) {
+    if (i % 2 === 0) {
+      saveDeepRedWhite(moveList[i]);
+    } else {
+      saveDeepRedBlack(moveList[i]);
+    }
+  }
+};
+
+games.forEach(thisGame => saveToDB(encodePGN(thisGame)));

@@ -54,7 +54,7 @@ const knex = require('knex')(require('../knexfile'));
 //    );
 
 //   knex('games').where('room', game.room).then((res) => { 
-      
+
 //   var history = JSON.parse(res[0].history);
 //   history.push(game.history);
 
@@ -248,94 +248,94 @@ const saveDeepRedWhite = (entry) => {
       parent: entry.parent,
       board: entry.board,
     })
-    .then((res) => {
-      if (JSON.stringify(res) === '[]') {
-        knex.insert({
-          parent: entry.parent,
-          board: entry.board,
-          white_win: entry.white_win,
-          black_win: entry.black_win,
-          draw: entry.draw,
-          winPercentage: 100,
-        }).into('DeepRed_WhiteMoves').then((resp) => {
-          console.log(resp);
-        });
-      } else {
-        knex('DeepRed_WhiteMoves').where({
-          parent: entry.parent,
-          board: entry.board,
-        })
-        .update({
-          'white_win': res[0].white_win + 1,
-          'winPercentage': (res[0].white_win + 1) / (res[0].white_win + 1 + res[0].black_win + res[0].draw) * 100,
-        })
-        .then((resp) => {
-          console.log(resp);
-        });
-      }
-    });
+      .then((res) => {
+        if (JSON.stringify(res) === '[]') {
+          knex.insert({
+            parent: entry.parent,
+            board: entry.board,
+            white_win: entry.white_win,
+            black_win: entry.black_win,
+            draw: entry.draw,
+            winPercentage: 100,
+          }).into('DeepRed_WhiteMoves').then((resp) => {
+            console.log(resp);
+          });
+        } else {
+          knex('DeepRed_WhiteMoves').where({
+            parent: entry.parent,
+            board: entry.board,
+          })
+            .update({
+              'white_win': res[0].white_win + 1,
+              'winPercentage': (res[0].white_win + 1) / (res[0].white_win + 1 + res[0].black_win + res[0].draw) * 100,
+            })
+            .then((resp) => {
+              console.log(resp);
+            });
+        }
+      });
   } else if (entry.black_win === 1) {
     knex('DeepRed_WhiteMoves').where({
       parent: entry.parent,
       board: entry.board,
     })
-    .then((res) => {
-      if (JSON.stringify(res) === '[]') {
-        knex.insert({
-          parent: entry.parent,
-          board: entry.board,
-          white_win: entry.white_win,
-          black_win: entry.black_win,
-          draw: entry.draw,
-          winPercentage: 0,
-        }).into('DeepRed_WhiteMoves').then((resp) => {
-          console.log(resp);
-        });
-      } else {
-        knex('DeepRed_WhiteMoves').where({
-          parent: entry.parent,
-          board: entry.board,
-        })
-        .update({
-          'black_win': res[0].black_win + 1,
-          'winPercentage': (res[0].white_win) / (res[0].white_win + res[0].black_win + 1 + res[0].draw) * 100,
-        })
-        .then((resp) => {
-          console.log(resp);
-        });
-      }
-    });
+      .then((res) => {
+        if (JSON.stringify(res) === '[]') {
+          knex.insert({
+            parent: entry.parent,
+            board: entry.board,
+            white_win: entry.white_win,
+            black_win: entry.black_win,
+            draw: entry.draw,
+            winPercentage: 0,
+          }).into('DeepRed_WhiteMoves').then((resp) => {
+            console.log(resp);
+          });
+        } else {
+          knex('DeepRed_WhiteMoves').where({
+            parent: entry.parent,
+            board: entry.board,
+          })
+            .update({
+              'black_win': res[0].black_win + 1,
+              'winPercentage': (res[0].white_win) / (res[0].white_win + res[0].black_win + 1 + res[0].draw) * 100,
+            })
+            .then((resp) => {
+              console.log(resp);
+            });
+        }
+      });
   } else {
     knex('DeepRed_WhiteMoves').where({
       parent: entry.parent,
       board: entry.board,
     })
-    .then((res) => {
-      if (JSON.stringify(res) === '[]') {
-        knex.insert({
-          parent: entry.parent,
-          board: entry.board,
-          white_win: entry.white_win,
-          black_win: entry.black_win,
-          draw: entry.draw,
-          winPercentage: 0,
-        }).into('DeepRed_WhiteMoves').then((resp) => {
-          console.log(resp);
-        });
-      } else {
-        knex('DeepRed_WhiteMoves').where({
-          parent: entry.parent,
-          board: entry.board,
-        })
-        .update({
-          'draw': res[0].draw + 1,
-          'winPercentage': (res[0].white_win) / (res[0].white_win + res[0].black_win + res[0].draw + 1) * 100,
-        })
-        .then((resp) => {
-          console.log(resp)
-        });
-      }
-    });
+      .then((res) => {
+        if (JSON.stringify(res) === '[]') {
+          knex.insert({
+            parent: entry.parent,
+            board: entry.board,
+            white_win: entry.white_win,
+            black_win: entry.black_win,
+            draw: entry.draw,
+            winPercentage: 0,
+          }).into('DeepRed_WhiteMoves').then((resp) => {
+            console.log(resp);
+          });
+        } else {
+          knex('DeepRed_WhiteMoves').where({
+            parent: entry.parent,
+            board: entry.board,
+          })
+            .update({
+              'draw': res[0].draw + 1,
+              'winPercentage': (res[0].white_win) / (res[0].white_win + res[0].black_win + res[0].draw + 1) * 100,
+            })
+            .then((resp) => {
+              console.log(resp)
+            });
+        }
+      });
   }
 };
 
@@ -345,122 +345,124 @@ const saveDeepRedBlack = (entry) => {
       parent: entry.parent,
       board: entry.board,
     })
-    .then((res) => {
-      if (JSON.stringify(res) === '[]') {
-        knex.insert({
-          parent: entry.parent,
-          board: entry.board,
-          white_win: entry.white_win,
-          black_win: entry.black_win,
-          draw: entry.draw,
-          winPercentage: 0,
-        }).into('DeepRed_BlackMoves').then((resp) => {
-          console.log(resp);
-        });
-      } else {
-        knex('DeepRed_BlackMoves').where({
-          parent: entry.parent,
-          board: entry.board,
-        })
-        .update({
-          'white_win': res[0].white_win + 1,
-          'winPercentage': (res[0].black_win) / (res[0].white_win + 1 + res[0].black_win + res[0].draw) * 100,
-        })
-        .then((resp) => {
-          console.log(resp);
-        });
-      }
-    });
+      .then((res) => {
+        if (JSON.stringify(res) === '[]') {
+          knex.insert({
+            parent: entry.parent,
+            board: entry.board,
+            white_win: entry.white_win,
+            black_win: entry.black_win,
+            draw: entry.draw,
+            winPercentage: 0,
+          }).into('DeepRed_BlackMoves').then((resp) => {
+            console.log(resp);
+          });
+        } else {
+          knex('DeepRed_BlackMoves').where({
+            parent: entry.parent,
+            board: entry.board,
+          })
+            .update({
+              'white_win': res[0].white_win + 1,
+              'winPercentage': (res[0].black_win) / (res[0].white_win + 1 + res[0].black_win + res[0].draw) * 100,
+            })
+            .then((resp) => {
+              console.log(resp);
+            });
+        }
+      });
   } else if (entry.black_win === 1) {
     knex('DeepRed_BlackMoves').where({
       parent: entry.parent,
       board: entry.board,
     })
-    .then((res) => {
-      if (JSON.stringify(res) === '[]') {
-        knex.insert({
-          parent: entry.parent,
-          board: entry.board,
-          white_win: entry.white_win,
-          black_win: entry.black_win,
-          draw: entry.draw,
-          winPercentage: 100,
-        }).into('DeepRed_BlackMoves').then((resp) => {
-          console.log(resp);
-        });
-      } else {
-        knex('DeepRed_BlackMoves').where({
-          parent: entry.parent,
-          board: entry.board,
-        })
-        .update({
-          'black_win': res[0].black_win + 1,
-          'winPercentage': (res[0].black_win + 1) / (res[0].white_win + res[0].black_win + 1 + res[0].draw) * 100,
-        })
-        .then((resp) => {
-          console.log(resp);
-        });
-      }
-    });
+      .then((res) => {
+        if (JSON.stringify(res) === '[]') {
+          knex.insert({
+            parent: entry.parent,
+            board: entry.board,
+            white_win: entry.white_win,
+            black_win: entry.black_win,
+            draw: entry.draw,
+            winPercentage: 100,
+          }).into('DeepRed_BlackMoves').then((resp) => {
+            console.log(resp);
+          });
+        } else {
+          knex('DeepRed_BlackMoves').where({
+            parent: entry.parent,
+            board: entry.board,
+          })
+            .update({
+              'black_win': res[0].black_win + 1,
+              'winPercentage': (res[0].black_win + 1) / (res[0].white_win + res[0].black_win + 1 + res[0].draw) * 100,
+            })
+            .then((resp) => {
+              console.log(resp);
+            });
+        }
+      });
   } else {
     knex('DeepRed_BlackMoves').where({
       parent: entry.parent,
       board: entry.board,
     })
-    .then((res) => {
-      if (JSON.stringify(res) === '[]') {
-        knex.insert({
-          parent: entry.parent,
-          board: entry.board,
-          white_win: entry.white_win,
-          black_win: entry.black_win,
-          draw: entry.draw,
-          winPercentage: 0,
-        }).into('DeepRed_BlackMoves').then((resp) => {
-          console.log(resp);
-        });
-      } else {
-        knex('DeepRed_BlackMoves').where({
-          parent: entry.parent,
-          board: entry.board,
-        })
-        .update({
-          'draw': res[0].draw + 1,
-          'winPercentage': (res[0].black_win) / (res[0].white_win + res[0].black_win + res[0].draw + 1) * 100,
-        })
-        .then((resp) => {
-          console.log(resp);
-        });
-      }
-    });
+      .then((res) => {
+        if (JSON.stringify(res) === '[]') {
+          knex.insert({
+            parent: entry.parent,
+            board: entry.board,
+            white_win: entry.white_win,
+            black_win: entry.black_win,
+            draw: entry.draw,
+            winPercentage: 0,
+          }).into('DeepRed_BlackMoves').then((resp) => {
+            console.log(resp);
+          });
+        } else {
+          knex('DeepRed_BlackMoves').where({
+            parent: entry.parent,
+            board: entry.board,
+          })
+            .update({
+              'draw': res[0].draw + 1,
+              'winPercentage': (res[0].black_win) / (res[0].white_win + res[0].black_win + res[0].draw + 1) * 100,
+            })
+            .then((resp) => {
+              console.log(resp);
+            });
+        }
+      });
   }
-}; 
+};
 
-const getBestMoveFromDB = (encodedBoardWithState, color) => {
-  if (color === 'white') {
+const getMovesFromDB = (encodedBoardWithState, color, foundFn, notFoundFn) => {
+  if (color === 'W') {
     knex('DeepRed_WhiteMoves').where({
       parent: encodedBoardWithState,
     }).orderBy('winPercentage', 'desc')
-    .then((res) => {
-      if (JSON.stringify(res) === '[]'){
-        console.log('No Entry Found');
-        // AI does random Move
-      } else {
-        console.log('Best Possible Board:', res[0].board, res[0].winPercentage + '%' );
-      }
-    });
+      .then((res) => {
+        if (res.length === 0) {
+          console.log('No Entry Found');
+          notFoundFn();
+        } else {
+          // console.log('Best Possible Board:', res[0].board, res[0].winPercentage + '%');
+          foundFn(res);
+        }
+      });
   } else {
     knex('DeepRed_BlackMoves').where({
       parent: encodedBoardWithState,
     }).orderBy('winPercentage', 'desc')
-    .then((res) => {
-      if (JSON.stringify(res) === '[]'){
-        console.log('No Entry Found');
-        // AI does random Move
-      } else {
-        console.log('Best Possible Board:', res[0].board, res[0].winPercentage + '%' );
-      }
-    });
+      .then((res) => {
+        if (res.length === 0) {
+          console.log('No Entry Found');
+          notFoundFn();
+        } else {
+          // console.log('Best Possible Board:', res[0].board, res[0].winPercentage + '%');
+          foundFn(res);
+        }
+      });
   }
 };
 
@@ -469,28 +471,30 @@ const getNewMove = (encodedBoardWithState, color) => {
     knex('DeepRed_WhiteMoves').where({
       parent: encodedBoardWithState,
     }).orderBy('winPercentage', 'desc')
-    .then((res) => {
-      if (JSON.stringify(res) === '[]') {
-        console.log('No Entry Found');
-      } else {
-        console.log(res);
-      }
-    });
+      .then((res) => {
+        if (JSON.stringify(res) === '[]') {
+          console.log('No Entry Found');
+        } else {
+          console.log(res);
+        }
+      });
   } else {
     knex('DeepRed_BlackMoves').where({
       parent: encodedBoardWithState,
     }).orderBy('winPercentage', 'desc')
-    .then((res) => {
-      if (JSON.stringify(res) === '[]') {
-        console.log('No Entry Found');
-      } else {
-        console.log(res);
-      }
-    });
+      .then((res) => {
+        if (JSON.stringify(res) === '[]') {
+          console.log('No Entry Found');
+        } else {
+          console.log(res);
+        }
+      });
   }
 };
 
-module.exports.saveDeepRedWhite = saveDeepRedWhite;
-module.exports.saveDeepRedBlack = saveDeepRedBlack;
-module.exports.getBestMoveFromDB = getBestMoveFromDB;
-module.exports.getNewMove = getNewMove;
+module.exports = {
+  saveDeepRedWhite,
+  saveDeepRedBlack,
+  getMovesFromDB,
+  getNewMove,
+};
