@@ -15,7 +15,7 @@ const Header = ({ sendPauseRequest, sendResumeRequest, handleSurrender }) => (
               sendPauseRequest={sendPauseRequest}
               handleSurrender={handleSurrender}
             />
-            <a href="/profile" className="button">Home</a>
+            <a href="/" className="button">Home</a>
             <a href="/logout" className="button">Logout</a>
           </td>
         </tr>

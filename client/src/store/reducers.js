@@ -50,62 +50,20 @@ const gameState = (state = Immutable({
         moveHistory: action.game.moveHistoryEntry,
       });
     }
-    // case types.MOVE_PIECE: {
-    //   const cols = 'abcdefgh';
-    //   const from = cols[action.origin[1]] + (8 - action.origin[0]);
-    //   const to = cols[action.dest[1]] + (8 - action.dest[0]);
-    //   return Immutable({
-    //     ...state,
-    //     moveHistory: state.moveHistory.concat({ from, to }),
-    //     gameTurn: action.gameTurn,
-    //   });
-    // }
-    // case types.CASTLING_MOVE: {
-    //   let castleNotation = 'O-O';
-    //   if (action.castling[2] === 'Q') {
-    //     castleNotation = 'O-O-O';
-    //   }
-    //   return Immutable({
-    //     ...state,
-    //     moveHistory: state.moveHistory.concat({ castleNotation }),
-    //     gameTurn: action.gameTurn,
-    //   });
-    // }
-    // case types.EN_PASSANT_MOVE: {
-    //   const cols = 'abcdefgh';
-    //   const from = cols[action.origin[1]] + (8 - action.origin[0]);
-    //   const to = cols[action.dest[1]] + (8 - action.dest[0]);
-    //   return Immutable({
-    //     ...state,
-    //     moveHistory: state.moveHistory.concat({ from, to }),
-    //     gameTurn: action.gameTurn,
-    //   });
-    // }
-    // case types.PAWN_PROMOTION_MOVE: {
-    //   const cols = 'abcdefgh';
-    //   const from = cols[action.origin[1]] + (8 - action.origin[0]);
-    //   const to = cols[action.dest[1]] + (8 - action.dest[0]);
-    //   return Immutable({
-    //     ...state,
-    //     moveHistory: state.moveHistory.concat({ from, to }),
-    //     gameTurn: action.gameTurn,
-    //   });
-    // }
-    // case types.CAPTURE_PIECE: {
-    //   const cols = 'abcdefgh';
-    //   const from = cols[action.origin[1]] + (8 - action.origin[0]);
-    //   const to = cols[action.dest[1]] + (8 - action.dest[0]);
-    //   const capturedPiece = action.capturedPiece;
-    //   const capturedPiecesArray = (capturedPiece[0] === 'W') ? 'capturedPiecesBlack' : 'capturedPiecesWhite';
-    //   const newState = {
-    //     ...state,
-    //     moveHistory: state.moveHistory.concat({ from, to, capturedPiece }),
-    //     capturedPiecesArray: state[capturedPiecesArray].concat(capturedPiece),
-    //     gameTurn: action.gameTurn,
-    //   };
-    //   newState[capturedPiecesArray] = state[capturedPiecesArray].concat(capturedPiece);
-    //   return Immutable(newState);
-    // }
+    case types.UPDATE_CAPTURED_PIECES: {
+      return Immutable({
+        ...state,
+        capturedPiecesBlack: action.blackCapPieces,
+        capturedPiecesWhite: action.whiteCapPieces,
+      });
+    }
+    case types.CLEAR_CAPTURED_PIECES: {
+      return Immutable({
+        ...state,
+        capturedPiecesBlack: [],
+        capturedPiecesWhite: [],
+      });
+    }
     case types.UPDATE_TIMER: {
       return Immutable({
         ...state,
@@ -204,57 +162,25 @@ const boardState = (state = {
   ],
 }, action) => {
   switch (action.type) {
-    // case types.MOVE_PIECE: {
-    //   const board = state.board.slice(0);
-    //   board[action.dest[0]][action.dest[1]]
-    //     = board[action.origin[0]][action.origin[1]];
-    //   board[action.origin[0]][action.origin[1]] = null;
-    //   return { board };
-    // }
-    // case types.CAPTURE_PIECE: {
-    //   const board = state.board.slice(0);
-    //   board[action.dest[0]][action.dest[1]]
-    //     = board[action.origin[0]][action.origin[1]];
-    //   board[action.origin[0]][action.origin[1]] = null;
-    //   return { board };
-    // }
-    // case types.CASTLING_MOVE: {
-    //   const board = state.board.slice(0);
-    //   board[action.dest[0]][action.dest[1]]
-    //     = board[action.origin[0]][action.origin[1]];
-    //   board[action.origin[0]][action.origin[1]] = null;
-    //   if (action.castling === 'BRQ') {
-    //     board[0][3] = 'BR';
-    //     board[0][0] = null;
-    //   } else if (action.castling === 'BRK') {
-    //     board[0][5] = 'BR';
-    //     board[0][7] = null;
-    //   } else if (action.castling === 'WRQ') {
-    //     board[7][3] = 'WR';
-    //     board[7][0] = null;
-    //   } else if (action.castling === 'WRK') {
-    //     board[7][5] = 'WR';
-    //     board[7][7] = null;
-    //   }
-    //   return { board };
-    // }
-    // case types.EN_PASSANT_MOVE: {
-    //   const board = state.board.slice(0);
-    //   board[action.dest[0]][action.dest[1]]
-    //     = board[action.origin[0]][action.origin[1]];
-    //   board[action.origin[0]][action.origin[1]] = null;
-    //   board[action.enPassantCoord[0]][action.enPassantCoord[1]] = null;
-    //   return { board };
-    // }
-    // case types.PAWN_PROMOTION_MOVE: {
-    //   const board = state.board.slice(0);
-    //   board[action.dest[0]][action.dest[1]]
-    //     = action.pawnPromotionPiece;
-    //   board[action.origin[0]][action.origin[1]] = null;
-    //   return { board };
-    // }
     case types.RECEIVE_GAME: {
       return { board: action.game.board };
+    }
+    case types.UPDATE_BOARD: {
+      return { board: action.board };
+    }
+    case types.RESET_BOARD: {
+      return {
+        board: [
+          ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+          ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+          [null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null],
+          ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+          ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
+        ],
+      };
     }
     default:
       return state;
@@ -607,6 +533,23 @@ const controlState = (state = Immutable({
   }
 };
 
+const aiState = (state = Immutable({
+  game: [],
+}), action) => {
+  switch (action.type) {
+    case types.ADD_AI_GAME: {
+      return Immutable({
+        ...state,
+        // playerW: action.player.data.display,
+        // playerWemail: action.player.data.email,
+        game: action.game,
+      });
+    }
+    default:
+      return state;
+  }
+};
+
 const rootReducer = combineReducers({
   gameState,
   boardState,
@@ -614,6 +557,7 @@ const rootReducer = combineReducers({
   userState,
   squareState,
   controlState,
+  aiState,
 });
 
 export default rootReducer;

@@ -157,6 +157,25 @@ export const receiveGame = game => ({
   game,
 });
 
+export const updateBoard = board => ({
+  type: types.UPDATE_BOARD,
+  board,
+});
+
+export const resetBoard = () => ({
+  type: types.RESET_BOARD,
+});
+
+export const updateCapturedPieces = (blackCapPieces, whiteCapPieces) => ({
+  type: types.UPDATE_CAPTURED_PIECES,
+  blackCapPieces,
+  whiteCapPieces,
+});
+
+export const clearCapturedPieces = () => ({
+  type: types.CLEAR_CAPTURED_PIECES,
+});
+
 // userState actions
 export const setPlayer = player => ({
   type: types.SET_PLAYER,
