@@ -1,1 +1,0 @@
-const chessEval = require('../chessEval');

@@ -22,15 +22,45 @@ const capturedPiecesScore = (capturedWhite, capturedBlack) => {
   let blackScore = 0;
   const isEndGame = (capturedWhite.length + capturedBlack.length) >= 16;
 
-  const score = pieceScore(isEndGame);
+  const value = pieceScore(isEndGame);
 
-  capturedWhite.forEach((piece) => { whiteScore += score[piece[1]]; });
-  capturedBlack.forEach((piece) => { blackScore += score[piece[1]]; });
+  capturedWhite.forEach((piece) => { whiteScore += value[piece[1]]; });
+  capturedBlack.forEach((piece) => { blackScore += value[piece[1]]; });
 
   return whiteScore - blackScore;
+};
+
+
+/**
+ * Return the value of each player's pieces on the board
+ * @param {array} board
+ * @return {object} { whiteScore, blackScore }
+ */
+
+const boardPiecesScore = (board) => {
+  const whitePieces = [];
+  const blackPieces = [];
+
+  board.forEach(row =>
+    row.forEach(col =>
+      ((col === 'W') ? whitePieces.push(col) : blackPieces.spush(col))));
+
+  const value = pieceScore((whitePieces.length + blackPieces.length) < 12);
+
+  let whiteScore = 0;
+  let blackScore = 0;
+
+  whitePieces.forEach((piece) => { whiteScore += value[piece[1]]; });
+  blackPieces.forEach((piece) => { blackScore += value[piece[1]]; });
+
+  return {
+    whiteScore,
+    blackScore,
+  };
 };
 
 module.exports = {
   pieceScore,
   capturedPiecesScore,
+  boardPiecesScore,
 };
