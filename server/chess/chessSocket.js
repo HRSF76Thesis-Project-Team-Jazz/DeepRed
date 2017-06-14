@@ -179,8 +179,6 @@ module.exports = (io, client) => {
             allRooms[i].playerBid = '';
             allRooms[i].playerBtime = 600;
             if (allRooms[i].playerW === undefined || allRooms[i].playerW === 'AI') {
-              console.log('playerW: ', allRooms[i].playerW);
-              console.log('1234567');
               allRooms[i] = null;
               queue.push(i);
             }

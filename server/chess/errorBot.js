@@ -33,7 +33,7 @@ const errorBot = (key) => {
                           ],
   }
 
-  console.log('key: ', key);
+  // console.log('key: ', key);
   if (errorStore.hasOwnProperty(key)) {
       if (errorStore[key].length === 1) {
         return errorStore[key][0];

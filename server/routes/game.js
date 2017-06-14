@@ -27,7 +27,7 @@ const processResponse = (err, response) => {
     if (!response.output) {
       response.output = {};
     }
-    console.log('response: ', response);
+    // console.log('response: ', response);
     return response;
   }
 };
