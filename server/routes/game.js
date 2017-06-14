@@ -8,7 +8,7 @@ let local;
 if (env === 'local' || env === 'localtest') local = require('../../config/config.dev.js');
 
 const conversation = new ConversationV1({
-  url: 'https://gateway.watsonplatform.net/conversation/api',
+  // url: 'https://gateway.watsonplatform.net/conversation/api',
   username: process.env.WATSON_USERNAME || local.Watson.username,
   password: process.env.WATSON_PASSWORD || local.Watson.password,
   path: { workspace_id: '4440e6fc-92da-4518-afb9-9f47aae615cc' },
@@ -46,12 +46,12 @@ router.route('/updateUserGameStat')
   .post((req, res) => {
     console.log(req.body);
     // query function goes here to update user game win lose stats
-    res.send();
+    res.send('done');
   });
 
 router.route('/conversation')
   .post((req, res) => {
-    console.log('triggered event and message: ', req.body);
+    // console.log('triggered event and message: ', req.body);
 
     const payload = {
       workspace_id: '4440e6fc-92da-4518-afb9-9f47aae615cc',
@@ -66,7 +66,7 @@ router.route('/conversation')
 
   router.route('/errorMessage')
     .post((req, res) => {
-      console.log('req: ', req.body.input);
+      // console.log('req: ', req.body.input);
       res.send(errorBot(req.body.input));
     });
 
