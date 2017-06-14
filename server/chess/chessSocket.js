@@ -1,6 +1,8 @@
 const ChessGame = require('./ChessGame');
-// const chessDB = require('../chessDB');
+const chessDB = require('../chessDB');
 const { simulateGamesAIvAI, simulateWinningGameAIvAI } = require('./gameSimulation/gamePlayAIvAI');
+const { getAllMoves, getMovesFromDB } = chessDB;
+const { encodeWithState } = require('./chessEncode');
 
 const allGames = {};
 const allRooms = [];
@@ -86,6 +88,9 @@ module.exports = (io, client) => {
         roomInfo.playerBclicked = false;
         io.in(room).emit('joinRoomCompleted', roomInfo, allRooms);
         io.emit('updateAllRooms', allRooms);
+        getAllMoves('B', (res) => {
+          io.in(room).emit('messageLocal',  { message: 'DeepRed has analyzed ' + res + ' Total Black Moves' , color: 'red', timeStamp: new Date() });
+        });
       }
       count += 1;
       roomInfo = {};
@@ -123,6 +128,9 @@ module.exports = (io, client) => {
         allGames[room].moveAI((gameState) => {
           io.in(room).emit('joinRoomCompleted', roomInfo, allRooms, gameState.game);
           io.emit('updateAllRooms', allRooms);
+          getAllMoves('W', (res) => {
+            io.in(room).emit('messageLocal',  { message: 'DeepRed has analyzed ' + res + ' Total White Moves' , color: 'red', timeStamp: new Date() });
+          });
           count += 1;
           roomInfo = {};
         });
@@ -212,6 +220,10 @@ module.exports = (io, client) => {
         pawnPromoteType,
         gameMode
       );
+      const request = encodeWithState(allGames[clientRoom].board, allGames[clientRoom].generatePieceState());
+      getMovesFromDB(request, allGames[clientRoom].turn, (res) => {
+        io.in(room).emit('messageLocal', { message: 'DeepRed has analyzed this move ' + res.length + ' times', color: 'red', timeStamp: new Date() })
+      }, () => { io.in(room).emit('messageLocal', { message: 'DeepRed has analyzed this board 0 times', color: 'red', timeStamp: new Date() })});
     }
   });
 

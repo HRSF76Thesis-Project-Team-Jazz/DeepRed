@@ -492,9 +492,28 @@ const getNewMove = (encodedBoardWithState, color) => {
   }
 };
 
+const getAllMoves = (color, foundFn) => {
+  if (color === 'W') {
+    knex.column('white_win','black_win','draw').select().from('DeepRed_WhiteMoves').then((res) => {
+      let total = 0;
+      res.forEach((entry) => { total += entry.white_win + entry.black_win + entry.draw });
+      console.log('Total Learned Moves: ', total);
+      foundFn(total);
+    });
+  } else {
+    knex.column('white_win','black_win','draw').select().from('DeepRed_BlackMoves').then((res) => {
+      let total = 0;
+      res.forEach((entry) => { total += entry.white_win + entry.black_win + entry.draw });
+      console.log('Total Learned Moves: ', total);
+      foundFn(total);
+    });
+  }
+};
+
 module.exports = {
   saveDeepRedWhite,
   saveDeepRedBlack,
   getMovesFromDB,
   getNewMove,
+  getAllMoves,
 };
