@@ -51,5 +51,5 @@ gamesArr.forEach((str) => {
   }
 });
 for (let i = 0; i < encodeResults.length; i += 1) {
-  setTimeout(() => saveToDB(encodeResults[i]), i * 1000);
+  setTimeout(() => saveToDB(encodeResults[i]), i * 1500);
 }
