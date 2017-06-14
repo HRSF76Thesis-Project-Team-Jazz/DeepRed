@@ -1,7 +1,10 @@
 const express = require('express');
 const ChessGame = require('../chess/ChessGame');
 const ConversationV1 = require('watson-developer-cloud/conversation/v1');
-const local = require('../../config/config.dev.js');
+
+const env = process.env.NODE_ENV || 'local';
+let local;
+if (env === 'local') local = require('../../config/config.dev.js');
 
 const conversation = new ConversationV1({
   url: 'https://gateway.watsonplatform.net/conversation/api',
