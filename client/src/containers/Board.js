@@ -24,12 +24,13 @@ class Board extends Component {
     const {
       dispatch, board, origin, selectedPiece, room, gameTurn,
       isWhite, attemptMove, checkLegalMoves, boolBoard, gameMode,
-      conversation,
+      conversation, renderError,
     } = this.props;
 
     if ((isWhite && gameTurn === 'B') || (!isWhite && gameTurn === 'W')) {
       // dispatch(displayError('Not your turn.'));
-      conversation('Not your turn.');
+      // conversation('Not your turn.');
+      renderError('Not your turn.');
     } else {
       const selection = board[dest[0]][dest[1]];
       console.log('SELECTION: ', selection);
