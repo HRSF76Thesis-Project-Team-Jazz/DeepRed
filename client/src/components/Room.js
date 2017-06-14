@@ -69,6 +69,7 @@ messagesGlobal, sendMessageLocal, messagesLocal, thisUser, isWhite }) => (
       </div>
       <div className="grid existing-room">
       <p className="title-text">Existing rooms </p>
+      <table>
         <tbody>
           {
             allRooms.map((room, i) => {
@@ -106,6 +107,7 @@ messagesGlobal, sendMessageLocal, messagesLocal, thisUser, isWhite }) => (
             })
           }
         </tbody>
+      </table>
       </div>
       <div className="grid">
         <p className="title-text">Global Chat</p>
