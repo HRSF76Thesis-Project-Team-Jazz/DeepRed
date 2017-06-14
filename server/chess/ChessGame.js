@@ -420,6 +420,21 @@ class ChessGame {
         if (deepRedMove.newPiece) {
           deepRedPawnPromotionValue = deepRedMove.newPiece[1];
         }
+        if (deepRedMove.move === 'castle') {
+          if (deepRedMove.color === 'W' && deepRedMove.side === 'O-O') {
+            deepRedOrigin = [7, 4];
+            deepRedDest = [7, 6];
+          } else if (deepRedMove.color === 'W' && deepRedMove.side === 'O-O-O') {
+            deepRedOrigin = [7, 4];
+            deepRedDest = [7, 2];
+          } else if (deepRedMove.color === 'B' && deepRedMove.side === 'O-O') {
+            deepRedOrigin = [0, 4];
+            deepRedDest = [0, 6];
+          } else if (deepRedMove.color === 'B' && deepRedMove.side === 'O-O-O') {
+            deepRedOrigin = [0, 4];
+            deepRedDest = [0, 2];
+          }
+        }
       }
       this.movePiece(deepRedOrigin, deepRedDest, deepRedPawnPromotionValue, 'default', cb);
     };
