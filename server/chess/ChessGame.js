@@ -112,8 +112,8 @@ class ChessGame {
         this.moveAI(cb);
       } else {
         // console.log(this.history);
-        // console.log(this.board);
-        // console.log('Move piece is successful.');
+        console.log(this.board);
+        console.log('Move piece is successful.');
         cb({
           game: this,
           error: null,

@@ -153,7 +153,7 @@ class App extends Component {
   updateUserGameStat(arr) {
     axios.post('/api/game/updateUserGameStat', arr)
       .then((response) => {
-        console.log('successfully sent user win lose information to server: ', response);
+        // console.log('successfully sent user win lose information to server: ', response);
       })
       .catch((err) => {
         console.error('failed to send user win lose information to the server! ', err);
@@ -188,10 +188,10 @@ class App extends Component {
       dispatch(selectRoomClose());
       dispatch(updateAllRooms(allRooms));
       dispatch(updateRoomInfo(roomInfo));
-      dispatch(updateTimer(roomInfo));
       if (game) {
         dispatch(receiveGame(game));
-      }
+      };
+      dispatch(updateTimer(roomInfo));
       this.decrementTimerW();
     });
 
