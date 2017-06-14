@@ -22,8 +22,8 @@
 .red-chat {
   clear: both;
   float: center;
-  text-align: left;
-  width: 90%;
+  text-align: center;
+  width: 98%;
   background-color:#cc0000;
   color: white;
 }

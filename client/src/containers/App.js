@@ -102,7 +102,7 @@ class App extends Component {
         console.error('failed to obtain current user infomation!', err);
       });
   }
-  // this.conversation(`${player1}-win`);
+
   conversation(message, context) {
     message = message || '';
     context = context || '';
@@ -122,7 +122,7 @@ class App extends Component {
           user: thisUser, 
           color: 'red',
           message: response.data.output.text[0],
-          timeStamp: new Date(),
+          timeStamp: JSON.stringify(new Date()),
         }));
       })
       .catch((err) => {
@@ -272,9 +272,6 @@ class App extends Component {
                 if (game.event[i] === 'enpassant' && gameTurn === 'W') {
                   intent = `${specialTable[game.event[i]]}Win`;
                 }
-                console.log('thisUser: ', thisUser);
-                console.log('gameTurn: ', gameTurn);
-                console.log('playerW: ', playerW);
                 if (game.event[i] === 'castle' && gameTurn === 'W' && thisUser === playerW) {
                   intent = `${specialTable[game.event[i]]}Win`;
                 }
@@ -301,9 +298,6 @@ class App extends Component {
                 if (game.event[i] === 'enpassant' && gameTurn === 'B') {
                   intent = `${specialTable[game.event[i]]}Win`;
                 }
-                console.log('thisUser: ', thisUser);
-                console.log('gameTurn: ', gameTurn);
-                console.log('playerB: ', playerB);
                 if (game.event[i] === 'castle' && gameTurn === 'B' && thisUser === playerB) {
                   intent = `${specialTable[game.event[i]]}Win`;
                 }
