@@ -65,5 +65,16 @@ describe('Watson conversation and error message handler', () => {
       expect(res.text).to.equal('system error')
     })
     .end(done);
-  })
+  });
+
+  it('should return correct message for correct entry', (done) => {
+      request(app)
+      .post('/api/game/errorMessage')
+      .send({input: 'Not your turn.'})
+      .expect(200)
+      .expect(res => {
+        expect(res.text).to.equal('Back up there...' || 'Reign in those horses.' ||'Don\'t worry, your turn is coming'); 
+      })
+      .end(done);
+  });
 });
