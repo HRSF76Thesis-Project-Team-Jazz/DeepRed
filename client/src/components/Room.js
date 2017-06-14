@@ -68,10 +68,10 @@ messagesGlobal, sendMessageLocal, messagesLocal, thisUser, isWhite }) => (
       <p className="title-text">Existing rooms </p>
         <tbody>
           {
-            allRooms.map((room) => {
+            allRooms.map((room, i) => {
               if (room !== null) {
                 return (
-                  <tr>
+                  <tr key={i}>
                     <th className="room-name">
                       {room.room}
                     </th>
