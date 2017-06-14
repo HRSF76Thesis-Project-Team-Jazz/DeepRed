@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Messages from './Messages';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
@@ -57,12 +58,14 @@ messagesGlobal, sendMessageLocal, messagesLocal, thisUser, isWhite }) => (
           onTouchTap={() => handleCreateRoomAsBlack('AI')}
         />
         <p>AI vs AI</p>
-        <RaisedButton
-          label="Start"
-          style={selectSideActionsStyle}
-          secondary
-          onTouchTap={() => handleCreateRoomAsWhite('default')}
-        />
+        <Link to="/ai">
+          <RaisedButton
+            label="Start"
+            style={selectSideActionsStyle}
+            secondary
+            onTouchTap={() => handleCreateRoomAsWhite('default')}
+          />
+        </Link>
       </div>
       <div className="grid existing-room">
       <p className="title-text">Existing rooms </p>
@@ -115,10 +118,9 @@ messagesGlobal, sendMessageLocal, messagesLocal, thisUser, isWhite }) => (
           isWhite={isWhite}
           thisUser={thisUser}
         />*/}
-      </div> 
+      </div>
     </div>
   </div>
 );
 
 export default Room;
-

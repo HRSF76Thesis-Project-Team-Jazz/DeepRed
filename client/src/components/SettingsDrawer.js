@@ -46,7 +46,7 @@ class SettingsDrawer extends Component {
           open={this.state.open}
           onRequestChange={open => this.setState({ open })}
         >
-          <Link to="/profile#">
+          <Link to="/ai">
             <MenuItem
               onTouchTap={this.handleClose}
               leftIcon={<SocialPerson />}

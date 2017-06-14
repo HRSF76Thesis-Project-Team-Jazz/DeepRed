@@ -10,8 +10,8 @@
 const isLegalMove = require('./isLegalMove');
 const { isCheckmateWhite, isStalemateBlack, blackIsChecked, isCheckmateBlack,
 isStalemateWhite, whiteIsChecked } = require('./deepRed/endGameChecks');
-const { whiteMove, blackMove } = require('./deepRed/playerVsAI');
 const { encodeWithState } = require('./chessEncode');
+const { chooseBestMoveFromDB } = require('./moveSelection/movesFromDB');
 const chessDB = require('../chessDB');
 
 class ChessGame {
@@ -44,10 +44,10 @@ class ChessGame {
     this.event = [];
   }
 
-  movePiece(origin, dest, pawnPromotionValue = null, gameMode = 'default') {
+  movePiece(origin, dest, pawnPromotionValue = null, gameMode = 'default', cb) {
     const error = this.errorCheck(origin, dest);
     if (error) {
-      return { game: this, error };
+      cb({ game: this, error });
     }
     this.event = [];
     const originPiece = this.board[origin[0]][origin[1]];
@@ -59,15 +59,15 @@ class ChessGame {
       testBoard[dest[0]][dest[1]] = originPiece;
       testBoard[origin[0]][origin[1]] = null;
       if (this.turn === 'W' && whiteIsChecked(testBoard)) {
-        return {
+        cb({
           game: this,
           error: 'Cannot leave yourself in check.',
-        };
+        });
       } else if (this.turn === 'B' && blackIsChecked(testBoard)) {
-        return {
+        cb({
           game: this,
           error: 'Cannot leave yourself in check.',
-        };
+        });
       }
 
       // handle castling
@@ -109,19 +109,21 @@ class ChessGame {
       this.moveHistoryEntry.push(this.generateMoveHistoryEntry(origin, dest,
         destPiece, pawnPromotionValue, legalMoveResult));
       if (gameMode === 'AI' && !this.winner) {
-        this.moveAI();
+        this.moveAI(cb);
+      } else {
+        // console.log(this.history);
+        // console.log(this.board);
+        // console.log('Move piece is successful.');
+        cb({
+          game: this,
+          error: null,
+        });
       }
-      // console.log(this.history);
-      // console.log(this.board);
-      // console.log('Move piece is successful.');
-      return {
-        game: this,
-        error: null,
-      };
+    } else {
+      cb({ game: this, error: 'Move is not allowed.' });
     }
     // console.log(this.board);
     // console.log(error);
-    return { game: this, error: 'Move is not allowed.' };
   }
 
   errorCheck(origin, dest) {
@@ -402,28 +404,26 @@ class ChessGame {
     return returnStr;
   }
 
-  moveAI() {
+  moveAI(cb) {
     const pieceState = this.generatePieceState();
-    let deepRedMove;
-    if (this.turn === 'W') {
-      deepRedMove = whiteMove(this.board, pieceState);
-    } else if (this.turn === 'B') {
-      deepRedMove = blackMove(this.board, pieceState);
-    }
-    let deepRedOrigin;
-    let deepRedDest;
-    let deepRedPawnPromotionValue = null;
-    if (Array.isArray(deepRedMove[0])) {
-      deepRedOrigin = [parseInt(deepRedMove[0][0][0], 10), parseInt(deepRedMove[0][0][1], 10)];
-      deepRedDest = deepRedMove[0][1];
-    } else if (typeof deepRedMove[0] === 'object') {
-      deepRedOrigin = deepRedMove.from;
-      deepRedDest = deepRedMove.to;
-      if (deepRedMove.newPiece) {
-        deepRedPawnPromotionValue = deepRedMove.newPiece[1];
+    const encodedBoard = encodeWithState(this.board, pieceState);
+    const callback = (deepRedMove) => {
+      let deepRedOrigin;
+      let deepRedDest;
+      let deepRedPawnPromotionValue = null;
+      if (Array.isArray(deepRedMove)) {
+        deepRedOrigin = [parseInt(deepRedMove[0][0], 10), parseInt(deepRedMove[0][1], 10)];
+        deepRedDest = deepRedMove[1];
+      } else if (typeof deepRedMove === 'object') {
+        deepRedOrigin = deepRedMove.from;
+        deepRedDest = deepRedMove.to;
+        if (deepRedMove.newPiece) {
+          deepRedPawnPromotionValue = deepRedMove.newPiece[1];
+        }
       }
-    }
-    this.movePiece(deepRedOrigin, deepRedDest, deepRedPawnPromotionValue, 'default');
+      this.movePiece(deepRedOrigin, deepRedDest, deepRedPawnPromotionValue, 'default', cb);
+    };
+    chooseBestMoveFromDB(encodedBoard, this.turn, callback);
   }
 
 }

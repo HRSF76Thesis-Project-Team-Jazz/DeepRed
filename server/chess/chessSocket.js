@@ -1,5 +1,6 @@
 const ChessGame = require('./ChessGame');
 // const chessDB = require('../chessDB');
+const { simulateGamesAIvAI, simulateWinningGameAIvAI } = require('./gameSimulation/gamePlayAIvAI');
 
 const allGames = {};
 const allRooms = [];
@@ -17,6 +18,42 @@ module.exports = (io, client) => {
 
   client.on('getAllRooms', (id) => {
     io.to(id).emit('returnAllRooms', allRooms);
+  });
+
+  client.on('createRoomAsWhite', (currentUserName, currentUserEmail, id, gameMode) => {
+    if (queue.length !== 0) {
+      room = `room ${queue.splice(0, 1)}`;
+    } else {
+      room = `room ${count}`;
+    }
+    client.join(room, () => {
+      roomInfo.room = room;
+      roomInfo.playerW = currentUserName;
+      roomInfo.playerWemail = currentUserEmail;
+      roomInfo.playerWid = client.client.id;
+      roomInfo.playerWtime = 600;
+      roomInfo.playerWclicked = false;
+      createAndSaveNewGame(room);
+      const num = parseInt(room[room.length - 1], 10);
+      if (count !== num) {
+        count = num;
+      }
+      roomInfo.count = count;
+      allRooms[count] = roomInfo;
+      io.emit('updateAllRooms', allRooms);
+      io.to(room).emit('createRoomCompleted', roomInfo, allRooms);
+      if (gameMode === 'AI') {
+        roomInfo.playerB = 'AI';
+        roomInfo.playerBemail = 'AI@AI';
+        roomInfo.playerBid = 12345;
+        roomInfo.playerBtime = 600;
+        roomInfo.playerBclicked = false;
+        io.in(room).emit('joinRoomCompleted', roomInfo, allRooms);
+        io.emit('updateAllRooms', allRooms);
+      }
+      count += 1;
+      roomInfo = {};
+    });
   });
 
   client.on('createRoomAsWhite', (currentUserName, currentUserEmail, id, gameMode) => {
@@ -84,9 +121,10 @@ module.exports = (io, client) => {
         roomInfo.playerWtime = 600;
         roomInfo.playerWclicked = false;
         const currentGame = allGames[room];
-        currentGame.moveAI();
-        io.in(room).emit('joinRoomCompleted', roomInfo, allRooms, currentGame);
-        io.emit('updateAllRooms', allRooms);
+        currentGame.moveAI((gameState) => {
+          io.in(room).emit('joinRoomCompleted', roomInfo, allRooms, gameState.game);
+          io.emit('updateAllRooms', allRooms);
+        });
       }
       count += 1;
       roomInfo = {};
@@ -166,8 +204,15 @@ module.exports = (io, client) => {
     console.log('Attempted Move: ', origin, dest);
     console.log('Room Number: ', clientRoom);
     if (allGames[clientRoom]) {
-      const newGameState = allGames[clientRoom].movePiece(origin, dest, pawnPromoteType, gameMode);
-      io.in(clientRoom).emit('attemptMoveResult', newGameState.error, newGameState.game, origin, dest, selection);
+      allGames[clientRoom].movePiece(
+        origin,
+        dest,
+        pawnPromoteType,
+        gameMode,
+        ((newGameState) => {
+          io.in(clientRoom).emit('attemptMoveResult', newGameState.error, newGameState.game, origin, dest, selection);
+        })
+      );
     }
   });
 
@@ -175,6 +220,13 @@ module.exports = (io, client) => {
     if (origin && allGames[clientRoom]) {
       const boolBoard = allGames[clientRoom].checkAllMovesOfOrigin(origin);
       io.to(id).emit('checkLegalMovesResults', boolBoard);
+    }
+  });
+
+  client.on('startAIvAI', (id, numOfGames) => {
+    if (id) {
+      const result = simulateWinningGameAIvAI(numOfGames, false);
+      io.to(id).emit('startAIvAIResults', result.winningGames, result.gameSummary);
     }
   });
 

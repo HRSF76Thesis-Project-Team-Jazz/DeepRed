@@ -386,7 +386,7 @@ const simulateGames = (number, displayAll, displayFn) => {
 
         /*  ONE HUNDRED MOVES */
 
-        if ((newState.moveCount >= 100)) {
+        if ((newState.moveCount >= MAX_GAME_LENGTH)) {
           gameEnded = true;
           console.log('**** 100 Moves ***', newState);
           gameSummary.end100moves += 1;
