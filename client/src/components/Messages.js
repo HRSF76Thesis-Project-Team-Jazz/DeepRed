@@ -21,11 +21,11 @@ class Messages extends Component {
   render() {
     const {
       messagesLocal, messagesGlobal, sendMessageLocal,
-      sendMessageGlobal, isWhite, thisUser,
+      sendMessageGlobal, isWhite, thisUser, gameMode,
     } = this.props;
 
     return (<Tabs>
-      <Tab label="Local">
+      <Tab label={gameMode === 'default' ? 'LOCAL' : 'DEEPRED'}>
         <MobileTearSheet>
           {messagesLocal.map((msg, i) => (
             <ChatMessageLocal

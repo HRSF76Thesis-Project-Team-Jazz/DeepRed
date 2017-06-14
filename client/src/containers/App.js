@@ -17,7 +17,7 @@ import {
   selectSideOpen, selectSideClose, updateAllRooms, setPlayerId,
   enPassantMove, pawnPromotionMove, resumeDialogOpen, resumeDialogClose, cancelResumeDialogOpen,
   cancelResumeDialogClose, announceSurrenderDialogOpen, announceSurrenderDialogClose,
-  updateGameMode, openWinnerDialog, openCheckDialog,
+  updateGameMode, openWinnerDialog, openCheckDialog, gameMode,
 } from '../store/actions';
 // Components
 import Header from '../components/Header';
@@ -693,7 +693,7 @@ class App extends Component {
       capturedPiecesBlack, capturedPiecesWhite, resumeOpen,
       playerB, playerW, error, messagesLocal, messagesGlobal, isWhite, thisUser,
       chooseGameModeOpen, chooseRoomOpen, chooseSideOpen, allRooms,
-      cancelResumeOpen, surrenderOpen,
+      cancelResumeOpen, surrenderOpen, gameMode,
     } = this.props;
 
     const pauseActions = [
@@ -836,6 +836,7 @@ class App extends Component {
                 sendMessageGlobal={this.sendMessageGlobal}
                 isWhite={isWhite}
                 thisUser={thisUser}
+                gameMode={gameMode}
               />
             </div>
 
