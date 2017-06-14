@@ -12,7 +12,7 @@ import {
   unselectPiece, capturePiece, displayError, colorSquare, sendMsgLocal, sendMsgGlobal,
   updateTimerB, timeInstanceB, updateTimerW, timeInstanceW, saveBoolBoard, castlingMove,
   selectGameModeClose, selectRoomOpen, selectRoomClose,
-  selectSideOpen, selectSideClose, updateAllRooms, updateRoomQueue, setPlayerId,
+  selectSideOpen, selectSideClose, updateAllRooms, setPlayerId,
   enPassantMove, pawnPromotionMove, resumeDialogOpen, resumeDialogClose, cancelResumeDialogOpen,
   cancelResumeDialogClose, announceSurrenderDialogOpen, announceSurrenderDialogClose,
   updateGameMode, openWinnerDialog, openCheckDialog,
@@ -102,8 +102,8 @@ class App extends Component {
         console.error('failed to obtain current user infomation!', err);
       });
   }
-  // this.conversation(`${player1}-win`);
-  conversation(context, message) {
+
+  conversation(message, context) {
     message = message || '';
     context = context || '';
     const payload = {
@@ -122,7 +122,7 @@ class App extends Component {
           user: thisUser, 
           color: 'red',
           message: response.data.output.text[0],
-          // timeStamp: new Date(),
+          timeStamp: JSON.stringify(new Date()),
         }));
       })
       .catch((err) => {
@@ -272,7 +272,7 @@ class App extends Component {
                 if (game.event[i] === 'enpassant' && gameTurn === 'W') {
                   intent = `${specialTable[game.event[i]]}Win`;
                 }
-                if (game.event[i] === 'castle' && gameTurn === 'W') {
+                if (game.event[i] === 'castle' && gameTurn === 'W' && thisUser === playerW) {
                   intent = `${specialTable[game.event[i]]}Win`;
                 }
               }
@@ -298,7 +298,7 @@ class App extends Component {
                 if (game.event[i] === 'enpassant' && gameTurn === 'B') {
                   intent = `${specialTable[game.event[i]]}Win`;
                 }
-                if (game.event[i] === 'castle' && gameTurn === 'B') {
+                if (game.event[i] === 'castle' && gameTurn === 'B' && thisUser === playerB) {
                   intent = `${specialTable[game.event[i]]}Win`;
                 }
               }
@@ -347,21 +347,33 @@ class App extends Component {
             } else {
               text = game.event[i];
             }
-            // console.log('///////////////text: ', text);
-            // console.log('//////////////intent: ', intent);
-            this.conversation(intent, text);
+            if (intent !== '') {
+              this.conversation(text, intent);
+            }
           }
         }
         dispatch(receiveGame(game));
         if (game.winner) {
-          dispatch(openWinnerDialog(game.winner));
+          const { playerW, playerB } = this.props;
+          if (game.winner === 'W') {
+            game.winner = playerW;
+          } else {
+            game.winner = playerB;
+          }
+            dispatch(openWinnerDialog(game.winner));
+          
         } else if (game.playerInCheck) {
           dispatch(openCheckDialog(game.playerInCheck));
         }
         this.toggleTimers();
       } else {
         console.log('ERROR: ', error);
-        dispatch(displayError(error));
+        const { playerW, playerB, gameTurn } = this.props;
+        // dispatch(displayError(error));
+        if (((gameTurn === 'W' && thisUser === playerW) 
+          || (gameTurn === 'B' && thisUser === playerB)))  {
+          this.conversation(error);
+        }
       }
       dispatch(unselectPiece());
       dispatch(resetBoolBoard());
@@ -784,13 +796,17 @@ class App extends Component {
               </div>
             </div>
             <div className="flex-col">
-              <Board attemptMove={this.attemptMove} checkLegalMoves={this.checkLegalMoves} />
+              <Board 
+                attemptMove={this.attemptMove}
+                checkLegalMoves={this.checkLegalMoves}
+                conversation={this.conversation} 
+              />
               {/* <Message message={message} />
               <Message message={error} /> */}
             </div>
 
             <div className="flex-col right-col">
-              <Message message={error} />
+              {/*<Message message={error} />*/}
               <Messages
                 messagesLocal={messagesLocal}
                 sendMessageLocal={this.sendMessageLocal}

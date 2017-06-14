@@ -2,10 +2,15 @@ const express = require('express');
 const ChessGame = require('../chess/ChessGame');
 const ConversationV1 = require('watson-developer-cloud/conversation/v1');
 
+const env = process.env.NODE_ENV || 'local';
+let local;
+if (env === 'local') local = require('../../config/config.dev.js');
+console.log('123: ', process.env.WATSON_USERNAME);
+console.log('321: ', process.env.WATSON_PASSWORD);
 const conversation = new ConversationV1({
   url: 'https://gateway.watsonplatform.net/conversation/api',
-  username: '757817a0-acdd-4cbc-a17e-9307b923048c',
-  password: 'uZVqsH2Zi6x6',
+  username: process.env.WATSON_USERNAME || local.Watson.username,
+  password: process.env.WATSON_PASSWORD || local.Watson.password,
   path: { workspace_id: '4440e6fc-92da-4518-afb9-9f47aae615cc' },
   version: 'v1',
   version_date: '2017-05-26',

@@ -24,10 +24,12 @@ class Board extends Component {
     const {
       dispatch, board, origin, selectedPiece, room, gameTurn,
       isWhite, attemptMove, checkLegalMoves, boolBoard, gameMode,
+      conversation,
     } = this.props;
 
     if ((isWhite && gameTurn === 'B') || (!isWhite && gameTurn === 'W')) {
-      dispatch(displayError('Not your turn.'));
+      // dispatch(displayError('Not your turn.'));
+      conversation('Not your turn.');
     } else {
       const selection = board[dest[0]][dest[1]];
       console.log('SELECTION: ', selection);
@@ -106,7 +108,7 @@ class Board extends Component {
 
   render() {
     const { board, isWhite, showPromotionDialog, winner, playerInCheck,
-      showCheckDialog, showWinnerDialog } = this.props;
+      showCheckDialog, showWinnerDialog, playerW, playerB } = this.props;
     const offset = (isWhite) ? 0 : 7;
 
     const promotionActions = [
@@ -191,7 +193,7 @@ class Board extends Component {
         /> */}
         <Alert
           className="pauseRequest"
-          title={`Winner is ${winner}!`}
+          title={`${winner} is the Chess Master!!`}
           actions={winnerActions}
           open={showWinnerDialog}
         />
@@ -199,7 +201,6 @@ class Board extends Component {
     );
   }
 }
-
 function mapStateToProps(state) {
   const { gameState, boardState, moveState, userState, squareState } = state;
   const { playerColor, gameTurn, playerInCheck, winner, showCheckDialog,
