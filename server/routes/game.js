@@ -3,6 +3,8 @@ const ChessGame = require('../chess/ChessGame');
 const ConversationV1 = require('watson-developer-cloud/conversation/v1');
 
 const env = process.env.NODE_ENV || 'local';
+console.log('env: ', env);
+console.log('env2: ', process.env.NODE_ENV);
 let local;
 if (env === 'local') local = require('../../config/config.dev.js');
 
