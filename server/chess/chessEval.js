@@ -43,7 +43,7 @@ const boardPiecesScore = (board) => {
 
   board.forEach(row =>
     row.forEach(col =>
-      ((col === 'W') ? whitePieces.push(col) : blackPieces.spush(col))));
+      ((col[0] === 'W') ? whitePieces.push(col) : blackPieces.push(col))));
 
   const value = pieceScore((whitePieces.length + blackPieces.length) < 12);
 
