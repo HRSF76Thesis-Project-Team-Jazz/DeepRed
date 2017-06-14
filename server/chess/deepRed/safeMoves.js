@@ -10,10 +10,7 @@ const { whiteIsChecked } = attacksBlack;
 const { blackIsChecked } = attacksWhite;
 const { getAllMovesWithSpecialWhite, getAllMovesWithSpecialBlack } = specialMoves;
 const {
-  transcribeBoard,
-  encodeBoard,
   encodeWithState,
-  decodeWithState,
 } = chessEncode;
 const { evalPieceState } = pieceState;
 

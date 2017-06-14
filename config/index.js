@@ -15,7 +15,7 @@ const config = {
       database: process.env.DB || 'deepred',
       user: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
-      host: process.env.DB_HOST || '10.6.65.67',
+      host: process.env.DB_HOST || 'localhost',
       port: process.env.DB_PORT || 5432,
       url: process.env.DATABASE_URL || '',
     },
