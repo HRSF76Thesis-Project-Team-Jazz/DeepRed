@@ -1,6 +1,7 @@
 const express = require('express');
 const ChessGame = require('../chess/ChessGame');
 const ConversationV1 = require('watson-developer-cloud/conversation/v1');
+const errorBot = require('../chess/errorBot.js');
 
 const env = process.env.NODE_ENV || 'local';
 let local;
@@ -62,5 +63,11 @@ router.route('/conversation')
       res.send(processResponse(err, data));
     });
   });
+
+  router.route('/errorMessage')
+    .post((req, res) => {
+      console.log('req: ', req.body.input);
+      res.send(errorBot(req.body.input));
+    });
 
 module.exports = router;

@@ -74,6 +74,7 @@ class App extends Component {
     this.updateUserGameStat = this.updateUserGameStat.bind(this);
     this.winLoseResult = this.winLoseResult.bind(this);
     this.conversation = this.conversation.bind(this);
+    this.renderError = this.renderError.bind(this);
   }
 
   componentDidMount() {
@@ -130,6 +131,20 @@ class App extends Component {
       .catch((err) => {
         console.error('failed to send message to watson conversation service: ', err);
       });
+  }
+
+  renderError(error) {
+    axios.post('/api/game/errorMessage', {input: error})
+      .then((response) => {
+        const { dispatch, messagesLocal, thisUser } = this.props;
+        console.log('from renderError function: ', response.data);
+        dispatch(sendMsgLocal({
+          user: thisUser,
+          color: 'red', 
+          message: response.data,
+          timeStamp: JSON.stringify(new Date()),
+        }));
+      })
   }
 
   updateUserGameStat(arr) {
@@ -374,7 +389,8 @@ class App extends Component {
         // dispatch(displayError(error));
         if (((gameTurn === 'W' && thisUser === playerW) 
           || (gameTurn === 'B' && thisUser === playerB)))  {
-          this.conversation(error);
+          // this.conversation(error);
+          this.renderError(error);
         }
       }
       dispatch(unselectPiece());
@@ -802,6 +818,7 @@ class App extends Component {
                 attemptMove={this.attemptMove}
                 checkLegalMoves={this.checkLegalMoves}
                 conversation={this.conversation} 
+                renderError={this.renderError}
               />
               {/* <Message message={message} />
               <Message message={error} /> */}
