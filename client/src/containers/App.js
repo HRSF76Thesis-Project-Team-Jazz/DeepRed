@@ -832,6 +832,7 @@ class App extends Component {
             <Paper className="flex-col right-col" zDepth={2}>
               {/*<Message message={error} />*/}
               <Messages
+                className="messageBox"
                 messagesLocal={messagesLocal}
                 sendMessageLocal={this.sendMessageLocal}
                 messagesGlobal={messagesGlobal}

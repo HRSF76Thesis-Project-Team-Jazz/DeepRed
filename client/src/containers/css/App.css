@@ -149,6 +149,10 @@ body {
   margin-top: auto;
 }
 
+.messageBox {
+  /*background-color: #cc0000;*/
+}
+
 /*@media all and (max-width: 640px) {
   .flex-row {
     display: flex;
