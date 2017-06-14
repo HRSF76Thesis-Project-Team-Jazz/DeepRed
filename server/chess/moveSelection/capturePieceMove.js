@@ -4,7 +4,7 @@ const safeMoves = require('../deepRed/safeMoves');
 const chessMoves = require('../chessMoves');
 
 const { boardPiecesScore } = chessEval;
-const { decodeWithState } = chessEncode;
+const { decodeWithState, encodeWithState } = chessEncode;
 const { getEncodedSafeMoves } = safeMoves;
 const { evalMove } = chessMoves;
 
@@ -22,7 +22,6 @@ const choosePieceCapture = (encodedParentBoard, color) => {
   const encodedSafeMoves = getEncodedSafeMoves(board, state, color);
 
   encodedSafeMoves.forEach((encodedBoard) => {
-    console.log('encoded board: ', encodedBoard);
     const boardWithState = decodeWithState(encodedBoard);
     const newBoard = boardWithState[0];
     const newBoardScore = boardPiecesScore(newBoard);
@@ -30,7 +29,7 @@ const choosePieceCapture = (encodedParentBoard, color) => {
 
     if (newScore < lowScore) {
       lowScore = newScore;
-      lowBoard = newBoard;
+      lowBoard = encodedBoard;
     }
   });
 
@@ -61,13 +60,12 @@ module.exports = {
 //   [null, null, null, null, null, null, null, null],
 //   [null, null, null, null, null, null, null, null],
 //   [null, null, null, null, null, null, null, null],
+//   [null, null, 'BN', null, 'BR', null, null, null],
 //   [null, null, null, null, null, null, null, null],
-//   [null, null, 'BP', null, 'BQ', null, null, null],
 //   ['WP', null, null, 'WP', null, null, 'WP', 'WP'],
 //   [null, null, null, null, null, null, null, null],
 // ];
 
 // const encoded = encodeWithState(board, pieceState);
 // console.log(encoded);
-// console.log(decodeWithState(encoded));
 // console.log(choosePieceCapture(encoded, 'W'));

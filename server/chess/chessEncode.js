@@ -205,9 +205,12 @@ const encodeBoard = (board) => {
   let storage = '';
   let count = 1;
   const result = [];
-  boardArray.forEach((input) => {
+  boardArray.forEach((input, i) => {
     const piece = (input === null) ? '_' : input;
-    if (piece === storage) {
+    if (piece === storage && i === boardArray.length - 1) {
+      count += 1;
+      result.push(encode[storage + count]);
+    } else if (piece === storage) {
       count += 1;
     } else if (piece !== '_' && piece[1] !== 'P') {
       result.push(encode[storage + count]);
