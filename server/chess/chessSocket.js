@@ -121,9 +121,10 @@ module.exports = (io, client) => {
         roomInfo.playerWtime = 600;
         roomInfo.playerWclicked = false;
         const currentGame = allGames[room];
-        currentGame.moveAI();
-        io.in(room).emit('joinRoomCompleted', roomInfo, allRooms, currentGame);
-        io.emit('updateAllRooms', allRooms);
+        currentGame.moveAI((gameState) => {
+          io.in(room).emit('joinRoomCompleted', roomInfo, allRooms, gameState.game);
+          io.emit('updateAllRooms', allRooms);
+        });
       }
       count += 1;
       roomInfo = {};
@@ -203,8 +204,15 @@ module.exports = (io, client) => {
     console.log('Attempted Move: ', origin, dest);
     console.log('Room Number: ', clientRoom);
     if (allGames[clientRoom]) {
-      const newGameState = allGames[clientRoom].movePiece(origin, dest, pawnPromoteType, gameMode);
-      io.in(clientRoom).emit('attemptMoveResult', newGameState.error, newGameState.game, origin, dest, selection);
+      allGames[clientRoom].movePiece(
+        origin,
+        dest,
+        pawnPromoteType,
+        gameMode,
+        ((newGameState) => {
+          io.in(clientRoom).emit('attemptMoveResult', newGameState.error, newGameState.game, origin, dest, selection);
+        })
+      );
     }
   });
 
@@ -214,20 +222,6 @@ module.exports = (io, client) => {
       io.to(id).emit('checkLegalMovesResults', boolBoard);
     }
   });
-
-  // client.on('startAIvAI', (id, numOfGames) => {
-  //   if (id) {
-  //     const data = [];
-  //     const result = simulateGamesAIvAI(numOfGames, false, (gameState) => {
-  //       const gameObj = {};
-  //       gameObj.board = gameState.board;
-  //       gameObj.blackCapPieces = gameState.pieceState.capturedWhite.slice(0);
-  //       gameObj.whiteCapPieces = gameState.pieceState.capturedBlack.slice(0);
-  //       data.push(gameObj);
-  //     });
-  //     io.to(id).emit('startAIvAIResults', data, result);
-  //   }
-  // });
 
   client.on('startAIvAI', (id, numOfGames) => {
     if (id) {

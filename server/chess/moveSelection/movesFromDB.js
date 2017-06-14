@@ -37,8 +37,10 @@ const chooseNewMove = (encodedParentBoard, color, callback) => {
 
   const moveNotFound = () => {
     console.log('** move not found **');
-    return evalMove(encodedParentBoard,
-      encodedSafeMoves[Math.floor(Math.random() * encodedSafeMoves.length)], color);
+    console.log(evalMove(encodedParentBoard,
+      encodedSafeMoves[Math.floor(Math.random() * encodedSafeMoves.length)], color));
+    callback(evalMove(encodedParentBoard,
+      encodedSafeMoves[Math.floor(Math.random() * encodedSafeMoves.length)], color));
   };
 
   return getMovesFromDB(encodedParentBoard, color, moveFound, moveNotFound);
@@ -64,6 +66,10 @@ const chooseBestMoveFromDB = (encodedParentBoard, color, callback) => {
   };
 
   return getMovesFromDB(encodedParentBoard, color, moveFound, moveNotFound);
+};
+
+module.exports = {
+  chooseBestMoveFromDB,
 };
 
 chooseBestMoveFromDB('75689657PvH20134102|000000', 'W', console.log);

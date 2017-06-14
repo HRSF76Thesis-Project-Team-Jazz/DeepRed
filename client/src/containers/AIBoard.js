@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
 
-import { invalidSelection, selectPiece, colorSquare, displayError, openPromotionDialog, closePromotionDialog, closeCheckDialog, closeWinnerDialog } from '../store/actions';
-
-import Alert from './Alert';
 import './css/Board.css';
 
 class Board extends Component {
@@ -49,33 +44,9 @@ class Board extends Component {
 }
 
 function mapStateToProps(state) {
-  const { gameState, boardState, moveState, userState, squareState } = state;
-  const { playerColor, gameTurn, playerInCheck, winner, showCheckDialog,
-    showWinnerDialog, gameMode } = gameState;
+  const { boardState } = state;
   const { board } = boardState;
-  const { origin, selectedPiece, boolBoard, pawnPromotionCoord,
-    showPromotionDialog } = moveState;
-  const { room, isWhite } = userState;
-  const { color, hover } = squareState;
-  return {
-    playerColor,
-    board,
-    origin,
-    selectedPiece,
-    boolBoard,
-    pawnPromotionCoord,
-    showPromotionDialog,
-    room,
-    color,
-    hover,
-    isWhite,
-    gameTurn,
-    playerInCheck,
-    winner,
-    showCheckDialog,
-    showWinnerDialog,
-    gameMode,
-  };
+  return { board };
 }
 
 export default connect(mapStateToProps)(Board);
