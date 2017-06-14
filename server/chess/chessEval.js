@@ -31,5 +31,6 @@ const capturedPiecesScore = (capturedWhite, capturedBlack) => {
 };
 
 module.exports = {
+  pieceScore,
   capturedPiecesScore,
 };
