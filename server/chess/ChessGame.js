@@ -44,7 +44,7 @@ class ChessGame {
     this.event = [];
   }
 
-  movePiece(origin, dest, pawnPromotionValue = null, gameMode = 'default', cb) {
+  movePiece(origin, dest, cb, pawnPromotionValue = null, gameMode = 'default') {
     const error = this.errorCheck(origin, dest);
     if (error) {
       cb({ game: this, error });
@@ -436,7 +436,7 @@ class ChessGame {
           }
         }
       }
-      this.movePiece(deepRedOrigin, deepRedDest, deepRedPawnPromotionValue, 'default', cb);
+      this.movePiece(deepRedOrigin, deepRedDest, cb, deepRedPawnPromotionValue, 'default');
     };
     chooseBestMoveFromDB(encodedBoard, this.turn, callback);
   }

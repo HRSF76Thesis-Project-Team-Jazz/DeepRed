@@ -206,11 +206,11 @@ module.exports = (io, client) => {
       allGames[clientRoom].movePiece(
         origin,
         dest,
-        pawnPromoteType,
-        gameMode,
         ((newGameState) => {
           io.in(clientRoom).emit('attemptMoveResult', newGameState.error, newGameState.game, origin, dest, selection);
-        })
+        }),
+        pawnPromoteType,
+        gameMode
       );
     }
   });

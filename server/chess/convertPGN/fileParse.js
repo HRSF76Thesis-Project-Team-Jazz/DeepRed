@@ -1,5 +1,5 @@
 const { encodePGN, saveToDB } = require('./parsePGN');
-const {gamesData} = require('./seedGames');
+const { gamesData } = require('./seedGames');
 
 const testStr = gamesData.replace(/[\n\r]+/g, ' ');
 // console.log(testStr);
@@ -50,6 +50,6 @@ gamesArr.forEach((str) => {
     console.log('BAD COUNT: ', goodCount, badCount);
   }
 });
-for (let i = 0; i < gamesArr.length; i += 1) {
-  setTimeout(() => saveToDB(gamesArr[i]), i * 100);
+for (let i = 0; i < encodeResults.length; i += 1) {
+  setTimeout(() => saveToDB(encodeResults[i]), i * 1000);
 }
