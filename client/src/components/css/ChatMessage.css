@@ -1,5 +1,5 @@
 .chat-message-container {
-  border-radius: 2px;
+  border-radius: 8px;
   margin: 2px;
   padding: 5px;
 }
@@ -21,8 +21,8 @@
 }
 .red-chat {
   clear: both;
-  float: right;
-  text-align: right;
+  float: center;
+  text-align: left;
   width: 90%;
   background-color:#cc0000;
   color: white;
