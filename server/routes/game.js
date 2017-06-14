@@ -4,9 +4,8 @@ const ConversationV1 = require('watson-developer-cloud/conversation/v1');
 
 const env = process.env.NODE_ENV || 'local';
 let local;
-if (env === 'local') local = require('../../config/config.dev.js');
-console.log('123: ', process.env.WATSON_USERNAME);
-console.log('321: ', process.env.WATSON_PASSWORD);
+if (env === 'local' || env === 'localtest') local = require('../../config/config.dev.js');
+
 const conversation = new ConversationV1({
   url: 'https://gateway.watsonplatform.net/conversation/api',
   username: process.env.WATSON_USERNAME || local.Watson.username,
