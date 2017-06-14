@@ -220,10 +220,12 @@ module.exports = (io, client) => {
         pawnPromoteType,
         gameMode
       );
-      const request = encodeWithState(allGames[clientRoom].board, allGames[clientRoom].generatePieceState());
-      getMovesFromDB(request, allGames[clientRoom].turn, (res) => {
-        io.in(room).emit('messageLocal', { message: 'DeepRed has analyzed this move ' + res.length + ' times', color: 'red', timeStamp: new Date() })
-      }, () => { io.in(room).emit('messageLocal', { message: 'DeepRed has analyzed this board 0 times', color: 'red', timeStamp: new Date() })});
+      if (gameMode === 'AI'){
+        const request = encodeWithState(allGames[clientRoom].board, allGames[clientRoom].generatePieceState());
+        getMovesFromDB(request, allGames[clientRoom].turn, (res) => {
+          io.in(room).emit('messageLocal', { message: 'DeepRed has analyzed this move ' + res.length + ' times', color: 'red', timeStamp: new Date() })
+        }, () => { io.in(room).emit('messageLocal', { message: 'DeepRed has analyzed this board 0 times', color: 'red', timeStamp: new Date() })});
+      }
     }
   });
 
