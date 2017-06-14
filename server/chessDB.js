@@ -440,26 +440,25 @@ const getMovesFromDB = (encodedBoardWithState, color, foundFn, notFoundFn) => {
   if (color === 'W') {
     knex('DeepRed_WhiteMoves').where({
       parent: encodedBoardWithState,
-    }).orderBy('winPercentage', 'desc')
+    }).orderByRaw('white_win + black_win + draw DESC')
       .then((res) => {
         if (res.length === 0) {
           console.log('No Entry Found');
           notFoundFn();
         } else {
-          // console.log('Best Possible Board:', res[0].board, res[0].winPercentage + '%');
           foundFn(res);
         }
-      });
+      })
+      .catch(err => console.warn('db error: ', err));
   } else {
     knex('DeepRed_BlackMoves').where({
       parent: encodedBoardWithState,
-    }).orderBy('winPercentage', 'desc')
+    }).orderByRaw('white_win + black_win + draw DESC')
       .then((res) => {
         if (res.length === 0) {
           console.log('No Entry Found');
           notFoundFn();
         } else {
-          // console.log('Best Possible Board:', res[0].board, res[0].winPercentage + '%');
           foundFn(res);
         }
       });
