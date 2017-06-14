@@ -35,7 +35,7 @@ passport.use('local-signup', new LocalStrategy({
   passReqToCallback: true,
 },
   (req, email, password, done) => {
-    console.log(Object.keys(req), req.body);
+    // console.log(Object.keys(req), req.body);
     // check to see if there is a local account with this email address
     return models.Profile.where({ email }).fetch({
       withRelated: [{
@@ -79,7 +79,7 @@ passport.use('local-signup', new LocalStrategy({
         done(error, null);
       })
       .catch((err) => {
-        console.warn(err);
+        // console.warn(err);
         done(null, false, req.flash('signupMessage', 'An account with this email address already exists.'));
       });
   }));

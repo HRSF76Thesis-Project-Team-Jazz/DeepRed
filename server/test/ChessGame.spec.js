@@ -851,7 +851,7 @@ describe('Check', () => {
     ['WR', 'WN', 'WB', null, 'WK', 'WB', 'WN', 'WR'],
   ];
   it('board state should be as expected', () => {
-    console.log(checkWChessGame.board);
+    // console.log(checkWChessGame.board);
     expect(checkWChessGame.board).to.eql(expectedCheckWChessBoard);
   });
 });
@@ -913,7 +913,7 @@ describe('White Stalemate', () => {
     expect(stalemateChessGame.movePiece([3, 0], [2, 0]).error).to.eql(null);
   });
   it('should declare Draw if stalemate', () => {
-    console.log(stalemateChessGame.board);
+    // console.log(stalemateChessGame.board);
     expect(stalemateChessGame.winner).to.eql('D');
   });
 });
@@ -935,7 +935,7 @@ describe('Black Stalemate', () => {
     expect(stalemateChessGame.movePiece([3, 0], [2, 0]).error).to.eql(null);
   });
   it('should declare Draw if stalemate', () => {
-    console.log(stalemateChessGame.board);
+    // console.log(stalemateChessGame.board);
     expect(stalemateChessGame.winner).to.eql('D');
   });
 });

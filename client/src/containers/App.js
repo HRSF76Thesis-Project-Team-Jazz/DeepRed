@@ -120,13 +120,14 @@ class App extends Component {
     axios.post('/api/game/conversation', payload)
       .then((response) => {
         const { dispatch, messagesLocal, thisUser } = this.props;
-        console.log('message: ', response.data.output.text[0]);
-        dispatch(sendMsgLocal({
-          user: thisUser, 
-          color: 'red',
-          message: response.data.output.text[0],
-          timeStamp: JSON.stringify(new Date()),
-        }));
+        if (response.data.output.text[0]) {
+          dispatch(sendMsgLocal({
+            user: thisUser, 
+            color: 'red',
+            message: response.data.output.text[0],
+            timeStamp: JSON.stringify(new Date()),
+          }));
+        }
       })
       .catch((err) => {
         console.error('failed to send message to watson conversation service: ', err);
@@ -137,13 +138,15 @@ class App extends Component {
     axios.post('/api/game/errorMessage', {input: error})
       .then((response) => {
         const { dispatch, messagesLocal, thisUser } = this.props;
-        console.log('from renderError function: ', response.data);
         dispatch(sendMsgLocal({
           user: thisUser,
           color: 'red', 
           message: response.data,
           timeStamp: JSON.stringify(new Date()),
         }));
+      })
+      .catch((err) => {
+        console.error('failed to fetch error message ', err);
       })
   }
 
