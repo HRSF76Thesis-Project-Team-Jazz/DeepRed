@@ -63,6 +63,10 @@ export const SAVE_BOOL_BOARD = 'SAVE_BOOL_BOARD';
 
 export const RESET_BOOL_BOARD = 'RESET_BOOL_BOARD';
 
+export const HIDE_AI_BUTTON = 'HIDE_AI_BUTTON';
+
+export const SHOW_AI_BUTTON = 'SHOW_AI_BUTTON';
+
 // userState action types
 export const SET_PLAYER = 'SET_PLAYER';
 

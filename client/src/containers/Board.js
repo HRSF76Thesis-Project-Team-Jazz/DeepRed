@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
+import Paper from 'material-ui/Paper';
 
 import { invalidSelection, selectPiece, colorSquare, displayError, openPromotionDialog, closePromotionDialog, closeCheckDialog, closeWinnerDialog } from '../store/actions';
 
@@ -156,7 +157,7 @@ class Board extends Component {
 
     return (
       <div>
-        <div className="board">
+        <Paper className="board" zDepth={4}>
           {board.map((row, rowIndex) => (
             <div key={Math.random()} className="board-row">
               {row.map((col, colIndex) => (
@@ -179,7 +180,7 @@ class Board extends Component {
             </div>
           ),
           )}
-        </div>
+        </Paper>
         <Alert
           className="pauseRequest"
           title="Please select an upgrade."

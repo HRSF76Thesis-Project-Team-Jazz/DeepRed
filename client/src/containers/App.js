@@ -122,7 +122,7 @@ class App extends Component {
         const { dispatch, messagesLocal, thisUser } = this.props;
         if (response.data.output.text[0]) {
           dispatch(sendMsgLocal({
-            user: thisUser, 
+            user: thisUser,
             color: 'red',
             message: response.data.output.text[0],
             timeStamp: JSON.stringify(new Date()),
@@ -140,7 +140,7 @@ class App extends Component {
         const { dispatch, messagesLocal, thisUser } = this.props;
         dispatch(sendMsgLocal({
           user: thisUser,
-          color: 'red', 
+          color: 'red',
           message: response.data,
           timeStamp: JSON.stringify(new Date()),
         }));
@@ -244,7 +244,7 @@ class App extends Component {
           'enpassant': 'enpassant',
           'castle': 'castle',
         };
-        
+
         var intent = '';
         var text = '';
 
@@ -301,7 +301,7 @@ class App extends Component {
                   intent = `${specialTable[game.event[i]]}Lose`;
                 }
                 if (game.event[i] === '+W') {
-                  intent = `${specialTable[game.event[i]]}Win`; 
+                  intent = `${specialTable[game.event[i]]}Win`;
                 }
                 if (game.event[i] === '#B') {
                   intent = `${specialTable[game.event[i]]}Win`;
@@ -381,7 +381,7 @@ class App extends Component {
             game.winner = playerB;
           }
             dispatch(openWinnerDialog(game.winner));
-          
+
         } else if (game.playerInCheck) {
           dispatch(openCheckDialog(game.playerInCheck));
         }
@@ -390,7 +390,7 @@ class App extends Component {
         console.log('ERROR: ', error);
         const { playerW, playerB, gameTurn } = this.props;
         // dispatch(displayError(error));
-        if (((gameTurn === 'W' && thisUser === playerW) 
+        if (((gameTurn === 'W' && thisUser === playerW)
           || (gameTurn === 'B' && thisUser === playerB)))  {
           // this.conversation(error);
           this.renderError(error);
@@ -767,7 +767,7 @@ class App extends Component {
         />
         <div className="content">
           <div className="flex-row">
-            <div className="flex-col left-col">
+            <Paper className="flex-col left-col" zDepth={2}>
               <div className="left-col-row">
                 <div className="player-top">
                   <PlayerName
@@ -799,35 +799,37 @@ class App extends Component {
                   />
                 </div>
               </div>
-            </div>
-            <div className="flex-col capt-col">
-              <div className="flex-col capt-black-col">
-                <CapturedPieces
-                  color={(!isWhite) ? 'White' : 'Black'}
-                  capturedPieces={(!isWhite) ? capturedPiecesWhite : capturedPiecesBlack}
-                  player={(!isWhite) ? playerW : playerB}
-                />
-              </div>
-              <div className="flex-col capt-black-col">
-                <CapturedPieces
-                  color={(isWhite) ? 'White' : 'Black'}
-                  capturedPieces={(isWhite) ? capturedPiecesWhite : capturedPiecesBlack}
-                  player={(isWhite) ? playerW : playerB}
-                />
-              </div>
-            </div>
+            </Paper>
+            <Paper style={{ backgroundColor: '#78909C' }} className="flex-col capt-col" zDepth={2}>
+              {/* <Paper zDepth={5}> */}
+                <div className="flex-col capt-black-col">
+                  <CapturedPieces
+                    color={(!isWhite) ? 'White' : 'Black'}
+                    capturedPieces={(!isWhite) ? capturedPiecesWhite : capturedPiecesBlack}
+                    player={(!isWhite) ? playerW : playerB}
+                  />
+                </div>
+                <div className="flex-col capt-black-col">
+                  <CapturedPieces
+                    color={(isWhite) ? 'White' : 'Black'}
+                    capturedPieces={(isWhite) ? capturedPiecesWhite : capturedPiecesBlack}
+                    player={(isWhite) ? playerW : playerB}
+                  />
+                </div>
+              {/* </Paper> */}
+            </Paper>
             <div className="flex-col">
-              <Board 
+              <Board
                 attemptMove={this.attemptMove}
                 checkLegalMoves={this.checkLegalMoves}
-                conversation={this.conversation} 
+                conversation={this.conversation}
                 renderError={this.renderError}
               />
               {/* <Message message={message} />
               <Message message={error} /> */}
             </div>
 
-            <div className="flex-col right-col">
+            <Paper className="flex-col right-col" zDepth={2}>
               {/*<Message message={error} />*/}
               <Messages
                 messagesLocal={messagesLocal}
@@ -838,7 +840,7 @@ class App extends Component {
                 thisUser={thisUser}
                 gameMode={gameMode}
               />
-            </div>
+            </Paper>
 
             <div className="control-general">
               <Alert

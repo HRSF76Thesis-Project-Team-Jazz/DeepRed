@@ -535,6 +535,7 @@ const controlState = (state = Immutable({
 
 const aiState = (state = Immutable({
   game: [],
+  isAIButtonDisabled: false,
 }), action) => {
   switch (action.type) {
     case types.ADD_AI_GAME: {
@@ -543,6 +544,18 @@ const aiState = (state = Immutable({
         // playerW: action.player.data.display,
         // playerWemail: action.player.data.email,
         game: action.game,
+      });
+    }
+    case types.HIDE_AI_BUTTON: {
+      return Immutable({
+        ...state,
+        isAIButtonDisabled: true,
+      });
+    }
+    case types.SHOW_AI_BUTTON: {
+      return Immutable({
+        ...state,
+        isAIButtonDisabled: false,
       });
     }
     default:

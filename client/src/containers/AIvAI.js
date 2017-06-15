@@ -2,14 +2,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import { updateBoard, resetBoard, updateCapturedPieces, clearCapturedPieces } from '../store/actions';
+import Paper from 'material-ui/Paper';
+
+// import RaisedButton from 'material-ui/RaisedButton';
+import { updateBoard, resetBoard, updateCapturedPieces, updateGameSummary,
+  clearCapturedPieces, hideAIButton, showAIButton } from '../store/actions';
 
 // Components
 import Header from '../components/Header';
 import AIBoard from './AIBoard';
+import AIDialog from '../components/AIDialog';
 import CapturedPieces from '../components/CapturedPieces';
-import MoveHistory from '../components/MoveHistory';
+// import MoveHistory from '../components/MoveHistory';
 import PlayerName from '../components/PlayerName';
 import './css/App.css';
 
@@ -37,10 +41,12 @@ class AIvAI extends Component {
         game.forEach((boardState, i) => {
           setTimeout(() => {
             dispatch(updateBoard(boardState.board));
+            // dispatch(updateGameSummary(gameSummary));
             dispatch(updateCapturedPieces(boardState.blackCapPieces,
               boardState.whiteCapPieces));
-          }, 50 * i);
+          }, 100 * i);
         });
+        dispatch(showAIButton());
       });
       // dispatch(updateAllRooms(allRooms));
         // setInterval(() => dispatch(updateBoard(data[i])), 1000);
@@ -51,17 +57,15 @@ class AIvAI extends Component {
     const { dispatch } = this.props;
     dispatch(resetBoard());
     dispatch(clearCapturedPieces());
+    dispatch(hideAIButton());
     this.socket.emit('startAIvAI', this.socket.id, 1);
   }
   render() {
-    const { capturedPiecesBlack, capturedPiecesWhite } = this.props;
+    const { capturedPiecesBlack, capturedPiecesWhite, isAIButtonDisabled } = this.props;
     return (
       <div className="site-wrap">
-        <Header
-          // sendPauseRequest={this.sendPauseRequest}
-          // sendResumeRequest={this.sendResumeRequest}
-          // handleSurrender={this.handleSurrender}
-        />
+        <AIDialog shouldOpen={isAIButtonDisabled} />
+        <Header />
         <div className="content">
           <div className="flex-row">
             <div className="flex-col left-col">
@@ -70,6 +74,7 @@ class AIvAI extends Component {
                   <FlatButton
                     label="Start"
                     primary
+                    disabled={isAIButtonDisabled}
                     onTouchTap={this.handleStartAIvAI}
                   />
                   <PlayerName
@@ -125,11 +130,12 @@ function mapStateToProps(state) {
   const { gameState, boardState, aiState } = state;
   const { capturedPiecesBlack, capturedPiecesWhite } = gameState;
   const { board } = boardState;
-  const { game } = aiState;
+  const { game, isAIButtonDisabled } = aiState;
   return { capturedPiecesBlack,
     capturedPiecesWhite,
     game,
     board,
+    isAIButtonDisabled,
   };
 }
 
