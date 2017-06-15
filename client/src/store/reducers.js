@@ -428,6 +428,7 @@ const controlState = (state = Immutable({
   showClock: false,
   systemPause: false,
   systemResume: true,
+  snackbarOpen: false,
 }), action) => {
   switch (action.type) {
     case types.PAUSE_DIALOG_OPEN: {
@@ -567,6 +568,18 @@ const controlState = (state = Immutable({
         ...state,
         systemResume: !state.systemResume,
       });
+    }
+    case types.TURN_SNACKBAR_ON: {
+      return Immutable({
+        ...state,
+        snackbarOpen: true,
+      });
+    }
+    case types.TURN_SNACKBAR_OFF: {
+      return Immutable({
+        ...state,
+        snackbarOpen: false,
+      })
     }
     default:
       return state;

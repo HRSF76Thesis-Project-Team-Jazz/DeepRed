@@ -326,6 +326,13 @@ export const toggleSystemResume = () => ({
   type: types.TOGGLE_SYSTEM_RESUME,
 });
 
+export const turnSnackbarOn = () => ({
+  type: types.TURN_SNACKBAR_ON,
+});
+
+export const turnSnackbarOff = () => ({
+  type: types.TURN_SNACKBAR_OFF,
+});
 // other requests
 export const fetchGame = () => (dispatch) => {
   dispatch(requestGame());

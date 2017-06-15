@@ -51,7 +51,7 @@ router.route('/updateUserGameStat')
 
 router.route('/conversation')
   .post((req, res) => {
-    // console.log('triggered event and message: ', req.body);
+    console.log('triggered event and message: ', req.body);
 
     const payload = {
       workspace_id: '4440e6fc-92da-4518-afb9-9f47aae615cc',
