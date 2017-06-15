@@ -3,7 +3,7 @@ const middleware = require('../middleware');
 
 const router = express.Router();
 
-router.route('/*')
+router.route('/')
   .get(middleware.auth.verify, (req, res) => {
     res.render('index.ejs');
   });
@@ -66,5 +66,10 @@ router.get('/auth/twitter/callback', middleware.passport.authenticate('twitter',
   successRedirect: '/',
   failureRedirect: '/login',
 }));
+
+router.route('/*')
+  .get(middleware.auth.verify, (req, res) => {
+    res.render('index.ejs');
+  });
 
 module.exports = router;

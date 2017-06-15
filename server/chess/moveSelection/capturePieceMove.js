@@ -12,7 +12,7 @@ const { evalMove } = chessMoves;
  * Chooses move that captures the highest value piece
  * If no piece capture is available, random move is selected
  * @param {string} encodedParentBoard : encoded board + state
- * @param {*} color : 'W' : 'B'
+ * @param {string} color : 'W' : 'B'
  * @return {array/object} selected move in deep red move notation
  */
 
