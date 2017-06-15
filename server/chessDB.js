@@ -249,7 +249,7 @@ const saveDeepRedWhite = (entry) => {
       board: entry.board,
     })
       .then((res) => {
-        if (JSON.stringify(res) === '[]') {
+        if (res.length === 0) {
           knex.insert({
             parent: entry.parent,
             board: entry.board,
@@ -280,7 +280,7 @@ const saveDeepRedWhite = (entry) => {
       board: entry.board,
     })
       .then((res) => {
-        if (JSON.stringify(res) === '[]') {
+        if (res.length === 0) {
           knex.insert({
             parent: entry.parent,
             board: entry.board,
@@ -311,7 +311,7 @@ const saveDeepRedWhite = (entry) => {
       board: entry.board,
     })
       .then((res) => {
-        if (JSON.stringify(res) === '[]') {
+        if (res.length === 0) {
           knex.insert({
             parent: entry.parent,
             board: entry.board,
@@ -346,7 +346,7 @@ const saveDeepRedBlack = (entry) => {
       board: entry.board,
     })
       .then((res) => {
-        if (JSON.stringify(res) === '[]') {
+        if (res.length === 0) {
           knex.insert({
             parent: entry.parent,
             board: entry.board,
@@ -377,7 +377,7 @@ const saveDeepRedBlack = (entry) => {
       board: entry.board,
     })
       .then((res) => {
-        if (JSON.stringify(res) === '[]') {
+        if (res.length === 0) {
           knex.insert({
             parent: entry.parent,
             board: entry.board,
@@ -408,7 +408,7 @@ const saveDeepRedBlack = (entry) => {
       board: entry.board,
     })
       .then((res) => {
-        if (JSON.stringify(res) === '[]') {
+        if (res.length === 0) {
           knex.insert({
             parent: entry.parent,
             board: entry.board,
