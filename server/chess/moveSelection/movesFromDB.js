@@ -2,11 +2,13 @@ const chessEncode = require('../chessEncode');
 const safeMoves = require('../deepRed/safeMoves');
 const chessDB = require('../../chessDB');
 const chessMoves = require('../chessMoves');
+const capturePieceMove = require('./capturePieceMove');
 
 const { getEncodedSafeMoves } = safeMoves;
 const { decodeWithState } = chessEncode;
 const { getMovesFromDB } = chessDB;
 const { evalMove } = chessMoves;
+const { choosePieceCapture } = capturePieceMove;
 
 /**
  * Input a current board and state and find a move that DeepRed has not seen before (not in DB)
@@ -26,8 +28,10 @@ const chooseNewMove = (encodedParentBoard, color, callback) => {
   const moveFound = (moves) => {
     let newEncodedBoard;
     if (encodedSafeMoves.length === moves.length) {
+      console.log('** ALL MOVES IN DB: CHOOSE RANDOM');
       newEncodedBoard = encodedSafeMoves[Math.floor(Math.random() * encodedSafeMoves.length)];
     } else {
+      console.log('** CHOOSE A NEW MOVE NOT IN DB');
       const dbMoves = moves.map(move => move.board);
       const newMoves = encodedSafeMoves.filter(move => dbMoves.indexOf(move) === -1);
       newEncodedBoard = newMoves[Math.floor(Math.random() * newMoves.length)];
@@ -36,14 +40,14 @@ const chooseNewMove = (encodedParentBoard, color, callback) => {
   };
 
   const moveNotFound = () => {
-    console.log('** move not found **');
-    console.log(evalMove(encodedParentBoard,
-      encodedSafeMoves[Math.floor(Math.random() * encodedSafeMoves.length)], color));
+    console.log('** PARENT NOT IN DB: CHOOSE NEW RANDOM MOVE');
     callback(evalMove(encodedParentBoard,
       encodedSafeMoves[Math.floor(Math.random() * encodedSafeMoves.length)], color));
   };
 
-  return getMovesFromDB(encodedParentBoard, color, moveFound, moveNotFound);
+  choosePieceCapture(encodedParentBoard, color, callback,
+    () => getMovesFromDB(encodedParentBoard, color, moveFound, moveNotFound));
+  
 };
 
 /**
@@ -57,6 +61,7 @@ const chooseNewMove = (encodedParentBoard, color, callback) => {
 
 const chooseBestMoveFromDB = (encodedParentBoard, color, callback) => {
   const moveFound = (moves) => {
+    console.log('** MOVE CHOSEN FROM DB');
     callback(evalMove(encodedParentBoard, moves[0].board, color));
   };
 
@@ -65,12 +70,9 @@ const chooseBestMoveFromDB = (encodedParentBoard, color, callback) => {
     chooseNewMove(encodedParentBoard, color, callback);
   };
 
-  return getMovesFromDB(encodedParentBoard, color, moveFound, moveNotFound);
+  getMovesFromDB(encodedParentBoard, color, moveFound, moveNotFound);
 };
 
 module.exports = {
   chooseBestMoveFromDB,
 };
-
-chooseBestMoveFromDB('75689657PvH20134102|000000', 'W', console.log);
-chooseNewMove('75689657PvH20134102|000000', 'W', console.log);
