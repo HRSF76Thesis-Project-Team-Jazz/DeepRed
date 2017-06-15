@@ -5,6 +5,9 @@ import Messages from './Messages';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 import './css/Room.css';
+import MobileTearSheet from './MobileTearSheet';
+import ChatBoxGlobal from './ChatBoxGlobal';
+import ChatMessageGlobal from './ChatMessageGlobal';
 
 const selectSideActionsStyle = {
   margin: '1px',
@@ -120,6 +123,19 @@ messagesGlobal, sendMessageLocal, messagesLocal, thisUser, isWhite }) => (
           isWhite={isWhite}
           thisUser={thisUser}
         />*/}
+          <MobileTearSheet>
+            {messagesGlobal.map((msg, i) => (
+              <ChatMessageGlobal
+                key={i + msg}
+                isThisUser={msg.user === thisUser}
+                color={msg.color}
+                user={msg.user}
+                message={msg.message}
+                timeStamp={msg.timeStamp}
+              />
+            ))}
+          </MobileTearSheet>
+          <ChatBoxGlobal sendMessageGlobal={sendMessageGlobal} isWhite={isWhite} thisUser={thisUser} />
       </div>
     </div>
   </div>
