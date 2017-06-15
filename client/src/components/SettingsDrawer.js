@@ -20,6 +20,9 @@ class SettingsDrawer extends Component {
     this.state = { open: false };
     this.handleToggle = this.handleToggle.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.handlePauseClose = this.handlePauseClose.bind(this);
+    this.handleResumeClose = this.handleResumeClose.bind(this);
+    this.handleSurrenderClose = this.handleSurrenderClose.bind(this);
   }
 
   handleToggle() {
@@ -30,6 +33,20 @@ class SettingsDrawer extends Component {
     this.setState({ open: false });
   }
 
+  handlePauseClose() {
+    this.handleClose();
+    this.props.sendPauseRequest();
+  }
+
+  handleResumeClose() {
+    this.handleClose();
+    this.props.sendResumeRequest();
+  }
+
+  handleSurrenderClose() {
+    this.handleClose();
+    this.props.handleSurrender();
+  }
   render() {
     return (
       <div>
@@ -40,7 +57,7 @@ class SettingsDrawer extends Component {
           className="drawer-button"
         />
         <Drawer
-          width={'20%'}
+          width={'18%'}
           docked={false}
           openSecondary
           open={this.state.open}
@@ -51,44 +68,26 @@ class SettingsDrawer extends Component {
               onTouchTap={this.handleClose}
               leftIcon={<SocialPerson />}
             >
-              User Profile
+              AI vs AI
             </MenuItem>
           </Link>
           <MenuItem
-            onTouchTap={this.props.sendPauseRequest}
+            onTouchTap={this.handlePauseClose}
             leftIcon={<SocialPerson />}
           >
             Pause
           </MenuItem>
           <MenuItem
-            onTouchTap={this.props.sendResumeRequest}
+            onTouchTap={this.handleResumeClose}
             leftIcon={<SocialShare />}
           >
             Resume
           </MenuItem>
           <MenuItem
-            onTouchTap={this.props.handleSurrender}
+            onTouchTap={this.handleSurrenderClose}
             leftIcon={<SocialShare />}
           >
             Surrender
-          </MenuItem>
-          <MenuItem
-            onTouchTap={this.handleClose}
-            leftIcon={<SocialShare />}
-          >
-            Share
-          </MenuItem>
-          <MenuItem
-            onTouchTap={this.handleClose}
-            leftIcon={<ContentSave />}
-          >
-            Save Game
-          </MenuItem>
-          <MenuItem
-            onTouchTap={this.handleClose}
-            leftIcon={<NavigationArrowUpward />}
-          >
-            Load Game
           </MenuItem>
           <MenuItem
             onTouchTap={this.handleClose}

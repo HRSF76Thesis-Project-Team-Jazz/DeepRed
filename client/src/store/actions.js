@@ -278,6 +278,14 @@ export const announceSurrenderDialogClose = () => ({
   type: types.ANNOUNCE_SURRENDER_DIALOG_CLOSE,
 });
 
+export const confirmSurrenderDialogOpen = () => ({
+  type: types.CONFIRM_SURRENDER_DIALOG_OPEN,
+});
+
+export const confirmSurrenderDialogClose = () => ({
+  type: types.CONFIRM_SURRENDER_DIALOG_CLOSE,
+});
+
 export const selectGameModeOpen = () => ({
   type: types.SELECT_GAME_MODE_OPEN,
 });
@@ -306,8 +314,16 @@ export const turnClockOn = () => ({
   type: types.TURN_CLOCK_ON,
 });
 
-export const turnClockOff =() => ({
+export const turnClockOff = () => ({
   type: types.TURN_CLOCK_OFF,
+});
+
+export const toggleSystemPause = () => ({
+  type: types.TOGGLE_SYSTEM_PAUSE,
+});
+
+export const toggleSystemResume = () => ({
+  type: types.TOGGLE_SYSTEM_RESUME,
 });
 
 // other requests

@@ -22,7 +22,7 @@ const customContentStyle = {
 
 const Alert = ({ title, open, actions, handleClose, showRooms,
 allRooms, createNewPVPRoom, handleJoinRoomAsBlack, handleJoinRoomAsWhite,
-handleCreateRoomAsWhite, handleCreateRoomAsBlack, thisUser,
+handleCreateRoomAsWhite, handleCreateRoomAsBlack, thisUser, persist,
 messagesGlobal, sendMessageGlobal, sendMessageLocal, messagesLocal, isWhite }) => (
   <div>
     <Dialog 
@@ -46,7 +46,7 @@ messagesGlobal, sendMessageGlobal, sendMessageLocal, messagesLocal, isWhite }) =
       autoScrollBodyContent={true}
       autoDetectWindowHeight={true}
       actions={actions}
-      modal={false}
+      modal={persist === true? persist : false}
       open={open}
       onRequestClose={handleClose}
     />

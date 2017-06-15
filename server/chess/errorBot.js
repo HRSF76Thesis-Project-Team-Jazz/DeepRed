@@ -25,12 +25,24 @@ const errorBot = (key) => {
                             ],
     'Cannot capture your own piece.': [
                                       'Cannot capture your own piece.',
-                                      'No killing among same kind LOL'
+                                      'No killing among same kind LOL',
                                       ],
     'Origin is invalid.': [
                           'Origin is invalid.',
-                          'Please choose a different origin~'
+                          'Please choose a different origin~',
                           ],
+    'game has paused!': [
+                        'game has paused!',
+                        ],
+    'game has resumed!': [
+                         'game has resumed!',
+                         ],
+    'game is already in pause :)': [
+                                   'game is already in pause :)', 
+                                   ],
+    'current game is still running': [
+                                     'current game is still running',
+                                     ],                                   
   }
 
   // console.log('key: ', key);
