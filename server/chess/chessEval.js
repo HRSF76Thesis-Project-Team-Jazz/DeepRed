@@ -97,27 +97,3 @@ module.exports = {
   pieceScore,
   boardPiecesScore,
 };
-
-const state = {
-  hasMovedWK: false,
-  hasMovedWKR: false,
-  hasMovedWQR: false,
-  hasMovedBK: false,
-  hasMovedBKR: false,
-  hasMovedBQR: false,
-  canEnPassantW: '',
-  canEnPassantB: '',
-};
-
-const board = [
-  ['BR', 'BN', 'BB', null, 'BK', 'BB', 'BN', 'BR'],
-  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
-  [null, null, null, 'WP', null, null, null, null],
-  [null, null, null, 'BQ', null, null, null, null],
-  [null, null, null, null, null, null, null, 'BB'],
-  [null, null, null, null, null, null, null, null],
-  ['WP', 'WP', 'WP', null, 'WP', 'WP', 'WP', 'WP'],
-  ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
-];
-
-console.log(piecesAttacked(board, state, 'W'));

@@ -3,7 +3,7 @@ const chessEncode = require('../chessEncode');
 const safeMoves = require('../deepRed/safeMoves');
 const chessMoves = require('../chessMoves');
 
-const { boardPiecesScore } = chessEval;
+const { boardPiecesScore, piecesAttacked } = chessEval;
 const { decodeWithState } = chessEncode;
 const { getEncodedSafeMoves } = safeMoves;
 const { evalMove } = chessMoves;
@@ -25,29 +25,32 @@ const choosePieceCapture = (encodedParentBoard, color, successFn, noneFn) => {
   const parentPiecesScore = boardPiecesScore(board);
   const startScore = parentPiecesScore[selector];
 
-  let lowScore = startScore;
-  let lowBoard;
+  let bestBoard;
+  let bestValue = 0;
   const encodedSafeMoves = getEncodedSafeMoves(board, state, color);
 
-  // 1) If capturing piece moves to a safe position
-
-  // 2) If capturing piece <= captured piece
+  const parentAttackedScore = piecesAttacked(board, color);
 
   encodedSafeMoves.forEach((encodedBoard) => {
     const boardWithState = decodeWithState(encodedBoard);
     const newBoard = boardWithState[0];
     const newBoardScore = boardPiecesScore(newBoard);
     const newScore = newBoardScore[selector];
+    const boardAttackedScore = piecesAttacked(board, color);
 
-    if (newScore < lowScore) {
-      lowScore = newScore;
-      lowBoard = encodedBoard;
+    const valueOfAddedRisk = boardAttackedScore - parentAttackedScore;
+    const valueOfCapturedPiece = startScore - newScore;
+    const moveValue = valueOfCapturedPiece - valueOfAddedRisk;
+
+    if (moveValue > bestValue) {
+      bestValue = moveValue;
+      bestBoard = encodedBoard;
     }
   });
 
-  if (lowScore < startScore) {
+  if (bestValue > 0) {
     console.log('** CHOOSE PIECE CAPTURE');
-    successFn(evalMove(encodedParentBoard, lowBoard, color));
+    successFn(evalMove(encodedParentBoard, bestBoard, color));
   } else {
     noneFn();
   }
@@ -56,3 +59,4 @@ const choosePieceCapture = (encodedParentBoard, color, successFn, noneFn) => {
 module.exports = {
   choosePieceCapture,
 };
+
