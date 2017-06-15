@@ -20,14 +20,14 @@ const router = express.Router();
 
 const processResponse = (err, response) => {
   if (err) {
-    console.error(err);
+    // console.error(err);
     return err;
   }
   if (response.output.text.length !== 0) {
     if (!response.output) {
       response.output = {};
     }
-    console.log('response: ', response);
+    // console.log('response: ', response);
     return response;
   }
 };
