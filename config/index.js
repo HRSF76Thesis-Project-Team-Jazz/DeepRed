@@ -2,8 +2,12 @@ const env = process.env.NODE_ENV || 'local';
 let local;
 if (env === 'local' || env === 'localtest') local = require('./config.dev.js');
 
+// FOR LOCAL DEPLOYMENT
+const SERVER_IP = 'localhost';
+const DB_IP = '10.6.65.67';
+
 const callbackURL = (name) => {
-  if (env === 'local' || env === 'localtest') return `http://localhost:3000/auth/${name}/callback`;
+  if (env === 'local' || env === 'localtest') return `http://${SERVER_IP}:3000/auth/${name}/callback`;
   const suffix = (process.env.NODE_ENV === 'staging') ? '-staging' : '';
   return `http://hrsf76deepred${suffix}.herokuapp.com/auth/${name}/callback`;
 };
@@ -15,7 +19,7 @@ const config = {
       database: process.env.DB || 'deepred',
       user: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
-      host: process.env.DB_HOST || '10.6.65.67',
+      host: process.env.DB_HOST || DB_IP,
       port: process.env.DB_PORT || 5432,
       url: process.env.DATABASE_URL || '',
     },
