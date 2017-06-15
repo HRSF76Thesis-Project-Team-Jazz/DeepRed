@@ -322,7 +322,6 @@ module.exports = (io, client) => {
   });
 
   client.on('updateTime', (clientRoom, clientCount, timeB, timeW) => {
-    console.log('*** ALL ROOMS: ', allRooms, clientCount);
     allRooms[clientCount].playerBtime = timeB;
     allRooms[clientCount].playerWtime = timeW;
     io.in(clientRoom).emit('sendUpdatedTime', allRooms[clientCount]);
