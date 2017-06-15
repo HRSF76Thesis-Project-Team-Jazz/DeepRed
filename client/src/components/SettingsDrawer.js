@@ -3,10 +3,14 @@ import { Link } from 'react-router-dom';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
+import ActionHome from 'material-ui/svg-icons/action/home';
 import SocialPerson from 'material-ui/svg-icons/social/person';
 import SocialShare from 'material-ui/svg-icons/social/share';
 import ContentSave from 'material-ui/svg-icons/content/save';
 import ActionExit from 'material-ui/svg-icons/action/exit-to-app';
+import Android from 'material-ui/svg-icons/action/android';
+import Pause from 'material-ui/svg-icons/av/pause';
+import PlayArrow from 'material-ui/svg-icons/av/play-arrow';
 import NavigationArrowUpward from 'material-ui/svg-icons/navigation/arrow-upward';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
@@ -52,7 +56,7 @@ class SettingsDrawer extends Component {
   handleLobbyClose() {
     this.handleClose();
     window.location = '/';
-    this.props.handleLobbyOpen();
+    // this.props.handleLobbyOpen();
   }
   render() {
     return (
@@ -73,33 +77,33 @@ class SettingsDrawer extends Component {
           <Link to="/ai">
             <MenuItem
               onTouchTap={this.handleClose}
-              leftIcon={<SocialPerson />}
+              leftIcon={<Android />}
             >
               AI vs AI
             </MenuItem>
           </Link>
           <MenuItem
             onTouchTap={this.handlePauseClose}
-            leftIcon={<SocialPerson />}
+            leftIcon={<Pause />}
           >
             Pause
           </MenuItem>
           <MenuItem
             onTouchTap={this.handleResumeClose}
-            leftIcon={<SocialShare />}
+            leftIcon={<PlayArrow />}
           >
             Resume
           </MenuItem>
           <MenuItem
             onTouchTap={this.handleSurrenderClose}
-            leftIcon={<SocialShare />}
+            leftIcon={<NavigationClose />}
           >
             Surrender
           </MenuItem>
             <Link to="/">
             <MenuItem
               onTouchTap={this.handleLobbyClose}
-              leftIcon={<NavigationClose />}
+              leftIcon={<ActionHome />}
             >
               Lobby
             </MenuItem>

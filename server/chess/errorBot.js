@@ -1,6 +1,6 @@
 const errorBot = (key) => {
   let errorStore = {
-    'Cannot leave yourself in check': [
+    'Cannot leave yourself in check.': [
                                       'Cannot leave yourself in check.',
                                       'Watch out! you are still in check'
                                       ], 

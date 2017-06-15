@@ -165,7 +165,7 @@ class App extends Component {
   }
 
   startSocket() {
-    const { dispatch, thisUser, thisEmail, playerB, playerW } = this.props;
+    const { dispatch, thisUser, thisEmail, playerB, playerW, gameMode, gameTurn } = this.props;
     const name = thisUser;
     const email = thisEmail;
     // instantiate socket instance on the client side
@@ -197,7 +197,11 @@ class App extends Component {
       };
       dispatch(updateTimer(roomInfo));
       dispatch(turnClockOn());
-      this.decrementTimerW();
+      if ( gameMode !== 'AI' && gameTurn !== 'W') {
+        this.decrementTimerW();
+      } else {
+        this.toggleTimers();
+      }
     });
 
     this.socket.on('messageLocal', (msg) => {
@@ -482,7 +486,12 @@ class App extends Component {
       dispatch(updateTimer(roomInfo));
     });
 
-    this.socket.on('updateAllRooms', (allRooms) => {
+    this.socket.on('updateAllRooms', (allRooms, roomInfo) => {
+      if (roomInfo.playerW === undefined || roomInfo.playerB === undefined) {
+        dispatch(turnClockOff());
+      }
+      // dispatch(updateTimer(roomInfo));
+      dispatch(updateRoomInfo(roomInfo));
       dispatch(updateAllRooms(allRooms));
     });
 
