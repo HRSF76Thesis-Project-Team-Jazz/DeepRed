@@ -487,6 +487,10 @@ class App extends Component {
     });
 
     this.socket.on('updateAllRooms', (allRooms, roomInfo) => {
+      if (roomInfo.playerW === undefined || roomInfo.playerB === undefined) {
+        dispatch(turnClockOff());
+      }
+      // dispatch(updateTimer(roomInfo));
       dispatch(updateRoomInfo(roomInfo));
       dispatch(updateAllRooms(allRooms));
     });
