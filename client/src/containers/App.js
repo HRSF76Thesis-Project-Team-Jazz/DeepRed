@@ -17,7 +17,7 @@ import {
   selectSideOpen, selectSideClose, updateAllRooms, setPlayerId,
   enPassantMove, pawnPromotionMove, resumeDialogOpen, resumeDialogClose, cancelResumeDialogOpen,
   cancelResumeDialogClose, announceSurrenderDialogOpen, announceSurrenderDialogClose,
-  updateGameMode, openWinnerDialog, openCheckDialog, gameMode,
+  updateGameMode, openWinnerDialog, openCheckDialog, gameMode, turnClockOn, turnClockOff
 } from '../store/actions';
 // Components
 import Header from '../components/Header';
@@ -192,6 +192,7 @@ class App extends Component {
         dispatch(receiveGame(game));
       };
       dispatch(updateTimer(roomInfo));
+      dispatch(turnClockOn());
       this.decrementTimerW();
     });
 
@@ -693,7 +694,7 @@ class App extends Component {
       capturedPiecesBlack, capturedPiecesWhite, resumeOpen,
       playerB, playerW, error, messagesLocal, messagesGlobal, isWhite, thisUser,
       chooseGameModeOpen, chooseRoomOpen, chooseSideOpen, allRooms,
-      cancelResumeOpen, surrenderOpen, gameMode,
+      cancelResumeOpen, surrenderOpen, gameMode, showClock,
     } = this.props;
 
     const pauseActions = [
@@ -777,7 +778,7 @@ class App extends Component {
                   />
                 </div>
                 <div className="countdown-top-clock">
-                  {(playerB !== undefined) ?
+                  {(playerB !== undefined && showClock === true) ?
                     <Clock color={(!isWhite) ? 'White' : 'Black'} /> : null
                   }
                 </div>
@@ -787,7 +788,7 @@ class App extends Component {
                   />
                 </div>
                 <div className="countdown-bot-clock">
-                  {(playerB !== undefined) ?
+                  {(playerB !== undefined && showClock === true) ?
                     <Clock color={(isWhite) ? 'White' : 'Black'} /> : null
                   }
                 </div>
@@ -937,6 +938,7 @@ function mapStateToProps(state) {
   } = userState;
   const { message, error } = moveState;
   const {
+    showClock,
     surrenderOpen,
     resumeOpen,
     pauseOpen,
@@ -948,6 +950,7 @@ function mapStateToProps(state) {
     chooseSideOpen,
   } = controlState;
   return {
+    showClock,
     gameMode,
     surrenderOpen,
     cancelResumeOpen,

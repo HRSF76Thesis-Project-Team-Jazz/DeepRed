@@ -120,3 +120,12 @@ export const SELECT_ROOM_CLOSE = 'SELECT_ROOM_CLOSE';
 export const SELECT_SIDE_OPEN = 'SELECT_SIDE_OPEN';
 
 export const SELECT_SIDE_CLOSE = 'SELECT_SIDE_CLOSE';
+
+export const TURN_CLOCK_ON = 'TURN_CLOCK_ON';
+
+export const TURN_CLOCK_OFF = 'TURN_CLOCK_OFF';
+
+// aiState action types
+export const TURN_AI_SPINNER_OFF = 'TURN_AI_SPINNER_OFF';
+
+export const TURN_AI_SPINNER_ON = 'TURN_AI_SPINNER_ON';

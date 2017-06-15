@@ -302,6 +302,14 @@ export const selectSideClose = () => ({
   type: types.SELECT_SIDE_CLOSE,
 });
 
+export const turnClockOn = () => ({
+  type: types.TURN_CLOCK_ON,
+});
+
+export const turnClockOff =() => ({
+  type: types.TURN_CLOCK_OFF,
+});
+
 // other requests
 export const fetchGame = () => (dispatch) => {
   dispatch(requestGame());
@@ -321,3 +329,4 @@ export const sendMsgGlobal = msg => ({
   type: types.SEND_MESSAGE_GLOBAL,
   msg,
 });
+

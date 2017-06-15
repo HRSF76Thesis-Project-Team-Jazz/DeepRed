@@ -117,7 +117,7 @@ class AIvAI extends Component {
               </div>
             </Paper>
             <div className="flex-col">
-              <AIBoard />
+                <AIBoard />
             </div>
             <Paper className="flex-col right-col" zDepth={2}>
 
@@ -133,8 +133,10 @@ function mapStateToProps(state) {
   const { gameState, boardState, aiState } = state;
   const { capturedPiecesBlack, capturedPiecesWhite } = gameState;
   const { board } = boardState;
-  const { game, isAIButtonDisabled } = aiState;
-  return { capturedPiecesBlack,
+  const { game, isAIButtonDisabled, aiSpinner } = aiState;
+  return { 
+    aiSpinner,
+    capturedPiecesBlack,
     capturedPiecesWhite,
     game,
     board,

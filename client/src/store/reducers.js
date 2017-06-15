@@ -424,6 +424,7 @@ const controlState = (state = Immutable({
   chooseGameModeOpen: false,
   chooseRoomOpen: false,
   chooseSideOpen: false,
+  showClock: false,
 }), action) => {
   switch (action.type) {
     case types.PAUSE_DIALOG_OPEN: {
@@ -528,6 +529,18 @@ const controlState = (state = Immutable({
         chooseSideOpen: false,
       });
     }
+    case types.TURN_CLOCK_ON: {
+      return Immutable({
+        ...state,
+        showClock: true,
+      });
+    }
+    case types.TURN_CLOCK_OFF: {
+      return Immutable({
+        ...state,
+        showClock: false,
+      });
+    }
     default:
       return state;
   }
@@ -536,6 +549,7 @@ const controlState = (state = Immutable({
 const aiState = (state = Immutable({
   game: [],
   isAIButtonDisabled: false,
+  aiSpinner: false,
 }), action) => {
   switch (action.type) {
     case types.ADD_AI_GAME: {
