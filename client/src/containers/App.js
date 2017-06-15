@@ -90,7 +90,6 @@ class App extends Component {
     const { room, count, timeB, timeW } = this.props;
     this.stopTimerB();
     this.stopTimerW();
-    console.log('*** count: ', count);
     this.socket.emit('updateTime', room, count, timeB, timeW);
   }
 

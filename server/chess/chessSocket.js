@@ -78,16 +78,10 @@ module.exports = (io, client) => {
       roomInfo.playerWtime = 600;
       roomInfo.playerWclicked = false;
       createAndSaveNewGame(room);
-
-      console.log('*** WHITE ROOM: ', room);
-
       const num = parseInt(room[room.length - 1], 10);
       if (count !== num) {
         count = num;
       }
-
-      console.log('*** COUNT SERVER: ', count, num);
-
       roomInfo.count = count;
       allRooms[count] = roomInfo;
       io.emit('updateAllRooms', allRooms);
@@ -129,9 +123,6 @@ module.exports = (io, client) => {
       roomInfo.playerBtime = 600;
       roomInfo.playerBclicked = false;
       createAndSaveNewGame(room);
-
-      console.log('*** ROOM: ', room);
-
       const num = parseInt(room[room.length - 1], 10);
       if (count !== num) {
         count = num;
