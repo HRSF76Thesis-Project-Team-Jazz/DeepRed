@@ -68,7 +68,7 @@ class AIvAI extends Component {
         <Header />
         <div className="content">
           <div className="flex-row">
-            <div className="flex-col left-col">
+            <Paper className="flex-col left-col" zDepth={2}>
               <div className="left-col-row">
                 <div className="player-top">
                   <FlatButton
@@ -96,8 +96,11 @@ class AIvAI extends Component {
                   />
                 </div>
               </div>
-            </div>
-            <div className="flex-col capt-col">
+            </Paper>
+            <Paper
+              style={{ backgroundColor: '#78909C' }}
+              className="flex-col capt-col"
+            >
               <div className="flex-col capt-black-col">
                 <CapturedPieces
                   color="Black"
@@ -112,13 +115,13 @@ class AIvAI extends Component {
                   player="DeepRed-White"
                 />
               </div>
-            </div>
+            </Paper>
             <div className="flex-col">
               <AIBoard />
             </div>
-            <div className="flex-col right-col">
+            <Paper className="flex-col right-col" zDepth={2}>
 
-            </div>
+            </Paper>
           </div>
         </div>
       </div>

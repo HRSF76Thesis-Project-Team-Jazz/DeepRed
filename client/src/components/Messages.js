@@ -69,7 +69,6 @@ class Messages extends Component {
           <ChatBoxGlobal sendMessageGlobal={sendMessageGlobal} isWhite={isWhite} thisUser={thisUser} />
         </Tab>
       </Tabs>);
->>>>>>> styling material-ui, CSS
   }
 }
 

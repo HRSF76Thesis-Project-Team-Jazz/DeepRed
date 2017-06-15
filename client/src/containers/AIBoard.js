@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Paper from 'material-ui/Paper';
 
 import './css/Board.css';
 
@@ -20,7 +21,7 @@ class Board extends Component {
     const { board } = this.props;
     return (
       <div>
-        <div className="board">
+        <Paper className="board" zDepth={4}>
           {board.map((row, rowIndex) => (
             <div key={Math.random()} className="board-row">
               {row.map((col, colIndex) => (
@@ -37,7 +38,7 @@ class Board extends Component {
             </div>
           ),
           )}
-        </div>
+        </Paper>
       </div>
     );
   }
