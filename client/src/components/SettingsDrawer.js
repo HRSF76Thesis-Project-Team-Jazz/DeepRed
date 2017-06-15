@@ -51,6 +51,7 @@ class SettingsDrawer extends Component {
 
   handleLobbyClose() {
     this.handleClose();
+    window.location = '/';
     this.props.handleLobbyOpen();
   }
   render() {
