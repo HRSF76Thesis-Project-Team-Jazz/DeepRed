@@ -421,9 +421,13 @@ const controlState = (state = Immutable({
   pauseOpen: false,
   resumeOpen: false,
   surrenderOpen: false,
+  surrenderConfirmOpen: false,
   chooseGameModeOpen: false,
   chooseRoomOpen: false,
   chooseSideOpen: false,
+  showClock: false,
+  systemPause: false,
+  systemResume: true,
 }), action) => {
   switch (action.type) {
     case types.PAUSE_DIALOG_OPEN: {
@@ -492,6 +496,18 @@ const controlState = (state = Immutable({
         surrenderOpen: false,
       });
     }
+    case types.CONFIRM_SURRENDER_DIALOG_OPEN: {
+      return Immutable({
+        ...state,
+        surrenderConfirmOpen: true,
+      });
+    }
+    case types.CONFIRM_SURRENDER_DIALOG_CLOSE: {
+      return Immutable({
+        ...state,
+        surrenderConfirmOpen: false,
+      });
+    }
     case types.SELECT_GAME_MODE_OPEN: {
       return Immutable({
         ...state,
@@ -528,6 +544,30 @@ const controlState = (state = Immutable({
         chooseSideOpen: false,
       });
     }
+    case types.TURN_CLOCK_ON: {
+      return Immutable({
+        ...state,
+        showClock: true,
+      });
+    }
+    case types.TURN_CLOCK_OFF: {
+      return Immutable({
+        ...state,
+        showClock: false,
+      });
+    }
+    case types.TOGGLE_SYSTEM_PAUSE: {
+      return Immutable({
+        ...state,
+        systemPause: !state.systemPause,
+      });
+    }
+    case types.TOGGLE_SYSTEM_RESUME: {
+      return Immutable({
+        ...state,
+        systemResume: !state.systemResume,
+      });
+    }
     default:
       return state;
   }
@@ -536,6 +576,7 @@ const controlState = (state = Immutable({
 const aiState = (state = Immutable({
   game: [],
   isAIButtonDisabled: false,
+  aiSpinner: false,
 }), action) => {
   switch (action.type) {
     case types.ADD_AI_GAME: {

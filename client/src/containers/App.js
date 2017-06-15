@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import io from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
@@ -17,7 +18,8 @@ import {
   selectSideOpen, selectSideClose, updateAllRooms, setPlayerId,
   enPassantMove, pawnPromotionMove, resumeDialogOpen, resumeDialogClose, cancelResumeDialogOpen,
   cancelResumeDialogClose, announceSurrenderDialogOpen, announceSurrenderDialogClose,
-  updateGameMode, openWinnerDialog, openCheckDialog, gameMode,
+  updateGameMode, openWinnerDialog, openCheckDialog, gameMode, turnClockOn, turnClockOff,
+  toggleSystemPause, confirmSurrenderDialogClose, confirmSurrenderDialogOpen,
 } from '../store/actions';
 // Components
 import Header from '../components/Header';
@@ -75,6 +77,8 @@ class App extends Component {
     this.winLoseResult = this.winLoseResult.bind(this);
     this.conversation = this.conversation.bind(this);
     this.renderError = this.renderError.bind(this);
+    this.handleConfirmSurrenderOpen = this.handleConfirmSurrenderOpen.bind(this);
+    this.handleLobbyOpen = this.handleLobbyOpen.bind(this);
   }
 
   componentDidMount() {
@@ -192,6 +196,7 @@ class App extends Component {
         dispatch(receiveGame(game));
       };
       dispatch(updateTimer(roomInfo));
+      dispatch(turnClockOn());
       this.decrementTimerW();
     });
 
@@ -424,6 +429,8 @@ class App extends Component {
     });
 
     this.socket.on('executePauseRequest', () => {
+      dispatch(toggleSystemPause());
+      this.renderError('game has paused!');
       this.onChangePlayerTurn();
     });
 
@@ -446,7 +453,9 @@ class App extends Component {
     });
 
     this.socket.on('executeResumeRequest', () => {
-      const { gameTurn } = this.props;
+      const { dispatch, gameTurn } = this.props;
+      this.renderError('game has resumed!');
+      dispatch(toggleSystemPause());
       if (gameTurn === 'W') {
         this.decrementTimerW();
       }
@@ -549,10 +558,17 @@ class App extends Component {
   closeDialog() {
     const { dispatch } = this.props;
     dispatch(selectRoomClose());
+    window.location = '/login';
   }
 
   handleSurrender() {
-    const { thisUser, room } = this.props;
+    const { dispatch } = this.props;
+    dispatch(confirmSurrenderDialogOpen());
+  }
+
+  handleConfirmSurrenderOpen() {
+    const { dispatch, thisUser, room } = this.props;
+    dispatch(confirmSurrenderDialogClose());
     this.socket.emit('onSurrender', thisUser, room);
   }
 
@@ -599,13 +615,21 @@ class App extends Component {
   }
 
   sendPauseRequest() {
-    const { room } = this.props;
-    this.socket.emit('requestPause', room);
+    const { room, systemPause } = this.props;
+    if (systemPause === true) {
+      this.renderError('game is already in pause :)');
+    } else {
+      this.socket.emit('requestPause', room);
+    }
   }
 
   sendResumeRequest() {
-    const { room } = this.props;
-    this.socket.emit('requestResume', room);
+    const { room, systemPause } = this.props;
+    if (systemPause === false ) {
+      this.renderError('current game is still running');
+    } else {
+      this.socket.emit('requestResume', room);
+    }
   }
 
   onCancelResumeRequest() {
@@ -649,11 +673,17 @@ class App extends Component {
   handleAnnounceSurrenderClose() {
     const { dispatch } = this.props;
     dispatch(announceSurrenderDialogClose());
+    dispatch(confirmSurrenderDialogClose());
   }
 
   handleAnnounceSurrenderOpen() {
     const { dispatch } = this.props;
     dispatch(announceSurrenderDialogOpen());
+  }
+
+  handleLobbyOpen() {
+    const { dispatch } = this.props;
+    dispatch(selectRoomOpen());
   }
   // LOGIC
   newChessGame() {
@@ -693,7 +723,7 @@ class App extends Component {
       capturedPiecesBlack, capturedPiecesWhite, resumeOpen,
       playerB, playerW, error, messagesLocal, messagesGlobal, isWhite, thisUser,
       chooseGameModeOpen, chooseRoomOpen, chooseSideOpen, allRooms,
-      cancelResumeOpen, surrenderOpen, gameMode,
+      cancelResumeOpen, surrenderOpen, gameMode, showClock, surrenderConfirmOpen,
     } = this.props;
 
     const pauseActions = [
@@ -743,7 +773,7 @@ class App extends Component {
 
     const selectRoomActions = [
       <RaisedButton
-        label="Close"
+        label="Log out"
         secondary
         keyboardFocused
         onTouchTap={this.closeDialog}
@@ -758,12 +788,32 @@ class App extends Component {
       />,
     ];
 
+    const confirmSurrenderActions = [
+      <RaisedButton
+        label="No"
+        secondary
+        style={actionStyle}
+        onTouchTap={this.handleAnnounceSurrenderClose}
+      />,
+      <RaisedButton
+        label="Yes"
+        primary
+        style={actionStyle}
+        onTouchTap={this.handleConfirmSurrenderOpen}
+      />,
+    ];
+
+    const actionStyle = {
+      margin: '1px',
+      padding: '1px',
+    };
     return (
       <div className="site-wrap">
         <Header
           sendPauseRequest={this.sendPauseRequest}
           sendResumeRequest={this.sendResumeRequest}
           handleSurrender={this.handleSurrender}
+          handleLobbyOpen={this.handleLobbyOpen}
         />
         <div className="content">
           <div className="flex-row">
@@ -777,7 +827,7 @@ class App extends Component {
                   />
                 </div>
                 <div className="countdown-top-clock">
-                  {(playerB !== undefined) ?
+                  {(playerB !== undefined && showClock === true) ?
                     <Clock color={(!isWhite) ? 'White' : 'Black'} /> : null
                   }
                 </div>
@@ -787,7 +837,7 @@ class App extends Component {
                   />
                 </div>
                 <div className="countdown-bot-clock">
-                  {(playerB !== undefined) ?
+                  {(playerB !== undefined && showClock === true) ?
                     <Clock color={(isWhite) ? 'White' : 'Black'} /> : null
                   }
                 </div>
@@ -832,6 +882,7 @@ class App extends Component {
             <Paper className="flex-col right-col" zDepth={2}>
               {/*<Message message={error} />*/}
               <Messages
+                className="messageBox"
                 messagesLocal={messagesLocal}
                 sendMessageLocal={this.sendMessageLocal}
                 messagesGlobal={messagesGlobal}
@@ -847,6 +898,7 @@ class App extends Component {
                 className="pause-request"
                 title="Would you like to pause this game?"
                 actions={pauseActions}
+                persist={true}
                 open={pauseOpen}
                 handleClose={this.handlePauseClose}
               />
@@ -862,6 +914,7 @@ class App extends Component {
                 title="Are you ready to resume this game?"
                 actions={resumeActions}
                 open={resumeOpen}
+                persist={true}
                 handleClose={this.handleCancelResumeClose}
               />
               <Alert
@@ -876,6 +929,13 @@ class App extends Component {
                 title={`${alertName} has surrendered`}
                 actions={surrenderActions}
                 open={surrenderOpen}
+                handleClose={this.handleAnnounceSurrenderClose}
+              />
+              <Alert
+                className="confirm-surrender"
+                title={`are you sure about surrender?`}
+                actions={confirmSurrenderActions}
+                open={surrenderConfirmOpen}
                 handleClose={this.handleAnnounceSurrenderClose}
               />
             </div>
@@ -936,6 +996,9 @@ function mapStateToProps(state) {
   } = userState;
   const { message, error } = moveState;
   const {
+    surrenderConfirmOpen,
+    systemPause,
+    showClock,
     surrenderOpen,
     resumeOpen,
     pauseOpen,
@@ -947,6 +1010,9 @@ function mapStateToProps(state) {
     chooseSideOpen,
   } = controlState;
   return {
+    surrenderConfirmOpen,
+    systemPause,
+    showClock,
     gameMode,
     surrenderOpen,
     cancelResumeOpen,

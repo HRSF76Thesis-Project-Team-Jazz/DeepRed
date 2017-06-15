@@ -3,7 +3,7 @@ import SettingsDrawer from '../components/SettingsDrawer';
 
 import './css/Header.css';
 
-const Header = ({ sendPauseRequest, sendResumeRequest, handleSurrender }) => (
+const Header = ({ sendPauseRequest, sendResumeRequest, handleSurrender, handleLobbyOpen }) => (
   <div className="header">
     <table>
       <tbody>
@@ -14,9 +14,8 @@ const Header = ({ sendPauseRequest, sendResumeRequest, handleSurrender }) => (
               sendResumeRequest={sendResumeRequest}
               sendPauseRequest={sendPauseRequest}
               handleSurrender={handleSurrender}
+              handleLobbyOpen={handleLobbyOpen}
             />
-            <a href="/" className="button">Home</a>
-            <a href="/logout" className="button">Logout</a>
           </td>
         </tr>
       </tbody>
