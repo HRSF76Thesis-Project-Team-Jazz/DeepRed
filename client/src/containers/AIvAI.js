@@ -35,17 +35,20 @@ class AIvAI extends Component {
     this.socket.on('connect', () => {
       console.log('client side socket connected!');
     });
-
     this.socket.on('startAIvAIResults', (games, gameSummary) => {
-      games.forEach((game) => {
-        game.forEach((boardState, i) => {
-          setTimeout(() => {
-            dispatch(updateBoard(boardState.board));
-            // dispatch(updateGameSummary(gameSummary));
-            dispatch(updateCapturedPieces(boardState.blackCapPieces,
+      Promise.all(games.map(game =>
+        game.map((boardState, i) =>
+          new Promise(
+            () => setTimeout(() => {
+              dispatch(updateBoard(boardState.board));
+              // dispatch(updateGameSummary(gameSummary));
+              dispatch(updateCapturedPieces(boardState.blackCapPieces,
               boardState.whiteCapPieces));
-          }, 100 * i);
-        });
+            }, 100 * i)
+          )
+        )
+      ))
+      .then(() => {
         dispatch(showAIButton());
       });
       // dispatch(updateAllRooms(allRooms));
@@ -134,7 +137,7 @@ function mapStateToProps(state) {
   const { capturedPiecesBlack, capturedPiecesWhite } = gameState;
   const { board } = boardState;
   const { game, isAIButtonDisabled, aiSpinner } = aiState;
-  return { 
+  return {
     aiSpinner,
     capturedPiecesBlack,
     capturedPiecesWhite,
