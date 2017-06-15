@@ -80,6 +80,7 @@ class App extends Component {
     this.renderError = this.renderError.bind(this);
     this.handleConfirmSurrenderOpen = this.handleConfirmSurrenderOpen.bind(this);
     this.handleLobbyOpen = this.handleLobbyOpen.bind(this);
+    this.goToLobby = this.goToLobby.bind(this);
   }
 
   componentDidMount() {
@@ -574,6 +575,10 @@ class App extends Component {
     window.location = '/login';
   }
 
+  goToLobby() {
+    window.location = '/';
+  }
+
   handleSurrender() {
     const { dispatch } = this.props;
     dispatch(confirmSurrenderDialogOpen());
@@ -610,9 +615,9 @@ class App extends Component {
   }
 
   onAgreePauseRequest() {
-    const { dispatch, count } = this.props;
+    const { dispatch, count, gameMode } = this.props;
     dispatch(pauseDialogClose());
-    this.socket.emit('agreePauseRequest', count, this.socket.id);
+    this.socket.emit('agreePauseRequest', count, this.socket.id, gameMode);
   }
 
   onCancelPauseRequest() {
@@ -652,9 +657,9 @@ class App extends Component {
   }
 
   onAgreeResumeRequest() {
-    const { dispatch, count } = this.props;
+    const { dispatch, count, gameMode } = this.props;
     dispatch(resumeDialogClose());
-    this.socket.emit('agreeResumeRequest', count, this.socket.id);
+    this.socket.emit('agreeResumeRequest', count, this.socket.id, gameMode);
   }
 
   handleCancelResumeClose() {
@@ -744,12 +749,13 @@ class App extends Component {
       <FlatButton
         label="No"
         primary
+        style={actionStyle}
         onTouchTap={this.onCancelPauseRequest}
       />,
       <FlatButton
         label="Yes"
         primary
-        keyboardFocused
+        style={actionStyle}
         onTouchTap={this.onAgreePauseRequest}
       />,
     ];
@@ -758,11 +764,13 @@ class App extends Component {
       <FlatButton
         label="No"
         primary
+        style={actionStyle}
         onTouchTap={this.onCancelResumeRequest}
       />,
       <FlatButton
         label="yes"
         primary
+        style={actionStyle}
         onTouchTap={this.onAgreeResumeRequest}
       />,
     ];
@@ -772,6 +780,7 @@ class App extends Component {
         label="Ok"
         primary
         keyboardFocused
+        style={actionStyle}
         onTouchTap={this.handleCancelPauseClose}
       />,
     ];
@@ -781,6 +790,7 @@ class App extends Component {
         label="Ok"
         primary
         keyboardFocused
+        style={actionStyle}
         onTouchTap={this.handleCancelResumeClose}
       />,
     ];
@@ -797,8 +807,15 @@ class App extends Component {
     const surrenderActions = [
       <RaisedButton
         label="Ok"
-        secondary
+        primary
+        style={actionStyle}
         onTouchTap={this.handleAnnounceSurrenderClose}
+      />,
+      <RaisedButton
+        label="Back to Lobby"
+        secondary
+        style={actionStyle}
+        onTouchTap={this.goToLobby}
       />,
     ];
 
@@ -818,8 +835,8 @@ class App extends Component {
     ];
 
     const actionStyle = {
-      margin: '1px',
-      padding: '1px',
+      margin: '3px',
+      padding: '3px',
     };
     return (
       <div className="site-wrap">
@@ -884,6 +901,7 @@ class App extends Component {
             </Paper>
             <div className="flex-col">
               <Board
+                goToLobby={this.goToLobby}
                 attemptMove={this.attemptMove}
                 checkLegalMoves={this.checkLegalMoves}
                 conversation={this.conversation}

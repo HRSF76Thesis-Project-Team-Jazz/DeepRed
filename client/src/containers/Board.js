@@ -150,8 +150,13 @@ class Board extends Component {
     const winnerActions = [
       <RaisedButton
         label="Ok"
-        secondary
+        primary
         onTouchTap={this.handleCloseWinnerDialog}
+      />,
+      <RaisedButton
+        label="Back to Lobby"
+        secondary
+        onTouchTap={this.props.goToLobby}
       />,
     ];
 
