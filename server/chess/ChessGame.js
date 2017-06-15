@@ -416,9 +416,9 @@ class ChessGame {
         deepRedOrigin = [parseInt(deepRedMove[0][0], 10), parseInt(deepRedMove[0][1], 10)];
         deepRedDest = deepRedMove[1];
       } else if (typeof deepRedMove === 'object') {
-        deepRedOrigin = [parseInt(deepRedMove.from[0], 10), parseInt(deepRedMove.from[1], 10)];
-        deepRedDest = [parseInt(deepRedMove.to[0], 10), parseInt(deepRedMove.to[1], 10)];
         if (deepRedMove.newPiece) {
+          deepRedOrigin = [parseInt(deepRedMove.from[0], 10), parseInt(deepRedMove.from[1], 10)];
+          deepRedDest = [parseInt(deepRedMove.to[0], 10), parseInt(deepRedMove.to[1], 10)];
           deepRedPawnPromotionValue = deepRedMove.newPiece[1];
         }
         if (deepRedMove.move === 'castle') {

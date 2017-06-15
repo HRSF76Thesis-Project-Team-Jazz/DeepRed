@@ -15,7 +15,7 @@ export default class AIDialog extends Component {
   handleClose() {
     const { dispatch } = this.props;
     dispatch(showAIButton());
-  };
+  }
 
   render() {
     // const actions = [
@@ -25,12 +25,11 @@ export default class AIDialog extends Component {
     //     onTouchTap={this.handleClose}
     //   />,
     // ];
-
     return (
       <div>
         <Dialog
-          title="DeepRed is simulating games to discover new checkmate..."
-          modal={true}
+          title="DeepRed is playing games to discover a new checkmate..."
+          modal
           open={this.props.shouldOpen}
         >
           <LinearProgress
