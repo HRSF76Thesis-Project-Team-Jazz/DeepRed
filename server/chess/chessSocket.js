@@ -66,8 +66,8 @@ module.exports = (io, client) => {
         count = 0;
       } else {
         count += 1;
-        room = `room ${count}`;
       }
+      room = `room ${count}`;
     }
     client.join(room, () => {
       roomInfo = {};
@@ -78,10 +78,16 @@ module.exports = (io, client) => {
       roomInfo.playerWtime = 600;
       roomInfo.playerWclicked = false;
       createAndSaveNewGame(room);
+
+      console.log('*** WHITE ROOM: ', room);
+
       const num = parseInt(room[room.length - 1], 10);
       if (count !== num) {
         count = num;
       }
+
+      console.log('*** COUNT SERVER: ', count, num);
+
       roomInfo.count = count;
       allRooms[count] = roomInfo;
       io.emit('updateAllRooms', allRooms);
@@ -108,11 +114,11 @@ module.exports = (io, client) => {
       room = `room ${queue.splice(0, 1)}`;
     } else {
       if (allRooms.length === 0) {
-        room = `room 0`;
+        room = 'room 0';
       } else {
         count += 1;
-        room = `room ${count}`;
       }
+      room = `room ${count}`;
     }
     client.join(room, () => {
       roomInfo = {};
@@ -123,6 +129,9 @@ module.exports = (io, client) => {
       roomInfo.playerBtime = 600;
       roomInfo.playerBclicked = false;
       createAndSaveNewGame(room);
+
+      console.log('*** ROOM: ', room);
+
       const num = parseInt(room[room.length - 1], 10);
       if (count !== num) {
         count = num;
@@ -320,6 +329,7 @@ module.exports = (io, client) => {
   });
 
   client.on('updateTime', (clientRoom, clientCount, timeB, timeW) => {
+    console.log('*** ALL ROOMS: ', allRooms, clientCount);
     allRooms[clientCount].playerBtime = timeB;
     allRooms[clientCount].playerWtime = timeW;
     io.in(clientRoom).emit('sendUpdatedTime', allRooms[clientCount]);
