@@ -23,6 +23,7 @@ class SettingsDrawer extends Component {
     this.handlePauseClose = this.handlePauseClose.bind(this);
     this.handleResumeClose = this.handleResumeClose.bind(this);
     this.handleSurrenderClose = this.handleSurrenderClose.bind(this);
+    this.handleLobbyClose = this.handleLobbyClose.bind(this);
   }
 
   handleToggle() {
@@ -46,6 +47,11 @@ class SettingsDrawer extends Component {
   handleSurrenderClose() {
     this.handleClose();
     this.props.handleSurrender();
+  }
+
+  handleLobbyClose() {
+    this.handleClose();
+    this.props.handleLobbyOpen();
   }
   render() {
     return (
@@ -89,13 +95,15 @@ class SettingsDrawer extends Component {
           >
             Surrender
           </MenuItem>
-          <MenuItem
-            onTouchTap={this.handleClose}
-            leftIcon={<NavigationClose />}
-          >
-            Quit Game
-          </MenuItem>
-          <Link to="/logout">
+            <Link to="/">
+            <MenuItem
+              onTouchTap={this.handleLobbyClose}
+              leftIcon={<NavigationClose />}
+            >
+              Lobby
+            </MenuItem>
+          </Link>
+          <Link to="/login">
             <MenuItem
               onTouchTap={this.handleClose}
               leftIcon={<ActionExit />}

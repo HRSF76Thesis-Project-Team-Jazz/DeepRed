@@ -78,6 +78,7 @@ class App extends Component {
     this.conversation = this.conversation.bind(this);
     this.renderError = this.renderError.bind(this);
     this.handleConfirmSurrenderOpen = this.handleConfirmSurrenderOpen.bind(this);
+    this.handleLobbyOpen = this.handleLobbyOpen.bind(this);
   }
 
   componentDidMount() {
@@ -679,6 +680,11 @@ class App extends Component {
     const { dispatch } = this.props;
     dispatch(announceSurrenderDialogOpen());
   }
+
+  handleLobbyOpen() {
+    const { dispatch } = this.props;
+    dispatch(selectRoomOpen());
+  }
   // LOGIC
   newChessGame() {
     const { dispatch } = this.props;
@@ -807,6 +813,7 @@ class App extends Component {
           sendPauseRequest={this.sendPauseRequest}
           sendResumeRequest={this.sendResumeRequest}
           handleSurrender={this.handleSurrender}
+          handleLobbyOpen={this.handleLobbyOpen}
         />
         <div className="content">
           <div className="flex-row">
