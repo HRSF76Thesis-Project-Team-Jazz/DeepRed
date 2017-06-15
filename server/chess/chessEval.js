@@ -47,6 +47,10 @@ const boardPiecesScore = (board) => {
   const whitePieces = [];
   const blackPieces = [];
 
+  board.forEach(row =>
+  row.forEach(col =>
+      ((col && col[0] === 'W') ? whitePieces.push(col) : blackPieces.push(col))));
+
   const value = pieceScore(board);
 
   let whiteScore = 0;
@@ -83,17 +87,18 @@ const piecesAttacked = (board, state, color) => {
   });
 
   const piecesKey = Object.keys(pieces);
-  console.log(value);
-  console.log(pieces);
-  console.log(piecesKey);
 
   for (let i = 0; i < piecesKey.length; i += 1) {
     score += value[pieces[piecesKey[i]][1]];
   }
+
+  console.log(' Pieces attacked: ', pieces, score);
+
   return score;
 };
 
 module.exports = {
   pieceScore,
   boardPiecesScore,
+  piecesAttacked,
 };

@@ -22,38 +22,54 @@ const choosePieceCapture = (encodedParentBoard, color, successFn, noneFn) => {
   const state = parentWithState[1];
   const selector = (color === 'W') ? 'blackScore' : 'whiteScore';
 
-  const parentPiecesScore = boardPiecesScore(board);
+  const parentPiecesScore = Object.assign({}, boardPiecesScore(board));
   const startScore = parentPiecesScore[selector];
 
   let bestBoard;
-  let bestValue = 0;
-  const encodedSafeMoves = getEncodedSafeMoves(board, state, color);
+  let bestValue;
+  let bestCaptured;
+  let lowestRiskScore;
 
-  const parentAttackedScore = piecesAttacked(board, color);
+  const encodedSafeMoves = getEncodedSafeMoves(board, state, color).sort((a, b) => Math.random() - Math.random());
+
+  const parentAttackedScore = piecesAttacked(board, state, color);
+  console.log('*** parentPiecesScore: ', parentPiecesScore);
+  console.log('*** START SCORE: ', startScore);
+  console.log('*** PARENT ATTACKED SCORE: ', parentAttackedScore);
 
   encodedSafeMoves.forEach((encodedBoard) => {
     const boardWithState = decodeWithState(encodedBoard);
     const newBoard = boardWithState[0];
-    const newBoardScore = boardPiecesScore(newBoard);
+    const newState = boardWithState[1];
+    const newBoardScore = Object.assign({}, boardPiecesScore(newBoard));
     const newScore = newBoardScore[selector];
-    const boardAttackedScore = piecesAttacked(board, color);
+    const boardAttackedScore = piecesAttacked(board, newState, color);
 
     const valueOfAddedRisk = boardAttackedScore - parentAttackedScore;
     const valueOfCapturedPiece = startScore - newScore;
     const moveValue = valueOfCapturedPiece - valueOfAddedRisk;
 
-    if (moveValue > bestValue) {
+    if (!bestValue || moveValue > bestValue) {
+      console.log('****************** SAVE FIRST', moveValue, bestValue);
       bestValue = moveValue;
       bestBoard = encodedBoard;
+      lowestRiskScore = valueOfAddedRisk;
+    } else if (bestValue === moveValue && (!bestCaptured || (valueOfCapturedPiece > bestCaptured))) {
+      bestValue = moveValue;
+      bestBoard = encodedBoard;
+      bestCaptured = valueOfCapturedPiece;
     }
   });
 
-  if (bestValue > 0) {
-    console.log('** CHOOSE PIECE CAPTURE');
-    successFn(evalMove(encodedParentBoard, bestBoard, color));
-  } else {
-    noneFn();
-  }
+  console.log('===== BEST CAPTURE =====');
+  console.log('startScore | newScore | attackedScore | newAttackedScore', startScore, parentAttackedScore);
+  console.log('moveValue: ', bestValue);
+  console.log('valueOfAddedRisk: ', lowestRiskScore);
+  console.log('valueOfCapturedPiece: ', bestCaptured);
+  console.log();
+  console.log();
+
+  successFn(evalMove(encodedParentBoard, bestBoard, color));
 };
 
 module.exports = {
