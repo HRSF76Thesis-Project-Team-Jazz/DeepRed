@@ -45,9 +45,7 @@ const chooseNewMove = (encodedParentBoard, color, callback) => {
       encodedSafeMoves[Math.floor(Math.random() * encodedSafeMoves.length)], color));
   };
 
-  choosePieceCapture(encodedParentBoard, color, callback,
-    () => getMovesFromDB(encodedParentBoard, color, moveFound, moveNotFound));
-  
+  choosePieceCapture(encodedParentBoard, color, callback);
 };
 
 /**
