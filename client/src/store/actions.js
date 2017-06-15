@@ -64,6 +64,19 @@ export const resetBoolBoard = () => ({
   type: types.RESET_BOOL_BOARD,
 });
 
+export const hideAIButton = () => ({
+  type: types.HIDE_AI_BUTTON,
+});
+
+export const showAIButton = () => ({
+  type: types.SHOW_AI_BUTTON,
+});
+
+export const updateGameSummary = gameSummary => ({
+  type: types.UPDATE_GAME_SUMMARY,
+  gameSummary,
+});
+
 export const unselectPiece = () => ({
   type: types.UNSELECT_PIECE,
 });
