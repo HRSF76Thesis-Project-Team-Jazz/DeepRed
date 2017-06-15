@@ -1,11 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Messages from './Messages';
+import {List, ListItem} from 'material-ui/List';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
-import './css/Room.css';
 import MobileTearSheet from './MobileTearSheet';
+import './css/Room.css';
+
+// Components
+import Messages from './Messages';
 import ChatBoxGlobal from './ChatBoxGlobal';
 import ChatMessageGlobal from './ChatMessageGlobal';
 
@@ -74,6 +77,7 @@ messagesGlobal, sendMessageLocal, messagesLocal, thisUser, isWhite }) => (
       <p className="title-text">Existing rooms </p>
       <table>
         <tbody>
+          {/*<List>*/}
           {
             allRooms.map((room, i) => {
               if (room !== null) {
@@ -109,6 +113,7 @@ messagesGlobal, sendMessageLocal, messagesLocal, thisUser, isWhite }) => (
               }
             })
           }
+        {/*</List>*/}
         </tbody>
       </table>
       </div>

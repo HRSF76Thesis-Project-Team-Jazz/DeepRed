@@ -22,49 +22,55 @@ module.exports = (io, client) => {
     io.to(id).emit('returnAllRooms', allRooms);
   });
 
-  client.on('createRoomAsWhite', (currentUserName, currentUserEmail, id, gameMode) => {
-    if (queue.length !== 0) {
-      room = `room ${queue.splice(0, 1)}`;
-    } else {
-      room = `room ${count}`;
-    }
-    client.join(room, () => {
-      roomInfo.room = room;
-      roomInfo.playerW = currentUserName;
-      roomInfo.playerWemail = currentUserEmail;
-      roomInfo.playerWid = client.client.id;
-      roomInfo.playerWtime = 600;
-      roomInfo.playerWclicked = false;
-      createAndSaveNewGame(room);
-      const num = parseInt(room[room.length - 1], 10);
-      if (count !== num) {
-        count = num;
-      }
-      roomInfo.count = count;
-      allRooms[count] = roomInfo;
-      io.emit('updateAllRooms', allRooms, allRooms[count]);
-      io.to(room).emit('createRoomCompleted', roomInfo, allRooms);
-      if (gameMode === 'AI') {
-        roomInfo.playerB = 'AI';
-        roomInfo.playerBemail = 'AI@AI';
-        roomInfo.playerBid = 12345;
-        roomInfo.playerBtime = 600;
-        roomInfo.playerBclicked = false;
-        io.in(room).emit('joinRoomCompleted', roomInfo, allRooms);
-        io.emit('updateAllRooms', allRooms, allRooms[count]);
-      }
-      count += 1;
-      roomInfo = {};
-    });
-  });
+  // client.on('createRoomAsWhite', (currentUserName, currentUserEmail, id, gameMode) => {
+  //   if (queue.length !== 0) {
+  //     room = `room ${queue.splice(0, 1)}`;
+  //   } else {
+  //     room = `room ${count}`;
+  //   }
+  //   client.join(room, () => {
+  //     roomInfo.room = room;
+  //     roomInfo.playerW = currentUserName;
+  //     roomInfo.playerWemail = currentUserEmail;
+  //     roomInfo.playerWid = client.client.id;
+  //     roomInfo.playerWtime = 600;
+  //     roomInfo.playerWclicked = false;
+  //     createAndSaveNewGame(room);
+  //     const num = parseInt(room[room.length - 1], 10);
+  //     if (count !== num) {
+  //       count = num;
+  //     }
+  //     roomInfo.count = count;
+  //     allRooms[count] = roomInfo;
+  //     io.emit('updateAllRooms', allRooms, allRooms[count]);
+  //     io.to(room).emit('createRoomCompleted', roomInfo, allRooms);
+  //     if (gameMode === 'AI') {
+  //       roomInfo.playerB = 'AI';
+  //       roomInfo.playerBemail = 'AI@AI';
+  //       roomInfo.playerBid = 12345;
+  //       roomInfo.playerBtime = 600;
+  //       roomInfo.playerBclicked = false;
+  //       io.in(room).emit('joinRoomCompleted', roomInfo, allRooms);
+  //       io.emit('updateAllRooms', allRooms, allRooms[count]);
+  //     }
+  //     count += 1;
+  //     roomInfo = {};
+  //   });
+  // });
 
   client.on('createRoomAsWhite', (currentUserName, currentUserEmail, id, gameMode) => {
     if (queue.length !== 0) {
       room = `room ${queue.splice(0, 1)}`;
     } else {
-      room = `room ${count}`;
+      if (allRooms.length === 0) {
+        count = 0;
+      } else {
+        count += 1;
+        room = `room ${count}`;
+      }
     }
     client.join(room, () => {
+      roomInfo = {};
       roomInfo.room = room;
       roomInfo.playerW = currentUserName;
       roomInfo.playerWemail = currentUserEmail;
@@ -78,8 +84,9 @@ module.exports = (io, client) => {
       }
       roomInfo.count = count;
       allRooms[count] = roomInfo;
-      io.emit('updateAllRooms', allRooms, allRooms[count]);
+      io.emit('updateAllRooms', allRooms);
       io.to(room).emit('createRoomCompleted', roomInfo, allRooms);
+      // count += 1;
       if (gameMode === 'AI') {
         roomInfo.playerB = 'AI';
         roomInfo.playerBemail = 'AI@AI';
@@ -87,12 +94,11 @@ module.exports = (io, client) => {
         roomInfo.playerBtime = 600;
         roomInfo.playerBclicked = false;
         io.in(room).emit('joinRoomCompleted', roomInfo, allRooms);
-        io.emit('updateAllRooms', allRooms, allRooms[count]);
+        io.emit('updateAllRooms', allRooms);
         getAllMoves('B', (res) => {
           io.in(room).emit('messageLocal',  { message: 'DeepRed has analyzed ' + res + ' Total Black Moves' , color: 'red', timeStamp: new Date() });
         });
       }
-      count += 1;
       roomInfo = {};
     });
   });
@@ -101,9 +107,15 @@ module.exports = (io, client) => {
     if (queue.length !== 0) {
       room = `room ${queue.splice(0, 1)}`;
     } else {
-      room = `room ${count}`;
+      if (allRooms.length === 0) {
+        room = `room 0`;
+      } else {
+        count += 1;
+        room = `room ${count}`;
+      }
     }
     client.join(room, () => {
+      roomInfo = {};
       roomInfo.room = room;
       roomInfo.playerB = currentUserName;
       roomInfo.playerBemail = currentUserEmail;
@@ -117,7 +129,7 @@ module.exports = (io, client) => {
       }
       roomInfo.count = count;
       allRooms[count] = roomInfo;
-      io.emit('updateAllRooms', allRooms, allRooms[count]);
+      io.emit('updateAllRooms', allRooms);
       io.to(room).emit('createRoomCompleted', roomInfo, allRooms);
       if (gameMode === 'AI') {
         roomInfo.playerW = 'AI';
@@ -127,11 +139,10 @@ module.exports = (io, client) => {
         roomInfo.playerWclicked = false;
         allGames[room].moveAI((gameState) => {
           io.in(room).emit('joinRoomCompleted', roomInfo, allRooms, gameState.game);
-          io.emit('updateAllRooms', allRooms, roomInfo);
+          io.emit('updateAllRooms', allRooms);
           getAllMoves('W', (res) => {
             io.in(room).emit('messageLocal',  { message: 'DeepRed has analyzed ' + res + ' Total White Moves' , color: 'red', timeStamp: new Date() });
           });
-          count += 1;
           roomInfo = {};
         });
       }
@@ -148,7 +159,7 @@ module.exports = (io, client) => {
       // createAndSaveNewGame(allRooms[clientCount].room);
       const currentGame = allGames[allRooms[clientCount].room];
       io.in(allRooms[clientCount].room).emit('joinRoomCompleted', allRooms[clientCount], allRooms, currentGame);
-      io.emit('updateAllRooms', allRooms, allRooms[clientCount]);
+      io.emit('updateAllRooms', allRooms);
     });
   });
 
@@ -162,7 +173,7 @@ module.exports = (io, client) => {
       // createAndSaveNewGame(allRooms[clientCount].room);
       const currentGame = allGames[allRooms[clientCount].room];
       io.in(allRooms[clientCount].room).emit('joinRoomCompleted', allRooms[clientCount], allRooms, currentGame);
-      io.emit('updateAllRooms', allRooms, allRooms[clientCount]);
+      io.emit('updateAllRooms', allRooms);
     });
   });
 
@@ -182,7 +193,7 @@ module.exports = (io, client) => {
               allRooms[i] = null;
               queue.push(i);
             }
-            io.emit('updateAllRooms', allRooms, allRooms[i]);
+            io.emit('updateAllRooms', allRooms);
           });
         }
         if (allRooms[i].playerWid === id) {
@@ -197,7 +208,7 @@ module.exports = (io, client) => {
               allRooms[i] = null;
               queue.push(i);
             }
-            io.emit('updateAllRooms', allRooms, allRooms[i]);
+            io.emit('updateAllRooms', allRooms);
           });
         }
       }
