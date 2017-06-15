@@ -214,7 +214,7 @@ class App extends Component {
     });
 
     this.socket.on('attemptMoveResult', (error, game, origin, dest, selection) => {
-      console.log('+++++++++++++++++++++++++++++move: ', game.event);
+      // console.log('+++++++++++++++++++++++++++++move: ', game.event);
       // if gameTurn color and the captured piece color are opposite,
       // that means it is a win,
       // if the gameTurn color and the captured piece's color are the same
@@ -379,7 +379,6 @@ class App extends Component {
             }
             if (intent !== '') {
               if (text === '+BW' || text === '+WW' || text === '+B' || text === '+W') {
-                console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
                 dispatch(turnSnackbarOn());
               }
               this.conversation(text, intent);

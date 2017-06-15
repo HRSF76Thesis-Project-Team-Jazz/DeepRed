@@ -22,7 +22,7 @@ import { turnSnackbarOff } from '../store/actions';
       <div>
         <Snackbar
           open={snackbarOpen}
-          message="Check"
+          message="Check!!"
           autoHideDuration={3000}
           onRequestClose={this.handleRequestClose}
         />
