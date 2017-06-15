@@ -48,82 +48,83 @@ class ChessGame {
     const error = this.errorCheck(origin, dest);
     if (error) {
       cb({ game: this, error });
-    }
-    this.event = [];
-    const originPiece = this.board[origin[0]][origin[1]];
-    const destPiece = this.board[dest[0]][dest[1]];
-    const legalMoveResult = isLegalMove(this, origin, dest);
-    if (legalMoveResult.bool) {
-      // prevent putting yourself in check
-      const testBoard = this.board.map(row => row.map(x => x));
-      testBoard[dest[0]][dest[1]] = originPiece;
-      testBoard[origin[0]][origin[1]] = null;
-      if (this.turn === 'W' && whiteIsChecked(testBoard)) {
-        cb({
-          game: this,
-          error: 'Cannot leave yourself in check.',
-        });
-      } else if (this.turn === 'B' && blackIsChecked(testBoard)) {
-        cb({
-          game: this,
-          error: 'Cannot leave yourself in check.',
-        });
-      }
-
-      // handle castling
-      if (legalMoveResult.castling) {
-        this.castlingMove(legalMoveResult.castling);
-        this.event.push('castle');
-      }
-      this.toggleMovedRooksOrKings(origin, originPiece);
-      // handle toggling en Passant
-      if (legalMoveResult.enPassant) {
-        const pawn = this.board[this.canEnPassant[0]][this.canEnPassant[1]];
-        this.addToCaptureArray(pawn);
-        this.board[this.canEnPassant[0]][this.canEnPassant[1]] = null;
-        this.event.push('enpassant');
-      }
-      this.canEnPassant = legalMoveResult.canEnPassant || [];
-      // add to capture array
-      if (destPiece) {
-        this.addToCaptureArray(destPiece);
-        this.event.push(destPiece);
-      }
-
-      // swap location
-      this.board[dest[0]][dest[1]] = originPiece;
-      this.board[origin[0]][origin[1]] = null;
-
-      // handle pawn promotion
-      let pawnPromotionPiece = null;
-      if (pawnPromotionValue) {
-        pawnPromotionPiece = originPiece[0] + pawnPromotionValue;
-        this.promotePawn(originPiece, dest, pawnPromotionPiece);
-        this.event.push(`=${pawnPromotionPiece}`);
-      }
-      // check for check/checkmate/stalemate
-      const pieceStateForEncode = this.generatePieceState();
-      this.history.push(encodeWithState(this.board, pieceStateForEncode));
-      this.endGameChecks();
-      this.turn = (this.turn === 'W') ? 'B' : 'W';
-      this.moveHistoryEntry.push(this.generateMoveHistoryEntry(origin, dest,
-        destPiece, pawnPromotionValue, legalMoveResult));
-      if (gameMode === 'AI' && !this.winner) {
-        this.moveAI(cb);
-      } else {
-        // console.log(this.history);
-        console.log(this.board);
-        console.log('Move piece is successful.');
-        cb({
-          game: this,
-          error: null,
-        });
-      }
     } else {
-      cb({ game: this, error: 'Move is not allowed.' });
+      this.event = [];
+      const originPiece = this.board[origin[0]][origin[1]];
+      const destPiece = this.board[dest[0]][dest[1]];
+      const legalMoveResult = isLegalMove(this, origin, dest);
+      if (legalMoveResult.bool) {
+        // prevent putting yourself in check
+        const testBoard = this.board.map(row => row.map(x => x));
+        testBoard[dest[0]][dest[1]] = originPiece;
+        testBoard[origin[0]][origin[1]] = null;
+        if (this.turn === 'W' && whiteIsChecked(testBoard)) {
+          cb({
+            game: this,
+            error: 'Cannot leave yourself in check.',
+          });
+        } else if (this.turn === 'B' && blackIsChecked(testBoard)) {
+          cb({
+            game: this,
+            error: 'Cannot leave yourself in check.',
+          });
+        } else {
+          // handle castling
+          if (legalMoveResult.castling) {
+            this.castlingMove(legalMoveResult.castling);
+            this.event.push('castle');
+          }
+          this.toggleMovedRooksOrKings(origin, originPiece);
+          // handle toggling en Passant
+          if (legalMoveResult.enPassant) {
+            const pawn = this.board[this.canEnPassant[0]][this.canEnPassant[1]];
+            this.addToCaptureArray(pawn);
+            this.board[this.canEnPassant[0]][this.canEnPassant[1]] = null;
+            this.event.push('enpassant');
+          }
+          this.canEnPassant = legalMoveResult.canEnPassant || [];
+          // add to capture array
+          if (destPiece) {
+            this.addToCaptureArray(destPiece);
+            this.event.push(destPiece);
+          }
+
+          // swap location
+          this.board[dest[0]][dest[1]] = originPiece;
+          this.board[origin[0]][origin[1]] = null;
+
+          // handle pawn promotion
+          let pawnPromotionPiece = null;
+          if (pawnPromotionValue) {
+            pawnPromotionPiece = originPiece[0] + pawnPromotionValue;
+            this.promotePawn(originPiece, dest, pawnPromotionPiece);
+            this.event.push(`=${pawnPromotionPiece}`);
+          }
+          // check for check/checkmate/stalemate
+          const pieceStateForEncode = this.generatePieceState();
+          this.history.push(encodeWithState(this.board, pieceStateForEncode));
+          this.endGameChecks();
+          this.turn = (this.turn === 'W') ? 'B' : 'W';
+          this.moveHistoryEntry.push(this.generateMoveHistoryEntry(origin, dest,
+            destPiece, pawnPromotionValue, legalMoveResult));
+          if (gameMode === 'AI' && !this.winner) {
+            this.moveAI(cb);
+          } else {
+            // console.log(this.history);
+            console.log(this.board);
+            console.log('Move piece is successful.');
+            cb({
+              game: this,
+              error: null,
+            });
+          }
+        }
+      } else {
+        cb({ game: this, error: 'Move is not allowed.' });
+      }
     }
-    // console.log(this.board);
-    // console.log(error);
+      // console.log(this.board);
+      // console.log(error);
   }
 
   errorCheck(origin, dest) {
@@ -216,7 +217,7 @@ class ChessGame {
   }
 
   promotePawn(originPiece, dest, pawnPromotionPiece) {
-    if ((originPiece === 'WP' && dest[0] === 0) || (originPiece === 'BP' && dest[0] === 7)) {
+    if ((originPiece === 'WP' && (dest[0] === 0 || dest[0] === '0')) || (originPiece === 'BP' && (dest[0] === 7 || dest[0] === '7'))) {
       this.board[dest[0]][dest[1]] = pawnPromotionPiece;
     }
   }
@@ -415,8 +416,8 @@ class ChessGame {
         deepRedOrigin = [parseInt(deepRedMove[0][0], 10), parseInt(deepRedMove[0][1], 10)];
         deepRedDest = deepRedMove[1];
       } else if (typeof deepRedMove === 'object') {
-        deepRedOrigin = deepRedMove.from;
-        deepRedDest = deepRedMove.to;
+        deepRedOrigin = [parseInt(deepRedMove.from[0], 10), parseInt(deepRedMove.from[1], 10)];
+        deepRedDest = [parseInt(deepRedMove.to[0], 10), parseInt(deepRedMove.to[1], 10)];
         if (deepRedMove.newPiece) {
           deepRedPawnPromotionValue = deepRedMove.newPiece[1];
         }
