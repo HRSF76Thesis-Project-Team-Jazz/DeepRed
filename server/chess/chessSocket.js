@@ -66,8 +66,8 @@ module.exports = (io, client) => {
         count = 0;
       } else {
         count += 1;
-        room = `room ${count}`;
       }
+      room = `room ${count}`;
     }
     client.join(room, () => {
       roomInfo = {};
@@ -108,11 +108,11 @@ module.exports = (io, client) => {
       room = `room ${queue.splice(0, 1)}`;
     } else {
       if (allRooms.length === 0) {
-        room = `room 0`;
+        room = 'room 0';
       } else {
         count += 1;
-        room = `room ${count}`;
       }
+      room = `room ${count}`;
     }
     client.join(room, () => {
       roomInfo = {};
@@ -320,6 +320,7 @@ module.exports = (io, client) => {
   });
 
   client.on('updateTime', (clientRoom, clientCount, timeB, timeW) => {
+    console.log('*** ALL ROOMS: ', allRooms, clientCount);
     allRooms[clientCount].playerBtime = timeB;
     allRooms[clientCount].playerWtime = timeW;
     io.in(clientRoom).emit('sendUpdatedTime', allRooms[clientCount]);
