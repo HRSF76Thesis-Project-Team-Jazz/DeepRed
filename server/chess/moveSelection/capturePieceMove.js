@@ -4,11 +4,19 @@ const safeMoves = require('../deepRed/safeMoves');
 const chessMoves = require('../chessMoves');
 
 const { boardPiecesScore } = chessEval;
-const { decodeWithState, encodeWithState } = chessEncode;
+const { decodeWithState } = chessEncode;
 const { getEncodedSafeMoves } = safeMoves;
 const { evalMove } = chessMoves;
 
-const choosePieceCapture = (encodedParentBoard, color) => {
+/**
+ * Chooses move that captures the highest value piece
+ * If no piece capture is available, random move is selected
+ * @param {string} encodedParentBoard : encoded board + state
+ * @param {*} color : 'W' : 'B'
+ * @return {array/object} selected move in deep red move notation
+ */
+
+const choosePieceCapture = (encodedParentBoard, color, successFn, noneFn) => {
   const parentWithState = decodeWithState(encodedParentBoard);
   const board = parentWithState[0];
   const state = parentWithState[1];
@@ -33,39 +41,14 @@ const choosePieceCapture = (encodedParentBoard, color) => {
     }
   });
 
-  if (lowScore === startScore) {
-    lowBoard = encodedSafeMoves[Math.floor(Math.random() * encodedSafeMoves.length)];
+  if (lowScore < startScore) {
+    console.log('** CHOOSE PIECE CAPTURE');
+    successFn(evalMove(encodedParentBoard, lowBoard, color));
+  } else {
+    noneFn();
   }
-
-  return evalMove(encodedParentBoard, lowBoard, color);
 };
 
 module.exports = {
   choosePieceCapture,
 };
-
-// const pieceState = {
-//   hasMovedWK: false,
-//   hasMovedWKR: false,
-//   hasMovedWQR: false,
-//   hasMovedBK: false,
-//   hasMovedBKR: false,
-//   hasMovedBQR: false,
-//   canEnPassantW: '',
-//   canEnPassantB: '',
-// };
-
-// const board = [
-//   [null, null, null, null, null, null, null, null],
-//   [null, null, null, null, null, null, null, null],
-//   [null, null, null, null, null, null, null, null],
-//   [null, null, null, null, null, null, null, null],
-//   [null, null, 'BN', null, 'BR', null, null, null],
-//   [null, null, null, null, null, null, null, null],
-//   ['WP', null, null, 'WP', null, null, 'WP', 'WP'],
-//   [null, null, null, null, null, null, null, null],
-// ];
-
-// const encoded = encodeWithState(board, pieceState);
-// console.log(encoded);
-// console.log(choosePieceCapture(encoded, 'W'));
