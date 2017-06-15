@@ -13,7 +13,8 @@
     "db:init-heroku": "knex migrate:latest",
     "db:init-test": "NODE_ENV=localtest grunt pgcreatedb:default && knex migrate:latest --env NODE_ENV",
     "chesstest": "node ./node_modules/mocha/bin/mocha",
-    "localtest": "NODE_ENV=localtest grunt test"
+    "localtest": "NODE_ENV=localtest grunt test",
+    "seed-pgn": "node ./server/chess/convertPGN/fileParse.js"
   },
   "author": "Hack Reactor",
   "license": "MIT",
