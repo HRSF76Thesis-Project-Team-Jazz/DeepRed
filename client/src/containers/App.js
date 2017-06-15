@@ -19,9 +19,9 @@ import {
   enPassantMove, pawnPromotionMove, resumeDialogOpen, resumeDialogClose, cancelResumeDialogOpen,
   cancelResumeDialogClose, announceSurrenderDialogOpen, announceSurrenderDialogClose,
   updateGameMode, openWinnerDialog, openCheckDialog, gameMode, turnClockOn, turnClockOff,
-  toggleSystemPause, confirmSurrenderDialogClose, confirmSurrenderDialogOpen,
+  toggleSystemPause, confirmSurrenderDialogClose, confirmSurrenderDialogOpen, turnSnackbarOn,
 } from '../store/actions';
-// Components
+// Components 
 import Header from '../components/Header';
 import Board from './Board';
 import Message from '../components/Message';
@@ -31,6 +31,7 @@ import Alert from './Alert';
 import PlayerName from '../components/PlayerName';
 import Clock from '../components/Clock';
 import Messages from '../components/Messages';
+import SnackBar from '../components/SnackBar';
 import './css/App.css';
 
 // Needed for onTouchTap
@@ -258,7 +259,7 @@ class App extends Component {
         var text = '';
 
         if (game.event.length !== 0) {
-          const { gameTurn, thisUser, playerW, playerB } = this.props;
+          const { gameTurn, thisUser, playerW, playerB, snackbarOpen } = this.props;
           for (let i = 0; i < game.event.length; i += 1) {
             // for capture event
             if (captureTable.hasOwnProperty(game.event[i])) {
@@ -377,6 +378,10 @@ class App extends Component {
               text = game.event[i];
             }
             if (intent !== '') {
+              if (text === '+BW' || text === '+WW' || text === '+B' || text === '+W') {
+                console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+                dispatch(turnSnackbarOn());
+              }
               this.conversation(text, intent);
             }
           }
@@ -733,6 +738,7 @@ class App extends Component {
       playerB, playerW, error, messagesLocal, messagesGlobal, isWhite, thisUser,
       chooseGameModeOpen, chooseRoomOpen, chooseSideOpen, allRooms,
       cancelResumeOpen, surrenderOpen, gameMode, showClock, surrenderConfirmOpen,
+      snackbarOpen,
     } = this.props;
 
     const pauseActions = [
@@ -968,6 +974,11 @@ class App extends Component {
                 open={chooseRoomOpen}
               />
             </div>
+            <div className="snack-bar">
+              <SnackBar
+
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -1005,6 +1016,7 @@ function mapStateToProps(state) {
   } = userState;
   const { message, error } = moveState;
   const {
+    snackbarOpen,
     surrenderConfirmOpen,
     systemPause,
     showClock,
@@ -1019,6 +1031,7 @@ function mapStateToProps(state) {
     chooseSideOpen,
   } = controlState;
   return {
+    snackbarOpen,
     surrenderConfirmOpen,
     systemPause,
     showClock,

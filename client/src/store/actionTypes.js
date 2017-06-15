@@ -133,6 +133,10 @@ export const TOGGLE_SYSTEM_PAUSE = 'TOGGLE_SYSTEM_PAUSE';
 
 export const TOGGLE_SYSTEM_RESUME = 'TOGGLE_SYSTEM_RESUME';
 
+export const TURN_SNACKBAR_ON = 'TURN_SNACKBAR_ON';
+
+export const TURN_SNACKBAR_OFF = 'TURN_SNACKBAR_OFF';
+
 // aiState action types
 export const TURN_AI_SPINNER_OFF = 'TURN_AI_SPINNER_OFF';
 
