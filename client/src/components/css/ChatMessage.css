@@ -22,10 +22,11 @@
 .red-chat {
   clear: both;
   float: center;
-  text-align: center;
+  text-align: left;
   width: 98%;
-  background-color:#cc0000;
-  color: white;
+  background-color:#FFEBEE;
+  color: #616161;
+  font-size: 0.9rem;
 }
 .chat-message {
   font-size: 1.5rem;
@@ -45,4 +46,7 @@
   border-radius: 3px;
   text-align: center;
   margin-top: 5px;
+}
+.red-image {
+  margin: 2px;
 }
