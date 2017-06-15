@@ -42,7 +42,7 @@ module.exports = (io, client) => {
       }
       roomInfo.count = count;
       allRooms[count] = roomInfo;
-      io.emit('updateAllRooms', allRooms);
+      io.emit('updateAllRooms', allRooms, allRooms[count]);
       io.to(room).emit('createRoomCompleted', roomInfo, allRooms);
       if (gameMode === 'AI') {
         roomInfo.playerB = 'AI';
@@ -51,7 +51,7 @@ module.exports = (io, client) => {
         roomInfo.playerBtime = 600;
         roomInfo.playerBclicked = false;
         io.in(room).emit('joinRoomCompleted', roomInfo, allRooms);
-        io.emit('updateAllRooms', allRooms);
+        io.emit('updateAllRooms', allRooms, allRooms[count]);
       }
       count += 1;
       roomInfo = {};
@@ -78,7 +78,7 @@ module.exports = (io, client) => {
       }
       roomInfo.count = count;
       allRooms[count] = roomInfo;
-      io.emit('updateAllRooms', allRooms);
+      io.emit('updateAllRooms', allRooms, allRooms[count]);
       io.to(room).emit('createRoomCompleted', roomInfo, allRooms);
       if (gameMode === 'AI') {
         roomInfo.playerB = 'AI';
@@ -87,7 +87,7 @@ module.exports = (io, client) => {
         roomInfo.playerBtime = 600;
         roomInfo.playerBclicked = false;
         io.in(room).emit('joinRoomCompleted', roomInfo, allRooms);
-        io.emit('updateAllRooms', allRooms);
+        io.emit('updateAllRooms', allRooms, allRooms[count]);
         getAllMoves('B', (res) => {
           io.in(room).emit('messageLocal',  { message: 'DeepRed has analyzed ' + res + ' Total Black Moves' , color: 'red', timeStamp: new Date() });
         });
@@ -117,7 +117,7 @@ module.exports = (io, client) => {
       }
       roomInfo.count = count;
       allRooms[count] = roomInfo;
-      io.emit('updateAllRooms', allRooms);
+      io.emit('updateAllRooms', allRooms, allRooms[count]);
       io.to(room).emit('createRoomCompleted', roomInfo, allRooms);
       if (gameMode === 'AI') {
         roomInfo.playerW = 'AI';
@@ -127,7 +127,7 @@ module.exports = (io, client) => {
         roomInfo.playerWclicked = false;
         allGames[room].moveAI((gameState) => {
           io.in(room).emit('joinRoomCompleted', roomInfo, allRooms, gameState.game);
-          io.emit('updateAllRooms', allRooms);
+          io.emit('updateAllRooms', allRooms, roomInfo);
           getAllMoves('W', (res) => {
             io.in(room).emit('messageLocal',  { message: 'DeepRed has analyzed ' + res + ' Total White Moves' , color: 'red', timeStamp: new Date() });
           });
@@ -148,7 +148,7 @@ module.exports = (io, client) => {
       // createAndSaveNewGame(allRooms[clientCount].room);
       const currentGame = allGames[allRooms[clientCount].room];
       io.in(allRooms[clientCount].room).emit('joinRoomCompleted', allRooms[clientCount], allRooms, currentGame);
-      io.emit('updateAllRooms', allRooms);
+      io.emit('updateAllRooms', allRooms, allRooms[clientCount]);
     });
   });
 
@@ -162,7 +162,7 @@ module.exports = (io, client) => {
       // createAndSaveNewGame(allRooms[clientCount].room);
       const currentGame = allGames[allRooms[clientCount].room];
       io.in(allRooms[clientCount].room).emit('joinRoomCompleted', allRooms[clientCount], allRooms, currentGame);
-      io.emit('updateAllRooms', allRooms);
+      io.emit('updateAllRooms', allRooms, allRooms[clientCount]);
     });
   });
 
@@ -175,14 +175,14 @@ module.exports = (io, client) => {
           console.log(`${allRooms[i].playerB} has left the room`);
           client.leave(allRooms[i].room, () => {
             allRooms[i].playerB = undefined;
-            allRooms[i].playerBemail = '';
-            allRooms[i].playerBid = '';
-            allRooms[i].playerBtime = 600;
+            allRooms[i].playerBemail = undefined;
+            allRooms[i].playerBid = undefined;
+            allRooms[i].playerBtime = undefined;
             if (allRooms[i].playerW === undefined || allRooms[i].playerW === 'AI') {
               allRooms[i] = null;
               queue.push(i);
             }
-            io.emit('updateAllRooms', allRooms);
+            io.emit('updateAllRooms', allRooms, allRooms[i]);
           });
         }
         if (allRooms[i].playerWid === id) {
@@ -190,14 +190,14 @@ module.exports = (io, client) => {
           console.log(`${allRooms[i].playerW} has left the room`);
           client.leave(allRooms[i].room, () => {
             allRooms[i].playerW = undefined;
-            allRooms[i].playerWemail = '';
-            allRooms[i].playerWid = '';
-            allRooms[i].playerWtime = 600;
+            allRooms[i].playerWemail = undefined;
+            allRooms[i].playerWid = undefined;
+            allRooms[i].playerWtime = undefined;
             if (allRooms[i].playerB === undefined || allRooms[i].playerB === 'AI') {
               allRooms[i] = null;
               queue.push(i);
             }
-            io.emit('updateAllRooms', allRooms);
+            io.emit('updateAllRooms', allRooms, allRooms[i]);
           });
         }
       }

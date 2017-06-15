@@ -486,7 +486,8 @@ class App extends Component {
       dispatch(updateTimer(roomInfo));
     });
 
-    this.socket.on('updateAllRooms', (allRooms) => {
+    this.socket.on('updateAllRooms', (allRooms, roomInfo) => {
+      dispatch(updateRoomInfo(roomInfo));
       dispatch(updateAllRooms(allRooms));
     });
 
