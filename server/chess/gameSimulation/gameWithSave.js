@@ -177,6 +177,7 @@ const blackMove = (board, state) => {
 
 const saveToDB = (movesList, winner) => {
   for (let i = 0; i < movesList.length - 1; i += 1) {
+    console.log(movesList[i]);
     const entry = {
       parent: movesList[i],
       board: movesList[i + 1],
@@ -214,6 +215,8 @@ const simulateGames = (number, displayAll, displayFn) => {
     averageMovesPerGame: 0,
   };
 
+  const gamesHistory = [];
+
   while (gameCount < number) {
     console.log('Game Count: ', gameCount, '/', number);
     console.log(gameSummary);
@@ -221,16 +224,14 @@ const simulateGames = (number, displayAll, displayFn) => {
     gameSummary.games += 1;
 
     let board = [
-      ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
-      ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
-      // [null, null, null, 'BK', null, null, null, null],
-      // [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
-      ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
+      ['BR', null, 'BB', 'BQ', 'BK', 'BB', null, 'BR'],
+      ['BP', 'BP', 'BP', 'BP', null, 'BP', 'BP', 'BP'],
+      [null, null, 'WN', null, null, 'BN', null, null],
+      [null, null, null, null, 'BP', null, null, null],
+      [null, null, null, null, 'WP', null, null, null],
+      [null, null, 'WN', null, null, 'WN', null, null],
+      ['WP', 'WP', 'WP', 'WP', null, 'WP', 'WP', 'WP'],
+      ['WR', null, 'WB', 'WQ', 'WK', 'WB', null, 'WR'],
     ];
 
     transcribeCount += transcribeBoard(board).length;
@@ -258,6 +259,7 @@ const simulateGames = (number, displayAll, displayFn) => {
     let movesList = [];
     let encodeState = Object.assign({}, state);
     movesList.push(encodeWithState(board, state));
+
     
     if (displayAll) {
       console.log('=== START GAME ===');
@@ -311,10 +313,12 @@ const simulateGames = (number, displayAll, displayFn) => {
           gameSummary.games;
         gameSummary.averageMovesPerGame = gameSummary.averageMovesPerGame.toFixed(2);
 
-        saveToDB(movesList, 'W');
+        // saveToDB(movesList, 'W');
+
+        gamesHistory.push([movesList.slice(0), 'W']);
+
         console.log('# Moves: ', newState.moveCount);
         movesList = [];
-        gameCount = number;
       }
       if (isStalemateBlack(board)) {
         gameEnded = true;
@@ -401,10 +405,10 @@ const simulateGames = (number, displayAll, displayFn) => {
             gameSummary.games;
           gameSummary.averageMovesPerGame = gameSummary.averageMovesPerGame.toFixed(2);
 
-          saveToDB(movesList, 'B');
+          // saveToDB(movesList, 'B');
+          gamesHistory.push([movesList.slice(0), 'B']);
           console.log('# Moves: ', newState.moveCount);
           movesList = [];
-          gameCount = number;
         }
         if (isStalemateWhite(board)) {
           gameEnded = true;
@@ -469,6 +473,15 @@ const simulateGames = (number, displayAll, displayFn) => {
   console.log('Encode Count:     ', encodeCount);
   console.log('Data compression: ', 1 - (encodeCount / transcribeCount));
   console.log('Game summary:     ', gameSummary);
+
+  console.log();
+  console.log();
+  console.log(gamesHistory);
+
+  for (let i = 0; i < gamesHistory.length; i += 1) {
+    setTimeout(() => saveToDB(gamesHistory[0], gamesHistory[1]), 2000 * i);
+  }
+
   return gameSummary;
 };
 
@@ -494,4 +507,4 @@ module.exports = {
   mutateBoard,
 };
 
-simulateGames(100, false, () => { });
+simulateGames(50, false, () => { });

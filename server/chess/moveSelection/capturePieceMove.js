@@ -29,6 +29,10 @@ const choosePieceCapture = (encodedParentBoard, color, successFn, noneFn) => {
   let lowBoard;
   const encodedSafeMoves = getEncodedSafeMoves(board, state, color);
 
+  // 1) If capturing piece moves to a safe position
+
+  // 2) If capturing piece <= captured piece
+
   encodedSafeMoves.forEach((encodedBoard) => {
     const boardWithState = decodeWithState(encodedBoard);
     const newBoard = boardWithState[0];
