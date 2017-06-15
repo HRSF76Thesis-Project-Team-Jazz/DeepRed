@@ -14,23 +14,23 @@
 }
 
 .grid {
-  margin: 10px;
-  padding: 10px;
+  margin: 8px;
+  padding: 5px;
   flex: 0 0 220px;
-  height: 250px;;
+  height: 280px;;
   /*box-shadow: inset 1px 1px 10px grey, 0 0 10px grey;*/
   flex-grow: 1;
 }
 
 .control-box {
-  margin: 10px;
-  padding: 10px;
-  flex: 0 0 220px;
-  height: 250px;;
+  margin: 8px;
+  padding: 5px;
   /*box-shadow: inset 1px 1px 10px grey, 0 0 10px grey;*/
 }
 
 .existing-room {
+  flex: 0 0 240px;
+  overflow: scroll;
   flex-grow: 2;
 }
 

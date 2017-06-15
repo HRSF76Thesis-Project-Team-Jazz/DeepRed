@@ -486,12 +486,12 @@ class App extends Component {
       dispatch(updateTimer(roomInfo));
     });
 
-    this.socket.on('updateAllRooms', (allRooms, roomInfo) => {
-      if (roomInfo.playerW === undefined || roomInfo.playerB === undefined) {
-        dispatch(turnClockOff());
-      }
+    this.socket.on('updateAllRooms', (allRooms, ) => {
+      // if (roomInfo.playerW === undefined || roomInfo.playerB === undefined) {
+      //   dispatch(turnClockOff());
+      // }
       // dispatch(updateTimer(roomInfo));
-      dispatch(updateRoomInfo(roomInfo));
+      // dispatch(updateRoomInfo(roomInfo));
       dispatch(updateAllRooms(allRooms));
     });
 
