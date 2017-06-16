@@ -39,21 +39,19 @@ describe('ChessGame', () => {
 
 describe('ChessGame.movePiece', () => {
   it('should return obj with error if destination is undefined', () => {
-    testChessGame.movePiece([0, 0], undefined, (result) => {
-      expect(result.error).to.eql('Attempted destination is invalid.');
-    });
+    testChessGame.movePiece([0, 0], undefined, result => expect(result.error).to.eql('Attempted destination is invalid.'));
   });
   it('should return obj with error if origin is undefined', () => {
-    expect(testChessGame.movePiece(undefined, [4, 4]).error).to.eql('Origin is invalid.');
+    testChessGame.movePiece(undefined, [4, 4], result => expect(result.error).to.eql('Origin is invalid.'));
   });
   it('should return obj with error if origin is undefined', () => {
-    expect(testChessGame.movePiece([500, 500], [4, 4]).error).to.eql('Origin is invalid.');
+    testChessGame.movePiece([500, 500], [4, 4], result => expect(result.error).to.eql('Origin is invalid.'));
   });
   it('should return obj with error if origin equals destination', () => {
-    expect(testChessGame.movePiece([0, 0], [0, 0]).error).to.eql('Origin and destination cannot be the same.');
+    testChessGame.movePiece([0, 0], [0, 0], result => expect(result.error).to.eql('Origin and destination cannot be the same.'));
   });
   it('should return obj with error if capturing own piece', () => {
-    expect(testChessGame.movePiece([7, 0], [6, 0]).error).to.eql('Cannot capture your own piece.');
+    testChessGame.movePiece([7, 0], [6, 0], result => expect(result.error).to.eql('Cannot capture your own piece.'));
   });
   const expectedMoveBoard = [
     ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
@@ -66,11 +64,12 @@ describe('ChessGame.movePiece', () => {
     ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
   ];
   it('should allow move a2 to a3', () => {
-    expect(testChessGame.movePiece([6, 0], [4, 0]).game.board).to.be.eql(expectedMoveBoard);
+    testChessGame.movePiece([6, 0], [4, 0],
+      result => expect(result.game.board).to.eql(expectedMoveBoard));
   });
-
   it('should not allow out of order move', () => {
-    expect(testChessGame.movePiece([7, 7], [7, 6]).error).to.eql('Not your turn.');
+    testChessGame.movePiece([7, 7], [7, 6],
+      result => expect(result.error).to.eql('Not your turn.'));
   });
 });
 
@@ -97,7 +96,8 @@ describe('ChessGame.capturePiece', () => {
     ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
   ];
   it('should allow WP to move forward', () => {
-    expect(captChessGame.movePiece([4, 0], [3, 0]).game.board).to.eql(expectedMovePawnCapBoard1);
+    captChessGame.movePiece([4, 0], [3, 0],
+      result => expect(result.game.board).to.eql(expectedMovePawnCapBoard1));
   });
   it('whiteCapPieces array is still empty', () => {
     expect(captChessGame.blackCapPieces).to.eql([]);
@@ -113,7 +113,8 @@ describe('ChessGame.capturePiece', () => {
     ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
   ];
   it('should allow BP to capture WP', () => {
-    expect(captChessGame.movePiece([3, 3], [4, 4]).game.board).to.eql(expectedPawnCapBoard1);
+    captChessGame.movePiece([3, 3], [4, 4],
+    result => expect(result.game.board).to.eql(expectedPawnCapBoard1));
   });
   it('should add WP to blackCapPieces array', () => {
     expect(captChessGame.blackCapPieces).to.eql(['WP']);
@@ -129,7 +130,8 @@ describe('ChessGame.capturePiece', () => {
     ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
   ];
   it('should allow WP to capture BP', () => {
-    expect(captChessGame.movePiece([5, 5], [4, 4]).game.board).to.eql(expectedPawnCapBoard2);
+    captChessGame.movePiece([5, 5], [4, 4],
+    result => expect(result.game.board).to.eql(expectedPawnCapBoard2));
   });
   it('should add BP to whiteCapPieces array', () => {
     expect(captChessGame.whiteCapPieces).to.eql(['BP']);
@@ -145,7 +147,8 @@ describe('ChessGame.capturePiece', () => {
     ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
   ];
   it('should allow BB to capture WP', () => {
-    expect(captChessGame.movePiece([4, 1], [6, 3]).game.board).to.eql(expectedBishopCapBoard);
+    captChessGame.movePiece([4, 1], [6, 3],
+    result => expect(result.game.board).to.eql(expectedBishopCapBoard));
   });
   it('should add WP to blackCapPieces array', () => {
     expect(captChessGame.blackCapPieces).to.eql(['WP', 'WP']);
@@ -161,7 +164,8 @@ describe('ChessGame.capturePiece', () => {
     ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
   ];
   it('should allow WK to capture BP', () => {
-    expect(captChessGame.movePiece([3, 6], [1, 7]).game.board).to.eql(expectedKnightCapBoard1);
+    captChessGame.movePiece([3, 6], [1, 7],
+    result => expect(result.game.board).to.eql(expectedKnightCapBoard1));
   });
   it('should add WP to whiteCapPieces array', () => {
     expect(captChessGame.whiteCapPieces).to.eql(['BP', 'BP']);
@@ -177,7 +181,8 @@ describe('ChessGame.capturePiece', () => {
     ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', null, 'WR'],
   ];
   it('should allow BQ to capture WP', () => {
-    expect(captChessGame.movePiece([1, 4], [4, 7]).game.board).to.eql(expectedQueenCapBoard1);
+    captChessGame.movePiece([1, 4], [4, 7],
+    result => expect(result.game.board).to.eql(expectedQueenCapBoard1));
   });
   it('should add WP to whiteCapPieces array', () => {
     expect(captChessGame.blackCapPieces).to.eql(['WP', 'WP', 'WP']);
@@ -193,7 +198,8 @@ describe('ChessGame.capturePiece', () => {
     ['WR', 'WN', 'WB', null, 'WQ', 'WB', null, 'WR'],
   ];
   it('should allow WK to capture BB', () => {
-    expect(captChessGame.movePiece([7, 3], [6, 3]).game.board).to.eql(expectedKingCapBoard1);
+    captChessGame.movePiece([7, 3], [6, 3],
+    result => expect(result.game.board).to.eql(expectedKingCapBoard1));
   });
   it('should add BB to whiteCapPieces array', () => {
     expect(captChessGame.whiteCapPieces).to.eql(['BP', 'BP', 'BB']);
@@ -209,7 +215,8 @@ describe('ChessGame.capturePiece', () => {
     ['WR', 'WN', 'WB', null, 'WQ', 'WB', null, 'WR'],
   ];
   it('should allow BR to capture WN', () => {
-    expect(captChessGame.movePiece([0, 7], [1, 7]).game.board).to.eql(expectedRookCapBoard1);
+    captChessGame.movePiece([0, 7], [1, 7],
+    result => expect(result.game.board).to.eql(expectedRookCapBoard1));
   });
   it('should add WN to blackCapPieces array', () => {
     expect(captChessGame.blackCapPieces).to.eql(['WP', 'WP', 'WP', 'WN']);
@@ -351,7 +358,8 @@ describe('En Passant', () => {
     ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
   ];
   it('should move pawn', () => {
-    expect(enPassantGame.movePiece([6, 3], [4, 3]).game.board).to.be.eql(enPassantGameBoard);
+    enPassantGame.movePiece([6, 3], [4, 3],
+      result => expect(result.game.board).to.be.eql(enPassantGameBoard));
   });
   it('should return object with dest canEnPassant', () => {
     expect(enPassantGame.canEnPassant).to.eql([4, 3]);
@@ -367,7 +375,8 @@ describe('En Passant', () => {
     ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
   ];
   it('should move pawn', () => {
-    expect(enPassantGame.movePiece([1, 2], [2, 2]).game.board).to.be.eql(enPassantGameBoard2);
+    enPassantGame.movePiece([1, 2], [2, 2],
+      result => expect(result.game.board).to.be.eql(enPassantGameBoard2));
   });
   it('should return object with empty canEnPassant', () => {
     expect(enPassantGame.canEnPassant).to.eql([]);
@@ -383,7 +392,8 @@ describe('En Passant', () => {
     ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
   ];
   it('should move pawn', () => {
-    expect(enPassantGame.movePiece([4, 3], [3, 3]).game.board).to.be.eql(enPassantGameBoard3);
+    enPassantGame.movePiece([4, 3], [3, 3],
+      result => expect(result.game.board).to.be.eql(enPassantGameBoard3));
   });
   it('should return object with empty canEnPassant', () => {
     expect(enPassantGame.canEnPassant).to.eql([]);
@@ -399,7 +409,8 @@ describe('En Passant', () => {
     ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
   ];
   it('should move pawn', () => {
-    expect(enPassantGame.movePiece([1, 4], [3, 4]).game.board).to.be.eql(enPassantGameBoard4);
+    enPassantGame.movePiece([1, 4], [3, 4],
+      result => expect(result.game.board).to.be.eql(enPassantGameBoard4));
   });
   it('should return object with empty canEnPassant', () => {
     expect(enPassantGame.canEnPassant).to.eql([3, 4]);
@@ -415,7 +426,8 @@ describe('En Passant', () => {
     ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
   ];
   it('should capture pawn via en passant', () => {
-    expect(enPassantGame.movePiece([3, 3], [2, 4]).game.board).to.be.eql(enPassantGameBoard5);
+    enPassantGame.movePiece([3, 3], [2, 4],
+      result => expect(result.game.board).to.be.eql(enPassantGameBoard5));
   });
   it('should return object with empty canEnPassant', () => {
     expect(enPassantGame.canEnPassant).to.eql([]);
@@ -831,16 +843,20 @@ describe('Check', () => {
     ['WR', 'WN', 'WB', null, 'WK', 'WB', 'WN', 'WR'],
   ];
   it('should put black in check', () => {
-    expect(checkWChessGame.movePiece([5, 5], [1, 5]).game.playerInCheck).to.eql('B');
+    checkWChessGame.movePiece([5, 5], [1, 5],
+      result => expect(result.game.playerInCheck).to.eql('B'));
   });
   it('should error if still in check after moving', () => {
-    expect(checkWChessGame.movePiece([1, 0], [2, 0]).error).to.eql('Cannot leave yourself in check.');
+    checkWChessGame.movePiece([1, 0], [2, 0],
+      result => expect(result.error).to.eql('Cannot leave yourself in check.'));
   });
   it('should not allow move if still in check', () => {
-    expect(checkWChessGame.movePiece([1, 0], [2, 0]).game.board).to.eql(checkWChessGame.board);
+    checkWChessGame.movePiece([1, 0], [2, 0],
+    result => expect(result.game.board).to.eql(checkWChessGame.board));
   });
   it('should allow move if getting out of check', () => {
-    expect(checkWChessGame.movePiece([0, 4], [1, 5]).error).to.eql(null);
+    checkWChessGame.movePiece([0, 4], [1, 5],
+    result => expect(result.error).to.eql(null));
   });
   const expectedCheckWChessBoard = [
     ['BR', null, 'BB', 'BQ', null, 'BB', 'BN', 'BR'],
@@ -871,7 +887,8 @@ describe('White Checkmate', () => {
     ['WR', 'WN', 'WB', null, 'WK', null, 'WN', 'WR'],
   ];
   it('should allow move to checkmate', () => {
-    expect(checkmateWChessGame.movePiece([5, 5], [1, 5]).error).to.eql(null);
+    checkmateWChessGame.movePiece([5, 5], [1, 5],
+    result => expect(result.error).to.eql(null));
   });
   it('should declare winner if checkmate', () => {
     expect(checkmateWChessGame.winner).to.eql('W');
@@ -892,7 +909,8 @@ describe('Black Checkmate', () => {
   ];
   checkmateBChessGame.turn = 'B';
   it('should allow move to checkmate', () => {
-    expect(checkmateBChessGame.movePiece([4, 5], [5, 5]).error).to.eql(null);
+    checkmateBChessGame.movePiece([4, 5], [5, 5],
+      result => expect(result.error).to.eql(null));
   });
   it('should declare winner if checkmate', () => {
     expect(checkmateBChessGame.winner).to.eql('B');
@@ -912,7 +930,8 @@ describe('White Stalemate', () => {
     [null, null, null, null, null, null, null, null],
   ];
   it('should allow move to stalemate', () => {
-    expect(stalemateChessGame.movePiece([3, 0], [2, 0]).error).to.eql(null);
+    stalemateChessGame.movePiece([3, 0], [2, 0],
+    result => expect(result.error).to.eql(null));
   });
   it('should declare Draw if stalemate', () => {
     // console.log(stalemateChessGame.board);
@@ -934,7 +953,8 @@ describe('Black Stalemate', () => {
   ];
   stalemateChessGame.turn = 'B';
   it('should allow move to stalemate', () => {
-    expect(stalemateChessGame.movePiece([3, 0], [2, 0]).error).to.eql(null);
+    stalemateChessGame.movePiece([3, 0], [2, 0],
+    result => expect(result.error).to.eql(null));
   });
   it('should declare Draw if stalemate', () => {
     // console.log(stalemateChessGame.board);
