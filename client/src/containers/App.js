@@ -963,11 +963,7 @@ class App extends Component {
               />
             </div>
             <div className="snack-bar">
-<<<<<<< HEAD
-              <SnackBar/>
-=======
               <SnackBar />
->>>>>>> CSS styling
             </div>
           </div>
         </div>
