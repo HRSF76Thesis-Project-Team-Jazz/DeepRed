@@ -20,6 +20,7 @@ import {
   cancelResumeDialogClose, announceSurrenderDialogOpen, announceSurrenderDialogClose,
   updateGameMode, openWinnerDialog, openCheckDialog, gameMode, turnClockOn, turnClockOff,
   toggleSystemPause, confirmSurrenderDialogClose, confirmSurrenderDialogOpen, turnSnackbarOn,
+  timeoutDialogOpen, timeoutDialogClose,
 } from '../store/actions';
 // Components 
 import Header from '../components/Header';
@@ -81,6 +82,7 @@ class App extends Component {
     this.handleConfirmSurrenderOpen = this.handleConfirmSurrenderOpen.bind(this);
     this.handleLobbyOpen = this.handleLobbyOpen.bind(this);
     this.goToLobby = this.goToLobby.bind(this);
+    this.onTimeOut = this.onTimeOut.bind(this);
   }
 
   componentDidMount() {
@@ -390,11 +392,10 @@ class App extends Component {
         if (game.winner) {
           const { playerW, playerB } = this.props;
           if (game.winner === 'W') {
-            game.winner = playerW;
+            dispatch(openWinnerDialog(playerW));
           } else {
-            game.winner = playerB;
+            dispatch(openWinnerDialog(playerB));
           }
-            dispatch(openWinnerDialog(game.winner));
 
         } else if (game.playerInCheck) {
           dispatch(openCheckDialog(game.playerInCheck));
@@ -525,14 +526,14 @@ class App extends Component {
   }
 
   decrementTimerB() {
-    const { dispatch, playerWemail, playerBemail } = this.props;
+    const { dispatch, playerWemail, playerBemail, playerW } = this.props;
     let { timeB, counterBinstance } = this.props;
     counterBinstance = setInterval(() => {
       if (timeB > 0) {
         timeB -= 1;
       } else {
         timeB = 0;
-        this.stopTimerB();
+        this.onTimeOut(playerW);
         this.updateUserGameStat(this.winLoseResult(playerWemail, playerBemail));
       }
       dispatch(updateTimerB(timeB));
@@ -541,19 +542,26 @@ class App extends Component {
   }
 
   decrementTimerW() {
-    const { dispatch, playerWemail, playerBemail } = this.props;
+    const { dispatch, playerWemail, playerBemail, playerB } = this.props;
     let { timeW, counterWinstance } = this.props;
     counterWinstance = setInterval(() => {
       if (timeW > 0) {
         timeW -= 1;
       } else {
         timeW = 0;
-        this.stopTimerW();
+        this.onTimeOut(playerB);
         this.updateUserGameStat(this.winLoseResult(playerWemail, playerBemail));
       }
       dispatch(updateTimerW(timeW));
       dispatch(timeInstanceW(counterWinstance));
     }, 1000);
+  }
+  
+  onTimeOut(player) {
+    const { dispatch } = this.props;
+    this.onChangePlayerTurn();
+    dispatch(updateAlertName(player));
+    dispatch(timeoutDialogOpen());
   }
 
   stopTimerB() {
@@ -692,6 +700,7 @@ class App extends Component {
     const { dispatch } = this.props;
     dispatch(announceSurrenderDialogClose());
     dispatch(confirmSurrenderDialogClose());
+    dispatch(timeoutDialogClose());
   }
 
   handleAnnounceSurrenderOpen() {
@@ -742,7 +751,7 @@ class App extends Component {
       playerB, playerW, error, messagesLocal, messagesGlobal, isWhite, thisUser,
       chooseGameModeOpen, chooseRoomOpen, chooseSideOpen, allRooms,
       cancelResumeOpen, surrenderOpen, gameMode, showClock, surrenderConfirmOpen,
-      snackbarOpen,
+      snackbarOpen, timeoutOpen,
     } = this.props;
 
     const pauseActions = [
@@ -990,11 +999,15 @@ class App extends Component {
                 actions={selectRoomActions}
                 open={chooseRoomOpen}
               />
+              <Alert
+                className="timeout-dialog"
+                title={`Timeout, ${alertName} is the Chess Master!`}
+                actions={surrenderActions}
+                open={timeoutOpen}
+              />
             </div>
             <div className="snack-bar">
-              <SnackBar
-
-              />
+              <SnackBar/>
             </div>
           </div>
         </div>
@@ -1033,6 +1046,7 @@ function mapStateToProps(state) {
   } = userState;
   const { message, error } = moveState;
   const {
+    timeoutOpen,
     snackbarOpen,
     surrenderConfirmOpen,
     systemPause,
@@ -1048,6 +1062,7 @@ function mapStateToProps(state) {
     chooseSideOpen,
   } = controlState;
   return {
+    timeoutOpen,
     snackbarOpen,
     surrenderConfirmOpen,
     systemPause,

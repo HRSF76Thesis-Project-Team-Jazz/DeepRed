@@ -200,7 +200,7 @@ class Board extends Component {
         /> */}
         <Alert
           className="pauseRequest"
-          title={`${winner} is the Chess Master!!`}
+          title={`Congratulation, ${winner} is the Chess Master!`}
           actions={winnerActions}
           open={showWinnerDialog}
         />

@@ -333,6 +333,15 @@ export const turnSnackbarOn = () => ({
 export const turnSnackbarOff = () => ({
   type: types.TURN_SNACKBAR_OFF,
 });
+
+export const timeoutDialogOpen = () => ({
+  type: types.TIMEOUT_DIALOG_OPEN,
+});
+
+export const timeoutDialogClose = () => ({
+  type: types.TIMEOUT_DIALOG_CLOSE,
+});
+
 // other requests
 export const fetchGame = () => (dispatch) => {
   dispatch(requestGame());
