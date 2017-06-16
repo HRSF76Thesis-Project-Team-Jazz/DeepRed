@@ -1,0 +1,11 @@
+/*.tabs {
+  min-height: '25vw';
+  max-height: '30vw';
+  overflow-y: 'hidden';
+}*/
+
+.messageslocal {
+  min-height: 36vw;
+  max-height: 36vw;
+  overflow-y: scroll;
+}

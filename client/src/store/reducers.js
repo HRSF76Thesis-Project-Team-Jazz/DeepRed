@@ -603,6 +603,19 @@ const aiState = (state = Immutable({
   game: [],
   isAIButtonDisabled: false,
   aiSpinner: false,
+  games: 0,
+  whiteWins: 0,
+  blackWins: 0,
+  stalemateByMoves: 0,
+  stalemateByPieces: 0,
+  stalemateNoWhiteMoves: 0,
+  stalemateNoBlackMoves: 0,
+  end100moves: 0,
+  castleKing: 0,
+  castleQueen: 0,
+  pawnPromotion: 0,
+  enPassant: 0,
+  averageMovesPerGame: '0',
 }), action) => {
   switch (action.type) {
     case types.ADD_AI_GAME: {
@@ -611,6 +624,24 @@ const aiState = (state = Immutable({
         // playerW: action.player.data.display,
         // playerWemail: action.player.data.email,
         game: action.game,
+      });
+    }
+    case types.UPDATE_GAME_SUMMARY: {
+      return Immutable({
+        ...state,
+        games: action.games,
+        whiteWins: action.whiteWins,
+        blackWins: action.blackWins,
+        stalemateByMoves: action.stalemateByMoves,
+        stalemateByPieces: action.stalemateByPieces,
+        stalemateNoWhiteMoves: action.stalemateNoWhiteMoves,
+        stalemateNoBlackMoves: action.stalemateNoBlackMoves,
+        end100moves: action.end100moves,
+        castleKing: action.castleKing,
+        castleQueen: action.castleQueen,
+        pawnPromotion: action.pawnPromotion,
+        enPassant: action.enPassant,
+        averageMovesPerGame: action.averageMovesPerGame,
       });
     }
     case types.HIDE_AI_BUTTON: {

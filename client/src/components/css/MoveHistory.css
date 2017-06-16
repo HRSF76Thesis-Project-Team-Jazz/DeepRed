@@ -1,0 +1,7 @@
+.move-history-list {
+  min-height: 35vw;
+  max-height: 35vw;
+  overflow-y: scroll;
+  /*background-color: #FAFAFA;*/
+  padding: 0;
+}

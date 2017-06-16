@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import io from 'socket.io-client';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
@@ -22,10 +21,9 @@ import {
   toggleSystemPause, confirmSurrenderDialogClose, confirmSurrenderDialogOpen, turnSnackbarOn,
   timeoutDialogOpen, timeoutDialogClose,
 } from '../store/actions';
-// Components 
+// Components
 import Header from '../components/Header';
 import Board from './Board';
-import Message from '../components/Message';
 import CapturedPieces from '../components/CapturedPieces';
 import MoveHistory from '../components/MoveHistory';
 import Alert from './Alert';
@@ -143,7 +141,7 @@ class App extends Component {
   }
 
   renderError(error) {
-    axios.post('/api/game/errorMessage', {input: error})
+    axios.post('/api/game/errorMessage', { input: error })
       .then((response) => {
         const { dispatch, messagesLocal, thisUser } = this.props;
         dispatch(sendMsgLocal({
@@ -155,7 +153,7 @@ class App extends Component {
       })
       .catch((err) => {
         console.error('failed to fetch error message ', err);
-      })
+      });
   }
 
   updateUserGameStat(arr) {
@@ -198,10 +196,10 @@ class App extends Component {
       dispatch(updateRoomInfo(roomInfo));
       if (game) {
         dispatch(receiveGame(game));
-      };
+      }
       dispatch(updateTimer(roomInfo));
       dispatch(turnClockOn());
-      if ( gameMode !== 'AI' && gameTurn !== 'W') {
+      if (gameMode !== 'AI' && gameTurn !== 'W') {
         this.decrementTimerW();
       } else {
         this.toggleTimers();
@@ -254,12 +252,12 @@ class App extends Component {
           '#W': 'checkMate',
           '=BQ': 'promotion',
           '=WQ': 'promotion',
-          'enpassant': 'enpassant',
-          'castle': 'castle',
+          enpassant: 'enpassant',
+          castle: 'castle',
         };
 
-        var intent = '';
-        var text = '';
+        let intent = '';
+        let text = '';
 
         if (game.event.length !== 0) {
           const { gameTurn, thisUser, playerW, playerB, snackbarOpen } = this.props;
@@ -336,45 +334,6 @@ class App extends Component {
                 }
               }
             }
-            //  else if (specialTable.hasOwnProperty(game.event[i])) {
-            //   if (thisUser === playerW) {
-            //     if (game.event[i][1] === 'B') {
-            //       if (game.event[i][0] === '#') {
-            //         intent = `${specialTable[game.event[i]]}Lose`;
-            //       } else if (game.event[i][0] === '+') {
-            //         intent = `${specialTable[game.event[i]]}Win`;
-            //       }
-            //     } else if (game.event[i][1] === 'W') {
-            //       if (game.event[i][0] === '#') {
-            //         intent = `${specialTable[game.event[i]]}Win`;
-            //       }
-            //       if (game.event[i][0] === '+') {
-            //         intent = `${specialTable[game.event[i]]}Lose`;
-            //       }
-            //     } else if ((game.event === 'castle' || game.event === 'enpassant') && gameTurn === 'W') {
-            //       intent = `${specialTable[game.event[i]]}Win`;
-            //     }
-            //   }
-            //   if (thisUser === playerB) {
-            //     if (game.event[i][1] === 'W') {
-            //       if (game.event[i][0] === '#') {
-            //         intent = `${specialTable[game.event[i]]}Lose`;
-            //       }
-            //       if (game.event[i][0] === '+') {
-            //         intent = `${specialTable[game.event[i]]}Win`;
-            //       }
-            //     } else if (game.event[i][1] === 'B') {
-            //       if (game.event[i][0] === '#') {
-            //         intent = `${specialTable[game.event[i]]}Win`;
-            //       }
-            //       if (game.event[i][0] === '+') {
-            //         intent = `${specialTable[game.event[i]]}Lose`;
-            //       }
-            //     } else if ((game.event === 'castle' || game.event === 'enpassant') && gameTurn === 'B') {
-            //       intent = `${specialTable[game.event[i]]}Win`;
-            //     }
-            //   }
-            // }
             if (intent.slice(-3) === 'Win') {
               text = `${game.event[i]}W`;
             } else {
@@ -391,12 +350,12 @@ class App extends Component {
         dispatch(receiveGame(game));
         if (game.winner) {
           const { playerW, playerB } = this.props;
+          let winner = null;
           if (game.winner === 'W') {
             dispatch(openWinnerDialog(playerW));
           } else {
             dispatch(openWinnerDialog(playerB));
           }
-
         } else if (game.playerInCheck) {
           dispatch(openCheckDialog(game.playerInCheck));
         }
@@ -406,7 +365,7 @@ class App extends Component {
         const { playerW, playerB, gameTurn } = this.props;
         // dispatch(displayError(error));
         if (((gameTurn === 'W' && thisUser === playerW)
-          || (gameTurn === 'B' && thisUser === playerB)))  {
+          || (gameTurn === 'B' && thisUser === playerB))) {
           // this.conversation(error);
           this.renderError(error);
         }
@@ -556,7 +515,7 @@ class App extends Component {
       dispatch(timeInstanceW(counterWinstance));
     }, 1000);
   }
-  
+
   onTimeOut(player) {
     const { dispatch } = this.props;
     this.onChangePlayerTurn();
@@ -651,7 +610,7 @@ class App extends Component {
 
   sendResumeRequest() {
     const { room, systemPause } = this.props;
-    if (systemPause === false ) {
+    if (systemPause === false) {
       this.renderError('current game is still running');
     } else {
       this.socket.emit('requestResume', room);
@@ -857,7 +816,10 @@ class App extends Component {
         />
         <div className="content">
           <div className="flex-row">
-            <Paper className="flex-col left-col" zDepth={2}>
+            <Paper
+              className="flex-col left-col"
+              zDepth={2}
+            >
               <div className="left-col-row">
                 <div className="player-top">
                   <PlayerName
@@ -871,11 +833,9 @@ class App extends Component {
                     <Clock color={(!isWhite) ? 'White' : 'Black'} /> : null
                   }
                 </div>
-                <div className="move-history">
-                  <MoveHistory
-                    moveHistory={moveHistory}
-                  />
-                </div>
+                <MoveHistory
+                  moveHistory={moveHistory}
+                />
                 <div className="countdown-bot-clock">
                   {(playerB !== undefined && showClock === true) ?
                     <Clock color={(isWhite) ? 'White' : 'Black'} /> : null
@@ -891,22 +851,20 @@ class App extends Component {
               </div>
             </Paper>
             <Paper style={{ backgroundColor: '#78909C' }} className="flex-col capt-col" zDepth={2}>
-              {/* <Paper zDepth={5}> */}
-                <div className="flex-col capt-black-col">
-                  <CapturedPieces
-                    color={(!isWhite) ? 'White' : 'Black'}
-                    capturedPieces={(!isWhite) ? capturedPiecesWhite : capturedPiecesBlack}
-                    player={(!isWhite) ? playerW : playerB}
-                  />
-                </div>
-                <div className="flex-col capt-black-col">
-                  <CapturedPieces
-                    color={(isWhite) ? 'White' : 'Black'}
-                    capturedPieces={(isWhite) ? capturedPiecesWhite : capturedPiecesBlack}
-                    player={(isWhite) ? playerW : playerB}
-                  />
-                </div>
-              {/* </Paper> */}
+              <div className="flex-col capt-black-col">
+                <CapturedPieces
+                  color={(!isWhite) ? 'White' : 'Black'}
+                  capturedPieces={(!isWhite) ? capturedPiecesWhite : capturedPiecesBlack}
+                  player={(!isWhite) ? playerW : playerB}
+                />
+              </div>
+              <div className="flex-col capt-black-col">
+                <CapturedPieces
+                  color={(isWhite) ? 'White' : 'Black'}
+                  capturedPieces={(isWhite) ? capturedPiecesWhite : capturedPiecesBlack}
+                  player={(isWhite) ? playerW : playerB}
+                />
+              </div>
             </Paper>
             <div className="flex-col">
               <Board
@@ -921,9 +879,7 @@ class App extends Component {
             </div>
 
             <Paper className="flex-col right-col" zDepth={2}>
-              {/*<Message message={error} />*/}
               <Messages
-                className="messageBox"
                 messagesLocal={messagesLocal}
                 sendMessageLocal={this.sendMessageLocal}
                 messagesGlobal={messagesGlobal}
@@ -939,7 +895,7 @@ class App extends Component {
                 className="pause-request"
                 title="Would you like to pause this game?"
                 actions={pauseActions}
-                persist={true}
+                persist
                 open={pauseOpen}
                 handleClose={this.handlePauseClose}
               />
@@ -955,7 +911,7 @@ class App extends Component {
                 title="Are you ready to resume this game?"
                 actions={resumeActions}
                 open={resumeOpen}
-                persist={true}
+                persist
                 handleClose={this.handleCancelResumeClose}
               />
               <Alert
@@ -974,7 +930,7 @@ class App extends Component {
               />
               <Alert
                 className="confirm-surrender"
-                title={`are you sure about surrender?`}
+                title={'Are you sure you wish to surrender?'}
                 actions={confirmSurrenderActions}
                 open={surrenderConfirmOpen}
                 handleClose={this.handleAnnounceSurrenderClose}
@@ -1007,7 +963,11 @@ class App extends Component {
               />
             </div>
             <div className="snack-bar">
+<<<<<<< HEAD
               <SnackBar/>
+=======
+              <SnackBar />
+>>>>>>> CSS styling
             </div>
           </div>
         </div>

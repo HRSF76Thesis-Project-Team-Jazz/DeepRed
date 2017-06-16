@@ -4,14 +4,10 @@ import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import ActionHome from 'material-ui/svg-icons/action/home';
-import SocialPerson from 'material-ui/svg-icons/social/person';
-import SocialShare from 'material-ui/svg-icons/social/share';
-import ContentSave from 'material-ui/svg-icons/content/save';
 import ActionExit from 'material-ui/svg-icons/action/exit-to-app';
 import Android from 'material-ui/svg-icons/action/android';
 import Pause from 'material-ui/svg-icons/av/pause';
 import PlayArrow from 'material-ui/svg-icons/av/play-arrow';
-import NavigationArrowUpward from 'material-ui/svg-icons/navigation/arrow-upward';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 
@@ -56,7 +52,6 @@ class SettingsDrawer extends Component {
   handleLobbyClose() {
     this.handleClose();
     window.location = '/';
-    // this.props.handleLobbyOpen();
   }
   render() {
     return (
@@ -68,6 +63,7 @@ class SettingsDrawer extends Component {
           className="drawer-button"
         />
         <Drawer
+          className="drawer"
           width={'18%'}
           docked={false}
           openSecondary
@@ -100,7 +96,7 @@ class SettingsDrawer extends Component {
           >
             Surrender
           </MenuItem>
-            <Link to="/">
+          <Link to="/">
             <MenuItem
               onTouchTap={this.handleLobbyClose}
               leftIcon={<ActionHome />}
