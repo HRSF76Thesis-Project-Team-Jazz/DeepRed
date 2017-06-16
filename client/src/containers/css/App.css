@@ -160,7 +160,16 @@ body {
 .messageBox {
   /*background-color: #cc0000;*/
 }
-
+.choose-room {
+  padding: 0vw 0vw;
+  border-top: none;
+  border-bottom: none;
+}
+.test {
+  padding: 0vw 0vw 0vw 0vw;
+  border-top: none;
+  border-bottom: none;
+}
 /*@media all and (max-width: 640px) {
   .flex-row {
     display: flex;

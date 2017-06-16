@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Snackbar from 'material-ui/Snackbar';
-import RaisedButton from 'material-ui/RaisedButton';
 
 import { turnSnackbarOff } from '../store/actions';
- 
- class SnackBar extends Component {
+
+class SnackBar extends Component {
   constructor(props) {
     super(props);
     this.handleRequestClose = this.handleRequestClose.bind(this);
   }
 
   handleRequestClose() {
-    const { dispatch, snackbarOpen } = this.props;
+    const { dispatch } = this.props;
     dispatch(turnSnackbarOff());
   }
 
@@ -32,7 +31,7 @@ import { turnSnackbarOff } from '../store/actions';
 }
 
 function mapStateToProps(state) {
-  const { controlState} = state;
+  const { controlState } = state;
   const {
     snackbarOpen,
   } = controlState;

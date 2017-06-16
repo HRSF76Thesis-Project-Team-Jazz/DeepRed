@@ -2,6 +2,8 @@ import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import Room from '../components/Room';
 import '../components/css/Room.css';
+import './css/App.css';
+
 /**
  * Dialog with action buttons. The actions are passed in as an array of React objects,
  * in this example [FlatButtons](/#/components/flat-button).
@@ -18,15 +20,28 @@ const customContentStyle = {
   // maxHeight: 'none',
   height: '100%',
   opacity: 0.85,
+  paddingTop: '0vw',
+  paddingRight: '0vw',
+  paddingBottom: '0vw',
+  paddingLeft: '0vw',
 };
 
-const Alert = ({ title, open, actions, handleClose, showRooms,
+const AlertRoom = ({ title, open, actions, handleClose, showRooms,
 allRooms, createNewPVPRoom, handleJoinRoomAsBlack, handleJoinRoomAsWhite,
 handleCreateRoomAsWhite, handleCreateRoomAsBlack, thisUser, persist,
 messagesGlobal, sendMessageGlobal, sendMessageLocal, messagesLocal, isWhite }) => (
   <div>
     <Dialog
       title={showRooms === true ?
+        <div className="room-title">{'Welcome to '}
+          <span className="deep-red">{'Deep Red'}</span>
+          {`, ${thisUser}`}
+        </div>
+        : title}
+      contentStyle={thisUser ? customContentStyle : null}
+      autoScrollBodyContent
+      autoDetectWindowHeight
+      children={
         <Room
           thisUser={thisUser}
           allRooms={allRooms}
@@ -40,17 +55,22 @@ messagesGlobal, sendMessageGlobal, sendMessageLocal, messagesLocal, isWhite }) =
           messagesGlobal={messagesGlobal}
           messagesLocal={messagesLocal}
           isWhite={isWhite}
+
         />
-        : title}
-      contentStyle={thisUser ? customContentStyle: null}
-      autoScrollBodyContent={true}
-      autoDetectWindowHeight={true}
+      }
       actions={actions}
-      modal={persist === true? persist : false}
+      modal={persist === true ? persist : false}
       open={open}
       onRequestClose={handleClose}
+      actionsContainerClassName="test"
+      bodyClassName="test"
+      className="test"
+      contentClassName="test"
+      overlayClassName="test"
+      titleClassName="test"
+
     />
   </div>
 );
 
-export default Alert;
+export default AlertRoom;
