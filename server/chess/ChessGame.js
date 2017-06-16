@@ -120,11 +120,11 @@ class ChessGame {
           }
         }
       } else {
+        // console.log(this.board);
+        // console.log(error);
         cb({ game: this, error: 'Move is not allowed.' });
       }
     }
-      // console.log(this.board);
-      // console.log(error);
   }
 
   errorCheck(origin, dest) {
@@ -261,10 +261,8 @@ class ChessGame {
           //     });
           //   }
           // }
-
       } else if (isStalemateBlack(this.board)) {
         this.winner = 'D';
-
           // for (var i = 1; i < this.history.length; i++) {
           //   if (i % 2 === 1){
           //     chessDB.saveDeepRedWhite({
@@ -286,7 +284,6 @@ class ChessGame {
           //     });
           //   }
           // }
-
       } else if (blackIsChecked(this.board)) {
         this.playerInCheck = 'B';
       } else {

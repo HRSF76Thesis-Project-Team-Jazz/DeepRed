@@ -42,18 +42,16 @@ class ChatBoxGlobal extends Component {
   render() {
     return (
       <div>
-        <form>
-          <TextField
-            className="text-field"
-            style={{ width: '18vw' }}
-            hintText="Message Opponent"
-            underlineStyle={{ borderColor: red900 }}
-            underlineFocusStyle={{ borderColor: red900 }}
-            value={this.state.message}
-            onChange={this.handleChange}
-            onKeyDown={this.handleKeyDown}
-          />
-        </form>
+        <TextField
+          className="textfield"
+          style={{ width: '18vw' }}
+          hintText="Message Opponent"
+          underlineStyle={{ borderColor: red900 }}
+          underlineFocusStyle={{ borderColor: red900 }}
+          value={this.state.message}
+          onChange={this.handleChange}
+          onKeyDown={this.handleKeyDown}
+        />
       </div>
     );
   }

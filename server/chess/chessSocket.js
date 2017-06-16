@@ -1,7 +1,6 @@
 const ChessGame = require('./ChessGame');
-const chessDB = require('../chessDB');
-const { simulateGamesAIvAI, simulateWinningGameAIvAI } = require('./gameSimulation/gamePlayAIvAI');
-const { getAllMoves, getMovesFromDB } = chessDB;
+const { getAllMoves, getMovesFromDB } = require('../chessDB');
+const { simulateWinningGameAIvAI } = require('./gameSimulation/gamePlayAIvAI');
 const { encodeWithState } = require('./chessEncode');
 
 const allGames = {};
@@ -21,42 +20,6 @@ module.exports = (io, client) => {
   client.on('getAllRooms', (id) => {
     io.to(id).emit('returnAllRooms', allRooms);
   });
-
-  // client.on('createRoomAsWhite', (currentUserName, currentUserEmail, id, gameMode) => {
-  //   if (queue.length !== 0) {
-  //     room = `room ${queue.splice(0, 1)}`;
-  //   } else {
-  //     room = `room ${count}`;
-  //   }
-  //   client.join(room, () => {
-  //     roomInfo.room = room;
-  //     roomInfo.playerW = currentUserName;
-  //     roomInfo.playerWemail = currentUserEmail;
-  //     roomInfo.playerWid = client.client.id;
-  //     roomInfo.playerWtime = 600;
-  //     roomInfo.playerWclicked = false;
-  //     createAndSaveNewGame(room);
-  //     const num = parseInt(room[room.length - 1], 10);
-  //     if (count !== num) {
-  //       count = num;
-  //     }
-  //     roomInfo.count = count;
-  //     allRooms[count] = roomInfo;
-  //     io.emit('updateAllRooms', allRooms, allRooms[count]);
-  //     io.to(room).emit('createRoomCompleted', roomInfo, allRooms);
-  //     if (gameMode === 'AI') {
-  //       roomInfo.playerB = 'AI';
-  //       roomInfo.playerBemail = 'AI@AI';
-  //       roomInfo.playerBid = 12345;
-  //       roomInfo.playerBtime = 600;
-  //       roomInfo.playerBclicked = false;
-  //       io.in(room).emit('joinRoomCompleted', roomInfo, allRooms);
-  //       io.emit('updateAllRooms', allRooms, allRooms[count]);
-  //     }
-  //     count += 1;
-  //     roomInfo = {};
-  //   });
-  // });
 
   client.on('createRoomAsWhite', (currentUserName, currentUserEmail, id, gameMode) => {
     if (queue.length !== 0) {
@@ -96,7 +59,11 @@ module.exports = (io, client) => {
         io.in(room).emit('joinRoomCompleted', roomInfo, allRooms);
         io.emit('updateAllRooms', allRooms);
         getAllMoves('B', (res) => {
-          io.in(room).emit('messageLocal',  { message: 'DeepRed has analyzed ' + res + ' Total Black Moves' , color: 'red', timeStamp: new Date() });
+          io.in(room).emit('messageLocal',
+            { message: `DeepRed has analyzed ${res} Black Moves`,
+              color: 'red',
+              timeStamp: new Date(),
+            });
         });
       }
       roomInfo = {};
@@ -141,7 +108,11 @@ module.exports = (io, client) => {
           io.in(room).emit('joinRoomCompleted', roomInfo, allRooms, gameState.game);
           io.emit('updateAllRooms', allRooms);
           getAllMoves('W', (res) => {
-            io.in(room).emit('messageLocal',  { message: 'DeepRed has analyzed ' + res + ' Total White Moves' , color: 'red', timeStamp: new Date() });
+            io.in(room).emit('messageLocal',
+              { message: `DeepRed has analyzed ${res} White Moves`,
+                color: 'red',
+                timeStamp: new Date(),
+              });
           });
           roomInfo = {};
         });
@@ -220,20 +191,26 @@ module.exports = (io, client) => {
     console.log('Attempted Move: ', origin, dest);
     console.log('Room Number: ', clientRoom);
     if (allGames[clientRoom]) {
-      allGames[clientRoom].movePiece(
-        origin,
-        dest,
-        ((newGameState) => {
-          io.in(clientRoom).emit('attemptMoveResult', newGameState.error, newGameState.game, origin, dest, selection);
-        }),
-        pawnPromoteType,
-        gameMode
-      );
-      if (gameMode === 'AI'){
-        const request = encodeWithState(allGames[clientRoom].board, allGames[clientRoom].generatePieceState());
+      allGames[clientRoom].movePiece(origin, dest, ((newGameState) => {
+        io.in(clientRoom).emit('attemptMoveResult', newGameState.error, newGameState.game, origin, dest, selection);
+      }), pawnPromoteType, gameMode);
+      if (gameMode === 'AI') {
+        const request = encodeWithState(allGames[clientRoom].board,
+          allGames[clientRoom].generatePieceState());
         getMovesFromDB(request, allGames[clientRoom].turn, (res) => {
-          io.in(room).emit('messageLocal', { message: 'DeepRed has analyzed this move ' + res.length + ' times', color: 'red', timeStamp: new Date() })
-        }, () => { io.in(room).emit('messageLocal', { message: 'DeepRed is learning.. Thank you for teaching me a new move :)', color: 'red', timeStamp: new Date() })});
+          io.in(room).emit('messageLocal',
+            { message: `DeepRed has analyzed this move ${res.length} times`,
+              color: 'red',
+              timeStamp: new Date(),
+            });
+        });
+        // () => {
+          // io.in(room).emit('messageLocal',
+          //   { message: 'DeepRed is learning ...',
+          //     color: 'red',
+          //     timeStamp: new Date(),
+          //   });
+        // });
       }
     }
   });
@@ -322,7 +299,6 @@ module.exports = (io, client) => {
   });
 
   client.on('updateTime', (clientRoom, clientCount, timeB, timeW) => {
-    console.log('*** ALL ROOMS: ', allRooms, clientCount);
     allRooms[clientCount].playerBtime = timeB;
     allRooms[clientCount].playerWtime = timeW;
     io.in(clientRoom).emit('sendUpdatedTime', allRooms[clientCount]);

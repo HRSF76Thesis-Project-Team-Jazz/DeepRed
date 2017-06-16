@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Tabs, Tab } from 'material-ui/Tabs';
-import MobileTearSheet from './MobileTearSheet';
 import ChatBoxLocal from './ChatBoxLocal';
 import ChatBoxGlobal from './ChatBoxGlobal';
 import ChatMessageLocal from './ChatMessageLocal';
 import ChatMessageGlobal from './ChatMessageGlobal';
+import './css/Messages.css';
 
 class Messages extends Component {
 
@@ -26,15 +26,13 @@ class Messages extends Component {
 
     return (
       <Tabs
-        className="tabs"
         inkBarStyle={{ background: '#00BCD4', zIndex: 1000 }}
       >
         <Tab
-          className="tab"
           style={{ backgroundColor: '#C62828' }}
           label={gameMode === 'default' ? 'LOCAL' : 'DEEPRED'}
         >
-          <MobileTearSheet>
+          <div className="messageslocal">
             {messagesLocal.map((msg, i) => (
               <ChatMessageLocal
                 key={i + msg}
@@ -45,7 +43,7 @@ class Messages extends Component {
               />
             ))}
             <div id="end-of-local" />
-          </MobileTearSheet>
+          </div>
           <ChatBoxLocal sendMessageLocal={sendMessageLocal} isWhite={isWhite} thisUser={thisUser} />
         </Tab>
         <Tab
@@ -53,7 +51,7 @@ class Messages extends Component {
           style={{ backgroundColor: '#C62828' }}
           label="Global"
         >
-          <MobileTearSheet>
+          <div className="messageslocal">
             {messagesGlobal.map((msg, i) => (
               <ChatMessageGlobal
                 key={i + msg}
@@ -65,8 +63,12 @@ class Messages extends Component {
               />
             ))}
             <div id="end-of-global" />
-          </MobileTearSheet>
-          <ChatBoxGlobal sendMessageGlobal={sendMessageGlobal} isWhite={isWhite} thisUser={thisUser} />
+          </div>
+          <ChatBoxGlobal
+            sendMessageGlobal={sendMessageGlobal}
+            isWhite={isWhite}
+            thisUser={thisUser}
+          />
         </Tab>
       </Tabs>);
   }

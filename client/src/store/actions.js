@@ -74,7 +74,19 @@ export const showAIButton = () => ({
 
 export const updateGameSummary = gameSummary => ({
   type: types.UPDATE_GAME_SUMMARY,
-  gameSummary,
+  games: gameSummary.games,
+  whiteWins: gameSummary.whiteWins,
+  blackWins: gameSummary.blackWins,
+  stalemateByMoves: gameSummary.stalemateByMoves,
+  stalemateByPieces: gameSummary.stalemateByPieces,
+  stalemateNoWhiteMoves: gameSummary.stalemateNoWhiteMoves,
+  stalemateNoBlackMoves: gameSummary.stalemateNoBlackMoves,
+  end100moves: gameSummary.end100moves,
+  castleKing: gameSummary.castleKing,
+  castleQueen: gameSummary.castleQueen,
+  pawnPromotion: gameSummary.pawnPromotion,
+  enPassant: gameSummary.enPassant,
+  averageMovesPerGame: gameSummary.averageMovesPerGame,
 });
 
 export const unselectPiece = () => ({
@@ -361,4 +373,3 @@ export const sendMsgGlobal = msg => ({
   type: types.SEND_MESSAGE_GLOBAL,
   msg,
 });
-

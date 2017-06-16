@@ -1,7 +1,7 @@
 .chat-message-container {
-  border-radius: 8px;
-  margin: 2px;
-  padding: 5px;
+  border-radius: 0.25vw;
+  margin: 0.25vw;
+  padding: 0.5vw;
 }
 .white-chat {
   float: left;
@@ -29,19 +29,19 @@
   font-size: 0.9rem;
 }
 .chat-message {
-  font-size: 1.5rem;
+  font-size: 1.25vw;
 }
 .chat-message-global {
-  font-size: 1rem;
+  font-size: 1.25vw;
 }
 .chat-username {
-  font-size: 1.5rem;
+  font-size: 1.25vw;
   font-weight: bold;
   font-style: italic;
 }
 .chat-timeStamp {
   clear: both;
-  font-size: 0.7rem;
+  font-size: 0.5vw;
   color: white;
   border-radius: 3px;
   text-align: center;

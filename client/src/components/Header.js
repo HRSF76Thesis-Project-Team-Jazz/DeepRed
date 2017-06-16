@@ -8,6 +8,7 @@ const Header = ({ sendPauseRequest, sendResumeRequest, handleSurrender, handleLo
     <table>
       <tbody>
         <tr>
+          <td />
           <td><img className="banner-img" src={'/assets/deepRed-dark-bg.png'} alt={''} /></td>
           <td className="button-cell">
             <SettingsDrawer

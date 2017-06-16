@@ -67,6 +67,8 @@ export const HIDE_AI_BUTTON = 'HIDE_AI_BUTTON';
 
 export const SHOW_AI_BUTTON = 'SHOW_AI_BUTTON';
 
+export const UPDATE_GAME_SUMMARY = 'UPDATE_GAME_SUMMARY';
+
 // userState action types
 export const SET_PLAYER = 'SET_PLAYER';
 
