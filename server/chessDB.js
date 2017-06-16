@@ -258,7 +258,7 @@ const saveDeepRedWhite = (entry) => {
             draw: entry.draw,
             winPercentage: 100,
           }).into('DeepRed_WhiteMoves').then((resp) => {
-            console.log(resp);
+            console.log('** INSERT new White move **');
           });
         } else {
           knex('DeepRed_WhiteMoves').where({
@@ -270,7 +270,7 @@ const saveDeepRedWhite = (entry) => {
               'winPercentage': (res[0].white_win + 1) / (res[0].white_win + 1 + res[0].black_win + res[0].draw) * 100,
             })
             .then((resp) => {
-              console.log(resp);
+              console.log('** UPDATED White move **');
             });
         }
       });
@@ -289,7 +289,7 @@ const saveDeepRedWhite = (entry) => {
             draw: entry.draw,
             winPercentage: 0,
           }).into('DeepRed_WhiteMoves').then((resp) => {
-            console.log(resp);
+            console.log('** INSERT new White move **');
           });
         } else {
           knex('DeepRed_WhiteMoves').where({
@@ -301,7 +301,7 @@ const saveDeepRedWhite = (entry) => {
               'winPercentage': (res[0].white_win) / (res[0].white_win + res[0].black_win + 1 + res[0].draw) * 100,
             })
             .then((resp) => {
-              console.log(resp);
+              console.log('** UPDATED White move **');
             });
         }
       });
@@ -320,7 +320,7 @@ const saveDeepRedWhite = (entry) => {
             draw: entry.draw,
             winPercentage: 0,
           }).into('DeepRed_WhiteMoves').then((resp) => {
-            console.log(resp);
+            console.log('** INSERT new White move **');
           });
         } else {
           knex('DeepRed_WhiteMoves').where({
@@ -332,7 +332,7 @@ const saveDeepRedWhite = (entry) => {
               'winPercentage': (res[0].white_win) / (res[0].white_win + res[0].black_win + res[0].draw + 1) * 100,
             })
             .then((resp) => {
-              console.log(resp)
+              console.log('** UPDATED White move **');
             });
         }
       });
@@ -355,7 +355,7 @@ const saveDeepRedBlack = (entry) => {
             draw: entry.draw,
             winPercentage: 0,
           }).into('DeepRed_BlackMoves').then((resp) => {
-            console.log(resp);
+            console.log('** INSERT new Black move **');
           });
         } else {
           knex('DeepRed_BlackMoves').where({
@@ -367,7 +367,7 @@ const saveDeepRedBlack = (entry) => {
               'winPercentage': (res[0].black_win) / (res[0].white_win + 1 + res[0].black_win + res[0].draw) * 100,
             })
             .then((resp) => {
-              console.log(resp);
+              console.log('** UPDATED Black move **');
             });
         }
       });
@@ -386,7 +386,7 @@ const saveDeepRedBlack = (entry) => {
             draw: entry.draw,
             winPercentage: 100,
           }).into('DeepRed_BlackMoves').then((resp) => {
-            console.log(resp);
+            console.log('** INSERT new Black move **');
           });
         } else {
           knex('DeepRed_BlackMoves').where({
@@ -398,7 +398,7 @@ const saveDeepRedBlack = (entry) => {
               'winPercentage': (res[0].black_win + 1) / (res[0].white_win + res[0].black_win + 1 + res[0].draw) * 100,
             })
             .then((resp) => {
-              console.log(resp);
+              console.log('** UPDATED Black move **');
             });
         }
       });
@@ -417,7 +417,7 @@ const saveDeepRedBlack = (entry) => {
             draw: entry.draw,
             winPercentage: 0,
           }).into('DeepRed_BlackMoves').then((resp) => {
-            console.log(resp);
+            console.log('** INSERT new Black move **');
           });
         } else {
           knex('DeepRed_BlackMoves').where({
@@ -425,11 +425,11 @@ const saveDeepRedBlack = (entry) => {
             board: entry.board,
           })
             .update({
-              'draw': res[0].draw + 1,
-              'winPercentage': (res[0].black_win) / (res[0].white_win + res[0].black_win + res[0].draw + 1) * 100,
+              draw: res[0].draw + 1,
+              winPercentage: (res[0].black_win) / (res[0].white_win + res[0].black_win + res[0].draw + 1) * 100,
             })
             .then((resp) => {
-              console.log(resp);
+              console.log('** UPDATED Black move **');
             });
         }
       });
@@ -493,14 +493,14 @@ const getNewMove = (encodedBoardWithState, color) => {
 
 const getAllMoves = (color, foundFn) => {
   if (color === 'W') {
-    knex.column('white_win','black_win','draw').select().from('DeepRed_WhiteMoves').then((res) => {
+    knex.column('white_win', 'black_win', 'draw').select().from('DeepRed_WhiteMoves').then((res) => {
       let total = 0;
       res.forEach((entry) => { total += entry.white_win + entry.black_win + entry.draw });
       console.log('Total Learned Moves: ', total);
       foundFn(total);
     });
   } else {
-    knex.column('white_win','black_win','draw').select().from('DeepRed_BlackMoves').then((res) => {
+    knex.column('white_win', 'black_win', 'draw').select().from('DeepRed_BlackMoves').then((res) => {
       let total = 0;
       res.forEach((entry) => { total += entry.white_win + entry.black_win + entry.draw });
       console.log('Total Learned Moves: ', total);

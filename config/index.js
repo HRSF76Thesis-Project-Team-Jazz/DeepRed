@@ -4,7 +4,7 @@ if (env === 'local' || env === 'localtest') local = require('./config.dev.js');
 
 // FOR LOCAL DEPLOYMENT
 const SERVER_IP = 'localhost';
-const DB_IP = '10.6.65.67';
+const DB_IP = 'localhost';
 
 const callbackURL = (name) => {
   if (env === 'local' || env === 'localtest') return `http://${SERVER_IP}:3000/auth/${name}/callback`;
