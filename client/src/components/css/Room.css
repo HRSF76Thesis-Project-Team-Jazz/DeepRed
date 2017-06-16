@@ -13,11 +13,11 @@
   justify-content: baseline;
   align-items: stretch;
   width: 80vw;
-  height: 26vw;
+  height: 30vw;
 }
 
 .grid {
-  margin: -5vw;
+  margin: -4vw auto;
   flex-flow: row;
   padding: 5vw;
   height: 100vw;
@@ -26,6 +26,7 @@
   align-self: flex-start;
   padding-right: auto;
   padding-left: auto;
+  text-align: center;
 }
 
 .control-box {
@@ -36,11 +37,22 @@
 
 
 .room-name {
-  padding-right: 8px;
-  padding-left: 8px;
+  text-align: center;
+  color: #383838;
+  font-size: 0.9vw;
+}
+
+.player-name {
+  text-align: center;
+  font-style: italic;
+  color: #383838;
+  font-size: 0.9vw;
 }
 
 .title-text {
+  font-weight: bold;
+  font-size: 1vw;
+  text-align: center;
 }
 
 .existing-room {
@@ -64,4 +76,40 @@
 
 .room-list {
   /*overflow: scroll;*/
+}
+
+.td-icon {
+  margin: 10px auto;
+  padding: 10px;
+  text-align: center;
+}
+
+.icon {
+  height: 4vw;
+}
+
+.deepred-text {
+  margin: null;
+  padding: 2vw;
+  font-size: 1.2vw;
+  text-align: left;
+  vertical-align: top;
+}
+
+.table-col {
+  width: 25%;
+}
+
+.start-ai {
+  text-align: center;
+  margin: auto;
+}
+
+.icon-button {
+  text-align: center;
+  margin: auto;
+}
+
+.room-listing {
+  margin: auto;
 }
