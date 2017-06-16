@@ -27,6 +27,7 @@ import Board from './Board';
 import CapturedPieces from '../components/CapturedPieces';
 import MoveHistory from '../components/MoveHistory';
 import Alert from './Alert';
+import AlertRoom from './AlertRoom';
 import PlayerName from '../components/PlayerName';
 import Clock from '../components/Clock';
 import Messages from '../components/Messages';
@@ -766,7 +767,8 @@ class App extends Component {
     const selectRoomActions = [
       <RaisedButton
         label="Log out"
-        secondary
+        backgroundColor="#F44336"
+        labelColor="white"
         keyboardFocused
         onTouchTap={this.closeDialog}
       />,
@@ -908,7 +910,7 @@ class App extends Component {
               />
               <Alert
                 className="resume-request"
-                title="Are you ready to resume this game?"
+                title="Are you ready to resume game?"
                 actions={resumeActions}
                 open={resumeOpen}
                 persist
@@ -923,7 +925,7 @@ class App extends Component {
               />
               <Alert
                 className="announce-surrender"
-                title={`${alertName} has surrendered`}
+                title={`${alertName} has surrendered.`}
                 actions={surrenderActions}
                 open={surrenderOpen}
                 handleClose={this.handleAnnounceSurrenderClose}
@@ -937,7 +939,7 @@ class App extends Component {
               />
             </div>
             <div className="control-room">
-              <Alert
+              <AlertRoom
                 thisUser={thisUser}
                 allRooms={allRooms}
                 handleCreateRoomAsWhite={this.handleCreateRoomAsWhite}
@@ -950,14 +952,20 @@ class App extends Component {
                 messagesLocal={messagesLocal}
                 isWhite={isWhite}
                 showRooms
-                className="choose-room"
-                title={'Choose or create a room to join:'}
+                title={'Join or create a room:'}
                 actions={selectRoomActions}
+                // actionsContainerStyle={{padding: '10vw'}}
                 open={chooseRoomOpen}
+                actionsContainerClassName="test"
+                bodyClassName="test"
+                className="test"
+                contentClassName="test"
+                overlayClassName="test"
+                titleClassName="test"
               />
               <Alert
                 className="timeout-dialog"
-                title={`Timeout, ${alertName} is the Chess Master!`}
+                title={`Out of time, ${alertName} is the Chess Master!`}
                 actions={surrenderActions}
                 open={timeoutOpen}
               />
