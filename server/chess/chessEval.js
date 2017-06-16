@@ -1,21 +1,9 @@
 const safeMoves = require('./deepRed/safeMoves');
-const basic = require('./deepRed/basic');
-const chessEncode = require('./chessEncode');
-const pieceState = require('./pieceState');
-
-const {
-  encodeWithState,
-  decodeWithState,
-} = chessEncode;
-
-const { mutateBoard } = basic;
 
 const {
   getSafeMovesWhite,
   getSafeMovesBlack,
 } = safeMoves;
-
-const { evalPieceState } = pieceState;
 
 const pieceScore = (board) => {
   const whitePieces = [];
@@ -23,7 +11,7 @@ const pieceScore = (board) => {
 
   board.forEach(row =>
   row.forEach(col =>
-    ((col && col[0] === 'W') ? whitePieces.push(col) : blackPieces.push(col))));
+    ((col && col[0] === 'W') ? whitePieces.push(col) : (col) ? blackPieces.push(col) : null)));
 
   const isEndGame = (whitePieces.length + blackPieces.length) < 12;
 
@@ -91,8 +79,6 @@ const piecesAttacked = (board, state, color) => {
   for (let i = 0; i < piecesKey.length; i += 1) {
     score += value[pieces[piecesKey[i]][1]];
   }
-
-  console.log(' Pieces attacked: ', pieces, score);
 
   return score;
 };

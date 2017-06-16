@@ -2,87 +2,147 @@ const expect = require('chai').expect;
 
 const chessEval = require('../chess/chessEval');
 
-describe('【ChessEval】 Evaluate Positioning / Game Metrics', () => {
-  describe('Compute Captured Pieces Score', () => {
-    const capturedPiecesScore = chessEval.capturedPiecesScore;
+const { pieceScore, boardPiecesScore, piecesAttacked } = chessEval;
 
-    it('capturedPiecesScore should exist and should be function', () => {
-      expect(capturedPiecesScore).to.be.a('function');
+const pieceState = {
+  hasMovedWK: false,
+  hasMovedWKR: false,
+  hasMovedWQR: false,
+  hasMovedBK: false,
+  hasMovedBKR: false,
+  hasMovedBQR: false,
+  canEnPassantW: '',
+  canEnPassantB: '',
+};
+
+const board = [
+  ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+  ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
+];
+
+
+describe('【ChessEval】 Evaluate value of pieces: ', () => {
+  describe('Compute value of pieces: ', () => {
+    it('pieceScore should exist and should be function', () => {
+      expect(pieceScore).to.be.a('function');
     });
 
-    let capturedWhite = [];
-    let capturedBlack = [];
-
-    it('should return 0 if no pieces are captured', () => {
-      expect(capturedPiecesScore(capturedWhite, capturedBlack)).to.eql(0);
+    it('should return have a value of pieces at the start', () => {
+      expect(pieceScore(board)).to.deep.eql({
+        P: 2,
+        N: 9.25,
+        B: 9.75,
+        R: 15,
+        Q: 23.75,
+        K: 2,
+      });
     });
 
-    it('should return value of pieces captured by White', () => {
-      capturedWhite = ['BP'];
-      expect(capturedPiecesScore(capturedWhite, capturedBlack)).to.eql(2);
+    const newBoard = [
+      ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      ['WR', null, null, null, 'WK', null, null, 'WR'],
+      [null, null, null, null, null, null, null, null],
+    ];
 
-      capturedWhite = ['BQ'];
-      expect(capturedPiecesScore(capturedWhite, capturedBlack)).to.eql(23.75);
+    it('should return have a different piece value during end game', () => {
+      console.log(newBoard);
+      expect(pieceScore(newBoard)).to.deep.eql({
+        P: 3.75,
+        N: 9.25,
+        B: 9.75,
+        R: 15,
+        Q: 23.75,
+        K: 6.5,
+      });
+    });
+  }); // end of piesScore
 
-      capturedWhite = ['BQ', 'BP'];
-      expect(capturedPiecesScore(capturedWhite, capturedBlack)).to.eql(25.75);
-
-      capturedWhite = ['BP', 'BN', 'BB', 'BR', 'BQ', 'BK'];
-      expect(capturedPiecesScore(capturedWhite, capturedBlack)).to.eql(
-        2 + 9.25 + 9.75 + 15 + 23.75 + 2);
+  describe('Compute value of board pieces for each player: ', () => {
+    it('boardPiecesScore should exist and should be function', () => {
+      expect(boardPiecesScore).to.be.a('function');
     });
 
-    it('should return value of pieces captured by Black', () => {
-      capturedWhite = [];
-      capturedBlack = ['WP'];
-      expect(capturedPiecesScore(capturedWhite, capturedBlack)).to.eql(-2);
-
-      capturedBlack = ['WQ'];
-      expect(capturedPiecesScore(capturedWhite, capturedBlack)).to.eql(-23.75);
-
-      capturedBlack = ['WQ', 'WP'];
-      expect(capturedPiecesScore(capturedWhite, capturedBlack)).to.eql(-25.75);
-
-      capturedBlack = ['WP', 'WN', 'WB', 'WR', 'WQ', 'WK'];
-      expect(capturedPiecesScore(capturedWhite, capturedBlack)).to.eql(
-        -(2 + 9.25 + 9.75 + 15 + 23.75 + 2));
+    it('should return the correct value for white', () => {
+      expect(boardPiecesScore(board).whiteScore).to.eql(109.75);
     });
 
-    it('should return net value of pieces captured by White vs Black', () => {
-      capturedWhite = ['BP'];
-      capturedBlack = ['WP'];
-      expect(capturedPiecesScore(capturedWhite, capturedBlack)).to.eql(0);
-      capturedBlack = ['WP', 'WQ'];
-
-      expect(capturedPiecesScore(capturedWhite, capturedBlack)).to.eql(-23.75);
-      capturedBlack = ['WQ', 'WP', 'WP'];
-
-      expect(capturedPiecesScore(capturedWhite, capturedBlack)).to.eql(-25.75);
-      capturedBlack = ['WP', 'WN', 'WB', 'WR', 'WQ', 'WK', 'WP'];
-
-      expect(capturedPiecesScore(capturedWhite, capturedBlack)).to.eql(
-        -(2 + 9.25 + 9.75 + 15 + 23.75 + 2));
-
-      capturedWhite = ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'];
-      capturedBlack = ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'];
-      expect(capturedPiecesScore(capturedWhite, capturedBlack)).to.eql(2);
-
-      // theoretical test for King end game value
-      capturedWhite = ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BK'];
-      capturedBlack = ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'];
-      expect(capturedPiecesScore(capturedWhite, capturedBlack)).to.eql(2);
+    it('should return the correct value for black', () => {
+      expect(boardPiecesScore(board).blackScore).to.eql(109.75);
     });
 
-    it('should return end game value of pieces captured by White vs Black', () => {
-      capturedWhite = ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'];
-      capturedBlack = ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'];
-      expect(capturedPiecesScore(capturedWhite, capturedBlack)).to.eql(0);
+    const newBoard2 = [
+      ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      ['WR', null, null, null, 'WK', null, null, 'WR'],
+      [null, null, null, null, null, null, null, null],
+    ];
 
-      capturedBlack = ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WR'];
-      expect(capturedPiecesScore(capturedWhite, capturedBlack)).to.eql(-11.25);
-
-      capturedBlack = ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WK'];
-      expect(capturedPiecesScore(capturedWhite, capturedBlack)).to.eql(-2.75);
+    it('should return the correct value for white', () => {
+      expect(boardPiecesScore(newBoard2).whiteScore).to.eql(36.5);
     });
-  });
-});
+
+    it('should return the correct value for black', () => {
+      expect(boardPiecesScore(newBoard2).blackScore).to.eql(98.25);
+    });
+
+  }); // end of piesScore
+  
+  describe('Compute value of pieces under attack for each player: ', () => {
+    it('piecesAttacked should exist and should be function', () => {
+      expect(piecesAttacked).to.be.a('function');
+    });
+
+    const attackBoard = [
+      [null, null, 'BR', null, 'BK', null, null, 'BR'],
+      [null, 'WP', null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      ['WR', null, null, null, 'WK', null, null, 'WR'],
+      [null, null, null, null, null, null, null, null],
+    ];
+
+    it('should return the correct value for threated white pieces', () => {
+      expect(piecesAttacked(attackBoard, pieceState, 'W')).to.eql(15);
+    });
+
+    it('should return the correct value for threated white pieces', () => {
+      expect(piecesAttacked(attackBoard, pieceState, 'B')).to.eql(30);
+    });
+
+    const newBoard2 = [
+      ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      ['WR', null, null, null, 'WK', null, null, 'WR'],
+      [null, null, null, null, null, null, null, null],
+    ];
+    it('should return the correct value for white', () => {
+      expect(boardPiecesScore(newBoard2).whiteScore).to.eql(36.5);
+    });
+
+    it('should return the correct value for black', () => {
+      expect(boardPiecesScore(newBoard2).blackScore).to.eql(98.25);
+    });
+
+  }); // end of piesScore
+}); // end of chess eval
