@@ -339,7 +339,7 @@ class App extends Component {
             } else {
               text = game.event[i];
             }
-            if (intent !== '') {
+            if (intent) {
               if (text === '+BW' || text === '+WW' || text === '+B' || text === '+W') {
                 dispatch(turnSnackbarOn());
               }

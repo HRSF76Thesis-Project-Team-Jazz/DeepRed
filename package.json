@@ -14,6 +14,7 @@
     "db:init-test": "NODE_ENV=localtest grunt pgcreatedb:default && knex migrate:latest --env NODE_ENV",
     "chesstest": "node ./node_modules/mocha/bin/mocha",
     "localtest": "NODE_ENV=localtest grunt test",
+    "mochatest": "NODE_ENV=localtest istanbul cover _mocha -- -R spec server/test/*.spec.js",
     "seed-pgn": "node ./server/chess/convertPGN/fileParse_3.js"
   },
   "author": "Hack Reactor",

@@ -12,13 +12,15 @@ const queue = [];
 const createAndSaveNewGame = (room) => {
   const newGame = new ChessGame();
   allGames[room] = newGame;
-};
+ };
 
 module.exports = (io, client) => {
   let room = '';
 
   client.on('getAllRooms', (id) => {
-    io.to(id).emit('returnAllRooms', allRooms);
+    if (id) {
+      io.to(id).emit('returnAllRooms', allRooms);
+    }
   });
 
   client.on('createRoomAsWhite', (currentUserName, currentUserEmail, id, gameMode) => {
@@ -128,9 +130,11 @@ module.exports = (io, client) => {
       allRooms[clientCount].playerWtime = 600;
       allRooms[clientCount].playerWclicked = false;
       // createAndSaveNewGame(allRooms[clientCount].room);
-      const currentGame = allGames[allRooms[clientCount].room];
-      io.in(allRooms[clientCount].room).emit('joinRoomCompleted', allRooms[clientCount], allRooms, currentGame);
-      io.emit('updateAllRooms', allRooms);
+      if (allGames[allRooms[clientCount].room]) {
+        const currentGame = allGames[allRooms[clientCount].room];
+        io.in(allRooms[clientCount].room).emit('joinRoomCompleted', allRooms[clientCount], allRooms, currentGame);
+        io.emit('updateAllRooms', allRooms);
+      }
     });
   });
 
@@ -142,9 +146,11 @@ module.exports = (io, client) => {
       allRooms[clientCount].playerBtime = 600;
       allRooms[clientCount].playerBclicked = false;
       // createAndSaveNewGame(allRooms[clientCount].room);
-      const currentGame = allGames[allRooms[clientCount].room];
-      io.in(allRooms[clientCount].room).emit('joinRoomCompleted', allRooms[clientCount], allRooms, currentGame);
-      io.emit('updateAllRooms', allRooms);
+      if (allGames[allRooms[clientCount].room]) {
+        const currentGame = allGames[allRooms[clientCount].room];
+        io.in(allRooms[clientCount].room).emit('joinRoomCompleted', allRooms[clientCount], allRooms, currentGame);
+        io.emit('updateAllRooms', allRooms);
+      }
     });
   });
 
@@ -231,105 +237,128 @@ module.exports = (io, client) => {
 
   // control socket communications
   client.on('requestPause', (clientRoom) => {
-    io.in(clientRoom).emit('requestPauseDialogBox');
+    if (clientRoom) {
+      io.in(clientRoom).emit('requestPauseDialogBox');
+    }
   });
 
   client.on('rejectPauseRequest', (clientRoom) => {
-    io.in(clientRoom).emit('rejectPauseRequestNotification');
+    if (clientRoom) {
+      io.in(clientRoom).emit('rejectPauseRequestNotification');
+    }
   });
 
   client.on('handleRejectPauseRequest', (clientCount, id) => {
-    if (id === allRooms[clientCount].playerBid) {
-      io.in(allRooms[clientCount].room).emit('cancelPauseNotification', allRooms[clientCount].playerB);
-    } else {
-      io.in(allRooms[clientCount].room).emit('cancelPauseNotification', allRooms[clientCount].playerW);
+    if (clientCount !== undefined && id !== undefined) {
+      if (id === allRooms[clientCount].playerBid) {
+        io.in(allRooms[clientCount].room).emit('cancelPauseNotification', allRooms[clientCount].playerB);
+      } else {
+        io.in(allRooms[clientCount].room).emit('cancelPauseNotification', allRooms[clientCount].playerW);
+      }
     }
   });
 
   client.on('agreePauseRequest', (clientCount, id, gameMode) => {
-    if (id === allRooms[clientCount].playerBid) {
-      allRooms[clientCount].playerBclicked = true;
+    if (allRooms[clientCount]) {
+      if (id === allRooms[clientCount].playerBid) {
+        allRooms[clientCount].playerBclicked = true;
+      }
+      if (id === allRooms[clientCount].playerWid) {
+        allRooms[clientCount].playerWclicked = true;
+      }
+    if ((allRooms[clientCount].playerBclicked === true
+      && allRooms[clientCount].playerWclicked === true) || gameMode === 'AI') {
+        io.in(allRooms[clientCount].room).emit('executePauseRequest');
+        allRooms[clientCount].playerBclicked = false;
+        allRooms[clientCount].playerWclicked = false;
+      }
     }
-    if (id === allRooms[clientCount].playerWid) {
-      allRooms[clientCount].playerWclicked = true;
-    }
-   if ((allRooms[clientCount].playerBclicked === true
-     && allRooms[clientCount].playerWclicked === true) || gameMode === 'AI') {
-      io.in(allRooms[clientCount].room).emit('executePauseRequest');
-      allRooms[clientCount].playerBclicked = false;
-      allRooms[clientCount].playerWclicked = false;
-    }
-
-
   });
 
   client.on('requestResume', (clientRoom) => {
-    io.in(clientRoom).emit('requestResumeDialogBox');
+    if (clientRoom) {
+      io.in(clientRoom).emit('requestResumeDialogBox');
+    }
   });
 
   client.on('rejectResumeRequest', (clientRoom) => {
-    io.in(clientRoom).emit('rejectResumeRequestNotification');
+    if (clientRoom) {
+      io.in(clientRoom).emit('rejectResumeRequestNotification');
+    }
   });
 
   client.on('handleRejectResumeRequest', (clientCount, id) => {
-    if (id === allRooms[clientCount].playerBid) {
-      io.in(allRooms[clientCount].room).emit('cancelResumeNotification', allRooms[clientCount].playerB);
-    } else {
-      io.in(allRooms[clientCount].room).emit('cancelResumeNotification', allRooms[clientCount].playerW);
+    if (allRooms[clientCount]) {
+      if (id === allRooms[clientCount].playerBid) {
+        io.in(allRooms[clientCount].room).emit('cancelResumeNotification', allRooms[clientCount].playerB);
+      } else {
+        io.in(allRooms[clientCount].room).emit('cancelResumeNotification', allRooms[clientCount].playerW);
+      }
     }
   });
 
   client.on('agreeResumeRequest', (clientCount, id, gameMode) => {
-    if (id === allRooms[clientCount].playerBid) {
-      allRooms[clientCount].playerBclicked = true;
+    if (allRooms[clientCount]) {
+      if (id === allRooms[clientCount].playerBid) {
+        allRooms[clientCount].playerBclicked = true;
+      }
+      if (id === allRooms[clientCount].playerWid) {
+        allRooms[clientCount].playerWclicked = true;
+      }
+      if ((allRooms[clientCount].playerBclicked === true
+        && allRooms[clientCount].playerWclicked === true) || gameMode === 'AI') {
+        io.in(allRooms[clientCount].room).emit('executeResumeRequest');
+        allRooms[clientCount].playerBclicked = false;
+        allRooms[clientCount].playerWclicked = false;
+      }
     }
-    if (id === allRooms[clientCount].playerWid) {
-      allRooms[clientCount].playerWclicked = true;
-    }
-    if ((allRooms[clientCount].playerBclicked === true
-      && allRooms[clientCount].playerWclicked === true) || gameMode === 'AI') {
-      io.in(allRooms[clientCount].room).emit('executeResumeRequest');
-      allRooms[clientCount].playerBclicked = false;
-      allRooms[clientCount].playerWclicked = false;
-    }
+
   });
 
   client.on('onSurrender', (currentUser, clientRoom) => {
-    io.in(clientRoom).emit('announceSurrender', currentUser);
+    if (clientRoom) {
+      io.in(clientRoom).emit('announceSurrender', currentUser);
+    }
   });
 
   client.on('updateTime', (clientRoom, clientCount, timeB, timeW) => {
-    allRooms[clientCount].playerBtime = timeB;
-    allRooms[clientCount].playerWtime = timeW;
-    io.in(clientRoom).emit('sendUpdatedTime', allRooms[clientCount]);
+    if (allRooms[clientCount]) {
+      allRooms[clientCount].playerBtime = timeB;
+      allRooms[clientCount].playerWtime = timeW;
+      io.in(clientRoom).emit('sendUpdatedTime', allRooms[clientCount]);
+    }
   });
 
   // messaging communications
   client.on('messageLocal', (msg, count) => {
     let user = '';
-    for (let key in allRooms[count]) {
-      if (allRooms[count][key] === client.id) {
-        if (key === 'playerWid') {
-          user = allRooms[count].playerW;
-        } else {
-          user = allRooms[count].playerB;
+    if (allRooms[count]) {
+      for (let key in allRooms[count]) {
+        if (allRooms[count][key] === client.id) {
+          if (key === 'playerWid') {
+            user = allRooms[count].playerW;
+          } else {
+            user = allRooms[count].playerB;
+          }
         }
       }
+      io.in(allRooms[count].room).emit('messageLocal', msg);
     }
-    io.in(allRooms[count].room).emit('messageLocal', msg);
   });
 
   client.on('messageGlobal', (msg, count) => {
     let user = '';
-    for (let key in allRooms[count]) {
-      if (allRooms[count][key] === client.id) {
-        if (key === 'playerWid') {
-          user = allRooms[count].playerW;
-        } else {
-          user = allRooms[count].playerB;
+    if (allRooms[count]) {
+      for (let key in allRooms[count]) {
+        if (allRooms[count][key] === client.id) {
+          if (key === 'playerWid') {
+            user = allRooms[count].playerW;
+          } else {
+            user = allRooms[count].playerB;
+          }
         }
       }
+      io.emit('messageGlobal', msg);
     }
-    io.emit('messageGlobal', msg);
   });
 };
