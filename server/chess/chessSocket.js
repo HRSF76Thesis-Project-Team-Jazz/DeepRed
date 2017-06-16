@@ -269,19 +269,21 @@ module.exports = (io, client) => {
     }
   });
 
-  client.on('agreePauseRequest', (clientCount, id) => {
+  client.on('agreePauseRequest', (clientCount, id, gameMode) => {
     if (id === allRooms[clientCount].playerBid) {
       allRooms[clientCount].playerBclicked = true;
     }
     if (id === allRooms[clientCount].playerWid) {
       allRooms[clientCount].playerWclicked = true;
     }
-    if (allRooms[clientCount].playerBclicked === true
-      && allRooms[clientCount].playerWclicked === true) {
+   if ((allRooms[clientCount].playerBclicked === true
+     && allRooms[clientCount].playerWclicked === true) || gameMode === 'AI') {
       io.in(allRooms[clientCount].room).emit('executePauseRequest');
       allRooms[clientCount].playerBclicked = false;
       allRooms[clientCount].playerWclicked = false;
     }
+
+
   });
 
   client.on('requestResume', (clientRoom) => {
@@ -300,15 +302,15 @@ module.exports = (io, client) => {
     }
   });
 
-  client.on('agreeResumeRequest', (clientCount, id) => {
+  client.on('agreeResumeRequest', (clientCount, id, gameMode) => {
     if (id === allRooms[clientCount].playerBid) {
       allRooms[clientCount].playerBclicked = true;
     }
     if (id === allRooms[clientCount].playerWid) {
       allRooms[clientCount].playerWclicked = true;
     }
-    if (allRooms[clientCount].playerBclicked === true
-      && allRooms[clientCount].playerWclicked === true) {
+    if ((allRooms[clientCount].playerBclicked === true
+      && allRooms[clientCount].playerWclicked === true) || gameMode === 'AI') {
       io.in(allRooms[clientCount].room).emit('executeResumeRequest');
       allRooms[clientCount].playerBclicked = false;
       allRooms[clientCount].playerWclicked = false;
