@@ -1,38 +1,39 @@
 .container {
-  
+  /*flex-wrap: nowrap;  */
+  /*display: flex;
+  flex: 0;*/
 }
 
 .room-container {
   /*box-shadow: inset 1px 1px 10px grey, 0 0 10px grey;*/
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: flex-start;
+  flex-wrap: nowrap;
+  flex-flow: center;
+  justify-content: baseline;
+  align-items: stretch;
   width: 80vw;
   height: 26vw;
 }
 
 .grid {
-  margin: 8px;
-  padding: 5px;
-  flex: 0 0 220px;
-  height: 280px;;
+  margin: -5vw;
+  flex-flow: row;
+  padding: 5vw;
+  height: 100vw;
   /*box-shadow: inset 1px 1px 10px grey, 0 0 10px grey;*/
-  flex-grow: 1;
+  flex: 1 0 auto;
+  align-self: flex-start;
+  padding-right: auto;
+  padding-left: auto;
 }
 
 .control-box {
-  margin: 8px;
-  padding: 5px;
+  /*margin: 8px;
+  padding: 5px;*/
   /*box-shadow: inset 1px 1px 10px grey, 0 0 10px grey;*/
 }
 
-.existing-room {
-  flex: 0 0 240px;
-  overflow: scroll;
-  flex-grow: 2;
-}
 
 .room-name {
   padding-right: 8px;
@@ -40,4 +41,27 @@
 }
 
 .title-text {
+}
+
+.existing-room {
+  /*flex: 1;*/
+  /*overflow: scroll;*/
+  /*flex-grow: 1;*/
+  flex-basis: 25%;
+}
+
+.player-vs-AI {
+  flex-basis: 25%;
+}
+
+.AI-vs-AI {
+  flex-basis: 25%;
+}
+
+.global-chat {
+  flex-basis: 25%;
+}
+
+.room-list {
+  /*overflow: scroll;*/
 }

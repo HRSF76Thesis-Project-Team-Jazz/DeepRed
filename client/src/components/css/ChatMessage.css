@@ -2,12 +2,14 @@
   border-radius: 0.25vw;
   margin: 0.25vw;
   padding: 0.5vw;
+  width: 65%;
+
 }
 .white-chat {
   float: left;
   clear: both;
   text-align: left;
-  width: 90%;
+  width: 65%;
   background-color: #EEEEEE;
   color: #383838;
 }
