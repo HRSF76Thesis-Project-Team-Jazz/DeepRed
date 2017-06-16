@@ -129,4 +129,3 @@ messagesGlobal, sendMessageLocal, messagesLocal, thisUser, isWhite }) => (
 );
 
 export default Room;
-
