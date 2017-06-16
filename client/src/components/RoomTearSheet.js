@@ -1,6 +1,6 @@
 const React = require('react');
 
-const MobileTearSheet = React.createClass({
+const RoomTearSheet = React.createClass({
 
   propTypes: {
     height: React.PropTypes.number,
@@ -27,8 +27,8 @@ const MobileTearSheet = React.createClass({
         // border: 'solid 0px #d9d9d9',
         // borderBottom: 'none',
         // height: '37vw',
-        minHeight: '38vw',
-        maxHeight: '38vw',
+        minHeight: '18vw',
+        maxHeight: '18vw',
         overflow: 'auto',
       },
 
@@ -45,4 +45,4 @@ const MobileTearSheet = React.createClass({
 
 });
 
-module.exports = MobileTearSheet;
+module.exports = RoomTearSheet;
