@@ -160,7 +160,7 @@ class App extends Component {
   updateUserGameStat(arr) {
     axios.post('/api/game/updateUserGameStat', arr)
       .then((response) => {
-        // console.log('successfully sent user win lose information to server: ', response);
+        console.log('successfully sent user win lose information to server: ', response);
       })
       .catch((err) => {
         console.error('failed to send user win lose information to the server! ', err);
@@ -714,6 +714,11 @@ class App extends Component {
       snackbarOpen, timeoutOpen,
     } = this.props;
 
+    const actionStyle = {
+      margin: '3px',
+      padding: '3px',
+    };
+
     const pauseActions = [
       <FlatButton
         label="No"
@@ -804,10 +809,6 @@ class App extends Component {
       />,
     ];
 
-    const actionStyle = {
-      margin: '3px',
-      padding: '3px',
-    };
     return (
       <div className="site-wrap">
         <Header
