@@ -231,18 +231,24 @@ module.exports = (io, client) => {
 
   // control socket communications
   client.on('requestPause', (clientRoom) => {
-    io.in(clientRoom).emit('requestPauseDialogBox');
+    if (clientRoom) {
+      io.in(clientRoom).emit('requestPauseDialogBox');
+    }
   });
 
   client.on('rejectPauseRequest', (clientRoom) => {
-    io.in(clientRoom).emit('rejectPauseRequestNotification');
+    if (clientRoom) {
+      io.in(clientRoom).emit('rejectPauseRequestNotification');
+    }
   });
 
   client.on('handleRejectPauseRequest', (clientCount, id) => {
-    if (id === allRooms[clientCount].playerBid) {
-      io.in(allRooms[clientCount].room).emit('cancelPauseNotification', allRooms[clientCount].playerB);
-    } else {
-      io.in(allRooms[clientCount].room).emit('cancelPauseNotification', allRooms[clientCount].playerW);
+    if (clientCount !== undefined && id !== undefined) {
+      if (id === allRooms[clientCount].playerBid) {
+        io.in(allRooms[clientCount].room).emit('cancelPauseNotification', allRooms[clientCount].playerB);
+      } else {
+        io.in(allRooms[clientCount].room).emit('cancelPauseNotification', allRooms[clientCount].playerW);
+      }
     }
   });
 
@@ -259,8 +265,6 @@ module.exports = (io, client) => {
       allRooms[clientCount].playerBclicked = false;
       allRooms[clientCount].playerWclicked = false;
     }
-
-
   });
 
   client.on('requestResume', (clientRoom) => {
@@ -295,13 +299,17 @@ module.exports = (io, client) => {
   });
 
   client.on('onSurrender', (currentUser, clientRoom) => {
-    io.in(clientRoom).emit('announceSurrender', currentUser);
+    if (clientRoom) {
+      io.in(clientRoom).emit('announceSurrender', currentUser);
+    }
   });
 
   client.on('updateTime', (clientRoom, clientCount, timeB, timeW) => {
-    allRooms[clientCount].playerBtime = timeB;
-    allRooms[clientCount].playerWtime = timeW;
-    io.in(clientRoom).emit('sendUpdatedTime', allRooms[clientCount]);
+    if (allRooms[clientCount]) {
+      allRooms[clientCount].playerBtime = timeB;
+      allRooms[clientCount].playerWtime = timeW;
+      io.in(clientRoom).emit('sendUpdatedTime', allRooms[clientCount]);
+    }
   });
 
   // messaging communications
