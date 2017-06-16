@@ -150,8 +150,13 @@ class Board extends Component {
     const winnerActions = [
       <RaisedButton
         label="Ok"
-        secondary
+        primary
         onTouchTap={this.handleCloseWinnerDialog}
+      />,
+      <RaisedButton
+        label="Back to Lobby"
+        secondary
+        onTouchTap={this.props.goToLobby}
       />,
     ];
 
@@ -195,7 +200,7 @@ class Board extends Component {
         /> */}
         <Alert
           className="pauseRequest"
-          title={`${winner} is the Chess Master!!`}
+          title={`Congratulation, ${winner} is the Chess Master!`}
           actions={winnerActions}
           open={showWinnerDialog}
         />

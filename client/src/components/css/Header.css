@@ -7,12 +7,25 @@
   width: 100%;
 }
 
+.header td {
+  width: 33%;
+}
+
 .header .button-cell {
-  padding-top: 15px;
-  float: right;
+  text-align: right;
+  padding-right: 8.5vw;
 }
 
 .header .button {
   margin: 5px;
   padding: 5px;
+}
+
+.header .banner-img {
+  display: block;
+  margin: auto;
+}
+
+.header .drawer {
+  text-align: left;
 }

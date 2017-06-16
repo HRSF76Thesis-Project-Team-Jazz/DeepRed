@@ -74,7 +74,19 @@ export const showAIButton = () => ({
 
 export const updateGameSummary = gameSummary => ({
   type: types.UPDATE_GAME_SUMMARY,
-  gameSummary,
+  games: gameSummary.games,
+  whiteWins: gameSummary.whiteWins,
+  blackWins: gameSummary.blackWins,
+  stalemateByMoves: gameSummary.stalemateByMoves,
+  stalemateByPieces: gameSummary.stalemateByPieces,
+  stalemateNoWhiteMoves: gameSummary.stalemateNoWhiteMoves,
+  stalemateNoBlackMoves: gameSummary.stalemateNoBlackMoves,
+  end100moves: gameSummary.end100moves,
+  castleKing: gameSummary.castleKing,
+  castleQueen: gameSummary.castleQueen,
+  pawnPromotion: gameSummary.pawnPromotion,
+  enPassant: gameSummary.enPassant,
+  averageMovesPerGame: gameSummary.averageMovesPerGame,
 });
 
 export const unselectPiece = () => ({
@@ -333,6 +345,15 @@ export const turnSnackbarOn = () => ({
 export const turnSnackbarOff = () => ({
   type: types.TURN_SNACKBAR_OFF,
 });
+
+export const timeoutDialogOpen = () => ({
+  type: types.TIMEOUT_DIALOG_OPEN,
+});
+
+export const timeoutDialogClose = () => ({
+  type: types.TIMEOUT_DIALOG_CLOSE,
+});
+
 // other requests
 export const fetchGame = () => (dispatch) => {
   dispatch(requestGame());
@@ -352,4 +373,3 @@ export const sendMsgGlobal = msg => ({
   type: types.SEND_MESSAGE_GLOBAL,
   msg,
 });
-

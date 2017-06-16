@@ -1,7 +1,7 @@
 import React from 'react';
 import './css/ChatMessage.css';
 
-const ChatMessageLocal = ({ user, color, message, timeStamp }) => (
+const ChatMessageLocal = ({ color, message, timeStamp }) => (
   <div>
     <div className="chat-timeStamp">{timeStamp}</div>
     <div className={(color === 'W') ? 'chat-message-container white-chat' : (color === 'B') ? 'chat-message-container black-chat' : (color === 'red') ? 'chat-message-container red-chat' : 'chat-message-container other-chat'}>

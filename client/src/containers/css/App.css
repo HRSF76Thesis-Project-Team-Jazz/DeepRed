@@ -29,7 +29,7 @@ body {
 }
 
 .header {
-  background-color: #121212;
+  background-color: #000000;
   color: white;
   display: flex;
   top: 0vw;
@@ -87,6 +87,7 @@ body {
 .left-col {
   display: flex;
   background-color: #808080;
+  /*background-color: #009688;*/
   margin: 1vw 0px;
   /*border-radius: 2px;*/
   color: white;
@@ -121,32 +122,39 @@ body {
 }
 
 .player-top {
-  margin-left: 5px;
-  font-size: 1.5vw;
+  padding-top: 1vw;
+  font-size: 1vw;
+  text-align: center;
+  color: #263238;
 }
 
 .countdown-top-clock {
-  margin-left: 5px;
   font-size: 1.5vw;
+  text-align: center;
+  color: #F44336;
+  font-weight: bold;
 }
 
-.move-history {
+/*.move-history {
   margin-left: 5px;
   font-size: 1.5vw;
   flex-grow: 2;
-}
+}*/
 
 .countdown-bot-clock {
-  margin-left: 5px;
   font-size: 1.5vw;
+  text-align: center;
+  color: #F44336;
+  font-weight: bold;
   /*flex-grow: 1;*/
   /*height: 19px;*/
 }
 
 .player-bot {
-  margin-left: 5px;
-  font-size: 1.5vw;
-  margin-top: auto;
+  font-size: 1vw;
+  /*margin-top: auto;*/
+  text-align: center;
+  color: #263238;
 }
 
 .messageBox {

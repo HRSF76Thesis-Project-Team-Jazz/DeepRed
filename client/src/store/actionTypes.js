@@ -67,6 +67,8 @@ export const HIDE_AI_BUTTON = 'HIDE_AI_BUTTON';
 
 export const SHOW_AI_BUTTON = 'SHOW_AI_BUTTON';
 
+export const UPDATE_GAME_SUMMARY = 'UPDATE_GAME_SUMMARY';
+
 // userState action types
 export const SET_PLAYER = 'SET_PLAYER';
 
@@ -136,6 +138,10 @@ export const TOGGLE_SYSTEM_RESUME = 'TOGGLE_SYSTEM_RESUME';
 export const TURN_SNACKBAR_ON = 'TURN_SNACKBAR_ON';
 
 export const TURN_SNACKBAR_OFF = 'TURN_SNACKBAR_OFF';
+
+export const TIMEOUT_DIALOG_OPEN = 'TIMEOUT_DIALOG_OPEN';
+
+export const TIMEOUT_DIALOG_CLOSE = 'TIMEOUT_DIALOG_CLOSE';
 
 // aiState action types
 export const TURN_AI_SPINNER_OFF = 'TURN_AI_SPINNER_OFF';

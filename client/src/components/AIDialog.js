@@ -34,7 +34,7 @@ export default class AIDialog extends Component {
         >
           <LinearProgress
             mode="indeterminate"
-            // style={{color: red500}}
+            color="#F44336"
           />
         </Dialog>
       </div>

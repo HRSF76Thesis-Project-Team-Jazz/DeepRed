@@ -1,8 +1,7 @@
 const { encodePGN, saveToDB } = require('./parsePGN');
-const { gamesData } = require('./seedGames');
+const { gamesData } = require('./seedGames_3');
 
 const testStr = gamesData.replace(/[\n\r]+/g, ' ');
-// console.log(testStr);
 
 const parseFile = (str) => {
   const games = [];
@@ -38,18 +37,22 @@ const parseFile = (str) => {
 const gamesArr = parseFile(testStr);
 let goodCount = 0;
 let badCount = 0;
-let encodeResults = [];
+const encodeResults = [];
+let count = 0;
 gamesArr.forEach((str) => {
-  try {
-    encodeResults.push(encodePGN(str));
-    goodCount += 1;
-    console.log('GOOD COUNT: ', goodCount, badCount);
-  } catch (e) {
-    console.log(e);
-    badCount += 1;
-    console.log('BAD COUNT: ', goodCount, badCount);
+  if (count % 3 === 0) {
+    try {
+      encodeResults.push(encodePGN(str));
+      goodCount += 1;
+      console.log('GOOD COUNT: ', goodCount, badCount);
+    } catch (e) {
+      console.log(e);
+      badCount += 1;
+      console.log('BAD COUNT: ', goodCount, badCount);
+    }
   }
+  count += 1;
 });
 for (let i = 0; i < encodeResults.length; i += 1) {
-  setTimeout(() => saveToDB(encodeResults[i]), i * 2500);
+  setTimeout(() => saveToDB(encodeResults[i]), i * 3000);
 }

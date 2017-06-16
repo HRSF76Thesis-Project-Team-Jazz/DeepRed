@@ -2,17 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 class Clock extends Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
     const { minB, minW, secB, secW } = this.props;
-
     return (
-      <div className="clock-class" >
-        <p>
-          {this.props.color === 'Black' ? (`0${minB}`).slice(-2) : (`0${minW}`).slice(-2)} : {this.props.color === 'Black' ? (`0${secB}`).slice(-2) : (`0${secW}`).slice(-2)}
-        </p>
+      <div>
+        {this.props.color === 'Black' ? (`0${minB}`).slice(-2) : (`0${minW}`).slice(-2)} : {this.props.color === 'Black' ? (`0${secB}`).slice(-2) : (`0${secW}`).slice(-2)}
       </div>
     );
   }

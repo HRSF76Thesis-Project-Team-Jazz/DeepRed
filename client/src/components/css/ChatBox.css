@@ -5,6 +5,8 @@
 .message {
   padding-top: 2px;
 }
-.text-field {
+.textfield {
   margin-left: 1vw;
+  font-size: 2vw;
+  line-height: 1vw;
 }
