@@ -47,6 +47,7 @@ const config = {
     },
     inline: true,
     hot: true,
+    historyApiFallback: true,
     proxy: {
       '/api': 'http://localhost:3000',
     },

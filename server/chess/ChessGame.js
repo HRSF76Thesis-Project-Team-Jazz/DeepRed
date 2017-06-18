@@ -314,7 +314,6 @@ class ChessGame {
           //     });
           //   }
           // }
-
       } else if (isStalemateWhite(this.board)) {
         this.winner = 'D';
 

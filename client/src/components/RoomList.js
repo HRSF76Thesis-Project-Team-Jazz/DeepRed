@@ -5,11 +5,11 @@ import './css/Room.css';
 const RoomList = ({ allRooms, handleJoinRoomAsWhite, handleJoinRoomAsBlack }) => (
   <div className="room-list">
     {
-      allRooms.map((room) => {
+      allRooms.map((room, i) => {
         if (room !== null) {
           return (
             <table className="room-listing">
-              <thead>
+              <thead index={i}>
                 <th className="room-name" colSpan="2">
                   {room.room[0].toUpperCase() + room.room.substring(1)}
                 </th>

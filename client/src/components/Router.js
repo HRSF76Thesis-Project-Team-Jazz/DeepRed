@@ -4,6 +4,8 @@ import { Switch, Route } from 'react-router-dom';
 import Settings from './Settings';
 import App from '../containers/App';
 import AIvAI from '../containers/AIvAI';
+import AboutPage from '../containers/AboutPage';
+import ShameBoard from '../containers/ShameBoard';
 
 const Router = () => (
   <div>
@@ -13,6 +15,12 @@ const Router = () => (
       </Route>
       <Route path="/ai">
         <AIvAI />
+      </Route>
+      <Route path="/about">
+        <AboutPage />
+      </Route>
+      <Route path="/shame">
+        <ShameBoard />
       </Route>
       <Route path="/settings">
         <Settings />

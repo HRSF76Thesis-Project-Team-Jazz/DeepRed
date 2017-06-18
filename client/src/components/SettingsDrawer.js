@@ -10,6 +10,8 @@ import Pause from 'material-ui/svg-icons/av/pause';
 import PlayArrow from 'material-ui/svg-icons/av/play-arrow';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
+import Group from 'material-ui/svg-icons/social/group';
+import Error from 'material-ui/svg-icons/alert/error';
 
 import './css/SettingsDrawer.css';
 
@@ -102,6 +104,22 @@ class SettingsDrawer extends Component {
               leftIcon={<ActionHome />}
             >
               Lobby
+            </MenuItem>
+          </Link>
+          <Link to="/shame">
+            <MenuItem
+              onTouchTap={this.handleClose}
+              leftIcon={<Error />}
+            >
+              Shame board
+            </MenuItem>
+          </Link>
+          <Link to="/about">
+            <MenuItem
+              onTouchTap={this.handleClose}
+              leftIcon={<Group />}
+            >
+              About
             </MenuItem>
           </Link>
           <Link to="/login">
