@@ -56,7 +56,7 @@ describe('【ChessEval】 Evaluate value of pieces: ', () => {
     ];
 
     it('should return have a different piece value during end game', () => {
-      console.log(newBoard);
+      // console.log(newBoard);
       expect(pieceScore(newBoard)).to.deep.eql({
         P: 3.75,
         N: 9.25,
@@ -101,7 +101,7 @@ describe('【ChessEval】 Evaluate value of pieces: ', () => {
     });
 
   }); // end of piesScore
-  
+
   describe('Compute value of pieces under attack for each player: ', () => {
     it('piecesAttacked should exist and should be function', () => {
       expect(piecesAttacked).to.be.a('function');

@@ -266,7 +266,7 @@ module.exports = (io, client) => {
       if (id === allRooms[clientCount].playerWid) {
         allRooms[clientCount].playerWclicked = true;
       }
-    if ((allRooms[clientCount].playerBclicked === true
+      if ((allRooms[clientCount].playerBclicked === true
       && allRooms[clientCount].playerWclicked === true) || gameMode === 'AI') {
         io.in(allRooms[clientCount].room).emit('executePauseRequest');
         allRooms[clientCount].playerBclicked = false;
@@ -312,7 +312,6 @@ module.exports = (io, client) => {
         allRooms[clientCount].playerWclicked = false;
       }
     }
-
   });
 
   client.on('onSurrender', (currentUser, clientRoom) => {
@@ -332,7 +331,6 @@ module.exports = (io, client) => {
   // messaging communications
   client.on('messageLocal', (msg, count) => {
     let user = '';
-    if (allRooms[count]) {
       for (let key in allRooms[count]) {
         if (allRooms[count][key] === client.id) {
           if (key === 'playerWid') {
@@ -342,13 +340,11 @@ module.exports = (io, client) => {
           }
         }
       }
-      io.in(allRooms[count].room).emit('messageLocal', msg);
-    }
+    io.in(allRooms[count].room).emit('messageLocal', msg);
   });
 
   client.on('messageGlobal', (msg, count) => {
     let user = '';
-    if (allRooms[count]) {
       for (let key in allRooms[count]) {
         if (allRooms[count][key] === client.id) {
           if (key === 'playerWid') {
@@ -358,7 +354,6 @@ module.exports = (io, client) => {
           }
         }
       }
-      io.emit('messageGlobal', msg);
-    }
+    io.emit('messageGlobal', msg);
   });
 };
