@@ -1,7 +1,7 @@
 # DeepRed: Machine Learning Chess Computer
 
 # Overview of Deep Red
-- Deep Red is a chess computer that learns to play chess and improve its performance through experience
+- Deep Red is a machine learning chess computer that learns to play chess and improve its performance through experience
 - Initially, Deep Red's only capability is to evaluate all legal and valid moves given a current board state
   - Deep Red has no experience and no preference or bias as to which move it will choose
 - Deep Red begins creating a bias/preference from experience through various sources:
@@ -9,6 +9,8 @@
   2. Humans playing against Deep Red (player vs. computer mode)
   3. Humans playing against other humans (game histories and outcomes stored for games played in Player vs Player mode)
   4. Computer vs. computer mode (Deep Red vs. Deep Red or 3rd party chess APIs)
+- If Deep Red has not 
+
 
 # Move Decisions (from Experience / Known Choices)
 - **Deep Red chooses its move based on its experience**: Deep Red chooses the previously known / learned move that has resulted in the best possible outcome
@@ -25,12 +27,25 @@
 ![](images/deepRed-learning.png?raw=true)
 
 # Data / Knowledge Representation
-- Deep Red's knowledge base is stored as a tree, where each node represents a chess move
+
+![](images/data_tree.png?raw=true)
+
+- Deep Red's knowledge base is stored as a decision tree, where each node represents a chess move
 - A full game consist of a full path from root to terminal node, with each node representing each sequential move of that game
 - Existing child nodes represent previously "experienced" or known nodes of possible moves
 - Terminal nodes (leaves) represent final moves that determined the outcome of the game
 - Each node keeps a store of the summary of all the outcomes (leaves) for that particular sub tree
-- Upon completion of a game, if any unknown moves were encountered, new nodes and a new path will be created in the tree, with each node in the path of the full game being updated to reflect the new experience
+- Upon completion of a game, if any unknown moves were encountered, new nodes and a new path will be created in the tree, with each node in the path of the full game being updated (or added) to reflect the new experience
+
+## Database Efficiency
+- **Move selection**: since each of the nodes store all of the cumulative game results for each subtree, each move selection only needs to query the current children of the current node: **O(n)**.
+- **Data updates**: at the end of each game, each node on the path of that game is updated.  Length of a game is approximately **log n**, while querying for each node update is **O(n)**, resulting in an **O(n log n)** time complexity.
+
+## Database Sharding
+- Deep Red's database is partitioned into two tables, white moves vs. black moves
+- When Deep Red is the white player, Deep Red only ever needs to query the white moves table.  And vice versa, when Deep Red is black, it only needs to query the black moves table.
+- This creates a natural partition in the data, and allows for Deep Red to reduce the size of the table it is querying by approximately half.
+
 
 # Deep Red Move Notation
 - Deep Red generates an object of all available moves based on an input board and game state.
@@ -65,22 +80,22 @@
 # Data Normalization and Importing
 - One initial source of experience for Deep Red is to import previously played games outside of Deep Red.  The standard convention for recording historical chess games are as follows:
 
-  **Portable Game Notation**
+**Portable Game Notation**
 
-  ```
-  1.e4 e5 2.Nf3 Nc6 3.Bb5 Nf6 4.O-O Bd6 5.Bxc6 dxc6 6.d4 Bg4
-  7.Qd3 Bxf3 8.gxf3 Nh5 9.Nc3 exd4 10.Ne2 Qh4 11.Ng3 O-O 12.Qxd4
-  Rfd8 13.Qc3 Nxg3 14.fxg3 Bxg3 15.hxg3 Qxg3+ 16.Kh1 Rd6 17.Qe1
-  Qh3+ 18.Kg1 Rg6+ 19.Kf2 Rg2+ 20.Ke3 f5 21.e5 Rxc2 22.Bd2 Rd8
-  23.Bc3 f4 24.Kxf4 Qh6+ 25.Ke4 Qg6+ 26.Kf4 Qh6+ 27.Ke4 Rh2
-  28.Rd1 Rh4+ 29.f4 Qg6+ 30.Ke3 Rh3+ 31.Rf3 Rxf3+ 32.Kxf3 Rxd1
-  33.Qe2 Rd3+ 0-1
-  ```
+```
+1.e4 e5 2.Nf3 Nc6 3.Bb5 Nf6 4.O-O Bd6 5.Bxc6 dxc6 6.d4 Bg4
+7.Qd3 Bxf3 8.gxf3 Nh5 9.Nc3 exd4 10.Ne2 Qh4 11.Ng3 O-O 12.Qxd4
+Rfd8 13.Qc3 Nxg3 14.fxg3 Bxg3 15.hxg3 Qxg3+ 16.Kh1 Rd6 17.Qe1
+Qh3+ 18.Kg1 Rg6+ 19.Kf2 Rg2+ 20.Ke3 f5 21.e5 Rxc2 22.Bd2 Rd8
+23.Bc3 f4 24.Kxf4 Qh6+ 25.Ke4 Qg6+ 26.Kf4 Qh6+ 27.Ke4 Rh2
+28.Rd1 Rh4+ 29.f4 Qg6+ 30.Ke3 Rh3+ 31.Rf3 Rxf3+ 32.Kxf3 Rxd1
+33.Qe2 Rd3+ 0-1
+```
 
-  **Deep Red: Move Notation**
-  - PGN: `1. e4`
-  - Deep Red Notation: `[ '64', '44' ]`
-  - Board Representation: 
+**Deep Red: Move Notation**
+- PGN: `1. e4`
+- Deep Red Notation: `[ '64', '44' ]`
+- Board Representation: 
 
 | a | b | c | d | e | f | g | h |
 | --|---|---|---|:---:|---|---|---|
@@ -93,10 +108,10 @@
 | WP  |  WP  |  WP  |  WP  |  --  |  WP  |  WP  |  WP  |
 | WR  |  WN  |  WB  |  WQ  |  WK  |  WB  |  WN  |  WR  |
 
-  - Another example: castling
-  - PGN: `O-O`
-  - Deep Red Notation: `{ move: 'castle', color: 'W', side: 'O-O' }`
-  - Board Representation: 
+- Another example: castling
+- PGN: `O-O`
+- Deep Red Notation: `{ move: 'castle', color: 'W', side: 'O-O' }`
+- Board Representation: 
 
 **Before Move**
 
@@ -110,7 +125,6 @@
  --  |  --  |  --  |  --  |  --  |  WN  |  --  |  -- 
  WP  |  WP  |  WP  |  WP  |  --  |  WP  |  WP  |  WP 
  WR  |  WN  |  WB  |  WQ  |  `WK`  |  --  |  --  |  `WR` 
----
 
 **After Move**
 
@@ -124,9 +138,8 @@
  --  |  --  |  --  |  --  |  --  |  WN  |  --  |  -- 
  WP  |  WP  |  WP  |  WP  |  --  |  WP  |  WP  |  WP 
  WR  |  WN  |  WB  |  WQ  |  --  |  `WR`  |  `WK`  |  -- 
----
 
--- In order to save game data to its database, Deep Red parses historical game information in PGN format and processes it into Deep Red notation format.
+- In order to save game data to its database, Deep Red parses historical game information in PGN format and processes it into normalized Deep Red notation format.
 
 # Database: Game State/Board Notation
 
@@ -192,5 +205,47 @@ White Wins | cumulative number of white wins in the subtree of this move
 Black Wins | (same as above for black)
 Statements | (same as above, for stalemates)
 
+## Data Compression
+- For added data efficiency, Deep Red deploys a lossless data compression algorithm that further reduces the board state by an average of 40-45%
+- Data is compressed using an algorithm analagous to Huffman coding, optimized for Deep Red.  Repeated characters are compressed into a single character representations using as hash map of all possible repeat character combinations possible on the chess board.
+
+**Example Hash Map Entries¹**
+
+Board Elements | Character Representation | Hashed Representation
+---|---|---
+8 black pawns | aaaaaaaa | P
+32 spaces | 0000000000000000 | v
+8 white pawns | 11111111 | H
+
+1) Example: starting board configuration, where there are 16 consecutive spaces in the middle of the board, and 8 consecutive pawns for each color
+
+**1) Original Starting Board Representation**
+
+```js
+board = [
+    ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
+    ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+    ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
+  ];
+```
+
+**2) Board Transcribed into Characters**
+
+```js
+board = 'dbcefcbdaaaaaaaa000000000000000000000000000000001111111142356324';
+```
+
+**3) Board Encoded**
+
+```js
+board = '75689657PvH20134102';
+```
+
+- *Encoded board results in 70% data compression of character transcribed representation*
 
 
