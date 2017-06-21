@@ -354,6 +354,12 @@ export const timeoutDialogClose = () => ({
   type: types.TIMEOUT_DIALOG_CLOSE,
 });
 
+// infoState actions
+export const updateLoserList = loserList => ({
+  type: types.UPDATE_LOSER_LIST,
+  loserList,
+});
+
 // other requests
 export const fetchGame = () => (dispatch) => {
   dispatch(requestGame());

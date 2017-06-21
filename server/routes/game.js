@@ -64,10 +64,54 @@ router.route('/conversation')
     });
   });
 
-  router.route('/errorMessage')
+router.route('/errorMessage')
     .post((req, res) => {
       // console.log('req: ', req.body.input);
       res.send(errorBot(req.body.input));
+    });
+
+const fakeData = [
+  {
+    name: 'Caleb Cordry',
+    email: 'calebcordry@gmail.com',
+    count: 11,
+  },
+  {
+    name: 'Carlo Las Marias',
+    email: 'carlom@gmail.com',
+    count: 3,
+  },
+  {
+    name: 'Ryan Chow',
+    email: 'chowryan@gmail.com',
+    count: 2,
+  },
+  {
+    name: 'Shawn Feng',
+    email: 'shawnsfeng@gmail.com',
+    count: 1,
+  },
+  {
+    name: 'Jason Yu',
+    email: 'jaycode1@gmail.com',
+    count: 6,
+  },
+  {
+    name: 'Karel Luwena',
+    email: 'karell@gmail.com',
+    count: 7,
+  },
+  {
+    name: 'Max Bras',
+    email: 'mb@gmail.com',
+    count: 3,
+  },
+];
+
+router.route('/getLoserList')
+    .get((req, res) => {
+      // query database for all the loser;
+      res.send(fakeData);
     });
 
 module.exports = router;
