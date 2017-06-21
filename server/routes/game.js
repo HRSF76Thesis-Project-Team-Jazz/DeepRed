@@ -106,6 +106,26 @@ const fakeData = [
     email: 'mb@gmail.com',
     count: 3,
   },
+  {
+    name: 'Ivana He',
+    email: 'ivanah@gmail.com',
+    count: 1,
+  },
+  {
+    name: 'Yvonne Zhang',
+    email: 'yvonne1994@gmail.com',
+    count: 3,
+  },
+  {
+    name: 'Tariq West',
+    email: 'tariqwest@gmail.com',
+    count: 5,
+  },
+  {
+    name: 'Edward Kim',
+    email: 'mredwardkim@gmail.com',
+    count: 1,
+  },
 ];
 
 router.route('/getLoserList')

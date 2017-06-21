@@ -1,5 +1,21 @@
 .shame-board {
-  width: 80vw;
-  margin: 20px;
-  padding: 5px;
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 83vw;
+}
+
+.shame-board-title {
+  text-align: center;
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: auto;
+  width: 83vw;
+  height: 50px;
+}
+
+.title {
+  color: #B71C1C;
+  font-size: 30px;
 }

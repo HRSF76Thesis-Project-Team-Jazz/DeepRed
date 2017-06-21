@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import RaisedButton from 'material-ui/RaisedButton';
+import Paper from 'material-ui/Paper';
 import {
   Table,
   TableBody,
@@ -14,6 +15,7 @@ import {
 import { updateLoserList } from '../store/actions';
 
 // Components
+import Header from '../components/Header';
 import './css/ShameBoard.css';
 
 class ShameBoard extends Component {
@@ -55,30 +57,42 @@ class ShameBoard extends Component {
   render() {
     const { loserList } = this.props;
     return (
-      <div className="shame-board">
-        <Table>
-          <TableHeader displaySelectAll={false} adjustForCheckbox={false} >
-            <TableRow>
-              <TableHeaderColumn>#</TableHeaderColumn>
-              <TableHeaderColumn>Name</TableHeaderColumn>
-              <TableHeaderColumn>Email</TableHeaderColumn>
-              <TableHeaderColumn>Lost count</TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody displayRowCheckbox={false} >
-            {
-            loserList.map((person, rowIndex) => (
-              <TableRow key={Math.random()} >
-                <TableRowColumn>{rowIndex + 1}</TableRowColumn>
-                <TableRowColumn>{person.name}</TableRowColumn>
-                <TableRowColumn>{person.email}</TableRowColumn>
-                <TableRowColumn>{person.count}</TableRowColumn>
-              </TableRow>
-              ),
-            )
-            }
-          </TableBody>
-        </Table>
+      <div>
+        <div className="shame-board-header">
+          <Header />
+        </div>
+        <div className="shame-board-title">
+          <Paper zDepth={4}>
+            <p className="title">Wall of Shame</p>
+          </Paper>
+        </div>
+        <div className="shame-board">
+          <Paper zDepth={4}>
+            <Table>
+              <TableHeader displaySelectAll={false} adjustForCheckbox={false} >
+                <TableRow>
+                  <TableHeaderColumn>#</TableHeaderColumn>
+                  <TableHeaderColumn>Fullname</TableHeaderColumn>
+                  <TableHeaderColumn>Email address</TableHeaderColumn>
+                  <TableHeaderColumn>Lost game count</TableHeaderColumn>
+                </TableRow>
+              </TableHeader>
+              <TableBody displayRowCheckbox={false} >
+                {
+                loserList.map((person, rowIndex) => (
+                  <TableRow key={Math.random()} >
+                    <TableRowColumn>{rowIndex + 1}</TableRowColumn>
+                    <TableRowColumn>{person.name}</TableRowColumn>
+                    <TableRowColumn>{person.email}</TableRowColumn>
+                    <TableRowColumn>{person.count}</TableRowColumn>
+                  </TableRow>
+                  ),
+                )
+                }
+              </TableBody>
+            </Table>
+          </Paper>
+        </div>
       </div>
 
 
