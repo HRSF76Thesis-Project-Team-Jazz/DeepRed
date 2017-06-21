@@ -147,3 +147,6 @@ export const TIMEOUT_DIALOG_CLOSE = 'TIMEOUT_DIALOG_CLOSE';
 export const TURN_AI_SPINNER_OFF = 'TURN_AI_SPINNER_OFF';
 
 export const TURN_AI_SPINNER_ON = 'TURN_AI_SPINNER_ON';
+
+// infoState action types
+export const UPDATE_LOSER_LIST = 'UPDATE_LOSER_LIST';

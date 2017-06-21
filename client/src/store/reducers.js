@@ -592,12 +592,28 @@ const controlState = (state = Immutable({
       return Immutable({
         ...state,
         timeoutOpen: false,
-      })
+      });
     }
     default:
       return state;
   }
 };
+
+const infoState = (state = Immutable({
+  loserList: [],
+}), action) => {
+  switch (action.type) {
+    case types.UPDATE_LOSER_LIST: {
+      return Immutable({
+        ...state,
+        loserList: action.loserList,
+      });
+    }
+    default:
+      return state;
+  }
+};
+
 
 const aiState = (state = Immutable({
   game: [],
@@ -669,6 +685,7 @@ const rootReducer = combineReducers({
   squareState,
   controlState,
   aiState,
+  infoState,
 });
 
 export default rootReducer;
