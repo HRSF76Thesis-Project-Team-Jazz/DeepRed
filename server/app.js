@@ -26,5 +26,10 @@ app.use('/', routes.auth);
 app.use('/api', routes.api);
 app.use('/api/game', routes.game);
 app.use('/api/profiles', routes.profiles);
+app.get('*.js', (req, res, next) => {
+  req.url += '.gz';
+  res.set('Content-Encoding', 'gzip');
+  next();
+});
 
 module.exports = app;
