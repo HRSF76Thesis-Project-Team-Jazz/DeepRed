@@ -73,57 +73,46 @@ router.route('/errorMessage')
 const fakeData = [
   {
     name: 'Caleb Cordry',
-    email: 'calebcordry@gmail.com',
     count: 11,
   },
   {
     name: 'Carlo Las Marias',
-    email: 'carlom@gmail.com',
     count: 3,
   },
   {
     name: 'Ryan Chow',
-    email: 'chowryan@gmail.com',
     count: 2,
   },
   {
     name: 'Shawn Feng',
-    email: 'shawnsfeng@gmail.com',
     count: 1,
   },
   {
     name: 'Jason Yu',
-    email: 'jaycode1@gmail.com',
     count: 6,
   },
   {
     name: 'Karel Luwena',
-    email: 'karell@gmail.com',
     count: 7,
   },
   {
     name: 'Max Bras',
-    email: 'mb@gmail.com',
     count: 3,
   },
   {
     name: 'Ivana He',
-    email: 'ivanah@gmail.com',
     count: 1,
   },
   {
     name: 'Yvonne Zhang',
-    email: 'yvonne1994@gmail.com',
     count: 3,
   },
   {
     name: 'Tariq West',
-    email: 'tariqwest@gmail.com',
     count: 5,
   },
   {
     name: 'Edward Kim',
-    email: 'mredwardkim@gmail.com',
     count: 1,
   },
 ];

@@ -1,6 +1,55 @@
+.banner {
+  text-align: center;
+  font-size: 2.8vw;
+  margin-bottom: 20px;
+  font-family: "OutputSans";
+}
 .circular-pic {
-  width: 300px;
-  height: 300px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   border: 1px;
+}
+
+/*#carlo-pic:hover {
+  background-image: url('/assets/carlo2.jpg');
+}
+
+#jason-pic:hover {
+  background-image: url('/assets/jason2.jpg');
+}
+
+#ryan-pic:hover {
+  background-image: url('/assets/ryan2.jpg');
+}
+
+#shawn-pic:hover {
+  background-image: url('/assets/shawn2.png');
+}*/
+
+.name-title {
+  margin-top: 5px;
+  text-align: center;
+  width:25%;
+  font-family: "OutputSans";
+}
+
+.table-layout {
+  text-align: center;
+  table-layout:fixed;
+  width:100%;
+  overflow: hidden;
+}
+
+
+.table-col {
+  width:25%;
+  margin-bottom: 5px;
+}
+
+.about-paper {
+  width: 83vw;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
 }
