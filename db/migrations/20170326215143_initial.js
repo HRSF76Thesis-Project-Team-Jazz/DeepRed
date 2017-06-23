@@ -52,6 +52,7 @@ exports.down = (knex, Promise) => {
   return Promise.all([
     knex.schema.dropTable('auths'),
     knex.schema.dropTable('profiles'),
+    knex.schema.dropTable('AIstats'),
     knex.schema.dropTable('DeepRed_WhiteMoves'),
     knex.schema.dropTable('DeepRed_BlackMoves'),
   ]);
