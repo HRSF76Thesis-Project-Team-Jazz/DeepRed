@@ -18,7 +18,7 @@ class AboutPage extends Component {
   render() {
     return (
       <div>
-        <Header />
+        <Header className="header" />
         <Paper className="about-paper" zDepth={4}>
           <div className="about-us">
             <div className="banner">
