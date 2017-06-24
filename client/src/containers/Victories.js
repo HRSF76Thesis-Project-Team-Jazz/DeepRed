@@ -30,13 +30,7 @@ class Victories extends Component {
   getLoserList() {
     const { dispatch } = this.props;
 
-    const options = {
-      method: 'GET',
-      // headers: {
-      //   Accept: 'application/json',
-      //   'Content-Type': 'application/json',
-      // },
-    };
+    const options = { method: 'GET' };
 
     fetch('api/game/getLoserList', options)
       .then(result => result.json())
