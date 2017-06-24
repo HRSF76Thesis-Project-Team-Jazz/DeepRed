@@ -54,7 +54,10 @@ class Victories extends Component {
         <div className="victories-board-title">
           <Paper zDepth={4}>
             <p className="title">DeepRed Victories</p>
-            <p className="victories-message">Thank you to all players and supporters who have helped to train and validate Deep Red.</p>
+            <p className="victories-message">
+              Thank you to all players and supporters who have helped
+              to train and validate Deep Red.
+            </p>
           </Paper>
         </div>
         <div className="victories-board">
