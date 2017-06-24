@@ -100,7 +100,7 @@
 
 .group-pic {
   border:2px solid #B71C1C;
-  border-radius: 2%;
+  border-radius: 5px;
   margin: 15px;
   width: 65vw;
   height: 45vw;
@@ -109,4 +109,9 @@
 .group-picture-item {
   margin-left: auto;
   margin-right: auto;
+}
+
+.meet-the-team {
+  position: relative;
+  top: 75px;
 }

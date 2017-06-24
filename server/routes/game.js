@@ -77,15 +77,15 @@ const fakeData = [
   },
   {
     name: 'Carlo Las Marias',
-    count: 3,
-  },
-  {
-    name: 'Ryan Chow',
     count: 2,
   },
   {
+    name: 'Ryan Chow',
+    count: 3,
+  },
+  {
     name: 'Shawn Feng',
-    count: 1,
+    count: 5,
   },
   {
     name: 'Jason Yu',
@@ -96,7 +96,7 @@ const fakeData = [
     count: 7,
   },
   {
-    name: 'Max Bras',
+    name: 'Max Braz',
     count: 3,
   },
   {

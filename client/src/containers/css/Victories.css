@@ -1,0 +1,28 @@
+.victories-board {
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70vw;
+  position: relative;
+  top: 100px;
+}
+
+.victories-board-title {
+  text-align: center;
+  padding: 10px;
+  margin: 10px auto;
+  width: 70vw;
+  height: 100px;
+  position: relative;
+  top: 75px;
+}
+
+.title {
+  color: #B71C1C;
+  font-size: 30px;
+}
+
+.victories-message {
+  margin: 10px;
+  font-style: italic;
+}

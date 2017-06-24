@@ -5,7 +5,7 @@ import Settings from './Settings';
 import App from '../containers/App';
 import AIvAI from '../containers/AIvAI';
 import AboutPage from './AboutPage';
-import ShameBoard from '../containers/ShameBoard';
+import Victories from '../containers/Victories';
 
 const Router = () => (
   <div>
@@ -19,8 +19,8 @@ const Router = () => (
       <Route path="/about">
         <AboutPage />
       </Route>
-      <Route path="/shame">
-        <ShameBoard />
+      <Route path="/victories">
+        <Victories />
       </Route>
       <Route path="/settings">
         <Settings />

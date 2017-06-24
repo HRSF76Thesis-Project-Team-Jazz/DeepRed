@@ -37,11 +37,6 @@ class AboutPage extends Component {
       <div>
         <Header className="header" />
         <Paper className="about-paper" zDepth={4}>
-          <div className="about-us">
-            <div className="banner">
-              <span>About Us</span>
-            </div>
-          </div>
           <hr className="horizontal-line" />
           <div className="meet-the-team">
             <div className="banner">
@@ -139,7 +134,7 @@ class AboutPage extends Component {
                       <SocialIcon
                         color="#B71C1C"
                         network="email"
-                        url="mailto:carlom@gmail.com?subject=Comments about DeepRed"
+                        url="mailto:carlolm@gmail.com?subject=Comments about DeepRed"
                       />
                     </span>
                   </td>
