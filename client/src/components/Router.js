@@ -4,7 +4,7 @@ import { Switch, Route } from 'react-router-dom';
 import Settings from './Settings';
 import App from '../containers/App';
 import AIvAI from '../containers/AIvAI';
-import AboutPage from '../containers/AboutPage';
+import AboutPage from './AboutPage';
 import ShameBoard from '../containers/ShameBoard';
 
 const Router = () => (
