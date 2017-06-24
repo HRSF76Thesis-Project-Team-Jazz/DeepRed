@@ -72,14 +72,6 @@ class SettingsDrawer extends Component {
           open={this.state.open}
           onRequestChange={open => this.setState({ open })}
         >
-          <Link to="/ai">
-            <MenuItem
-              onTouchTap={this.handleClose}
-              leftIcon={<Android />}
-            >
-              AI vs AI
-            </MenuItem>
-          </Link>
           <MenuItem
             onTouchTap={this.handlePauseClose}
             leftIcon={<Pause />}
@@ -104,6 +96,14 @@ class SettingsDrawer extends Component {
               leftIcon={<ActionHome />}
             >
               Lobby
+            </MenuItem>
+          </Link>
+          <Link to="/ai">
+            <MenuItem
+              onTouchTap={this.handleClose}
+              leftIcon={<Android />}
+            >
+              AI vs AI
             </MenuItem>
           </Link>
           <Link to="/shame">

@@ -63,7 +63,7 @@ class ShameBoard extends Component {
         </div>
         <div className="shame-board-title">
           <Paper zDepth={4}>
-            <p className="title">Wall of Shame</p>
+            <p className="title">DeepRed's victory</p>
           </Paper>
         </div>
         <div className="shame-board">
@@ -73,7 +73,6 @@ class ShameBoard extends Component {
                 <TableRow>
                   <TableHeaderColumn>#</TableHeaderColumn>
                   <TableHeaderColumn>Fullname</TableHeaderColumn>
-                  <TableHeaderColumn>Email address</TableHeaderColumn>
                   <TableHeaderColumn>Lost game count</TableHeaderColumn>
                 </TableRow>
               </TableHeader>
@@ -83,7 +82,6 @@ class ShameBoard extends Component {
                   <TableRow key={Math.random()} >
                     <TableRowColumn>{rowIndex + 1}</TableRowColumn>
                     <TableRowColumn>{person.name}</TableRowColumn>
-                    <TableRowColumn>{person.email}</TableRowColumn>
                     <TableRowColumn>{person.count}</TableRowColumn>
                   </TableRow>
                   ),

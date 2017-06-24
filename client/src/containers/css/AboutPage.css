@@ -1,6 +1,128 @@
+.header {
+  position: fixed;
+}
+
+.banner {
+  text-align: center;
+  font-size: 2.8vw;
+  margin-bottom: 20px;
+  margin-top: 15px;
+  font-family: "OutputSans";
+  font-weight: bold;
+
+}
 .circular-pic {
-  width: 300px;
-  height: 300px;
+  width: 230px;
+  height: 230px;
   border-radius: 50%;
   border: 1px;
+  border:5px solid #B71C1C;
+}
+
+/*#carlo-pic:hover {
+  background-image: url('/assets/carlo2.jpg');
+}
+
+#jason-pic:hover {
+  background-image: url('/assets/jason2.jpg');
+}
+
+#ryan-pic:hover {
+  background-image: url('/assets/ryan2.jpg');
+}
+
+#shawn-pic:hover {
+  background-image: url('/assets/shawn2.png');
+}*/
+
+.name-title {
+  margin-top: 5px;
+  text-align: center;
+  width:25%;
+  font-family: "OutputSans";
+}
+
+.table-layout {
+  text-align: center;
+  table-layout:fixed;
+  width:100%;
+  overflow: hidden;
+}
+
+
+.table-col {
+  width:25%;
+  margin-bottom: 25px;
+}
+
+.about-paper {
+  width: 83vw;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.horizontal-line {
+  width: 75vw;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.social-link {
+  margin-top: 25px;
+  margin-bottom: 25px;
+  text-align: center;
+  padding-bottom: 10px;
+  width:100%;
+  font-family: "OutputSans";
+}
+
+.social-icon {
+  padding: 10px;
+}
+
+.social-bar {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.role {
+  font-size: 1.3vw;
+  padding: 5px;
+}
+
+.name {
+  font-size: 1.5vw;
+  padding: 5px;
+  font-weight: bold;
+}
+
+.spacer {
+  display: block;
+}
+
+.spacer-box {
+  display: block;
+  height: 50px;
+}
+
+.spacer-item {
+  height:15px;
+}
+
+.group-picture {
+  text-align: center;
+}
+
+.group-pic {
+  border:5px solid #B71C1C;
+  border-radius: 2%;
+  margin: 15px;
+  width: 65vw;
+  height: 45vw;
+}
+
+.group-picture-item {
+  margin-left: auto;
+  margin-right: auto;
 }

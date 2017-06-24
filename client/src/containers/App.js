@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
+import { Link } from 'react-router-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
 import FlatButton from 'material-ui/FlatButton';
@@ -81,6 +82,8 @@ class App extends Component {
     this.handleConfirmSurrenderOpen = this.handleConfirmSurrenderOpen.bind(this);
     this.handleLobbyOpen = this.handleLobbyOpen.bind(this);
     this.goToLobby = this.goToLobby.bind(this);
+    this.goToAbout = this.goToAbout.bind(this);
+    this.goToShame = this.goToShame.bind(this);
     this.onTimeOut = this.onTimeOut.bind(this);
   }
 
@@ -547,6 +550,14 @@ class App extends Component {
     window.location = '/';
   }
 
+  goToAbout() {
+    window.location = '/about';
+  }
+
+  goToShame() {
+    window.location = '/shame';
+  }
+
   handleSurrender() {
     const { dispatch } = this.props;
     dispatch(confirmSurrenderDialogOpen());
@@ -771,10 +782,22 @@ class App extends Component {
 
     const selectRoomActions = [
       <RaisedButton
-        label="Log out"
+        label="About Us"
         backgroundColor="#F44336"
-        labelColor="white"
+        labelColor="#FFF"
         keyboardFocused
+        onTouchTap={this.goToAbout}
+      />,
+      <RaisedButton
+        label="Wall of Shame"
+        backgroundColor="#F44336"
+        labelColor="#FFF"
+        onTouchTap={this.goToShame}
+      />,
+      <RaisedButton
+        label="Log Out"
+        backgroundColor="#F44336"
+        labelColor="#FFF"
         onTouchTap={this.closeDialog}
       />,
     ];
