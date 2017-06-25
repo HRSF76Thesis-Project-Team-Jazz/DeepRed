@@ -83,7 +83,7 @@ class App extends Component {
     this.handleLobbyOpen = this.handleLobbyOpen.bind(this);
     this.goToLobby = this.goToLobby.bind(this);
     this.goToAbout = this.goToAbout.bind(this);
-    this.goToShame = this.goToShame.bind(this);
+    this.goToVictories = this.goToVictories.bind(this);
     this.onTimeOut = this.onTimeOut.bind(this);
   }
 
@@ -554,8 +554,8 @@ class App extends Component {
     window.location = '/about';
   }
 
-  goToShame() {
-    window.location = '/shame';
+  goToVictories() {
+    window.location = '/victories';
   }
 
   handleSurrender() {
@@ -789,10 +789,10 @@ class App extends Component {
         onTouchTap={this.goToAbout}
       />,
       <RaisedButton
-        label="Wall of Shame"
+        label="Victories"
         backgroundColor="#F44336"
         labelColor="#FFF"
-        onTouchTap={this.goToShame}
+        onTouchTap={this.goToVictories}
       />,
       <RaisedButton
         label="Log Out"

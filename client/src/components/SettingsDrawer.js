@@ -106,12 +106,12 @@ class SettingsDrawer extends Component {
               AI vs AI
             </MenuItem>
           </Link>
-          <Link to="/shame">
+          <Link to="/victories">
             <MenuItem
               onTouchTap={this.handleClose}
               leftIcon={<Error />}
             >
-              Shame board
+              Victories
             </MenuItem>
           </Link>
           <Link to="/about">

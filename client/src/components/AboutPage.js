@@ -1,18 +1,35 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 import { SocialIcon } from 'react-social-icons';
 
-// Components
-import Header from '../components/Header';
-
+import Header from './Header';
 
 import './css/AboutPage.css';
 
 class AboutPage extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      carlo: 1,
+      jason: 1,
+      ryan: 1,
+      shawn: 1,
+    };
+
+    this.onMouseEnter = this.onMouseEnter.bind(this);
+    this.onMouseLeave = this.onMouseLeave.bind(this);
+  }
+
+  onMouseEnter(name) {
+    const nameState = {};
+    nameState[name] = 2;
+    this.setState(nameState);
+  }
+
+  onMouseLeave(name) {
+    const nameState = {};
+    nameState[name] = 1;
+    this.setState(nameState);
   }
 
   render() {
@@ -20,15 +37,10 @@ class AboutPage extends Component {
       <div>
         <Header className="header" />
         <Paper className="about-paper" zDepth={4}>
-          <div className="about-us">
-            <div className="banner">
-              <span>About Us</span>
-            </div>
-          </div>
           <hr className="horizontal-line" />
           <div className="meet-the-team">
             <div className="banner">
-              <span>Meet The Team</span>
+              <span>Team Deep Red</span>
             </div>
             <div className="spacer-box" />
             <table className="table-layout">
@@ -39,7 +51,9 @@ class AboutPage extends Component {
                       alt=""
                       id="carlo-pic"
                       className="circular-pic"
-                      src="/assets/carlo.png"
+                      src={`/assets/carlo${this.state.carlo}.jpg`}
+                      onMouseEnter={() => this.onMouseEnter('carlo')}
+                      onMouseLeave={() => this.onMouseLeave('carlo')}
                     />
                   </td>
                   <td className="table-col">
@@ -47,7 +61,9 @@ class AboutPage extends Component {
                       alt=""
                       id="jason-pic"
                       className="circular-pic"
-                      src="/assets/jason.png"
+                      src={`/assets/jason${this.state.jason}.jpg`}
+                      onMouseEnter={() => this.onMouseEnter('jason')}
+                      onMouseLeave={() => this.onMouseLeave('jason')}
                     />
                   </td>
                   <td className="table-col">
@@ -55,7 +71,9 @@ class AboutPage extends Component {
                       alt=""
                       id="ryan-pic"
                       className="circular-pic"
-                      src="/assets/ryan.png"
+                      src={`/assets/ryan${this.state.ryan}.jpg`}
+                      onMouseEnter={() => this.onMouseEnter('ryan')}
+                      onMouseLeave={() => this.onMouseLeave('ryan')}
                     />
                   </td>
                   <td className="table-col">
@@ -63,7 +81,9 @@ class AboutPage extends Component {
                       alt=""
                       id="shawn-pic"
                       className="circular-pic"
-                      src="/assets/shawn.png"
+                      src={`/assets/shawn${this.state.shawn}.jpg`}
+                      onMouseEnter={() => this.onMouseEnter('shawn')}
+                      onMouseLeave={() => this.onMouseLeave('shawn')}
                     />
                   </td>
                 </tr>
@@ -95,7 +115,7 @@ class AboutPage extends Component {
                     <span className="role">Back End Engineer</span>
                   </td>
                   <td className="name-title">
-                    <span className="role">Front End Engineer</span>
+                    <span className="role">Full Stack Software Engineer</span>
                   </td>
                   <td className="name-title">
                     <span className="role">Solutions Architect</span>
@@ -114,7 +134,7 @@ class AboutPage extends Component {
                       <SocialIcon
                         color="#B71C1C"
                         network="email"
-                        url="mailto:carlom@gmail.com?subject=Comments about DeepRed"
+                        url="mailto:carlolm@gmail.com?subject=Comments about DeepRed"
                       />
                     </span>
                   </td>
@@ -163,7 +183,7 @@ class AboutPage extends Component {
                 <img
                   alt=""
                   className="group-pic"
-                  src="/assets/group-pic1.png"
+                  src="/assets/team-deepred1.jpg"
                 />
                 <div>
                   <span className="name">Old hacking days</span>
@@ -174,10 +194,10 @@ class AboutPage extends Component {
                 <img
                   alt=""
                   className="group-pic"
-                  src="/assets/group-pic2.jpeg"
+                  src="/assets/team-deepred2.jpg"
                 />
                 <div>
-                  <span className="name">Team tapout at Airbnb headquarter</span>
+                  <span className="name">Team tapout at Airbnb headquarters</span>
                 </div>
               </div>
               <div className="spacer-box" />
@@ -185,7 +205,7 @@ class AboutPage extends Component {
                 <img
                   alt=""
                   className="group-pic"
-                  src="/assets/group-pic3.jpg"
+                  src="/assets/team-deepred3.jpg"
                 />
                 <div>
                   <span className="name">Celebration after DeepRed presentation</span>

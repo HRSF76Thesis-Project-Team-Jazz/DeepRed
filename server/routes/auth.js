@@ -19,7 +19,7 @@ router.route('/about')
     res.render('index.ejs');
   });
 
-router.route('/shame')
+router.route('/victories')
   .get(middleware.auth.verify, (req, res) => {
     res.render('index.ejs');
   });
