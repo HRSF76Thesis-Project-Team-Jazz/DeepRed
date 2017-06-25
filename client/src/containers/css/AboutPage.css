@@ -1,6 +1,6 @@
-.header-top {
+/*.header {
   position: fixed;
-}
+}*/
 
 .banner {
   text-align: center;
@@ -12,12 +12,28 @@
 
 }
 .circular-pic {
-  width: 18vw;
-  height: 18vw;
+  width: 20vw;
+  height: 20vw;
   border-radius: 50%;
   border: 1px;
-  border:2px solid #B71C1C;
+  border:5px solid #B71C1C;
 }
+
+/*#carlo-pic:hover {
+  background-image: url('/assets/carlo2.jpg');
+}
+
+#jason-pic:hover {
+  background-image: url('/assets/jason2.jpg');
+}
+
+#ryan-pic:hover {
+  background-image: url('/assets/ryan2.jpg');
+}
+
+#shawn-pic:hover {
+  background-image: url('/assets/shawn2.png');
+}*/
 
 .name-title {
   margin-top: 5px;
@@ -62,7 +78,7 @@
 }
 
 .social-icon {
-  /*padding: 10px;*/
+  padding: 10px;
 }
 
 .social-bar {
@@ -99,19 +115,15 @@
 }
 
 .group-pic {
-  border:2px solid #B71C1C;
-  border-radius: 5px;
+  border:5px solid #B71C1C;
+  border-radius: 2%;
   margin: 15px;
   width: 65vw;
-  height: 45vw;
+
+   height: 45vw;
 }
 
 .group-picture-item {
   margin-left: auto;
   margin-right: auto;
-}
-
-.meet-the-team {
-  position: relative;
-  top: 75px;
 }
