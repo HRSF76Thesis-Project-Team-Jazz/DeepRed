@@ -35,7 +35,7 @@ class AboutPage extends Component {
   render() {
     return (
       <div>
-        <Header className="header" />
+        <Header />
         <Paper className="about-paper" zDepth={4}>
           <hr className="horizontal-line" />
           <div className="meet-the-team">

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
-import { Link } from 'react-router-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
 import FlatButton from 'material-ui/FlatButton';

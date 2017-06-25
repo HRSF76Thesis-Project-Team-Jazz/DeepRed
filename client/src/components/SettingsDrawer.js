@@ -11,7 +11,7 @@ import PlayArrow from 'material-ui/svg-icons/av/play-arrow';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import Group from 'material-ui/svg-icons/social/group';
-import Error from 'material-ui/svg-icons/alert/error';
+import Done from 'material-ui/svg-icons/action/done';
 
 import './css/SettingsDrawer.css';
 
@@ -109,7 +109,7 @@ class SettingsDrawer extends Component {
           <Link to="/victories">
             <MenuItem
               onTouchTap={this.handleClose}
-              leftIcon={<Error />}
+              leftIcon={<Done />}
             >
               Victories
             </MenuItem>
