@@ -35,7 +35,7 @@ class AboutPage extends Component {
   render() {
     return (
       <div>
-        <Header className="header-top" />
+        <Header />
         <Paper className="about-paper" zDepth={4}>
           <hr className="horizontal-line" />
           <div className="meet-the-team">
@@ -129,7 +129,7 @@ class AboutPage extends Component {
                 </tr>
                 <tr className="social-bar">
                   <td className="social-link ">
-                    <span className="social-icon"><SocialIcon className="icon-size" network="linkedin" url="https://www.linkedin.com/in/carlolm/" /></span>
+                    <span className="social-icon"><SocialIcon network="linkedin" url="https://www.linkedin.com/in/carlolm/" /></span>
                     <span className="social-icon">
                       <SocialIcon
                         color="#B71C1C"
